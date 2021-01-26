@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Minecraft NBT (Named Binary Tag) format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Game Data Files</li>
+        <li class="active">Minecraft NBT (Named Binary Tag)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Minecraft NBT (Named Binary Tag):
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A structured binary format native to Minecraft for saving game data and transferring
+it over the network (in multiplayer), such as player data
+(<a href="https://minecraft.gamepedia.com/Player.dat_format"><code>&lt;player&gt;.dat</code></a>; contains
+e.g. player's inventory and location), saved worlds
+(<a href="https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format"><code>level.dat</code></a> and <a href="https://minecraft.gamepedia.com/Chunk_format#NBT_structure">Chunk format</a>),
+list of saved multiplayer servers
+(<a href="https://minecraft.gamepedia.com/Servers.dat_format"><code>servers.dat</code></a>) and so on -
+see <a href="https://minecraft.gamepedia.com/NBT_format#Uses">https://minecraft.gamepedia.com/NBT_format#Uses</a>.</p>
+<p>The entire file should be <em>gzip</em>-compressed (in accordance with the original
+specification <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">NBT.txt</a> by Notch), but can also be compressed with <em>zlib</em> or uncompressed.</p>
+<p>This spec can only handle uncompressed NBT data, so be sure to first detect
+what type of data you are dealing with. You can use the Unix <code>file</code> command
+to do this:</p>
+<pre><code class="language-shell">file --brief --mime-type input-unknown.nbt
+</code></pre>
+<p>If it says:</p>
+<ul>
+<li><code>application/gzip</code>, you can decompress it by
+<ul>
+<li><code>gunzip -c input-gzip.nbt &gt; output.nbt</code> or</li>
+<li><code>python3 -c &quot;import sys, gzip; sys.stdout.buffer.write( gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt</code></li>
+</ul>
+</li>
+<li><code>application/zlib</code>, you can use
+<ul>
+<li><code>openssl zlib -d -in input.nbt.zlib -out output.nbt</code> (does not work on most systems)</li>
+<li><code>python3 -c &quot;import sys, zlib; sys.stdout.buffer.write( zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt</code></li>
+</ul>
+</li>
+<li>something else (especially <code>image/x-pcx</code> and <code>application/octet-stream</code>),
+it is most likely already uncompressed.</li>
+</ul>
+<p>The file <code>output.nbt</code> generated by one of the above commands can already be
+processed with this Kaitai Struct specification.</p>
+<p>This spec <strong>only</strong> implements the Java edition format. There is also
+a <a href="https://wiki.vg/NBT#Bedrock_edition">Bedrock edition</a> NBT format,
+which uses little-endian encoding and has a few other differences, but it isn't
+as popular as the Java edition format.</p>
+<p><strong>Implementation note:</strong> strings in <code>TAG_String</code> are incorrectly decoded with
+standard UTF-8, while they are encoded in <a href="https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8"><strong>Modified UTF-8</strong></a> (MUTF-8). That's because MUTF-8 is usually not supported natively by most target
+languages, and thus one must use external libraries to achieve a fully-compliant
+decoder. But decoding in standard UTF-8 is still better than nothing, and
+it usually works fine.</p>
+<p>All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are
+U+0000 (<em>NUL</em>), U+D800-U+DFFF (<em>High</em> and <em>Low Surrogates</em>) and U+10000-U+10FFFF
+(<em>Supplementary</em> Planes; includes e.g. emoticons, pictograms).
+A <em>MUTF-8</em>-encoded string containing these code points cannot be successfully
+decoded as UTF-8. The behavior in this case depends on the target language -
+usually an exception is thrown, or the bytes that are not valid UTF-8
+are replaced or ignored.</p>
+<hr />
+<p>Sample files:</p>
+<ul>
+<li><a href="https://wiki.vg/NBT#Download">https://wiki.vg/NBT#Download</a></li>
+<li><a href="https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat">https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat</a></li>
+<li><a href="https://github.com/chmod222/cNBT/tree/3f74b69/testdata">https://github.com/chmod222/cNBT/tree/3f74b69/testdata</a></li>
+<li><a href="https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests">https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests</a></li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Minecraft
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["nbt", "dat"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Minecraft_NBT_format">Minecraft NBT format in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Minecraft NBT (Named Binary Tag)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Minecraft NBT (Named Binary Tag) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Minecraft NBT (Named Binary Tag) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Minecraft NBT (Named Binary Tag) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Minecraft NBT (Named Binary Tag) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Minecraft NBT (Named Binary Tag) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Minecraft NBT (Named Binary Tag) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Minecraft NBT (Named Binary Tag) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="minecraft_nbt.svg">
+            <img class="diagram-img" src="minecraft_nbt.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minecraft_nbt</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Minecraft NBT (Named Binary Tag)</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Minecraft</span>
+  <span class="nt">file-extension</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nbt</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dat</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Minecraft_NBT_format</span>
+  <span class="nt">tags</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">serialization</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf-8</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">A structured binary format native to Minecraft for saving game data and transferring</span>
+  <span class="no">it over the network (in multiplayer), such as player data</span>
+  <span class="no">([`&lt;player&gt;.dat`](https://minecraft.gamepedia.com/Player.dat_format); contains</span>
+  <span class="no">e.g. player&#39;s inventory and location), saved worlds</span>
+  <span class="no">([`level.dat`](</span>
+    <span class="no">https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format</span>
+  <span class="no">) and [Chunk format](https://minecraft.gamepedia.com/Chunk_format#NBT_structure)),</span>
+  <span class="no">list of saved multiplayer servers</span>
+  <span class="no">([`servers.dat`](https://minecraft.gamepedia.com/Servers.dat_format)) and so on -</span>
+  <span class="no">see &lt;https://minecraft.gamepedia.com/NBT_format#Uses&gt;.</span>
+
+  <span class="no">The entire file should be _gzip_-compressed (in accordance with the original</span>
+  <span class="no">specification [NBT.txt](</span>
+    <span class="no">https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
+  <span class="no">) by Notch), but can also be compressed with _zlib_ or uncompressed.</span>
+
+  <span class="no">This spec can only handle uncompressed NBT data, so be sure to first detect</span>
+  <span class="no">what type of data you are dealing with. You can use the Unix `file` command</span>
+  <span class="no">to do this:</span>
+
+  <span class="no">```shell</span>
+  <span class="no">file --brief --mime-type input-unknown.nbt</span>
+  <span class="no">```</span>
+
+  <span class="no">If it says:</span>
+
+    <span class="no">* `application/gzip`, you can decompress it by</span>
+      <span class="no">* `gunzip -c input-gzip.nbt &gt; output.nbt` or</span>
+      <span class="no">* `python3 -c &quot;import sys, gzip; sys.stdout.buffer.write(</span>
+        <span class="no">gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>
+    <span class="no">* `application/zlib`, you can use</span>
+      <span class="no">* `openssl zlib -d -in input.nbt.zlib -out output.nbt` (does not work on most systems)</span>
+      <span class="no">* `python3 -c &quot;import sys, zlib; sys.stdout.buffer.write(</span>
+        <span class="no">zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt`</span>
+    <span class="no">* something else (especially `image/x-pcx` and `application/octet-stream`),</span>
+      <span class="no">it is most likely already uncompressed.</span>
+
+  <span class="no">The file `output.nbt` generated by one of the above commands can already be</span>
+  <span class="no">processed with this Kaitai Struct specification.</span>
+
+  <span class="no">This spec **only** implements the Java edition format. There is also</span>
+  <span class="no">a [Bedrock edition](https://wiki.vg/NBT#Bedrock_edition) NBT format,</span>
+  <span class="no">which uses little-endian encoding and has a few other differences, but it isn&#39;t</span>
+  <span class="no">as popular as the Java edition format.</span>
+
+  <span class="no">**Implementation note:** strings in `TAG_String` are incorrectly decoded with</span>
+  <span class="no">standard UTF-8, while they are encoded in [**Modified UTF-8**](</span>
+    <span class="no">https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8</span>
+  <span class="no">) (MUTF-8). That&#39;s because MUTF-8 is usually not supported natively by most target</span>
+  <span class="no">languages, and thus one must use external libraries to achieve a fully-compliant</span>
+  <span class="no">decoder. But decoding in standard UTF-8 is still better than nothing, and</span>
+  <span class="no">it usually works fine.</span>
+
+  <span class="no">All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are</span>
+  <span class="no">U+0000 (_NUL_), U+D800-U+DFFF (_High_ and _Low Surrogates_) and U+10000-U+10FFFF</span>
+  <span class="no">(_Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
+  <span class="no">A _MUTF-8_-encoded string containing these code points cannot be successfully</span>
+  <span class="no">decoded as UTF-8. The behavior in this case depends on the target language -</span>
+  <span class="no">usually an exception is thrown, or the bytes that are not valid UTF-8</span>
+  <span class="no">are replaced or ignored.</span>
+
+  <span class="no">---</span>
+
+  <span class="no">Sample files:</span>
+
+    <span class="no">* &lt;https://wiki.vg/NBT#Download&gt;</span>
+    <span class="no">* &lt;https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat&gt;</span>
+    <span class="no">* &lt;https://github.com/chmod222/cNBT/tree/3f74b69/testdata&gt;</span>
+    <span class="no">* &lt;https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests&gt;</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://wiki.vg/NBT</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://minecraft.gamepedia.com/NBT_format</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">valid</span><span class="p">:</span>
+      <span class="nt">expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_type == tag::compound</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">named_tag</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">root_type</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+    <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">named_tag</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;TAG_{type}(&quot;{name.data}&quot;):</span><span class="nv"> </span><span class="s">{payload:dec}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_string</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_tag_end</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::byte</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::short</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::int</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::long</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::float</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::double</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::byte_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_byte_array</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::string</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_string</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::list</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_list</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::compound</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_compound</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::int_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_int_array</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::long_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_long_array</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_tag_end</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_tag_end</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == tag::end</span>
+  <span class="nt">tag_byte_array</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{len_data:dec}</span><span class="nv"> </span><span class="s">bytes&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+  <span class="nt">tag_string</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{data}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">unsigned according to https://wiki.vg/NBT#Specification</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_data</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+  <span class="nt">tag_list</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_tags:dec}</span><span class="nv"> </span><span class="s">entries</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">type</span><span class="nv"> </span><span class="s">TAG_{tags_type}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::byte</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s1</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::short</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s2</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::int</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::long</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::float</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f4</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::double</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">f8</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::byte_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_byte_array</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::string</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_string</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::list</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_list</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::compound</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_compound</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::int_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_int_array</span>
+            <span class="l l-Scalar l-Scalar-Plain">tag::long_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_long_array</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+  <span class="nt">tag_compound</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{dump_num_tags:dec}</span><span class="nv"> </span><span class="s">entries&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">named_tag</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+        <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.is_tag_end</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">dump_num_tags</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;tags.size</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">((tags.size</span><span class="nv"> </span><span class="s">&gt;=</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">tags.last.is_tag_end)</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">0)&#39;</span>
+  <span class="nt">tag_int_array</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_tags:dec}</span><span class="nv"> </span><span class="s">entries</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">type</span><span class="nv"> </span><span class="s">TAG_{tags_type}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">tags_type</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag::int</span>
+  <span class="nt">tag_long_array</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{num_tags:dec}</span><span class="nv"> </span><span class="s">entries</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">type</span><span class="nv"> </span><span class="s">TAG_{tags_type}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tags</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_tags</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">tags_type</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag::long</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">tag</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+      <span class="nt">-affected-by</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">90</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">As of KSC 0.9, this enum key causes a syntax error in Lua.</span>
+        <span class="no">See https://github.com/kaitai-io/kaitai_struct/issues/90#issuecomment-766440975</span>
+        <span class="no">for more info.</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">short</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">int</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">long</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">float</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">double</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte_array</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">list</span>
+    <span class="nt">10</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">compound</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">int_array</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">long_array</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__minecraft_nbt {
+		label="MinecraftNbt";
+		graph[style=dotted];
+
+		minecraft_nbt__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="_unnamed0_pos">0</TD><TD PORT="_unnamed0_size">0</TD><TD></TD><TD PORT="_unnamed0_type">_unnamed0</TD></TR>
+			<TR><TD PORT="root_pos">0</TD><TD PORT="root_size">...</TD><TD>NamedTag</TD><TD PORT="root_type">root</TD></TR>
+		</TABLE>>];
+		minecraft_nbt__inst__root_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="root_type_pos">0</TD><TD PORT="root_type_size">1</TD><TD>u1→Tag</TD><TD PORT="root_type_type">root_type</TD></TR>
+		</TABLE>>];
+		subgraph cluster__tag_long_array {
+			label="MinecraftNbt::TagLongArray";
+			graph[style=dotted];
+
+			tag_long_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_tags_pos">0</TD><TD PORT="num_tags_size">4</TD><TD>s4be</TD><TD PORT="num_tags_type">num_tags</TD></TR>
+				<TR><TD PORT="tags_pos">4</TD><TD PORT="tags_size">8</TD><TD>s8be</TD><TD PORT="tags_type">tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tags__repeat">repeat num_tags times</TD></TR>
+			</TABLE>>];
+			tag_long_array__inst__tags_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tags_type</TD><TD>:tag_long</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tag_byte_array {
+			label="MinecraftNbt::TagByteArray";
+			graph[style=dotted];
+
+			tag_byte_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_data_pos">0</TD><TD PORT="len_data_size">4</TD><TD>s4be</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">4</TD><TD PORT="data_size">len_data</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tag_int_array {
+			label="MinecraftNbt::TagIntArray";
+			graph[style=dotted];
+
+			tag_int_array__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_tags_pos">0</TD><TD PORT="num_tags_size">4</TD><TD>s4be</TD><TD PORT="num_tags_type">num_tags</TD></TR>
+				<TR><TD PORT="tags_pos">4</TD><TD PORT="tags_size">4</TD><TD>s4be</TD><TD PORT="tags_type">tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tags__repeat">repeat num_tags times</TD></TR>
+			</TABLE>>];
+			tag_int_array__inst__tags_type [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>tags_type</TD><TD>:tag_int</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tag_list {
+			label="MinecraftNbt::TagList";
+			graph[style=dotted];
+
+			tag_list__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tags_type_pos">0</TD><TD PORT="tags_type_size">1</TD><TD>u1→Tag</TD><TD PORT="tags_type_type">tags_type</TD></TR>
+				<TR><TD PORT="num_tags_pos">1</TD><TD PORT="num_tags_size">4</TD><TD>s4be</TD><TD PORT="num_tags_type">num_tags</TD></TR>
+				<TR><TD PORT="tags_pos">5</TD><TD PORT="tags_size">...</TD><TD>switch (tags_type)</TD><TD PORT="tags_type">tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tags__repeat">repeat num_tags times</TD></TR>
+			</TABLE>>];
+tag_list__seq_tags_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:tag_long_array</TD><TD PORT="case0">TagLongArray</TD></TR>
+	<TR><TD>:tag_compound</TD><TD PORT="case1">TagCompound</TD></TR>
+	<TR><TD>:tag_list</TD><TD PORT="case2">TagList</TD></TR>
+	<TR><TD>:tag_byte_array</TD><TD PORT="case3">TagByteArray</TD></TR>
+	<TR><TD>:tag_int_array</TD><TD PORT="case4">TagIntArray</TD></TR>
+	<TR><TD>:tag_string</TD><TD PORT="case5">TagString</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__tag_string {
+			label="MinecraftNbt::TagString";
+			graph[style=dotted];
+
+			tag_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_data_pos">0</TD><TD PORT="len_data_size">2</TD><TD>u2be</TD><TD PORT="len_data_type">len_data</TD></TR>
+				<TR><TD PORT="data_pos">2</TD><TD PORT="data_size">len_data</TD><TD>str(utf-8)</TD><TD PORT="data_type">data</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__tag_compound {
+			label="MinecraftNbt::TagCompound";
+			graph[style=dotted];
+
+			tag_compound__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="tags_pos">0</TD><TD PORT="tags_size">...</TD><TD>NamedTag</TD><TD PORT="tags_type">tags</TD></TR>
+				<TR><TD COLSPAN="4" PORT="tags__repeat">repeat until _.is_tag_end</TD></TR>
+			</TABLE>>];
+			tag_compound__inst__dump_num_tags [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>dump_num_tags</TD><TD>(tags.length - ( ((tags.length &gt;= 1) &amp;&amp; (tags.last.is_tag_end))  ? 1 : 0))</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__named_tag {
+			label="MinecraftNbt::NamedTag";
+			graph[style=dotted];
+
+			named_tag__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">1</TD><TD>u1→Tag</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="name_pos">1</TD><TD PORT="name_size">...</TD><TD>TagString</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="payload_pos">...</TD><TD PORT="payload_size">...</TD><TD>switch (type)</TD><TD PORT="payload_type">payload</TD></TR>
+			</TABLE>>];
+			named_tag__inst__is_tag_end [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_tag_end</TD><TD>type == :tag_end</TD></TR>
+			</TABLE>>];
+named_tag__seq_payload_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:tag_long_array</TD><TD PORT="case0">TagLongArray</TD></TR>
+	<TR><TD>:tag_compound</TD><TD PORT="case1">TagCompound</TD></TR>
+	<TR><TD>:tag_list</TD><TD PORT="case2">TagList</TD></TR>
+	<TR><TD>:tag_byte_array</TD><TD PORT="case3">TagByteArray</TD></TR>
+	<TR><TD>:tag_int_array</TD><TD PORT="case4">TagIntArray</TD></TR>
+	<TR><TD>:tag_string</TD><TD PORT="case5">TagString</TD></TR>
+</TABLE>>];
+		}
+	}
+	minecraft_nbt__seq:root_type -> named_tag__seq [style=bold];
+	tag_long_array__seq:num_tags_type -> tag_long_array__seq:tags__repeat [color="#404040"];
+	tag_byte_array__seq:len_data_type -> tag_byte_array__seq:data_size [color="#404040"];
+	tag_int_array__seq:num_tags_type -> tag_int_array__seq:tags__repeat [color="#404040"];
+	tag_list__seq:tags_type -> tag_list__seq_tags_switch [style=bold];
+	tag_list__seq_tags_switch:case0 -> tag_long_array__seq [style=bold];
+	tag_list__seq_tags_switch:case1 -> tag_compound__seq [style=bold];
+	tag_list__seq_tags_switch:case2 -> tag_list__seq [style=bold];
+	tag_list__seq_tags_switch:case3 -> tag_byte_array__seq [style=bold];
+	tag_list__seq_tags_switch:case4 -> tag_int_array__seq [style=bold];
+	tag_list__seq_tags_switch:case5 -> tag_string__seq [style=bold];
+	tag_list__seq:tags_type_type -> tag_list__seq:tags_type [color="#404040"];
+	tag_list__seq:num_tags_type -> tag_list__seq:tags__repeat [color="#404040"];
+	tag_string__seq:len_data_type -> tag_string__seq:data_size [color="#404040"];
+	tag_compound__seq:tags_type -> named_tag__seq [style=bold];
+	named_tag__inst__is_tag_end:is_tag_end_type -> tag_compound__seq:tags__repeat [color="#404040"];
+	tag_compound__seq:tags_type -> tag_compound__inst__dump_num_tags [color="#404040"];
+	tag_compound__seq:tags_type -> tag_compound__inst__dump_num_tags [color="#404040"];
+	named_tag__inst__is_tag_end:is_tag_end_type -> tag_compound__inst__dump_num_tags [color="#404040"];
+	named_tag__seq:name_type -> tag_string__seq [style=bold];
+	named_tag__seq:payload_type -> named_tag__seq_payload_switch [style=bold];
+	named_tag__seq_payload_switch:case0 -> tag_long_array__seq [style=bold];
+	named_tag__seq_payload_switch:case1 -> tag_compound__seq [style=bold];
+	named_tag__seq_payload_switch:case2 -> tag_list__seq [style=bold];
+	named_tag__seq_payload_switch:case3 -> tag_byte_array__seq [style=bold];
+	named_tag__seq_payload_switch:case4 -> tag_int_array__seq [style=bold];
+	named_tag__seq_payload_switch:case5 -> tag_string__seq [style=bold];
+	named_tag__seq:type_type -> named_tag__seq:payload_type [color="#404040"];
+	named_tag__seq:type_type -> named_tag__inst__is_tag_end [color="#404040"];
+}

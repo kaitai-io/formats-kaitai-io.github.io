@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Minecraft NBT (Named Binary Tag): Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Game Data Files</li>
+        <li class="active">Minecraft NBT (Named Binary Tag)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Minecraft NBT (Named Binary Tag):
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A structured binary format native to Minecraft for saving game data and transferring
+it over the network (in multiplayer), such as player data
+(<a href="https://minecraft.gamepedia.com/Player.dat_format"><code>&lt;player&gt;.dat</code></a>; contains
+e.g. player's inventory and location), saved worlds
+(<a href="https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format"><code>level.dat</code></a> and <a href="https://minecraft.gamepedia.com/Chunk_format#NBT_structure">Chunk format</a>),
+list of saved multiplayer servers
+(<a href="https://minecraft.gamepedia.com/Servers.dat_format"><code>servers.dat</code></a>) and so on -
+see <a href="https://minecraft.gamepedia.com/NBT_format#Uses">https://minecraft.gamepedia.com/NBT_format#Uses</a>.</p>
+<p>The entire file should be <em>gzip</em>-compressed (in accordance with the original
+specification <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">NBT.txt</a> by Notch), but can also be compressed with <em>zlib</em> or uncompressed.</p>
+<p>This spec can only handle uncompressed NBT data, so be sure to first detect
+what type of data you are dealing with. You can use the Unix <code>file</code> command
+to do this:</p>
+<pre><code class="language-shell">file --brief --mime-type input-unknown.nbt
+</code></pre>
+<p>If it says:</p>
+<ul>
+<li><code>application/gzip</code>, you can decompress it by
+<ul>
+<li><code>gunzip -c input-gzip.nbt &gt; output.nbt</code> or</li>
+<li><code>python3 -c &quot;import sys, gzip; sys.stdout.buffer.write( gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt</code></li>
+</ul>
+</li>
+<li><code>application/zlib</code>, you can use
+<ul>
+<li><code>openssl zlib -d -in input.nbt.zlib -out output.nbt</code> (does not work on most systems)</li>
+<li><code>python3 -c &quot;import sys, zlib; sys.stdout.buffer.write( zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt</code></li>
+</ul>
+</li>
+<li>something else (especially <code>image/x-pcx</code> and <code>application/octet-stream</code>),
+it is most likely already uncompressed.</li>
+</ul>
+<p>The file <code>output.nbt</code> generated by one of the above commands can already be
+processed with this Kaitai Struct specification.</p>
+<p>This spec <strong>only</strong> implements the Java edition format. There is also
+a <a href="https://wiki.vg/NBT#Bedrock_edition">Bedrock edition</a> NBT format,
+which uses little-endian encoding and has a few other differences, but it isn't
+as popular as the Java edition format.</p>
+<p><strong>Implementation note:</strong> strings in <code>TAG_String</code> are incorrectly decoded with
+standard UTF-8, while they are encoded in <a href="https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8"><strong>Modified UTF-8</strong></a> (MUTF-8). That's because MUTF-8 is usually not supported natively by most target
+languages, and thus one must use external libraries to achieve a fully-compliant
+decoder. But decoding in standard UTF-8 is still better than nothing, and
+it usually works fine.</p>
+<p>All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are
+U+0000 (<em>NUL</em>), U+D800-U+DFFF (<em>High</em> and <em>Low Surrogates</em>) and U+10000-U+10FFFF
+(<em>Supplementary</em> Planes; includes e.g. emoticons, pictograms).
+A <em>MUTF-8</em>-encoded string containing these code points cannot be successfully
+decoded as UTF-8. The behavior in this case depends on the target language -
+usually an exception is thrown, or the bytes that are not valid UTF-8
+are replaced or ignored.</p>
+<hr />
+<p>Sample files:</p>
+<ul>
+<li><a href="https://wiki.vg/NBT#Download">https://wiki.vg/NBT#Download</a></li>
+<li><a href="https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat">https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat</a></li>
+<li><a href="https://github.com/chmod222/cNBT/tree/3f74b69/testdata">https://github.com/chmod222/cNBT/tree/3f74b69/testdata</a></li>
+<li><a href="https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests">https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests</a></li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Minecraft
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["nbt", "dat"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Minecraft_NBT_format">Minecraft NBT format in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Minecraft NBT (Named Binary Tag)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Minecraft NBT (Named Binary Tag) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Minecraft NBT (Named Binary Tag) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Minecraft NBT (Named Binary Tag) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Minecraft NBT (Named Binary Tag) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Minecraft NBT (Named Binary Tag) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Minecraft NBT (Named Binary Tag) parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="Minecraft NBT (Named Binary Tag) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <p>Parse a local file and get structure in memory:</p>
+
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">MinecraftNbt</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.[&quot;</span><span class="n">nbt</span><span class="s2">&quot;, &quot;</span><span class="n">dat</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
+</pre></div>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="no">MinecraftNbt</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">root</span> <span class="c1"># =&gt; get root</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse Minecraft NBT (Named Binary Tag)
+            
+        </h2>
+
+        
+
+        <h3>minecraft_nbt.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/minecraft_nbt.rb" download="minecraft_nbt.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
+
+
+<span class="c1">##</span>
+<span class="c1"># A structured binary format native to Minecraft for saving game data and transferring</span>
+<span class="c1"># it over the network (in multiplayer), such as player data</span>
+<span class="c1"># ([`&lt;player&gt;.dat`](https://minecraft.gamepedia.com/Player.dat_format); contains</span>
+<span class="c1"># e.g. player&#39;s inventory and location), saved worlds</span>
+<span class="c1"># ([`level.dat`](</span>
+<span class="c1">#   https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format</span>
+<span class="c1"># ) and [Chunk format](https://minecraft.gamepedia.com/Chunk_format#NBT_structure)),</span>
+<span class="c1"># list of saved multiplayer servers</span>
+<span class="c1"># ([`servers.dat`](https://minecraft.gamepedia.com/Servers.dat_format)) and so on -</span>
+<span class="c1"># see &lt;https://minecraft.gamepedia.com/NBT_format#Uses&gt;.</span>
+<span class="c1"># </span>
+<span class="c1"># The entire file should be _gzip_-compressed (in accordance with the original</span>
+<span class="c1"># specification [NBT.txt](</span>
+<span class="c1">#   https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
+<span class="c1"># ) by Notch), but can also be compressed with _zlib_ or uncompressed.</span>
+<span class="c1"># </span>
+<span class="c1"># This spec can only handle uncompressed NBT data, so be sure to first detect</span>
+<span class="c1"># what type of data you are dealing with. You can use the Unix `file` command</span>
+<span class="c1"># to do this:</span>
+<span class="c1"># </span>
+<span class="c1"># ```shell</span>
+<span class="c1"># file --brief --mime-type input-unknown.nbt</span>
+<span class="c1"># ```</span>
+<span class="c1"># </span>
+<span class="c1"># If it says:</span>
+<span class="c1"># </span>
+<span class="c1">#   * `application/gzip`, you can decompress it by</span>
+<span class="c1">#     * `gunzip -c input-gzip.nbt &gt; output.nbt` or</span>
+<span class="c1">#     * `python3 -c &quot;import sys, gzip; sys.stdout.buffer.write(</span>
+<span class="c1">#       gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>
+<span class="c1">#   * `application/zlib`, you can use</span>
+<span class="c1">#     * `openssl zlib -d -in input.nbt.zlib -out output.nbt` (does not work on most systems)</span>
+<span class="c1">#     * `python3 -c &quot;import sys, zlib; sys.stdout.buffer.write(</span>
+<span class="c1">#       zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt`</span>
+<span class="c1">#   * something else (especially `image/x-pcx` and `application/octet-stream`),</span>
+<span class="c1">#     it is most likely already uncompressed.</span>
+<span class="c1"># </span>
+<span class="c1"># The file `output.nbt` generated by one of the above commands can already be</span>
+<span class="c1"># processed with this Kaitai Struct specification.</span>
+<span class="c1"># </span>
+<span class="c1"># This spec **only** implements the Java edition format. There is also</span>
+<span class="c1"># a [Bedrock edition](https://wiki.vg/NBT#Bedrock_edition) NBT format,</span>
+<span class="c1"># which uses little-endian encoding and has a few other differences, but it isn&#39;t</span>
+<span class="c1"># as popular as the Java edition format.</span>
+<span class="c1"># </span>
+<span class="c1"># **Implementation note:** strings in `TAG_String` are incorrectly decoded with</span>
+<span class="c1"># standard UTF-8, while they are encoded in [**Modified UTF-8**](</span>
+<span class="c1">#   https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8</span>
+<span class="c1"># ) (MUTF-8). That&#39;s because MUTF-8 is usually not supported natively by most target</span>
+<span class="c1"># languages, and thus one must use external libraries to achieve a fully-compliant</span>
+<span class="c1"># decoder. But decoding in standard UTF-8 is still better than nothing, and</span>
+<span class="c1"># it usually works fine.</span>
+<span class="c1"># </span>
+<span class="c1"># All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are</span>
+<span class="c1"># U+0000 (_NUL_), U+D800-U+DFFF (_High_ and _Low Surrogates_) and U+10000-U+10FFFF</span>
+<span class="c1"># (_Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
+<span class="c1"># A _MUTF-8_-encoded string containing these code points cannot be successfully</span>
+<span class="c1"># decoded as UTF-8. The behavior in this case depends on the target language -</span>
+<span class="c1"># usually an exception is thrown, or the bytes that are not valid UTF-8</span>
+<span class="c1"># are replaced or ignored.</span>
+<span class="c1"># </span>
+<span class="c1"># ---</span>
+<span class="c1"># </span>
+<span class="c1"># Sample files:</span>
+<span class="c1"># </span>
+<span class="c1">#   * &lt;https://wiki.vg/NBT#Download&gt;</span>
+<span class="c1">#   * &lt;https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat&gt;</span>
+<span class="c1">#   * &lt;https://github.com/chmod222/cNBT/tree/3f74b69/testdata&gt;</span>
+<span class="c1">#   * &lt;https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests&gt;</span>
+<span class="c1"># @see https://wiki.vg/NBT Source</span>
+<span class="c1"># @see https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt Source</span>
+<span class="c1"># @see https://minecraft.gamepedia.com/NBT_format Source</span>
+<span class="k">class</span> <span class="nc">MinecraftNbt</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+  <span class="no">TAG</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:tag_end</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:tag_byte</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:tag_short</span><span class="p">,</span>
+    <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:tag_int</span><span class="p">,</span>
+    <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:tag_long</span><span class="p">,</span>
+    <span class="mi">5</span> <span class="o">=&gt;</span> <span class="ss">:tag_float</span><span class="p">,</span>
+    <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:tag_double</span><span class="p">,</span>
+    <span class="mi">7</span> <span class="o">=&gt;</span> <span class="ss">:tag_byte_array</span><span class="p">,</span>
+    <span class="mi">8</span> <span class="o">=&gt;</span> <span class="ss">:tag_string</span><span class="p">,</span>
+    <span class="mi">9</span> <span class="o">=&gt;</span> <span class="ss">:tag_list</span><span class="p">,</span>
+    <span class="mi">10</span> <span class="o">=&gt;</span> <span class="ss">:tag_compound</span><span class="p">,</span>
+    <span class="mi">11</span> <span class="o">=&gt;</span> <span class="ss">:tag_int_array</span><span class="p">,</span>
+    <span class="mi">12</span> <span class="o">=&gt;</span> <span class="ss">:tag_long_array</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__TAG</span> <span class="o">=</span> <span class="no">TAG</span><span class="o">.</span><span class="n">invert</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">_read</span>
+    <span class="vi">@_unnamed0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">_</span> <span class="o">=</span> <span class="n">unnamed_0</span>
+    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationExprError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">unnamed_0</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root_type</span> <span class="o">==</span> <span class="ss">:tag_compound</span>
+    <span class="vi">@root</span> <span class="o">=</span> <span class="no">NamedTag</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TagLongArray</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_tags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="vi">@tags</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_tags</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_tags</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8be</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">tags_type</span>
+      <span class="k">return</span> <span class="vi">@tags_type</span> <span class="k">unless</span> <span class="vi">@tags_type</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@tags_type</span> <span class="o">=</span> <span class="ss">:tag_long</span>
+      <span class="vi">@tags_type</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_tags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tags</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TagByteArray</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TagIntArray</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@num_tags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="vi">@tags</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_tags</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_tags</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">tags_type</span>
+      <span class="k">return</span> <span class="vi">@tags_type</span> <span class="k">unless</span> <span class="vi">@tags_type</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@tags_type</span> <span class="o">=</span> <span class="ss">:tag_int</span>
+      <span class="vi">@tags_type</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_tags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tags</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TagList</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@tags_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MinecraftNbt</span><span class="o">::</span><span class="no">TAG</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@num_tags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+      <span class="vi">@tags</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_tags</span><span class="p">)</span>
+      <span class="p">(</span><span class="n">num_tags</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="k">case</span> <span class="n">tags_type</span>
+        <span class="k">when</span> <span class="ss">:tag_long_array</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TagLongArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_compound</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TagCompound</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_double</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+        <span class="k">when</span> <span class="ss">:tag_list</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TagList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_float</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
+        <span class="k">when</span> <span class="ss">:tag_short</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2be</span>
+        <span class="k">when</span> <span class="ss">:tag_int</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+        <span class="k">when</span> <span class="ss">:tag_byte_array</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TagByteArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_byte</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+        <span class="k">when</span> <span class="ss">:tag_int_array</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TagIntArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_string</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">TagString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_long</span>
+          <span class="vi">@tags</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8be</span>
+        <span class="k">end</span>
+      <span class="p">}</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tags_type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_tags</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tags</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TagString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># unsigned according to https://wiki.vg/NBT#Specification</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_data</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">TagCompound</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@tags</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">begin</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="no">NamedTag</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="vi">@tags</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">is_tag_end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">dump_num_tags</span>
+      <span class="k">return</span> <span class="vi">@dump_num_tags</span> <span class="k">unless</span> <span class="vi">@dump_num_tags</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@dump_num_tags</span> <span class="o">=</span> <span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">length</span> <span class="o">-</span> <span class="p">(</span> <span class="p">((</span><span class="n">tags</span><span class="o">.</span><span class="n">length</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">tags</span><span class="o">.</span><span class="n">last</span><span class="o">.</span><span class="n">is_tag_end</span><span class="p">))</span>  <span class="p">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="vi">@dump_num_tags</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:tags</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">NamedTag</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">_read</span>
+      <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">MinecraftNbt</span><span class="o">::</span><span class="no">TAG</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">is_tag_end</span><span class="p">)</span>
+        <span class="vi">@name</span> <span class="o">=</span> <span class="no">TagString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">is_tag_end</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">type</span>
+        <span class="k">when</span> <span class="ss">:tag_long_array</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TagLongArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_compound</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TagCompound</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_double</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f8be</span>
+        <span class="k">when</span> <span class="ss">:tag_list</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TagList</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_float</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4be</span>
+        <span class="k">when</span> <span class="ss">:tag_short</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2be</span>
+        <span class="k">when</span> <span class="ss">:tag_int</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4be</span>
+        <span class="k">when</span> <span class="ss">:tag_byte_array</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TagByteArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_byte</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s1</span>
+        <span class="k">when</span> <span class="ss">:tag_int_array</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TagIntArray</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_string</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="no">TagString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_long</span>
+          <span class="vi">@payload</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s8be</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_tag_end</span>
+      <span class="k">return</span> <span class="vi">@is_tag_end</span> <span class="k">unless</span> <span class="vi">@is_tag_end</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_tag_end</span> <span class="o">=</span> <span class="n">type</span> <span class="o">==</span> <span class="ss">:tag_end</span>
+      <span class="vi">@is_tag_end</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:type</span>
+    <span class="kp">attr_reader</span> <span class="ss">:name</span>
+    <span class="kp">attr_reader</span> <span class="ss">:payload</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">root_type</span>
+    <span class="k">return</span> <span class="vi">@root_type</span> <span class="k">unless</span> <span class="vi">@root_type</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="vi">@root_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">TAG</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+    <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="vi">@root_type</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_unnamed0</span>
+  <span class="kp">attr_reader</span> <span class="ss">:root</span>
+<span class="k">end</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
