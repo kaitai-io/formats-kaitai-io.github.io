@@ -113,10 +113,9 @@ class MinecraftNbt(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self._unnamed0 = self._io.read_bytes(0)
-        _ = self.unnamed_0
-        if not self.root_type == MinecraftNbt.Tag.compound:
-            raise kaitaistruct.ValidationExprError(self.unnamed_0, self._io, u"/seq/0")
+        if  ((self.root_type == MinecraftNbt.Tag.end) and (False)) :
+            self.root_check = self._io.read_bytes(0)
+
         self.root = MinecraftNbt.NamedTag(self._io, self, self._root)
 
     class TagLongArray(KaitaiStruct):
@@ -313,6 +312,8 @@ class MinecraftNbt(KaitaiStruct):
         self._io.seek(0)
         self._m_root_type = KaitaiStream.resolve_enum(MinecraftNbt.Tag, self._io.read_u1())
         self._io.seek(_pos)
+        if not self.root_type == MinecraftNbt.Tag.compound:
+            raise kaitaistruct.ValidationNotEqualError(MinecraftNbt.Tag.compound, self.root_type, self._io, u"/instances/root_type")
         return self._m_root_type if hasattr(self, '_m_root_type') else None
 
 

@@ -123,10 +123,8 @@ var MinecraftNbt = (function() {
     this._read();
   }
   MinecraftNbt.prototype._read = function() {
-    this._unnamed0 = this._io.readBytes(0);
-    var _ = this.unnamed0;
-    if (!(this.rootType == MinecraftNbt.Tag.COMPOUND)) {
-      throw new KaitaiStream.ValidationExprError(this.unnamed0, this._io, "/seq/0");
+    if ( ((this.rootType == MinecraftNbt.Tag.END) && (false)) ) {
+      this.rootCheck = this._io.readBytes(0);
     }
     this.root = new NamedTag(this._io, this, this._root);
   }
@@ -380,6 +378,9 @@ var MinecraftNbt = (function() {
       this._io.seek(0);
       this._m_rootType = this._io.readU1();
       this._io.seek(_pos);
+      if (!(this.rootType == MinecraftNbt.Tag.COMPOUND)) {
+        throw new KaitaiStream.ValidationNotEqualError(MinecraftNbt.Tag.COMPOUND, this.rootType, this._io, "/instances/root_type");
+      }
       return this._m_rootType;
     }
   });

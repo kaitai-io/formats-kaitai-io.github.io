@@ -130,12 +130,8 @@ public class MinecraftNbt extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this._unnamed0 = this._io.readBytes(0);
-        {
-            byte[] _it = unnamed0();
-            if (!(rootType() == Tag.COMPOUND)) {
-                throw new KaitaiStream.ValidationExprError(unnamed0(), _io(), "/seq/0");
-            }
+        if ( ((rootType() == Tag.END) && (false)) ) {
+            this.rootCheck = this._io.readBytes(0);
         }
         this.root = new NamedTag(this._io, this, _root);
     }
@@ -538,13 +534,16 @@ public class MinecraftNbt extends KaitaiStruct {
         this._io.seek(0);
         this.rootType = Tag.byId(this._io.readU1());
         this._io.seek(_pos);
+        if (!(rootType() == Tag.COMPOUND)) {
+            throw new KaitaiStream.ValidationNotEqualError(Tag.COMPOUND, rootType(), _io(), "/instances/root_type");
+        }
         return this.rootType;
     }
-    private byte[] _unnamed0;
+    private byte[] rootCheck;
     private NamedTag root;
     private MinecraftNbt _root;
     private KaitaiStruct _parent;
-    public byte[] _unnamed0() { return _unnamed0; }
+    public byte[] rootCheck() { return rootCheck; }
     public NamedTag root() { return root; }
     public MinecraftNbt _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }

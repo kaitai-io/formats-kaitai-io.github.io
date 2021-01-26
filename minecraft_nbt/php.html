@@ -246,6 +246,11 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Minecraft NBT (Named Binary Tag) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -261,7 +266,17 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="lua.html" title="Minecraft NBT (Named Binary Tag) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
                 <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Minecraft NBT (Named Binary Tag) parsing Perl library">Perl</a></li>
                 
                 
                 <li class="active">
@@ -389,10 +404,8 @@ are replaced or ignored.</p>
         <span class="p">}</span>
 
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__unnamed0</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
-            <span class="nv">$_</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">unnamed0</span><span class="p">();</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rootType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">))</span> <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationExprError</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">unnamed0</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rootType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">END</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">false</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootCheck</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_root</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\MinecraftNbt\NamedTag</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
         <span class="p">}</span>
@@ -404,11 +417,14 @@ are replaced or ignored.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootType</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rootType</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="nx">\MinecraftNbt\Tag</span><span class="o">::</span><span class="na">COMPOUND</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rootType</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/instances/root_type&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootType</span><span class="p">;</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m__unnamed0</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_rootCheck</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_root</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">_unnamed0</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__unnamed0</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">rootCheck</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rootCheck</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_root</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>

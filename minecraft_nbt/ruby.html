@@ -246,6 +246,11 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Minecraft NBT (Named Binary Tag) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -261,7 +266,17 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="lua.html" title="Minecraft NBT (Named Binary Tag) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
                 <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Minecraft NBT (Named Binary Tag) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
@@ -304,7 +319,7 @@ are replaced or ignored.</p>
 <p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">root</span> <span class="c1"># =&gt; get root</span>
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">root_check</span> <span class="c1"># =&gt; get root check</span>
 </pre></div>
 
     </div>
@@ -438,9 +453,9 @@ are replaced or ignored.</p>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">_read</span>
-    <span class="vi">@_unnamed0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="n">_</span> <span class="o">=</span> <span class="n">unnamed_0</span>
-    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationExprError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">unnamed_0</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root_type</span> <span class="o">==</span> <span class="ss">:tag_compound</span>
+    <span class="k">if</span>  <span class="p">((</span><span class="n">root_type</span> <span class="o">==</span> <span class="ss">:tag_end</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="kp">false</span><span class="p">))</span> 
+      <span class="vi">@root_check</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">end</span>
     <span class="vi">@root</span> <span class="o">=</span> <span class="no">NamedTag</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -642,9 +657,10 @@ are replaced or ignored.</p>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="vi">@root_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">TAG</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
     <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">:tag_compound</span><span class="p">,</span> <span class="n">root_type</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/instances/root_type&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">root_type</span> <span class="o">==</span> <span class="ss">:tag_compound</span>
     <span class="vi">@root_type</span>
   <span class="k">end</span>
-  <span class="kp">attr_reader</span> <span class="ss">:_unnamed0</span>
+  <span class="kp">attr_reader</span> <span class="ss">:root_check</span>
   <span class="kp">attr_reader</span> <span class="ss">:root</span>
 <span class="k">end</span>
 </pre></div>

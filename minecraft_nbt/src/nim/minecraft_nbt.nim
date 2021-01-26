@@ -3,7 +3,7 @@ import options
 
 type
   MinecraftNbt* = ref object of KaitaiStruct
-    `unnamed0`*: seq[byte]
+    `rootCheck`*: seq[byte]
     `root`*: MinecraftNbt_NamedTag
     `parent`*: KaitaiStruct
     `rootTypeInst`*: MinecraftNbt_Tag
@@ -154,8 +154,9 @@ proc read*(_: typedesc[MinecraftNbt], io: KaitaiStream, root: KaitaiStruct, pare
   this.root = root
   this.parent = parent
 
-  let unnamed0Expr = this.io.readBytes(int(0))
-  this.unnamed0 = unnamed0Expr
+  if  ((this.rootType == minecraft_nbt.end) and (false)) :
+    let rootCheckExpr = this.io.readBytes(int(0))
+    this.rootCheck = rootCheckExpr
   let rootExpr = MinecraftNbt_NamedTag.read(this.io, this.root, this)
   this.root = rootExpr
 

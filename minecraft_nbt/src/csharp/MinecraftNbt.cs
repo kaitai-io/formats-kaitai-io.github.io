@@ -118,13 +118,8 @@ namespace Kaitai
         }
         private void _read()
         {
-            __unnamed0 = m_io.ReadBytes(0);
-            {
-                byte[] M_ = Unnamed0;
-                if (!(RootType == Tag.Compound))
-                {
-                    throw new ValidationExprError(Unnamed0, M_Io, "/seq/0");
-                }
+            if ( ((RootType == Tag.End) && (false)) ) {
+                _rootCheck = m_io.ReadBytes(0);
             }
             _root = new NamedTag(m_io, this, m_root);
         }
@@ -516,14 +511,18 @@ namespace Kaitai
                 _rootType = ((Tag) m_io.ReadU1());
                 m_io.Seek(_pos);
                 f_rootType = true;
+                if (!(RootType == Tag.Compound))
+                {
+                    throw new ValidationNotEqualError(Tag.Compound, RootType, M_Io, "/instances/root_type");
+                }
                 return _rootType;
             }
         }
-        private byte[] __unnamed0;
+        private byte[] _rootCheck;
         private NamedTag _root;
         private MinecraftNbt m_root;
         private KaitaiStruct m_parent;
-        public byte[] Unnamed_0 { get { return __unnamed0; } }
+        public byte[] RootCheck { get { return _rootCheck; } }
         public NamedTag Root { get { return _root; } }
         public MinecraftNbt M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }

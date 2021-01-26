@@ -246,6 +246,11 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Minecraft NBT (Named Binary Tag) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -259,9 +264,19 @@ are replaced or ignored.</p>
                 <a href="javascript.html" title="Minecraft NBT (Named Binary Tag) parsing JavaScript library">JavaScript</a></li>
                 
                 
+                <li>
+                
+                <a href="lua.html" title="Minecraft NBT (Named Binary Tag) parsing Lua library">Lua</a></li>
+                
+                
                 <li class="active">
                 
                 <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Minecraft NBT (Named Binary Tag) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
@@ -311,7 +326,7 @@ are replaced or ignored.</p>
 
 <span class="k">type</span>
   <span class="n">MinecraftNbt</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">unnamed0</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rootCheck</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">root</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_NamedTag</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">rootTypeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">MinecraftNbt_Tag</span>
@@ -462,8 +477,9 @@ are replaced or ignored.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
   <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">unnamed0Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">unnamed0</span> <span class="o">=</span> <span class="n">unnamed0Expr</span>
+  <span class="k">if</span>  <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">rootType</span> <span class="o">==</span> <span class="n">minecraft_nbt</span><span class="p">.</span><span class="k">end</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="kp">false</span><span class="p">))</span> <span class="p">:</span>
+    <span class="k">let</span> <span class="n">rootCheckExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">rootCheck</span> <span class="o">=</span> <span class="n">rootCheckExpr</span>
   <span class="k">let</span> <span class="n">rootExpr</span> <span class="o">=</span> <span class="n">MinecraftNbt_NamedTag</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">rootExpr</span>
 

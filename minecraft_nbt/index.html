@@ -246,6 +246,11 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="go.html" title="Minecraft NBT (Named Binary Tag) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
                 <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -261,7 +266,17 @@ are replaced or ignored.</p>
                 
                 <li>
                 
+                <a href="lua.html" title="Minecraft NBT (Named Binary Tag) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
                 <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Minecraft NBT (Named Binary Tag) parsing Perl library">Perl</a></li>
                 
                 
                 <li>
@@ -385,9 +400,12 @@ are replaced or ignored.</p>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
   <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://minecraft.gamepedia.com/NBT_format</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
-    <span class="nt">valid</span><span class="p">:</span>
-      <span class="nt">expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_type == tag::compound</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_check</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_type == tag::end and false</span> <span class="c1"># force evaluation of root_type&#39;s `valid` check</span>
+    <span class="nt">-affected-by</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/kaitai-io/kaitai_struct_formats/pull/404#discussion_r564852108</span>
+    <span class="c1"># valid:</span>
+    <span class="c1">#   expr: root_type == tag::compound # as of KS 0.9 does not compile for Go and Lua</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">named_tag</span>
 <span class="nt">instances</span><span class="p">:</span>
@@ -395,6 +413,7 @@ are replaced or ignored.</p>
     <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
     <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
+    <span class="nt">valid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag::compound</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">named_tag</span><span class="p">:</span>
     <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;TAG_{type}(&quot;{name.data}&quot;):</span><span class="nv"> </span><span class="s">{payload:dec}&#39;</span>

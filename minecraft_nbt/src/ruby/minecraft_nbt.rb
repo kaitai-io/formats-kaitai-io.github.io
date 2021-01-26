@@ -104,9 +104,9 @@ class MinecraftNbt < Kaitai::Struct::Struct
   end
 
   def _read
-    @_unnamed0 = @_io.read_bytes(0)
-    _ = unnamed_0
-    raise Kaitai::Struct::ValidationExprError.new(unnamed_0, _io, "/seq/0") if not root_type == :tag_compound
+    if  ((root_type == :tag_end) && (false)) 
+      @root_check = @_io.read_bytes(0)
+    end
     @root = NamedTag.new(@_io, self, @_root)
     self
   end
@@ -308,8 +308,9 @@ class MinecraftNbt < Kaitai::Struct::Struct
     @_io.seek(0)
     @root_type = Kaitai::Struct::Stream::resolve_enum(TAG, @_io.read_u1)
     @_io.seek(_pos)
+    raise Kaitai::Struct::ValidationNotEqualError.new(:tag_compound, root_type, _io, "/instances/root_type") if not root_type == :tag_compound
     @root_type
   end
-  attr_reader :_unnamed0
+  attr_reader :root_check
   attr_reader :root
 end

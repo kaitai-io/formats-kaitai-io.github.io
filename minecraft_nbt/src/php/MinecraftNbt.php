@@ -81,10 +81,8 @@ namespace {
         }
 
         private function _read() {
-            $this->_m__unnamed0 = $this->_io->readBytes(0);
-            $_ = $this->unnamed0();
-            if (!($this->rootType() == \MinecraftNbt\Tag::COMPOUND)) {
-                throw new \Kaitai\Struct\Error\ValidationExprError($this->unnamed0(), $this->_io(), "/seq/0");
+            if ( (($this->rootType() == \MinecraftNbt\Tag::END) && (false)) ) {
+                $this->_m_rootCheck = $this->_io->readBytes(0);
             }
             $this->_m_root = new \MinecraftNbt\NamedTag($this->_io, $this, $this->_root);
         }
@@ -96,11 +94,14 @@ namespace {
             $this->_io->seek(0);
             $this->_m_rootType = $this->_io->readU1();
             $this->_io->seek($_pos);
+            if (!($this->rootType() == \MinecraftNbt\Tag::COMPOUND)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(\MinecraftNbt\Tag::COMPOUND, $this->rootType(), $this->_io(), "/instances/root_type");
+            }
             return $this->_m_rootType;
         }
-        protected $_m__unnamed0;
+        protected $_m_rootCheck;
         protected $_m_root;
-        public function _unnamed0() { return $this->_m__unnamed0; }
+        public function rootCheck() { return $this->_m_rootCheck; }
         public function root() { return $this->_m_root; }
     }
 }

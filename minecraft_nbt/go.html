@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Minecraft NBT (Named Binary Tag): Go parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../index.html">Format Gallery</a></li>
+        <li>Game Data Files</li>
+        <li class="active">Minecraft NBT (Named Binary Tag)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Minecraft NBT (Named Binary Tag):
+            
+            Go parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A structured binary format native to Minecraft for saving game data and transferring
+it over the network (in multiplayer), such as player data
+(<a href="https://minecraft.gamepedia.com/Player.dat_format"><code>&lt;player&gt;.dat</code></a>; contains
+e.g. player's inventory and location), saved worlds
+(<a href="https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format"><code>level.dat</code></a> and <a href="https://minecraft.gamepedia.com/Chunk_format#NBT_structure">Chunk format</a>),
+list of saved multiplayer servers
+(<a href="https://minecraft.gamepedia.com/Servers.dat_format"><code>servers.dat</code></a>) and so on -
+see <a href="https://minecraft.gamepedia.com/NBT_format#Uses">https://minecraft.gamepedia.com/NBT_format#Uses</a>.</p>
+<p>The entire file should be <em>gzip</em>-compressed (in accordance with the original
+specification <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">NBT.txt</a> by Notch), but can also be compressed with <em>zlib</em> or uncompressed.</p>
+<p>This spec can only handle uncompressed NBT data, so be sure to first detect
+what type of data you are dealing with. You can use the Unix <code>file</code> command
+to do this:</p>
+<pre><code class="language-shell">file --brief --mime-type input-unknown.nbt
+</code></pre>
+<p>If it says:</p>
+<ul>
+<li><code>application/gzip</code>, you can decompress it by
+<ul>
+<li><code>gunzip -c input-gzip.nbt &gt; output.nbt</code> or</li>
+<li><code>python3 -c &quot;import sys, gzip; sys.stdout.buffer.write( gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt</code></li>
+</ul>
+</li>
+<li><code>application/zlib</code>, you can use
+<ul>
+<li><code>openssl zlib -d -in input.nbt.zlib -out output.nbt</code> (does not work on most systems)</li>
+<li><code>python3 -c &quot;import sys, zlib; sys.stdout.buffer.write( zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt</code></li>
+</ul>
+</li>
+<li>something else (especially <code>image/x-pcx</code> and <code>application/octet-stream</code>),
+it is most likely already uncompressed.</li>
+</ul>
+<p>The file <code>output.nbt</code> generated by one of the above commands can already be
+processed with this Kaitai Struct specification.</p>
+<p>This spec <strong>only</strong> implements the Java edition format. There is also
+a <a href="https://wiki.vg/NBT#Bedrock_edition">Bedrock edition</a> NBT format,
+which uses little-endian encoding and has a few other differences, but it isn't
+as popular as the Java edition format.</p>
+<p><strong>Implementation note:</strong> strings in <code>TAG_String</code> are incorrectly decoded with
+standard UTF-8, while they are encoded in <a href="https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8"><strong>Modified UTF-8</strong></a> (MUTF-8). That's because MUTF-8 is usually not supported natively by most target
+languages, and thus one must use external libraries to achieve a fully-compliant
+decoder. But decoding in standard UTF-8 is still better than nothing, and
+it usually works fine.</p>
+<p>All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are
+U+0000 (<em>NUL</em>), U+D800-U+DFFF (<em>High</em> and <em>Low Surrogates</em>) and U+10000-U+10FFFF
+(<em>Supplementary</em> Planes; includes e.g. emoticons, pictograms).
+A <em>MUTF-8</em>-encoded string containing these code points cannot be successfully
+decoded as UTF-8. The behavior in this case depends on the target language -
+usually an exception is thrown, or the bytes that are not valid UTF-8
+are replaced or ignored.</p>
+<hr />
+<p>Sample files:</p>
+<ul>
+<li><a href="https://wiki.vg/NBT#Download">https://wiki.vg/NBT#Download</a></li>
+<li><a href="https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat">https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat</a></li>
+<li><a href="https://github.com/chmod222/cNBT/tree/3f74b69/testdata">https://github.com/chmod222/cNBT/tree/3f74b69/testdata</a></li>
+<li><a href="https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests">https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests</a></li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        Minecraft
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["nbt", "dat"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Minecraft_NBT_format">Minecraft NBT format in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Minecraft NBT (Named Binary Tag)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Minecraft NBT (Named Binary Tag) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Minecraft NBT (Named Binary Tag) parsing C# library">C#</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="go.html" title="Minecraft NBT (Named Binary Tag) parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Minecraft NBT (Named Binary Tag) parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Minecraft NBT (Named Binary Tag) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Minecraft NBT (Named Binary Tag) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Minecraft NBT (Named Binary Tag) parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Minecraft NBT (Named Binary Tag) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Minecraft NBT (Named Binary Tag) parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Minecraft NBT (Named Binary Tag) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Minecraft NBT (Named Binary Tag) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Minecraft NBT (Named Binary Tag) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Go source code to parse Minecraft NBT (Named Binary Tag)
+            
+        </h2>
+
+        
+
+        <h3>minecraft_nbt.go</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/go/minecraft_nbt.go" download="minecraft_nbt.go" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1">// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="kn">import</span> <span class="p">(</span>
+	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
+	<span class="s">&quot;io&quot;</span>
+<span class="p">)</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * A structured binary format native to Minecraft for saving game data and transferring</span>
+<span class="cm"> * it over the network (in multiplayer), such as player data</span>
+<span class="cm"> * ([`&lt;player&gt;.dat`](https://minecraft.gamepedia.com/Player.dat_format); contains</span>
+<span class="cm"> * e.g. player&#39;s inventory and location), saved worlds</span>
+<span class="cm"> * ([`level.dat`](</span>
+<span class="cm"> *   https://minecraft.gamepedia.com/Java_Edition_level_format#level.dat_format</span>
+<span class="cm"> * ) and [Chunk format](https://minecraft.gamepedia.com/Chunk_format#NBT_structure)),</span>
+<span class="cm"> * list of saved multiplayer servers</span>
+<span class="cm"> * ([`servers.dat`](https://minecraft.gamepedia.com/Servers.dat_format)) and so on -</span>
+<span class="cm"> * see &lt;https://minecraft.gamepedia.com/NBT_format#Uses&gt;.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The entire file should be _gzip_-compressed (in accordance with the original</span>
+<span class="cm"> * specification [NBT.txt](</span>
+<span class="cm"> *   https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt</span>
+<span class="cm"> * ) by Notch), but can also be compressed with _zlib_ or uncompressed.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This spec can only handle uncompressed NBT data, so be sure to first detect</span>
+<span class="cm"> * what type of data you are dealing with. You can use the Unix `file` command</span>
+<span class="cm"> * to do this:</span>
+<span class="cm"> * </span>
+<span class="cm"> * ```shell</span>
+<span class="cm"> * file --brief --mime-type input-unknown.nbt</span>
+<span class="cm"> * ```</span>
+<span class="cm"> * </span>
+<span class="cm"> * If it says:</span>
+<span class="cm"> * </span>
+<span class="cm"> *   * `application/gzip`, you can decompress it by</span>
+<span class="cm"> *     * `gunzip -c input-gzip.nbt &gt; output.nbt` or</span>
+<span class="cm"> *     * `python3 -c &quot;import sys, gzip; sys.stdout.buffer.write(</span>
+<span class="cm"> *       gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>
+<span class="cm"> *   * `application/zlib`, you can use</span>
+<span class="cm"> *     * `openssl zlib -d -in input.nbt.zlib -out output.nbt` (does not work on most systems)</span>
+<span class="cm"> *     * `python3 -c &quot;import sys, zlib; sys.stdout.buffer.write(</span>
+<span class="cm"> *       zlib.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-zlib.nbt &gt; output.nbt`</span>
+<span class="cm"> *   * something else (especially `image/x-pcx` and `application/octet-stream`),</span>
+<span class="cm"> *     it is most likely already uncompressed.</span>
+<span class="cm"> * </span>
+<span class="cm"> * The file `output.nbt` generated by one of the above commands can already be</span>
+<span class="cm"> * processed with this Kaitai Struct specification.</span>
+<span class="cm"> * </span>
+<span class="cm"> * This spec **only** implements the Java edition format. There is also</span>
+<span class="cm"> * a [Bedrock edition](https://wiki.vg/NBT#Bedrock_edition) NBT format,</span>
+<span class="cm"> * which uses little-endian encoding and has a few other differences, but it isn&#39;t</span>
+<span class="cm"> * as popular as the Java edition format.</span>
+<span class="cm"> * </span>
+<span class="cm"> * **Implementation note:** strings in `TAG_String` are incorrectly decoded with</span>
+<span class="cm"> * standard UTF-8, while they are encoded in [**Modified UTF-8**](</span>
+<span class="cm"> *   https://docs.oracle.com/javase/8/docs/api/java/io/DataInput.html#modified-utf-8</span>
+<span class="cm"> * ) (MUTF-8). That&#39;s because MUTF-8 is usually not supported natively by most target</span>
+<span class="cm"> * languages, and thus one must use external libraries to achieve a fully-compliant</span>
+<span class="cm"> * decoder. But decoding in standard UTF-8 is still better than nothing, and</span>
+<span class="cm"> * it usually works fine.</span>
+<span class="cm"> * </span>
+<span class="cm"> * All Unicode codepoints with incompatible representations in MUTF-8 and UTF-8 are</span>
+<span class="cm"> * U+0000 (_NUL_), U+D800-U+DFFF (_High_ and _Low Surrogates_) and U+10000-U+10FFFF</span>
+<span class="cm"> * (_Supplementary_ Planes; includes e.g. emoticons, pictograms).</span>
+<span class="cm"> * A _MUTF-8_-encoded string containing these code points cannot be successfully</span>
+<span class="cm"> * decoded as UTF-8. The behavior in this case depends on the target language -</span>
+<span class="cm"> * usually an exception is thrown, or the bytes that are not valid UTF-8</span>
+<span class="cm"> * are replaced or ignored.</span>
+<span class="cm"> * </span>
+<span class="cm"> * ---</span>
+<span class="cm"> * </span>
+<span class="cm"> * Sample files:</span>
+<span class="cm"> * </span>
+<span class="cm"> *   * &lt;https://wiki.vg/NBT#Download&gt;</span>
+<span class="cm"> *   * &lt;https://github.com/twoolie/NBT/blob/f9e892e/tests/world_test/data/scoreboard.dat&gt;</span>
+<span class="cm"> *   * &lt;https://github.com/chmod222/cNBT/tree/3f74b69/testdata&gt;</span>
+<span class="cm"> *   * &lt;https://github.com/PistonDevelopers/hematite_nbt/tree/0b85f89/tests&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://wiki.vg/NBT&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://minecraft.gamepedia.com/NBT_format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="kd">type</span> <span class="nx">MinecraftNbt_Tag</span> <span class="kt">int</span>
+<span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">MinecraftNbt_Tag__End</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="nx">MinecraftNbt_Tag__Byte</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">MinecraftNbt_Tag__Short</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">MinecraftNbt_Tag__Int</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">MinecraftNbt_Tag__Long</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">MinecraftNbt_Tag__Float</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">5</span>
+	<span class="nx">MinecraftNbt_Tag__Double</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">6</span>
+	<span class="nx">MinecraftNbt_Tag__ByteArray</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">7</span>
+	<span class="nx">MinecraftNbt_Tag__String</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">8</span>
+	<span class="nx">MinecraftNbt_Tag__List</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">9</span>
+	<span class="nx">MinecraftNbt_Tag__Compound</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">10</span>
+	<span class="nx">MinecraftNbt_Tag__IntArray</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">11</span>
+	<span class="nx">MinecraftNbt_Tag__LongArray</span> <span class="nx">MinecraftNbt_Tag</span> <span class="p">=</span> <span class="mi">12</span>
+<span class="p">)</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">RootCheck</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">Root</span> <span class="o">*</span><span class="nx">MinecraftNbt_NamedTag</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_rootType</span> <span class="kt">bool</span>
+	<span class="nx">rootType</span> <span class="nx">MinecraftNbt_Tag</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp1</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RootType</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nx">tmp1</span> <span class="o">==</span> <span class="nx">MinecraftNbt_Tag__End</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="kc">false</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp2</span> <span class="p">=</span> <span class="nx">tmp2</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">RootCheck</span> <span class="p">=</span> <span class="nx">tmp2</span>
+	<span class="p">}</span>
+	<span class="nx">tmp3</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_NamedTag</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp3</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Root</span> <span class="p">=</span> <span class="nx">tmp3</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="nx">RootType</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_rootType</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">rootType</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp4</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">rootType</span> <span class="p">=</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">(</span><span class="nx">tmp4</span><span class="p">)</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_rootType</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">tmp5</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RootType</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RootType</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">tmp6</span> <span class="o">==</span> <span class="nx">MinecraftNbt_Tag__Compound</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="nx">MinecraftNbt_Tag__Compound</span><span class="p">,</span> <span class="nx">tmp5</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/instances/root_type&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_rootType</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">rootType</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_TagLongArray</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">NumTags</span> <span class="kt">int32</span>
+	<span class="nx">Tags</span> <span class="p">[]</span><span class="kt">int64</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_tagsType</span> <span class="kt">bool</span>
+	<span class="nx">tagsType</span> <span class="nx">MinecraftNbt_Tag</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_TagLongArray</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagLongArray</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_TagLongArray</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagLongArray</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp7</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumTags</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp7</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int64</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumTags</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">{</span>
+		<span class="nx">tmp8</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS8be</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp8</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagLongArray</span><span class="p">)</span> <span class="nx">TagsType</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_tagsType</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">tagsType</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">tagsType</span> <span class="p">=</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">(</span><span class="nx">MinecraftNbt_Tag__Long</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_tagsType</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">tagsType</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_TagByteArray</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">LenData</span> <span class="kt">int32</span>
+	<span class="nx">Data</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_TagByteArray</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagByteArray</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_TagByteArray</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagByteArray</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp9</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp9</span><span class="p">)</span>
+	<span class="nx">tmp10</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp10</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nx">tmp10</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_TagIntArray</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">NumTags</span> <span class="kt">int32</span>
+	<span class="nx">Tags</span> <span class="p">[]</span><span class="kt">int32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_tagsType</span> <span class="kt">bool</span>
+	<span class="nx">tagsType</span> <span class="nx">MinecraftNbt_Tag</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_TagIntArray</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagIntArray</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_TagIntArray</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagIntArray</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp11</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumTags</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp11</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kt">int32</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumTags</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">{</span>
+		<span class="nx">tmp12</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp12</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagIntArray</span><span class="p">)</span> <span class="nx">TagsType</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_tagsType</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">tagsType</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">tagsType</span> <span class="p">=</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">(</span><span class="nx">MinecraftNbt_Tag__Int</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_tagsType</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">tagsType</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_TagList</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">TagsType</span> <span class="nx">MinecraftNbt_Tag</span>
+	<span class="nx">NumTags</span> <span class="kt">int32</span>
+	<span class="nx">Tags</span> <span class="p">[]</span><span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_TagList</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagList</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_TagList</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagList</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp13</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TagsType</span> <span class="p">=</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">(</span><span class="nx">tmp13</span><span class="p">)</span>
+	<span class="nx">tmp14</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumTags</span> <span class="p">=</span> <span class="nb">int32</span><span class="p">(</span><span class="nx">tmp14</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="kd">interface</span><span class="p">{},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumTags</span><span class="p">)</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">{</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">TagsType</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__LongArray</span><span class="p">:</span>
+			<span class="nx">tmp15</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagLongArray</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp15</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp15</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Compound</span><span class="p">:</span>
+			<span class="nx">tmp16</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagCompound</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp16</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Double</span><span class="p">:</span>
+			<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadF8be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp17</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__List</span><span class="p">:</span>
+			<span class="nx">tmp18</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagList</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp18</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp18</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Float</span><span class="p">:</span>
+			<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadF4be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp19</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Short</span><span class="p">:</span>
+			<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS2be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp20</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Int</span><span class="p">:</span>
+			<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp21</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__ByteArray</span><span class="p">:</span>
+			<span class="nx">tmp22</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagByteArray</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp22</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp22</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Byte</span><span class="p">:</span>
+			<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS1</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp23</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__IntArray</span><span class="p">:</span>
+			<span class="nx">tmp24</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagIntArray</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp24</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp24</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__String</span><span class="p">:</span>
+			<span class="nx">tmp25</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagString</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp25</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp25</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Long</span><span class="p">:</span>
+			<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS8be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp26</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_TagString</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">LenData</span> <span class="kt">uint16</span>
+	<span class="nx">Data</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_TagString</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagString</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_TagString</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagString</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenData</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp28</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * unsigned according to https://wiki.vg/NBT#Specification</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_TagCompound</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Tags</span> <span class="p">[]</span><span class="o">*</span><span class="nx">MinecraftNbt_NamedTag</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_dumpNumTags</span> <span class="kt">bool</span>
+	<span class="nx">dumpNumTags</span> <span class="kt">int</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_TagCompound</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagCompound</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_TagCompound</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagCompound</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">tmp29</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_NamedTag</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp29</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">_it</span> <span class="o">:=</span> <span class="nx">tmp29</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">,</span> <span class="nx">_it</span><span class="p">)</span>
+		<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">_it</span><span class="p">.</span><span class="nx">IsTagEnd</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">tmp30</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagCompound</span><span class="p">)</span> <span class="nx">DumpNumTags</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_dumpNumTags</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">dumpNumTags</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="kd">var</span> <span class="nx">tmp31</span> <span class="kt">int8</span><span class="p">;</span>
+	<span class="nx">tmp32</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span>
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">tmp32</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="nx">IsTagEnd</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">tmp33</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+		<span class="nx">tmp31</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+		<span class="nx">tmp31</span> <span class="p">=</span> <span class="mi">0</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">dumpNumTags</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Tags</span><span class="p">)</span> <span class="o">-</span> <span class="nx">tmp31</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_dumpNumTags</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">dumpNumTags</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">type</span> <span class="nx">MinecraftNbt_NamedTag</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Type</span> <span class="nx">MinecraftNbt_Tag</span>
+	<span class="nx">Name</span> <span class="o">*</span><span class="nx">MinecraftNbt_TagString</span>
+	<span class="nx">Payload</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span>
+	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_f_isTagEnd</span> <span class="kt">bool</span>
+	<span class="nx">isTagEnd</span> <span class="kt">bool</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewMinecraftNbt_NamedTag</span><span class="p">()</span> <span class="o">*</span><span class="nx">MinecraftNbt_NamedTag</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">MinecraftNbt_NamedTag</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_NamedTag</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="kd">interface</span><span class="p">{},</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">MinecraftNbt</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Type</span> <span class="p">=</span> <span class="nx">MinecraftNbt_Tag</span><span class="p">(</span><span class="nx">tmp34</span><span class="p">)</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IsTagEnd</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(!(</span><span class="nx">tmp35</span><span class="p">))</span> <span class="p">{</span>
+		<span class="nx">tmp36</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagString</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp36</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Name</span> <span class="p">=</span> <span class="nx">tmp36</span>
+	<span class="p">}</span>
+	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IsTagEnd</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(!(</span><span class="nx">tmp37</span><span class="p">))</span> <span class="p">{</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__LongArray</span><span class="p">:</span>
+			<span class="nx">tmp38</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagLongArray</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp38</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp38</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Compound</span><span class="p">:</span>
+			<span class="nx">tmp39</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagCompound</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp39</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp39</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Double</span><span class="p">:</span>
+			<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadF8be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp40</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__List</span><span class="p">:</span>
+			<span class="nx">tmp41</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagList</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp41</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp41</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Float</span><span class="p">:</span>
+			<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadF4be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp42</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Short</span><span class="p">:</span>
+			<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS2be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp43</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Int</span><span class="p">:</span>
+			<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS4be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp44</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__ByteArray</span><span class="p">:</span>
+			<span class="nx">tmp45</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagByteArray</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp45</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp45</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Byte</span><span class="p">:</span>
+			<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS1</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp46</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__IntArray</span><span class="p">:</span>
+			<span class="nx">tmp47</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagIntArray</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp47</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp47</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__String</span><span class="p">:</span>
+			<span class="nx">tmp48</span> <span class="o">:=</span> <span class="nx">NewMinecraftNbt_TagString</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp48</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp48</span>
+		<span class="k">case</span> <span class="nx">MinecraftNbt_Tag__Long</span><span class="p">:</span>
+			<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadS8be</span><span class="p">()</span>
+			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+				<span class="k">return</span> <span class="nx">err</span>
+			<span class="p">}</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">Payload</span> <span class="p">=</span> <span class="nx">tmp49</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">MinecraftNbt_NamedTag</span><span class="p">)</span> <span class="nx">IsTagEnd</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isTagEnd</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isTagEnd</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">isTagEnd</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Type</span> <span class="o">==</span> <span class="nx">MinecraftNbt_Tag__End</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_isTagEnd</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isTagEnd</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">formats repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
