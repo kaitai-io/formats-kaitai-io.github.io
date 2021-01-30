@@ -75,39 +75,30 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{byte1} = $self->{_io}->read_u1();
-    if ($self->len() >= 2) {
-        $self->{byte2} = $self->{_io}->read_u1();
-    }
-    if ($self->len() >= 3) {
-        $self->{byte3} = $self->{_io}->read_u1();
-    }
-    if ($self->len() >= 4) {
-        $self->{byte4} = $self->{_io}->read_u1();
-    }
+    $self->{bytes} = $self->{_io}->read_bytes($self->len_bytes());
 }
 
 sub raw1 {
     my ($self) = @_;
     return $self->{raw1} if ($self->{raw1});
-    $self->{raw1} = ($self->byte1() & ($self->len() == 1 ? 127 : ($self->len() == 2 ? 31 : ($self->len() == 3 ? 15 : ($self->len() == 4 ? 7 : 0)))));
+    if ($self->len_bytes() >= 2) {
+        $self->{raw1} = (@{$self->bytes()}[1] & 63);
+    }
     return $self->{raw1};
 }
 
-sub raw4 {
+sub len_bytes {
     my ($self) = @_;
-    return $self->{raw4} if ($self->{raw4});
-    if ($self->len() >= 4) {
-        $self->{raw4} = ($self->byte4() & 63);
-    }
-    return $self->{raw4};
+    return $self->{len_bytes} if ($self->{len_bytes});
+    $self->{len_bytes} = (($self->byte0() & 128) == 0 ? 1 : (($self->byte0() & 224) == 192 ? 2 : (($self->byte0() & 240) == 224 ? 3 : (($self->byte0() & 248) == 240 ? 4 : -1))));
+    return $self->{len_bytes};
 }
 
 sub raw3 {
     my ($self) = @_;
     return $self->{raw3} if ($self->{raw3});
-    if ($self->len() >= 3) {
-        $self->{raw3} = ($self->byte3() & 63);
+    if ($self->len_bytes() >= 4) {
+        $self->{raw3} = (@{$self->bytes()}[3] & 63);
     }
     return $self->{raw3};
 }
@@ -115,44 +106,44 @@ sub raw3 {
 sub value_as_int {
     my ($self) = @_;
     return $self->{value_as_int} if ($self->{value_as_int});
-    $self->{value_as_int} = ($self->len() == 1 ? $self->raw1() : ($self->len() == 2 ? (($self->raw1() << 6) | $self->raw2()) : ($self->len() == 3 ? ((($self->raw1() << 12) | ($self->raw2() << 6)) | $self->raw3()) : ($self->len() == 4 ? (((($self->raw1() << 18) | ($self->raw2() << 12)) | ($self->raw3() << 6)) | $self->raw4()) : -1))));
+    $self->{value_as_int} = ($self->len_bytes() == 1 ? $self->raw0() : ($self->len_bytes() == 2 ? (($self->raw0() << 6) | $self->raw1()) : ($self->len_bytes() == 3 ? ((($self->raw0() << 12) | ($self->raw1() << 6)) | $self->raw2()) : ($self->len_bytes() == 4 ? (((($self->raw0() << 18) | ($self->raw1() << 12)) | ($self->raw2() << 6)) | $self->raw3()) : -1))));
     return $self->{value_as_int};
+}
+
+sub raw0 {
+    my ($self) = @_;
+    return $self->{raw0} if ($self->{raw0});
+    $self->{raw0} = (@{$self->bytes()}[0] & ($self->len_bytes() == 1 ? 127 : ($self->len_bytes() == 2 ? 31 : ($self->len_bytes() == 3 ? 15 : ($self->len_bytes() == 4 ? 7 : 0)))));
+    return $self->{raw0};
+}
+
+sub byte0 {
+    my ($self) = @_;
+    return $self->{byte0} if ($self->{byte0});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek($self->ofs());
+    $self->{byte0} = $self->{_io}->read_u1();
+    $self->{_io}->seek($_pos);
+    return $self->{byte0};
 }
 
 sub raw2 {
     my ($self) = @_;
     return $self->{raw2} if ($self->{raw2});
-    if ($self->len() >= 2) {
-        $self->{raw2} = ($self->byte2() & 63);
+    if ($self->len_bytes() >= 3) {
+        $self->{raw2} = (@{$self->bytes()}[2] & 63);
     }
     return $self->{raw2};
 }
 
-sub len {
+sub bytes {
     my ($self) = @_;
-    return $self->{len} if ($self->{len});
-    $self->{len} = (($self->byte1() & 128) == 0 ? 1 : (($self->byte1() & 224) == 192 ? 2 : (($self->byte1() & 240) == 224 ? 3 : (($self->byte1() & 248) == 240 ? 4 : -1))));
-    return $self->{len};
+    return $self->{bytes};
 }
 
-sub byte1 {
+sub ofs {
     my ($self) = @_;
-    return $self->{byte1};
-}
-
-sub byte2 {
-    my ($self) = @_;
-    return $self->{byte2};
-}
-
-sub byte3 {
-    my ($self) = @_;
-    return $self->{byte3};
-}
-
-sub byte4 {
-    my ($self) = @_;
-    return $self->{byte4};
+    return $self->{ofs};
 }
 
 1;

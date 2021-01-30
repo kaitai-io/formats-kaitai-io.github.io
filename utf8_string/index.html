@@ -302,54 +302,52 @@ for educational / research purposes.</p>
   <span class="no">for educational / research purposes.</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">codepoints</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8_codepoint</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">utf8_codepoint(_io.pos)</span>
     <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">utf8_codepoint</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;U+{value_as_int:hex}&#39;</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
     <span class="nt">seq</span><span class="p">:</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte1</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte2</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len &gt;= 2</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte3</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len &gt;= 3</span>
-      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">byte4</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len &gt;= 4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_bytes</span>
     <span class="nt">instances</span><span class="p">:</span>
-      <span class="nt">len</span><span class="p">:</span>
+      <span class="nt">byte0</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+      <span class="nt">len_bytes</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">(byte1 &amp; 0b1000_0000 == 0) ? 1 :</span>
-          <span class="no">(byte1 &amp; 0b1110_0000 == 0b1100_0000) ? 2 :</span>
-          <span class="no">(byte1 &amp; 0b1111_0000 == 0b1110_0000) ? 3 :</span>
-          <span class="no">(byte1 &amp; 0b1111_1000 == 0b1111_0000) ? 4 :</span>
+          <span class="no">(byte0 &amp; 0b1000_0000 == 0) ? 1 :</span>
+          <span class="no">(byte0 &amp; 0b1110_0000 == 0b1100_0000) ? 2 :</span>
+          <span class="no">(byte0 &amp; 0b1111_0000 == 0b1110_0000) ? 3 :</span>
+          <span class="no">(byte0 &amp; 0b1111_1000 == 0b1111_0000) ? 4 :</span>
           <span class="no">-1</span>
-      <span class="nt">raw1</span><span class="p">:</span>
+      <span class="nt">raw0</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
-          <span class="no">byte1 &amp; (</span>
-            <span class="no">len == 1 ? 0b0111_1111 :</span>
-            <span class="no">len == 2 ? 0b0001_1111 :</span>
-            <span class="no">len == 3 ? 0b0000_1111 :</span>
-            <span class="no">len == 4 ? 0b0000_0111 :</span>
+          <span class="no">bytes[0] &amp; (</span>
+            <span class="no">len_bytes == 1 ? 0b0111_1111 :</span>
+            <span class="no">len_bytes == 2 ? 0b0001_1111 :</span>
+            <span class="no">len_bytes == 3 ? 0b0000_1111 :</span>
+            <span class="no">len_bytes == 4 ? 0b0000_0111 :</span>
             <span class="no">0</span>
           <span class="no">)</span>
+      <span class="nt">raw1</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;bytes[1]</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0011_1111&#39;</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_bytes &gt;= 2</span>
       <span class="nt">raw2</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;byte2</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0011_1111&#39;</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len &gt;= 2</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;bytes[2]</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0011_1111&#39;</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_bytes &gt;= 3</span>
       <span class="nt">raw3</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;byte3</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0011_1111&#39;</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len &gt;= 3</span>
-      <span class="nt">raw4</span><span class="p">:</span>
-        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;byte4</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0011_1111&#39;</span>
-        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len &gt;= 4</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;bytes[3]</span><span class="nv"> </span><span class="s">&amp;</span><span class="nv"> </span><span class="s">0b0011_1111&#39;</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_bytes &gt;= 4</span>
       <span class="nt">value_as_int</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">&gt;</span>
-          <span class="no">len == 1 ? raw1 :</span>
-          <span class="no">len == 2 ? ((raw1 &lt;&lt; 6) | raw2) :</span>
-          <span class="no">len == 3 ? ((raw1 &lt;&lt; 12) | (raw2 &lt;&lt; 6) | raw3) :</span>
-          <span class="no">len == 4 ? ((raw1 &lt;&lt; 18) | (raw2 &lt;&lt; 12) | (raw3 &lt;&lt; 6) | raw4) :</span>
+          <span class="no">len_bytes == 1 ? raw0 :</span>
+          <span class="no">len_bytes == 2 ? ((raw0 &lt;&lt; 6) | raw1) :</span>
+          <span class="no">len_bytes == 3 ? ((raw0 &lt;&lt; 12) | (raw1 &lt;&lt; 6) | raw2) :</span>
+          <span class="no">len_bytes == 4 ? ((raw0 &lt;&lt; 18) | (raw1 &lt;&lt; 12) | (raw2 &lt;&lt; 6) | raw3) :</span>
           <span class="no">-1</span>
 </pre></div>
     </div>

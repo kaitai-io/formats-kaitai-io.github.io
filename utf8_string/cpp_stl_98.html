@@ -399,7 +399,7 @@ for educational / research purposes.</p>
 
     <span class="k">public</span><span class="o">:</span>
 
-        <span class="n">utf8_codepoint_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+        <span class="n">utf8_codepoint_t</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">p_ofs</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
 
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
@@ -411,22 +411,22 @@ for educational / research purposes.</p>
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">bool</span> <span class="n">f_raw1</span><span class="p">;</span>
         <span class="kt">int32_t</span> <span class="n">m_raw1</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_raw1</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_raw1</span><span class="p">()</span> <span class="p">{</span> <span class="n">raw1</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_raw1</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="kt">int32_t</span> <span class="n">raw1</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">f_raw4</span><span class="p">;</span>
-        <span class="kt">int32_t</span> <span class="n">m_raw4</span><span class="p">;</span>
-        <span class="kt">bool</span> <span class="n">n_raw4</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">f_len_bytes</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_len_bytes</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">_is_null_raw4</span><span class="p">()</span> <span class="p">{</span> <span class="n">raw4</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_raw4</span><span class="p">;</span> <span class="p">};</span>
-
-    <span class="k">private</span><span class="o">:</span>
-
-    <span class="k">public</span><span class="o">:</span>
-        <span class="kt">int32_t</span> <span class="n">raw4</span><span class="p">();</span>
+        <span class="kt">int32_t</span> <span class="n">len_bytes</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">bool</span> <span class="n">f_raw3</span><span class="p">;</span>
@@ -449,6 +449,20 @@ for educational / research purposes.</p>
         <span class="kt">int32_t</span> <span class="n">value_as_int</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_raw0</span><span class="p">;</span>
+        <span class="kt">int32_t</span> <span class="n">m_raw0</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">int32_t</span> <span class="n">raw0</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_byte0</span><span class="p">;</span>
+        <span class="kt">uint8_t</span> <span class="n">m_byte0</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">uint8_t</span> <span class="n">byte0</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
         <span class="kt">bool</span> <span class="n">f_raw2</span><span class="p">;</span>
         <span class="kt">int32_t</span> <span class="n">m_raw2</span><span class="p">;</span>
         <span class="kt">bool</span> <span class="n">n_raw2</span><span class="p">;</span>
@@ -462,43 +476,14 @@ for educational / research purposes.</p>
         <span class="kt">int32_t</span> <span class="n">raw2</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">f_len</span><span class="p">;</span>
-        <span class="kt">int32_t</span> <span class="n">m_len</span><span class="p">;</span>
-
-    <span class="k">public</span><span class="o">:</span>
-        <span class="kt">int32_t</span> <span class="n">len</span><span class="p">();</span>
-
-    <span class="k">private</span><span class="o">:</span>
-        <span class="kt">uint8_t</span> <span class="n">m_byte1</span><span class="p">;</span>
-        <span class="kt">uint8_t</span> <span class="n">m_byte2</span><span class="p">;</span>
-        <span class="kt">bool</span> <span class="n">n_byte2</span><span class="p">;</span>
-
-    <span class="k">public</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">_is_null_byte2</span><span class="p">()</span> <span class="p">{</span> <span class="n">byte2</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_byte2</span><span class="p">;</span> <span class="p">};</span>
-
-    <span class="k">private</span><span class="o">:</span>
-        <span class="kt">uint8_t</span> <span class="n">m_byte3</span><span class="p">;</span>
-        <span class="kt">bool</span> <span class="n">n_byte3</span><span class="p">;</span>
-
-    <span class="k">public</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">_is_null_byte3</span><span class="p">()</span> <span class="p">{</span> <span class="n">byte3</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_byte3</span><span class="p">;</span> <span class="p">};</span>
-
-    <span class="k">private</span><span class="o">:</span>
-        <span class="kt">uint8_t</span> <span class="n">m_byte4</span><span class="p">;</span>
-        <span class="kt">bool</span> <span class="n">n_byte4</span><span class="p">;</span>
-
-    <span class="k">public</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">_is_null_byte4</span><span class="p">()</span> <span class="p">{</span> <span class="n">byte4</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_byte4</span><span class="p">;</span> <span class="p">};</span>
-
-    <span class="k">private</span><span class="o">:</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_bytes</span><span class="p">;</span>
+        <span class="kt">uint64_t</span> <span class="n">m_ofs</span><span class="p">;</span>
         <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
         <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
-        <span class="kt">uint8_t</span> <span class="n">byte1</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_byte1</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint8_t</span> <span class="n">byte2</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_byte2</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint8_t</span> <span class="n">byte3</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_byte3</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kt">uint8_t</span> <span class="n">byte4</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_byte4</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">bytes</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bytes</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kt">uint64_t</span> <span class="n">ofs</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">};</span>
@@ -553,7 +538,7 @@ for educational / research purposes.</p>
     <span class="p">{</span>
         <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="n">m_codepoints</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">utf8_codepoint_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+            <span class="n">m_codepoints</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="k">new</span> <span class="n">utf8_codepoint_t</span><span class="p">(</span><span class="n">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">(),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
             <span class="n">i</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -572,15 +557,17 @@ for educational / research purposes.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="p">(</span><span class="kt">uint64_t</span> <span class="n">p_ofs</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">utf8_string_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">m_ofs</span> <span class="o">=</span> <span class="n">p_ofs</span><span class="p">;</span>
     <span class="n">f_raw1</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-    <span class="n">f_raw4</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_len_bytes</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_raw3</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_value_as_int</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_raw0</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_byte0</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_raw2</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-    <span class="n">f_len</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 
     <span class="k">try</span> <span class="p">{</span>
         <span class="n">_read</span><span class="p">();</span>
@@ -591,22 +578,7 @@ for educational / research purposes.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_byte1</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">n_byte2</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">n_byte2</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m_byte2</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="n">n_byte3</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">n_byte3</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m_byte3</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="n">n_byte4</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">n_byte4</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m_byte4</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="p">}</span>
+    <span class="n">m_bytes</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_bytes</span><span class="p">());</span>
 <span class="p">}</span>
 
 <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::~</span><span class="n">utf8_codepoint_t</span><span class="p">()</span> <span class="p">{</span>
@@ -614,41 +586,37 @@ for educational / research purposes.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_byte2</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_byte3</span><span class="p">)</span> <span class="p">{</span>
-    <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_byte4</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_byte0</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">raw1</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_raw1</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_raw1</span><span class="p">;</span>
-    <span class="n">m_raw1</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">127</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">31</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))))))));</span>
+    <span class="n">n_raw1</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_raw1</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_raw1</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+    <span class="p">}</span>
     <span class="n">f_raw1</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">m_raw1</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">raw4</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_raw4</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">m_raw4</span><span class="p">;</span>
-    <span class="n">n_raw4</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">n_raw4</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m_raw4</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte4</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
-    <span class="p">}</span>
-    <span class="n">f_raw4</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">m_raw4</span><span class="p">;</span>
+<span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">len_bytes</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_len_bytes</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_len_bytes</span><span class="p">;</span>
+    <span class="n">m_len_bytes</span> <span class="o">=</span> <span class="p">(((</span><span class="n">byte0</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="p">((((</span><span class="n">byte0</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="p">((((</span><span class="n">byte0</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">:</span> <span class="p">((((</span><span class="n">byte0</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">-1</span><span class="p">))))))));</span>
+    <span class="n">f_len_bytes</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_len_bytes</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">raw3</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_raw3</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_raw3</span><span class="p">;</span>
     <span class="n">n_raw3</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">n_raw3</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m_raw3</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte3</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="n">m_raw3</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="p">()[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="n">f_raw3</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">m_raw3</span><span class="p">;</span>
@@ -657,29 +625,40 @@ for educational / research purposes.</p>
 <span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">value_as_int</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_value_as_int</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_value_as_int</span><span class="p">;</span>
-    <span class="n">m_value_as_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">raw1</span><span class="p">())</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="p">(((</span><span class="n">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw2</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="p">((((</span><span class="n">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw3</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">?</span> <span class="p">(((((</span><span class="n">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw3</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw4</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(</span><span class="mi">-1</span><span class="p">))))))));</span>
+    <span class="n">m_value_as_int</span> <span class="o">=</span> <span class="p">((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">raw0</span><span class="p">())</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="p">(((</span><span class="n">raw0</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw1</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="p">((((</span><span class="n">raw0</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw2</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">?</span> <span class="p">(((((</span><span class="n">raw0</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw1</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw2</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw3</span><span class="p">()))</span> <span class="o">:</span> <span class="p">(</span><span class="mi">-1</span><span class="p">))))))));</span>
     <span class="n">f_value_as_int</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">m_value_as_int</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">raw0</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_raw0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_raw0</span><span class="p">;</span>
+    <span class="n">m_raw0</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="p">((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">127</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">31</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">15</span><span class="p">)</span> <span class="o">:</span> <span class="p">(((</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">7</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">)))))))));</span>
+    <span class="n">f_raw0</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_raw0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">uint8_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">byte0</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_byte0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_byte0</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs</span><span class="p">());</span>
+    <span class="n">m_byte0</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+    <span class="n">f_byte0</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_byte0</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">raw2</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_raw2</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_raw2</span><span class="p">;</span>
     <span class="n">n_raw2</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">len</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">len_bytes</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">3</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">n_raw2</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m_raw2</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte2</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
+        <span class="n">m_raw2</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="p">()[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="n">f_raw2</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">m_raw2</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="kt">int32_t</span> <span class="n">utf8_string_t</span><span class="o">::</span><span class="n">utf8_codepoint_t</span><span class="o">::</span><span class="n">len</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_len</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span>
-    <span class="n">m_len</span> <span class="o">=</span> <span class="p">(((</span><span class="n">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">:</span> <span class="p">((((</span><span class="n">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">:</span> <span class="p">((((</span><span class="n">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">:</span> <span class="p">((((</span><span class="n">byte1</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="mi">4</span><span class="p">)</span> <span class="o">:</span> <span class="p">(</span><span class="mi">-1</span><span class="p">))))))));</span>
-    <span class="n">f_len</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">m_len</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 

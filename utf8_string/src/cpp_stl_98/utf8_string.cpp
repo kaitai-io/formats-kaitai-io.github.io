@@ -20,7 +20,7 @@ void utf8_string_t::_read() {
     {
         int i = 0;
         while (!m__io->is_eof()) {
-            m_codepoints->push_back(new utf8_codepoint_t(m__io, this, m__root));
+            m_codepoints->push_back(new utf8_codepoint_t(_io()->pos(), m__io, this, m__root));
             i++;
         }
     }
@@ -39,15 +39,17 @@ void utf8_string_t::_clean_up() {
     }
 }
 
-utf8_string_t::utf8_codepoint_t::utf8_codepoint_t(kaitai::kstream* p__io, utf8_string_t* p__parent, utf8_string_t* p__root) : kaitai::kstruct(p__io) {
+utf8_string_t::utf8_codepoint_t::utf8_codepoint_t(uint64_t p_ofs, kaitai::kstream* p__io, utf8_string_t* p__parent, utf8_string_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    m_ofs = p_ofs;
     f_raw1 = false;
-    f_raw4 = false;
+    f_len_bytes = false;
     f_raw3 = false;
     f_value_as_int = false;
+    f_raw0 = false;
+    f_byte0 = false;
     f_raw2 = false;
-    f_len = false;
 
     try {
         _read();
@@ -58,22 +60,7 @@ utf8_string_t::utf8_codepoint_t::utf8_codepoint_t(kaitai::kstream* p__io, utf8_s
 }
 
 void utf8_string_t::utf8_codepoint_t::_read() {
-    m_byte1 = m__io->read_u1();
-    n_byte2 = true;
-    if (len() >= 2) {
-        n_byte2 = false;
-        m_byte2 = m__io->read_u1();
-    }
-    n_byte3 = true;
-    if (len() >= 3) {
-        n_byte3 = false;
-        m_byte3 = m__io->read_u1();
-    }
-    n_byte4 = true;
-    if (len() >= 4) {
-        n_byte4 = false;
-        m_byte4 = m__io->read_u1();
-    }
+    m_bytes = m__io->read_bytes(len_bytes());
 }
 
 utf8_string_t::utf8_codepoint_t::~utf8_codepoint_t() {
@@ -81,41 +68,37 @@ utf8_string_t::utf8_codepoint_t::~utf8_codepoint_t() {
 }
 
 void utf8_string_t::utf8_codepoint_t::_clean_up() {
-    if (!n_byte2) {
-    }
-    if (!n_byte3) {
-    }
-    if (!n_byte4) {
+    if (f_byte0) {
     }
 }
 
 int32_t utf8_string_t::utf8_codepoint_t::raw1() {
     if (f_raw1)
         return m_raw1;
-    m_raw1 = (byte1() & ((len() == 1) ? (127) : (((len() == 2) ? (31) : (((len() == 3) ? (15) : (((len() == 4) ? (7) : (0)))))))));
+    n_raw1 = true;
+    if (len_bytes() >= 2) {
+        n_raw1 = false;
+        m_raw1 = (bytes()[1] & 63);
+    }
     f_raw1 = true;
     return m_raw1;
 }
 
-int32_t utf8_string_t::utf8_codepoint_t::raw4() {
-    if (f_raw4)
-        return m_raw4;
-    n_raw4 = true;
-    if (len() >= 4) {
-        n_raw4 = false;
-        m_raw4 = (byte4() & 63);
-    }
-    f_raw4 = true;
-    return m_raw4;
+int32_t utf8_string_t::utf8_codepoint_t::len_bytes() {
+    if (f_len_bytes)
+        return m_len_bytes;
+    m_len_bytes = (((byte0() & 128) == 0) ? (1) : ((((byte0() & 224) == 192) ? (2) : ((((byte0() & 240) == 224) ? (3) : ((((byte0() & 248) == 240) ? (4) : (-1))))))));
+    f_len_bytes = true;
+    return m_len_bytes;
 }
 
 int32_t utf8_string_t::utf8_codepoint_t::raw3() {
     if (f_raw3)
         return m_raw3;
     n_raw3 = true;
-    if (len() >= 3) {
+    if (len_bytes() >= 4) {
         n_raw3 = false;
-        m_raw3 = (byte3() & 63);
+        m_raw3 = (bytes()[3] & 63);
     }
     f_raw3 = true;
     return m_raw3;
@@ -124,27 +107,38 @@ int32_t utf8_string_t::utf8_codepoint_t::raw3() {
 int32_t utf8_string_t::utf8_codepoint_t::value_as_int() {
     if (f_value_as_int)
         return m_value_as_int;
-    m_value_as_int = ((len() == 1) ? (raw1()) : (((len() == 2) ? (((raw1() << 6) | raw2())) : (((len() == 3) ? ((((raw1() << 12) | (raw2() << 6)) | raw3())) : (((len() == 4) ? (((((raw1() << 18) | (raw2() << 12)) | (raw3() << 6)) | raw4())) : (-1))))))));
+    m_value_as_int = ((len_bytes() == 1) ? (raw0()) : (((len_bytes() == 2) ? (((raw0() << 6) | raw1())) : (((len_bytes() == 3) ? ((((raw0() << 12) | (raw1() << 6)) | raw2())) : (((len_bytes() == 4) ? (((((raw0() << 18) | (raw1() << 12)) | (raw2() << 6)) | raw3())) : (-1))))))));
     f_value_as_int = true;
     return m_value_as_int;
+}
+
+int32_t utf8_string_t::utf8_codepoint_t::raw0() {
+    if (f_raw0)
+        return m_raw0;
+    m_raw0 = (bytes()[0] & ((len_bytes() == 1) ? (127) : (((len_bytes() == 2) ? (31) : (((len_bytes() == 3) ? (15) : (((len_bytes() == 4) ? (7) : (0)))))))));
+    f_raw0 = true;
+    return m_raw0;
+}
+
+uint8_t utf8_string_t::utf8_codepoint_t::byte0() {
+    if (f_byte0)
+        return m_byte0;
+    std::streampos _pos = m__io->pos();
+    m__io->seek(ofs());
+    m_byte0 = m__io->read_u1();
+    m__io->seek(_pos);
+    f_byte0 = true;
+    return m_byte0;
 }
 
 int32_t utf8_string_t::utf8_codepoint_t::raw2() {
     if (f_raw2)
         return m_raw2;
     n_raw2 = true;
-    if (len() >= 2) {
+    if (len_bytes() >= 3) {
         n_raw2 = false;
-        m_raw2 = (byte2() & 63);
+        m_raw2 = (bytes()[2] & 63);
     }
     f_raw2 = true;
     return m_raw2;
-}
-
-int32_t utf8_string_t::utf8_codepoint_t::len() {
-    if (f_len)
-        return m_len;
-    m_len = (((byte1() & 128) == 0) ? (1) : ((((byte1() & 224) == 192) ? (2) : ((((byte1() & 240) == 224) ? (3) : ((((byte1() & 248) == 240) ? (4) : (-1))))))));
-    f_len = true;
-    return m_len;
 }

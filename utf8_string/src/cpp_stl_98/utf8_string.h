@@ -50,7 +50,7 @@ public:
 
     public:
 
-        utf8_codepoint_t(kaitai::kstream* p__io, utf8_string_t* p__parent = 0, utf8_string_t* p__root = 0);
+        utf8_codepoint_t(uint64_t p_ofs, kaitai::kstream* p__io, utf8_string_t* p__parent = 0, utf8_string_t* p__root = 0);
 
     private:
         void _read();
@@ -62,22 +62,22 @@ public:
     private:
         bool f_raw1;
         int32_t m_raw1;
+        bool n_raw1;
+
+    public:
+        bool _is_null_raw1() { raw1(); return n_raw1; };
+
+    private:
 
     public:
         int32_t raw1();
 
     private:
-        bool f_raw4;
-        int32_t m_raw4;
-        bool n_raw4;
+        bool f_len_bytes;
+        int32_t m_len_bytes;
 
     public:
-        bool _is_null_raw4() { raw4(); return n_raw4; };
-
-    private:
-
-    public:
-        int32_t raw4();
+        int32_t len_bytes();
 
     private:
         bool f_raw3;
@@ -100,6 +100,20 @@ public:
         int32_t value_as_int();
 
     private:
+        bool f_raw0;
+        int32_t m_raw0;
+
+    public:
+        int32_t raw0();
+
+    private:
+        bool f_byte0;
+        uint8_t m_byte0;
+
+    public:
+        uint8_t byte0();
+
+    private:
         bool f_raw2;
         int32_t m_raw2;
         bool n_raw2;
@@ -113,43 +127,14 @@ public:
         int32_t raw2();
 
     private:
-        bool f_len;
-        int32_t m_len;
-
-    public:
-        int32_t len();
-
-    private:
-        uint8_t m_byte1;
-        uint8_t m_byte2;
-        bool n_byte2;
-
-    public:
-        bool _is_null_byte2() { byte2(); return n_byte2; };
-
-    private:
-        uint8_t m_byte3;
-        bool n_byte3;
-
-    public:
-        bool _is_null_byte3() { byte3(); return n_byte3; };
-
-    private:
-        uint8_t m_byte4;
-        bool n_byte4;
-
-    public:
-        bool _is_null_byte4() { byte4(); return n_byte4; };
-
-    private:
+        std::string m_bytes;
+        uint64_t m_ofs;
         utf8_string_t* m__root;
         utf8_string_t* m__parent;
 
     public:
-        uint8_t byte1() const { return m_byte1; }
-        uint8_t byte2() const { return m_byte2; }
-        uint8_t byte3() const { return m_byte3; }
-        uint8_t byte4() const { return m_byte4; }
+        std::string bytes() const { return m_bytes; }
+        uint64_t ofs() const { return m_ofs; }
         utf8_string_t* _root() const { return m__root; }
         utf8_string_t* _parent() const { return m__parent; }
     };

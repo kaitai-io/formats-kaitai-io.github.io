@@ -7,7 +7,7 @@ digraph {
 
 		utf8_string__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-			<TR><TD PORT="codepoints_pos">0</TD><TD PORT="codepoints_size">4</TD><TD>Utf8Codepoint</TD><TD PORT="codepoints_type">codepoints</TD></TR>
+			<TR><TD PORT="codepoints_pos">0</TD><TD PORT="codepoints_size">...</TD><TD>Utf8Codepoint</TD><TD PORT="codepoints_type">codepoints</TD></TR>
 			<TR><TD COLSPAN="4" PORT="codepoints__repeat">repeat to end of stream</TD></TR>
 		</TABLE>>];
 		subgraph cluster__utf8_codepoint {
@@ -16,62 +16,65 @@ digraph {
 
 			utf8_codepoint__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="byte1_pos">0</TD><TD PORT="byte1_size">1</TD><TD>u1</TD><TD PORT="byte1_type">byte1</TD></TR>
-				<TR><TD PORT="byte2_pos">1</TD><TD PORT="byte2_size">1</TD><TD>u1</TD><TD PORT="byte2_type">byte2</TD></TR>
-				<TR><TD PORT="byte3_pos">2</TD><TD PORT="byte3_size">1</TD><TD>u1</TD><TD PORT="byte3_type">byte3</TD></TR>
-				<TR><TD PORT="byte4_pos">3</TD><TD PORT="byte4_size">1</TD><TD>u1</TD><TD PORT="byte4_type">byte4</TD></TR>
+				<TR><TD PORT="bytes_pos">0</TD><TD PORT="bytes_size">len_bytes</TD><TD></TD><TD PORT="bytes_type">bytes</TD></TR>
 			</TABLE>>];
 			utf8_codepoint__inst__raw1 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>raw1</TD><TD>(byte1 &amp; (len == 1 ? 127 : (len == 2 ? 31 : (len == 3 ? 15 : (len == 4 ? 7 : 0)))))</TD></TR>
+				<TR><TD>raw1</TD><TD>(bytes[1].ord &amp; 63)</TD></TR>
 			</TABLE>>];
-			utf8_codepoint__inst__raw4 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			utf8_codepoint__inst__len_bytes [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>raw4</TD><TD>(byte4 &amp; 63)</TD></TR>
+				<TR><TD>len_bytes</TD><TD>((byte0 &amp; 128) == 0 ? 1 : ((byte0 &amp; 224) == 192 ? 2 : ((byte0 &amp; 240) == 224 ? 3 : ((byte0 &amp; 248) == 240 ? 4 : -1))))</TD></TR>
 			</TABLE>>];
 			utf8_codepoint__inst__raw3 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>raw3</TD><TD>(byte3 &amp; 63)</TD></TR>
+				<TR><TD>raw3</TD><TD>(bytes[3].ord &amp; 63)</TD></TR>
 			</TABLE>>];
 			utf8_codepoint__inst__value_as_int [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>value_as_int</TD><TD>(len == 1 ? raw1 : (len == 2 ? ((raw1 &lt;&lt; 6) | raw2) : (len == 3 ? (((raw1 &lt;&lt; 12) | (raw2 &lt;&lt; 6)) | raw3) : (len == 4 ? ((((raw1 &lt;&lt; 18) | (raw2 &lt;&lt; 12)) | (raw3 &lt;&lt; 6)) | raw4) : -1))))</TD></TR>
+				<TR><TD>value_as_int</TD><TD>(len_bytes == 1 ? raw0 : (len_bytes == 2 ? ((raw0 &lt;&lt; 6) | raw1) : (len_bytes == 3 ? (((raw0 &lt;&lt; 12) | (raw1 &lt;&lt; 6)) | raw2) : (len_bytes == 4 ? ((((raw0 &lt;&lt; 18) | (raw1 &lt;&lt; 12)) | (raw2 &lt;&lt; 6)) | raw3) : -1))))</TD></TR>
+			</TABLE>>];
+			utf8_codepoint__inst__raw0 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>raw0</TD><TD>(bytes[0].ord &amp; (len_bytes == 1 ? 127 : (len_bytes == 2 ? 31 : (len_bytes == 3 ? 15 : (len_bytes == 4 ? 7 : 0)))))</TD></TR>
+			</TABLE>>];
+			utf8_codepoint__inst__byte0 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="byte0_pos">ofs</TD><TD PORT="byte0_size">1</TD><TD>u1</TD><TD PORT="byte0_type">byte0</TD></TR>
 			</TABLE>>];
 			utf8_codepoint__inst__raw2 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>raw2</TD><TD>(byte2 &amp; 63)</TD></TR>
-			</TABLE>>];
-			utf8_codepoint__inst__len [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
-				<TR><TD>len</TD><TD>((byte1 &amp; 128) == 0 ? 1 : ((byte1 &amp; 224) == 192 ? 2 : ((byte1 &amp; 240) == 224 ? 3 : ((byte1 &amp; 248) == 240 ? 4 : -1))))</TD></TR>
+				<TR><TD>raw2</TD><TD>(bytes[2].ord &amp; 63)</TD></TR>
 			</TABLE>>];
 		}
 	}
 	utf8_string__seq:codepoints_type -> utf8_codepoint__seq [style=bold];
-	utf8_codepoint__seq:byte1_type -> utf8_codepoint__inst__raw1 [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__raw1 [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__raw1 [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__raw1 [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__raw1 [color="#404040"];
-	utf8_codepoint__seq:byte4_type -> utf8_codepoint__inst__raw4 [color="#404040"];
-	utf8_codepoint__seq:byte3_type -> utf8_codepoint__inst__raw3 [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__seq:bytes_size [color="#404040"];
+	utf8_codepoint__seq:bytes_type -> utf8_codepoint__inst__raw1 [color="#404040"];
+	utf8_codepoint__inst__byte0:byte0_type -> utf8_codepoint__inst__len_bytes [color="#404040"];
+	utf8_codepoint__inst__byte0:byte0_type -> utf8_codepoint__inst__len_bytes [color="#404040"];
+	utf8_codepoint__inst__byte0:byte0_type -> utf8_codepoint__inst__len_bytes [color="#404040"];
+	utf8_codepoint__inst__byte0:byte0_type -> utf8_codepoint__inst__len_bytes [color="#404040"];
+	utf8_codepoint__seq:bytes_type -> utf8_codepoint__inst__raw3 [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__raw0:raw0_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__raw0:raw0_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
 	utf8_codepoint__inst__raw1:raw1_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__raw0:raw0_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
 	utf8_codepoint__inst__raw1:raw1_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
 	utf8_codepoint__inst__raw2:raw2_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
+	utf8_codepoint__inst__raw0:raw0_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
 	utf8_codepoint__inst__raw1:raw1_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
 	utf8_codepoint__inst__raw2:raw2_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
 	utf8_codepoint__inst__raw3:raw3_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__len:len_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__raw1:raw1_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__raw2:raw2_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__raw3:raw3_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__inst__raw4:raw4_type -> utf8_codepoint__inst__value_as_int [color="#404040"];
-	utf8_codepoint__seq:byte2_type -> utf8_codepoint__inst__raw2 [color="#404040"];
-	utf8_codepoint__seq:byte1_type -> utf8_codepoint__inst__len [color="#404040"];
-	utf8_codepoint__seq:byte1_type -> utf8_codepoint__inst__len [color="#404040"];
-	utf8_codepoint__seq:byte1_type -> utf8_codepoint__inst__len [color="#404040"];
-	utf8_codepoint__seq:byte1_type -> utf8_codepoint__inst__len [color="#404040"];
+	utf8_codepoint__seq:bytes_type -> utf8_codepoint__inst__raw0 [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__raw0 [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__raw0 [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__raw0 [color="#404040"];
+	utf8_codepoint__inst__len_bytes:len_bytes_type -> utf8_codepoint__inst__raw0 [color="#404040"];
+	utf8_codepoint__params:ofs_type -> utf8_codepoint__inst__byte0:byte0_pos [color="#404040"];
+	utf8_codepoint__seq:bytes_type -> utf8_codepoint__inst__raw2 [color="#404040"];
 }

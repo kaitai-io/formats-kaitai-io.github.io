@@ -36,70 +36,68 @@ class Utf8String < Kaitai::Struct::Struct
     @codepoints = []
     i = 0
     while not @_io.eof?
-      @codepoints << Utf8Codepoint.new(@_io, self, @_root)
+      @codepoints << Utf8Codepoint.new(@_io, self, @_root, _io.pos)
       i += 1
     end
     self
   end
   class Utf8Codepoint < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = self, ofs)
       super(_io, _parent, _root)
+      @ofs = ofs
       _read
     end
 
     def _read
-      @byte1 = @_io.read_u1
-      if len >= 2
-        @byte2 = @_io.read_u1
-      end
-      if len >= 3
-        @byte3 = @_io.read_u1
-      end
-      if len >= 4
-        @byte4 = @_io.read_u1
-      end
+      @bytes = @_io.read_bytes(len_bytes)
       self
     end
     def raw1
       return @raw1 unless @raw1.nil?
-      @raw1 = (byte1 & (len == 1 ? 127 : (len == 2 ? 31 : (len == 3 ? 15 : (len == 4 ? 7 : 0)))))
+      if len_bytes >= 2
+        @raw1 = (bytes[1].ord & 63)
+      end
       @raw1
     end
-    def raw4
-      return @raw4 unless @raw4.nil?
-      if len >= 4
-        @raw4 = (byte4 & 63)
-      end
-      @raw4
+    def len_bytes
+      return @len_bytes unless @len_bytes.nil?
+      @len_bytes = ((byte0 & 128) == 0 ? 1 : ((byte0 & 224) == 192 ? 2 : ((byte0 & 240) == 224 ? 3 : ((byte0 & 248) == 240 ? 4 : -1))))
+      @len_bytes
     end
     def raw3
       return @raw3 unless @raw3.nil?
-      if len >= 3
-        @raw3 = (byte3 & 63)
+      if len_bytes >= 4
+        @raw3 = (bytes[3].ord & 63)
       end
       @raw3
     end
     def value_as_int
       return @value_as_int unless @value_as_int.nil?
-      @value_as_int = (len == 1 ? raw1 : (len == 2 ? ((raw1 << 6) | raw2) : (len == 3 ? (((raw1 << 12) | (raw2 << 6)) | raw3) : (len == 4 ? ((((raw1 << 18) | (raw2 << 12)) | (raw3 << 6)) | raw4) : -1))))
+      @value_as_int = (len_bytes == 1 ? raw0 : (len_bytes == 2 ? ((raw0 << 6) | raw1) : (len_bytes == 3 ? (((raw0 << 12) | (raw1 << 6)) | raw2) : (len_bytes == 4 ? ((((raw0 << 18) | (raw1 << 12)) | (raw2 << 6)) | raw3) : -1))))
       @value_as_int
+    end
+    def raw0
+      return @raw0 unless @raw0.nil?
+      @raw0 = (bytes[0].ord & (len_bytes == 1 ? 127 : (len_bytes == 2 ? 31 : (len_bytes == 3 ? 15 : (len_bytes == 4 ? 7 : 0)))))
+      @raw0
+    end
+    def byte0
+      return @byte0 unless @byte0.nil?
+      _pos = @_io.pos
+      @_io.seek(ofs)
+      @byte0 = @_io.read_u1
+      @_io.seek(_pos)
+      @byte0
     end
     def raw2
       return @raw2 unless @raw2.nil?
-      if len >= 2
-        @raw2 = (byte2 & 63)
+      if len_bytes >= 3
+        @raw2 = (bytes[2].ord & 63)
       end
       @raw2
     end
-    def len
-      return @len unless @len.nil?
-      @len = ((byte1 & 128) == 0 ? 1 : ((byte1 & 224) == 192 ? 2 : ((byte1 & 240) == 224 ? 3 : ((byte1 & 248) == 240 ? 4 : -1))))
-      @len
-    end
-    attr_reader :byte1
-    attr_reader :byte2
-    attr_reader :byte3
-    attr_reader :byte4
+    attr_reader :bytes
+    attr_reader :ofs
   end
   attr_reader :codepoints
 end

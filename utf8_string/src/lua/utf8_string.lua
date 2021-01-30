@@ -38,7 +38,7 @@ function Utf8String:_read()
   self.codepoints = {}
   local i = 0
   while not self._io:is_eof() do
-    self.codepoints[i + 1] = Utf8String.Utf8Codepoint(self._io, self, self._root)
+    self.codepoints[i + 1] = Utf8String.Utf8Codepoint(self._io:pos(), self._io, self, self._root)
     i = i + 1
   end
 end
@@ -46,24 +46,16 @@ end
 
 Utf8String.Utf8Codepoint = class.class(KaitaiStruct)
 
-function Utf8String.Utf8Codepoint:_init(io, parent, root)
+function Utf8String.Utf8Codepoint:_init(ofs, io, parent, root)
   KaitaiStruct._init(self, io)
   self._parent = parent
   self._root = root or self
+  self.ofs = ofs
   self:_read()
 end
 
 function Utf8String.Utf8Codepoint:_read()
-  self.byte1 = self._io:read_u1()
-  if self.len >= 2 then
-    self.byte2 = self._io:read_u1()
-  end
-  if self.len >= 3 then
-    self.byte3 = self._io:read_u1()
-  end
-  if self.len >= 4 then
-    self.byte4 = self._io:read_u1()
-  end
+  self.bytes = self._io:read_bytes(self.len_bytes)
 end
 
 Utf8String.Utf8Codepoint.property.raw1 = {}
@@ -72,20 +64,20 @@ function Utf8String.Utf8Codepoint.property.raw1:get()
     return self._m_raw1
   end
 
-  self._m_raw1 = (self.byte1 & utils.box_unwrap((self.len == 1) and utils.box_wrap(127) or (utils.box_unwrap((self.len == 2) and utils.box_wrap(31) or (utils.box_unwrap((self.len == 3) and utils.box_wrap(15) or (utils.box_unwrap((self.len == 4) and utils.box_wrap(7) or (0)))))))))
+  if self.len_bytes >= 2 then
+    self._m_raw1 = (string.byte(self.bytes, 1 + 1) & 63)
+  end
   return self._m_raw1
 end
 
-Utf8String.Utf8Codepoint.property.raw4 = {}
-function Utf8String.Utf8Codepoint.property.raw4:get()
-  if self._m_raw4 ~= nil then
-    return self._m_raw4
+Utf8String.Utf8Codepoint.property.len_bytes = {}
+function Utf8String.Utf8Codepoint.property.len_bytes:get()
+  if self._m_len_bytes ~= nil then
+    return self._m_len_bytes
   end
 
-  if self.len >= 4 then
-    self._m_raw4 = (self.byte4 & 63)
-  end
-  return self._m_raw4
+  self._m_len_bytes = utils.box_unwrap(((self.byte0 & 128) == 0) and utils.box_wrap(1) or (utils.box_unwrap(((self.byte0 & 224) == 192) and utils.box_wrap(2) or (utils.box_unwrap(((self.byte0 & 240) == 224) and utils.box_wrap(3) or (utils.box_unwrap(((self.byte0 & 248) == 240) and utils.box_wrap(4) or (-1))))))))
+  return self._m_len_bytes
 end
 
 Utf8String.Utf8Codepoint.property.raw3 = {}
@@ -94,8 +86,8 @@ function Utf8String.Utf8Codepoint.property.raw3:get()
     return self._m_raw3
   end
 
-  if self.len >= 3 then
-    self._m_raw3 = (self.byte3 & 63)
+  if self.len_bytes >= 4 then
+    self._m_raw3 = (string.byte(self.bytes, 3 + 1) & 63)
   end
   return self._m_raw3
 end
@@ -106,8 +98,31 @@ function Utf8String.Utf8Codepoint.property.value_as_int:get()
     return self._m_value_as_int
   end
 
-  self._m_value_as_int = utils.box_unwrap((self.len == 1) and utils.box_wrap(self.raw1) or (utils.box_unwrap((self.len == 2) and utils.box_wrap(((self.raw1 << 6) | self.raw2)) or (utils.box_unwrap((self.len == 3) and utils.box_wrap((((self.raw1 << 12) | (self.raw2 << 6)) | self.raw3)) or (utils.box_unwrap((self.len == 4) and utils.box_wrap(((((self.raw1 << 18) | (self.raw2 << 12)) | (self.raw3 << 6)) | self.raw4)) or (-1))))))))
+  self._m_value_as_int = utils.box_unwrap((self.len_bytes == 1) and utils.box_wrap(self.raw0) or (utils.box_unwrap((self.len_bytes == 2) and utils.box_wrap(((self.raw0 << 6) | self.raw1)) or (utils.box_unwrap((self.len_bytes == 3) and utils.box_wrap((((self.raw0 << 12) | (self.raw1 << 6)) | self.raw2)) or (utils.box_unwrap((self.len_bytes == 4) and utils.box_wrap(((((self.raw0 << 18) | (self.raw1 << 12)) | (self.raw2 << 6)) | self.raw3)) or (-1))))))))
   return self._m_value_as_int
+end
+
+Utf8String.Utf8Codepoint.property.raw0 = {}
+function Utf8String.Utf8Codepoint.property.raw0:get()
+  if self._m_raw0 ~= nil then
+    return self._m_raw0
+  end
+
+  self._m_raw0 = (string.byte(self.bytes, 0 + 1) & utils.box_unwrap((self.len_bytes == 1) and utils.box_wrap(127) or (utils.box_unwrap((self.len_bytes == 2) and utils.box_wrap(31) or (utils.box_unwrap((self.len_bytes == 3) and utils.box_wrap(15) or (utils.box_unwrap((self.len_bytes == 4) and utils.box_wrap(7) or (0)))))))))
+  return self._m_raw0
+end
+
+Utf8String.Utf8Codepoint.property.byte0 = {}
+function Utf8String.Utf8Codepoint.property.byte0:get()
+  if self._m_byte0 ~= nil then
+    return self._m_byte0
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(self.ofs)
+  self._m_byte0 = self._io:read_u1()
+  self._io:seek(_pos)
+  return self._m_byte0
 end
 
 Utf8String.Utf8Codepoint.property.raw2 = {}
@@ -116,20 +131,10 @@ function Utf8String.Utf8Codepoint.property.raw2:get()
     return self._m_raw2
   end
 
-  if self.len >= 2 then
-    self._m_raw2 = (self.byte2 & 63)
+  if self.len_bytes >= 3 then
+    self._m_raw2 = (string.byte(self.bytes, 2 + 1) & 63)
   end
   return self._m_raw2
-end
-
-Utf8String.Utf8Codepoint.property.len = {}
-function Utf8String.Utf8Codepoint.property.len:get()
-  if self._m_len ~= nil then
-    return self._m_len
-  end
-
-  self._m_len = utils.box_unwrap(((self.byte1 & 128) == 0) and utils.box_wrap(1) or (utils.box_unwrap(((self.byte1 & 224) == 192) and utils.box_wrap(2) or (utils.box_unwrap(((self.byte1 & 240) == 224) and utils.box_wrap(3) or (utils.box_unwrap(((self.byte1 & 248) == 240) and utils.box_wrap(4) or (-1))))))))
-  return self._m_len
 end
 
 

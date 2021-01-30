@@ -348,70 +348,68 @@ for educational / research purposes.</p>
     <span class="vi">@codepoints</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
-      <span class="vi">@codepoints</span> <span class="o">&lt;&lt;</span> <span class="no">Utf8Codepoint</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@codepoints</span> <span class="o">&lt;&lt;</span> <span class="no">Utf8Codepoint</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
       <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">end</span>
     <span class="nb">self</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">Utf8Codepoint</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">ofs</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@ofs</span> <span class="o">=</span> <span class="n">ofs</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">_read</span>
-      <span class="vi">@byte1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">2</span>
-        <span class="vi">@byte2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">end</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">3</span>
-        <span class="vi">@byte3</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">end</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">4</span>
-        <span class="vi">@byte4</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">end</span>
+      <span class="vi">@bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_bytes</span><span class="p">)</span>
       <span class="nb">self</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">raw1</span>
       <span class="k">return</span> <span class="vi">@raw1</span> <span class="k">unless</span> <span class="vi">@raw1</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@raw1</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">127</span> <span class="p">:</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="mi">31</span> <span class="p">:</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="mi">15</span> <span class="p">:</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">?</span> <span class="mi">7</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))))</span>
+      <span class="k">if</span> <span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">2</span>
+        <span class="vi">@raw1</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">ord</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+      <span class="k">end</span>
       <span class="vi">@raw1</span>
     <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">raw4</span>
-      <span class="k">return</span> <span class="vi">@raw4</span> <span class="k">unless</span> <span class="vi">@raw4</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">4</span>
-        <span class="vi">@raw4</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte4</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
-      <span class="k">end</span>
-      <span class="vi">@raw4</span>
+    <span class="k">def</span> <span class="nf">len_bytes</span>
+      <span class="k">return</span> <span class="vi">@len_bytes</span> <span class="k">unless</span> <span class="vi">@len_bytes</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@len_bytes</span> <span class="o">=</span> <span class="p">((</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="p">((</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span> <span class="o">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">((</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span> <span class="o">?</span> <span class="mi">3</span> <span class="p">:</span> <span class="p">((</span><span class="n">byte0</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span> <span class="o">?</span> <span class="mi">4</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
+      <span class="vi">@len_bytes</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">raw3</span>
       <span class="k">return</span> <span class="vi">@raw3</span> <span class="k">unless</span> <span class="vi">@raw3</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">3</span>
-        <span class="vi">@raw3</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte3</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+        <span class="vi">@raw3</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="o">[</span><span class="mi">3</span><span class="o">].</span><span class="n">ord</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
       <span class="k">end</span>
       <span class="vi">@raw3</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">value_as_int</span>
       <span class="k">return</span> <span class="vi">@value_as_int</span> <span class="k">unless</span> <span class="vi">@value_as_int</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@value_as_int</span> <span class="o">=</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">raw1</span> <span class="p">:</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">((</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw2</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="p">(((</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw3</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">len</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">?</span> <span class="p">((((</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw3</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw4</span><span class="p">)</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
+      <span class="vi">@value_as_int</span> <span class="o">=</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="n">raw0</span> <span class="p">:</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="p">((</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">)</span> <span class="o">|</span> <span class="n">raw1</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="p">(((</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw2</span><span class="p">)</span> <span class="p">:</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">?</span> <span class="p">((((</span><span class="n">raw0</span> <span class="o">&lt;&lt;</span> <span class="mi">18</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw1</span> <span class="o">&lt;&lt;</span> <span class="mi">12</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">raw2</span> <span class="o">&lt;&lt;</span> <span class="mi">6</span><span class="p">))</span> <span class="o">|</span> <span class="n">raw3</span><span class="p">)</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
       <span class="vi">@value_as_int</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">raw0</span>
+      <span class="k">return</span> <span class="vi">@raw0</span> <span class="k">unless</span> <span class="vi">@raw0</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@raw0</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="o">[</span><span class="mi">0</span><span class="o">].</span><span class="n">ord</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">1</span> <span class="o">?</span> <span class="mi">127</span> <span class="p">:</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">?</span> <span class="mi">31</span> <span class="p">:</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">?</span> <span class="mi">15</span> <span class="p">:</span> <span class="p">(</span><span class="n">len_bytes</span> <span class="o">==</span> <span class="mi">4</span> <span class="o">?</span> <span class="mi">7</span> <span class="p">:</span> <span class="mi">0</span><span class="p">)))))</span>
+      <span class="vi">@raw0</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">byte0</span>
+      <span class="k">return</span> <span class="vi">@byte0</span> <span class="k">unless</span> <span class="vi">@byte0</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs</span><span class="p">)</span>
+      <span class="vi">@byte0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@byte0</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">raw2</span>
       <span class="k">return</span> <span class="vi">@raw2</span> <span class="k">unless</span> <span class="vi">@raw2</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="k">if</span> <span class="n">len</span> <span class="o">&gt;=</span> <span class="mi">2</span>
-        <span class="vi">@raw2</span> <span class="o">=</span> <span class="p">(</span><span class="n">byte2</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">len_bytes</span> <span class="o">&gt;=</span> <span class="mi">3</span>
+        <span class="vi">@raw2</span> <span class="o">=</span> <span class="p">(</span><span class="n">bytes</span><span class="o">[</span><span class="mi">2</span><span class="o">].</span><span class="n">ord</span> <span class="o">&amp;</span> <span class="mi">63</span><span class="p">)</span>
       <span class="k">end</span>
       <span class="vi">@raw2</span>
     <span class="k">end</span>
-    <span class="k">def</span> <span class="nf">len</span>
-      <span class="k">return</span> <span class="vi">@len</span> <span class="k">unless</span> <span class="vi">@len</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@len</span> <span class="o">=</span> <span class="p">((</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="p">((</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">224</span><span class="p">)</span> <span class="o">==</span> <span class="mi">192</span> <span class="o">?</span> <span class="mi">2</span> <span class="p">:</span> <span class="p">((</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">240</span><span class="p">)</span> <span class="o">==</span> <span class="mi">224</span> <span class="o">?</span> <span class="mi">3</span> <span class="p">:</span> <span class="p">((</span><span class="n">byte1</span> <span class="o">&amp;</span> <span class="mi">248</span><span class="p">)</span> <span class="o">==</span> <span class="mi">240</span> <span class="o">?</span> <span class="mi">4</span> <span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">))))</span>
-      <span class="vi">@len</span>
-    <span class="k">end</span>
-    <span class="kp">attr_reader</span> <span class="ss">:byte1</span>
-    <span class="kp">attr_reader</span> <span class="ss">:byte2</span>
-    <span class="kp">attr_reader</span> <span class="ss">:byte3</span>
-    <span class="kp">attr_reader</span> <span class="ss">:byte4</span>
+    <span class="kp">attr_reader</span> <span class="ss">:bytes</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs</span>
   <span class="k">end</span>
   <span class="kp">attr_reader</span> <span class="ss">:codepoints</span>
 <span class="k">end</span>
