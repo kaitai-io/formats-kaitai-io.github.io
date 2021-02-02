@@ -12,9 +12,9 @@ namespace Kaitai
     /// like binary files, XML fragments, and even other
     /// SOAP messages, using standard transport protocols like HTTP.
     /// 
-    /// Sample file: `curl -L
+    /// Sample file: `curl -LO
     /// https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz
-    /// | gunzip -c &gt; scanner.dump`
+    /// &amp;&amp; gunzip scanner_withoptions.dump.gz`
     /// </summary>
     /// <remarks>
     /// Reference: <a href="https://tools.ietf.org/html/draft-nielsen-dime-02">Source</a>

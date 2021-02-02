@@ -15,9 +15,9 @@ local str_decode = require("string_decode")
 -- like binary files, XML fragments, and even other
 -- SOAP messages, using standard transport protocols like HTTP.
 -- 
--- Sample file: `curl -L
+-- Sample file: `curl -LO
 -- https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz
--- | gunzip -c > scanner.dump`
+-- && gunzip scanner_withoptions.dump.gz`
 -- See also: Source (https://tools.ietf.org/html/draft-nielsen-dime-02)
 -- See also: Source (https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime)
 -- See also: Source (http://imrannazar.com/Parsing-the-DIME-Message-Format)

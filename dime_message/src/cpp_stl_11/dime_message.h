@@ -18,9 +18,9 @@
  * like binary files, XML fragments, and even other
  * SOAP messages, using standard transport protocols like HTTP.
  * 
- * Sample file: `curl -L
+ * Sample file: `curl -LO
  * https://github.com/kaitai-io/kaitai_struct_formats/files/5894723/scanner_withoptions.dump.gz
- * | gunzip -c > scanner.dump`
+ * && gunzip scanner_withoptions.dump.gz`
  * \sa https://tools.ietf.org/html/draft-nielsen-dime-02 Source
  * \sa https://docs.microsoft.com/en-us/archive/msdn-magazine/2002/december/sending-files-attachments-and-soap-messages-via-dime Source
  * \sa http://imrannazar.com/Parsing-the-DIME-Message-Format Source
