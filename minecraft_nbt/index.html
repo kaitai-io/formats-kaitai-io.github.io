@@ -116,12 +116,13 @@ see <a href="https://minecraft.gamepedia.com/NBT_format#Uses">https://minecraft.
 specification <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">NBT.txt</a> by Notch), but can also be compressed with <em>zlib</em> or uncompressed.</p>
 <p>This spec can only handle uncompressed NBT data, so be sure to first detect
 what type of data you are dealing with. You can use the Unix <code>file</code> command
-to do this:</p>
+to do this (<code>file-5.20</code> or later is required; older versions do not recognize
+<em>zlib</em>-compressed data and return <code>application/octet-stream</code> instead):</p>
 <pre><code class="language-shell">file --brief --mime-type input-unknown.nbt
 </code></pre>
 <p>If it says:</p>
 <ul>
-<li><code>application/gzip</code>, you can decompress it by
+<li><code>application/x-gzip</code> or <code>application/gzip</code> (since <code>file-5.37</code>), you can decompress it by
 <ul>
 <li><code>gunzip -c input-gzip.nbt &gt; output.nbt</code> or</li>
 <li><code>python3 -c &quot;import sys, gzip; sys.stdout.buffer.write( gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt</code></li>
@@ -178,7 +179,7 @@ are replaced or ignored.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        ["nbt", "dat"]
+                        ["nbt", "dat", "schematic", "schem"]
                     </div>
                     
                     
@@ -317,6 +318,8 @@ are replaced or ignored.</p>
   <span class="nt">file-extension</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">nbt</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dat</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">schematic</span> <span class="c1"># https://minecraft.gamepedia.com/Schematic_file_format</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">schem</span>
   <span class="nt">xref</span><span class="p">:</span>
     <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Minecraft_NBT_format</span>
   <span class="nt">tags</span><span class="p">:</span>
@@ -343,7 +346,8 @@ are replaced or ignored.</p>
 
   <span class="no">This spec can only handle uncompressed NBT data, so be sure to first detect</span>
   <span class="no">what type of data you are dealing with. You can use the Unix `file` command</span>
-  <span class="no">to do this:</span>
+  <span class="no">to do this (`file-5.20` or later is required; older versions do not recognize</span>
+  <span class="no">_zlib_-compressed data and return `application/octet-stream` instead):</span>
 
   <span class="no">```shell</span>
   <span class="no">file --brief --mime-type input-unknown.nbt</span>
@@ -351,7 +355,7 @@ are replaced or ignored.</p>
 
   <span class="no">If it says:</span>
 
-    <span class="no">* `application/gzip`, you can decompress it by</span>
+    <span class="no">* `application/x-gzip` or `application/gzip` (since `file-5.37`), you can decompress it by</span>
       <span class="no">* `gunzip -c input-gzip.nbt &gt; output.nbt` or</span>
       <span class="no">* `python3 -c &quot;import sys, gzip; sys.stdout.buffer.write(</span>
         <span class="no">gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>

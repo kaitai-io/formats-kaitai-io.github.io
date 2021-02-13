@@ -116,12 +116,13 @@ see <a href="https://minecraft.gamepedia.com/NBT_format#Uses">https://minecraft.
 specification <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">NBT.txt</a> by Notch), but can also be compressed with <em>zlib</em> or uncompressed.</p>
 <p>This spec can only handle uncompressed NBT data, so be sure to first detect
 what type of data you are dealing with. You can use the Unix <code>file</code> command
-to do this:</p>
+to do this (<code>file-5.20</code> or later is required; older versions do not recognize
+<em>zlib</em>-compressed data and return <code>application/octet-stream</code> instead):</p>
 <pre><code class="language-shell">file --brief --mime-type input-unknown.nbt
 </code></pre>
 <p>If it says:</p>
 <ul>
-<li><code>application/gzip</code>, you can decompress it by
+<li><code>application/x-gzip</code> or <code>application/gzip</code> (since <code>file-5.37</code>), you can decompress it by
 <ul>
 <li><code>gunzip -c input-gzip.nbt &gt; output.nbt</code> or</li>
 <li><code>python3 -c &quot;import sys, gzip; sys.stdout.buffer.write( gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt</code></li>
@@ -178,7 +179,7 @@ are replaced or ignored.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        ["nbt", "dat"]
+                        ["nbt", "dat", "schematic", "schem"]
                     </div>
                     
                     
@@ -412,7 +413,8 @@ are replaced or ignored.</p>
 
 <span class="n">This</span> <span class="n">spec</span> <span class="n">can</span> <span class="n">only</span> <span class="n">handle</span> <span class="n">uncompressed</span> <span class="n">NBT</span> <span class="n">data</span><span class="p">,</span> <span class="n">so</span> <span class="n">be</span> <span class="n">sure</span> <span class="n">to</span> <span class="n">first</span> <span class="n">detect</span>
 <span class="n">what</span> <span class="k">type</span> <span class="k">of</span> <span class="n">data</span> <span class="n">you</span> <span class="n">are</span> <span class="n">dealing</span> <span class="n">with</span><span class="p">.</span> <span class="n">You</span> <span class="n">can</span> <span class="n">use</span> <span class="n">the</span> <span class="n">Unix</span> <span class="p">`</span><span class="n">file</span><span class="p">`</span> <span class="n">command</span>
-<span class="n">to</span> <span class="k">do</span> <span class="n">this</span><span class="p">:</span>
+<span class="n">to</span> <span class="k">do</span> <span class="n">this</span> <span class="p">(`</span><span class="n">file</span><span class="o">-</span><span class="mf">5.20</span><span class="p">`</span> <span class="ow">or</span> <span class="n">later</span> <span class="ow">is</span> <span class="n">required</span><span class="p">;</span> <span class="n">older</span> <span class="n">versions</span> <span class="k">do</span> <span class="ow">not</span> <span class="n">recognize</span>
+<span class="err">_zlib_-compressed data and return `application/octet-stream` instead):</span>
 
 <span class="p">```</span><span class="n">shell</span>
 <span class="n">file</span> <span class="o">--</span><span class="n">brief</span> <span class="o">--</span><span class="n">mime</span><span class="o">-</span><span class="k">type</span> <span class="n">input</span><span class="o">-</span><span class="n">unknown</span><span class="p">.</span><span class="n">nbt</span>
@@ -420,7 +422,7 @@ are replaced or ignored.</p>
 
 <span class="k">If</span> <span class="n">it</span> <span class="n">says</span><span class="p">:</span>
 
-  <span class="o">*</span> <span class="p">`</span><span class="n">application</span><span class="o">/</span><span class="n">gzip</span><span class="p">`,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">decompress</span> <span class="n">it</span> <span class="n">by</span>
+  <span class="o">*</span> <span class="p">`</span><span class="n">application</span><span class="o">/</span><span class="n">x</span><span class="o">-</span><span class="n">gzip</span><span class="p">`</span> <span class="ow">or</span> <span class="p">`</span><span class="n">application</span><span class="o">/</span><span class="n">gzip</span><span class="p">`</span> <span class="p">(</span><span class="n">since</span> <span class="p">`</span><span class="n">file</span><span class="o">-</span><span class="mf">5.37</span><span class="p">`),</span> <span class="n">you</span> <span class="n">can</span> <span class="n">decompress</span> <span class="n">it</span> <span class="n">by</span>
     <span class="o">*</span> <span class="p">`</span><span class="n">gunzip</span> <span class="o">-</span><span class="n">c</span> <span class="n">input</span><span class="o">-</span><span class="n">gzip</span><span class="p">.</span><span class="n">nbt</span> <span class="o">&gt;</span> <span class="n">output</span><span class="p">.</span><span class="n">nbt</span><span class="p">`</span> <span class="ow">or</span>
     <span class="o">*</span> <span class="p">`</span><span class="n">python3</span> <span class="o">-</span><span class="n">c</span> <span class="s">&quot;import sys, gzip; sys.stdout.buffer.write(</span>
       <span class="n">gzip</span><span class="p">.</span><span class="n">decompress</span><span class="p">(</span><span class="n">sys</span><span class="p">.</span><span class="n">stdin</span><span class="p">.</span><span class="n">buffer</span><span class="p">.</span><span class="n">read</span><span class="p">())</span> <span class="p">)</span><span class="s">&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>

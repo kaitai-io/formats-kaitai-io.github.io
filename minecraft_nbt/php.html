@@ -116,12 +116,13 @@ see <a href="https://minecraft.gamepedia.com/NBT_format#Uses">https://minecraft.
 specification <a href="https://web.archive.org/web/20110723210920/https://www.minecraft.net/docs/NBT.txt">NBT.txt</a> by Notch), but can also be compressed with <em>zlib</em> or uncompressed.</p>
 <p>This spec can only handle uncompressed NBT data, so be sure to first detect
 what type of data you are dealing with. You can use the Unix <code>file</code> command
-to do this:</p>
+to do this (<code>file-5.20</code> or later is required; older versions do not recognize
+<em>zlib</em>-compressed data and return <code>application/octet-stream</code> instead):</p>
 <pre><code class="language-shell">file --brief --mime-type input-unknown.nbt
 </code></pre>
 <p>If it says:</p>
 <ul>
-<li><code>application/gzip</code>, you can decompress it by
+<li><code>application/x-gzip</code> or <code>application/gzip</code> (since <code>file-5.37</code>), you can decompress it by
 <ul>
 <li><code>gunzip -c input-gzip.nbt &gt; output.nbt</code> or</li>
 <li><code>python3 -c &quot;import sys, gzip; sys.stdout.buffer.write( gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt</code></li>
@@ -178,7 +179,7 @@ are replaced or ignored.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        ["nbt", "dat"]
+                        ["nbt", "dat", "schematic", "schem"]
                     </div>
                     
                     
@@ -342,7 +343,8 @@ are replaced or ignored.</p>
 <span class="sd"> * </span>
 <span class="sd"> * This spec can only handle uncompressed NBT data, so be sure to first detect</span>
 <span class="sd"> * what type of data you are dealing with. You can use the Unix `file` command</span>
-<span class="sd"> * to do this:</span>
+<span class="sd"> * to do this (`file-5.20` or later is required; older versions do not recognize</span>
+<span class="sd"> * _zlib_-compressed data and return `application/octet-stream` instead):</span>
 <span class="sd"> * </span>
 <span class="sd"> * ```shell</span>
 <span class="sd"> * file --brief --mime-type input-unknown.nbt</span>
@@ -350,7 +352,7 @@ are replaced or ignored.</p>
 <span class="sd"> * </span>
 <span class="sd"> * If it says:</span>
 <span class="sd"> * </span>
-<span class="sd"> *   * `application/gzip`, you can decompress it by</span>
+<span class="sd"> *   * `application/x-gzip` or `application/gzip` (since `file-5.37`), you can decompress it by</span>
 <span class="sd"> *     * `gunzip -c input-gzip.nbt &gt; output.nbt` or</span>
 <span class="sd"> *     * `python3 -c &quot;import sys, gzip; sys.stdout.buffer.write(</span>
 <span class="sd"> *       gzip.decompress(sys.stdin.buffer.read()) )&quot; &lt; input-gzip.nbt &gt; output.nbt`</span>
