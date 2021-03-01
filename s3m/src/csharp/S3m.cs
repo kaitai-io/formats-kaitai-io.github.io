@@ -23,7 +23,7 @@ namespace Kaitai
     /// for repetitive musical phrases.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt">Source</a>
+    /// Reference: <a href="http://hackipedia.org/browse.cgi/File%20formats/Music%20tracker/S3M%2c%20ScreamTracker%203/Scream%20Tracker%203.20%20by%20Future%20Crew.txt">Source</a>
     /// </remarks>
     public partial class S3m : KaitaiStruct
     {

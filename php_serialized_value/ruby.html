@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -344,7 +344,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VALUE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
     <span class="k">case</span> <span class="n">type</span>
     <span class="k">when</span> <span class="ss">:value_type_custom_serialized_object</span>
@@ -383,7 +383,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_entries_dec</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
       <span class="vi">@opening_brace</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">123</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">opening_brace</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/count_prefixed_mapping/seq/1&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">opening_brace</span> <span class="o">==</span> <span class="o">[</span><span class="mi">123</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
@@ -423,7 +423,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/float_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@value_dec</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
@@ -456,7 +456,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@len_data_dec</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">58</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
       <span class="vi">@opening_quote</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">34</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">opening_quote</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/length_prefixed_quoted_string/seq/1&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">opening_quote</span> <span class="o">==</span> <span class="o">[</span><span class="mi">34</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
@@ -496,7 +496,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/object_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@class_name</span> <span class="o">=</span> <span class="no">LengthPrefixedQuotedString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -526,7 +526,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/array_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@elements</span> <span class="o">=</span> <span class="no">CountPrefixedMapping</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -549,7 +549,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/custom_serialized_object_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@class_name</span> <span class="o">=</span> <span class="no">LengthPrefixedQuotedString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -605,7 +605,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@semicolon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">59</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">semicolon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/null_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">semicolon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">59</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="nb">self</span>
@@ -622,7 +622,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/php_3_object_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@properties</span> <span class="o">=</span> <span class="no">CountPrefixedMapping</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -644,7 +644,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/bool_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@value_dec</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">PhpSerializedValue</span><span class="o">::</span><span class="no">BOOL_VALUE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
@@ -679,7 +679,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/string_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@string</span> <span class="o">=</span> <span class="no">LengthPrefixedQuotedString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -710,7 +710,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@colon</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">colon</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/int_contents/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">colon</span> <span class="o">==</span> <span class="o">[</span><span class="mi">58</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@value_dec</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">59</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
@@ -739,7 +739,7 @@ This spec supports serialized values from PHP 7.3 or any earlier version.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@key</span> <span class="o">=</span> <span class="no">PhpSerializedValue</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
       <span class="vi">@value</span> <span class="o">=</span> <span class="no">PhpSerializedValue</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">)</span>
       <span class="nb">self</span>

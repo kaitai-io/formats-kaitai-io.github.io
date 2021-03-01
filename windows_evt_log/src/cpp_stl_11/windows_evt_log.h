@@ -26,14 +26,14 @@
  * file using relevant option in Event Viewer application.
  * 
  * A Windows application can submit an entry into these logs using
- * [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
+ * [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
  * function of Windows API.
  * 
  * Internally, EVT files consist of a fixed-size header and event
  * records. There are several usage scenarios (non-wrapping vs wrapping
  * log files) which result in slightly different organization of
  * records.
- * \sa https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx Source
+ * \sa https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format Source
  */
 
 class windows_evt_log_t : public kaitai::kstruct {
@@ -54,7 +54,7 @@ public:
     ~windows_evt_log_t();
 
     /**
-     * \sa https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx Source
+     * \sa https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85) Source
      */
 
     class header_t : public kaitai::kstruct {
@@ -183,7 +183,7 @@ public:
     };
 
     /**
-     * \sa https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source
+     * \sa https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord Source
      */
 
     class record_t : public kaitai::kstruct {
@@ -247,7 +247,7 @@ public:
     };
 
     /**
-     * \sa https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source
+     * \sa https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord Source
      */
 
     class record_body_t : public kaitai::kstruct {
@@ -327,7 +327,7 @@ public:
 
         /**
          * Type of event.
-         * \sa https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx Source
+         * \sa https://docs.microsoft.com/en-us/windows/win32/eventlog/event-types Source
          */
         event_types_t event_type() const { return m_event_type; }
 
@@ -337,7 +337,7 @@ public:
         uint16_t num_strings() const { return m_num_strings; }
 
         /**
-         * \sa https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx Source
+         * \sa https://docs.microsoft.com/en-us/windows/win32/eventlog/event-categories Source
          */
         uint16_t event_category() const { return m_event_category; }
         std::string reserved() const { return m_reserved; }

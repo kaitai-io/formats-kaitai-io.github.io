@@ -16,7 +16,7 @@ namespace Kaitai
     /// &quot;streams&quot;, which contain some data according to its type attribute.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx">Source</a>
+    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header">Source</a>
     /// </remarks>
     public partial class WindowsMinidump : KaitaiStruct
     {
@@ -106,7 +106,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
         /// </remarks>
         public partial class ThreadList : KaitaiStruct
         {
@@ -141,7 +141,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
         /// </remarks>
         public partial class LocationDescriptor : KaitaiStruct
         {
@@ -194,7 +194,7 @@ namespace Kaitai
         /// actually a simple 32-bit length-prefixed UTF-16 string.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string">Source</a>
         /// </remarks>
         public partial class MinidumpString : KaitaiStruct
         {
@@ -229,7 +229,7 @@ namespace Kaitai
         /// hardware and operating system which produces this dump.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info">Source</a>
         /// </remarks>
         public partial class SystemInfo : KaitaiStruct
         {
@@ -319,7 +319,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
         /// </remarks>
         public partial class ExceptionRecord : KaitaiStruct
         {
@@ -382,7 +382,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
         /// </remarks>
         public partial class MiscInfo : KaitaiStruct
         {
@@ -440,7 +440,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
         /// </remarks>
         public partial class Dir : KaitaiStruct
         {
@@ -522,7 +522,7 @@ namespace Kaitai
             public StreamTypes StreamType { get { return _streamType; } }
 
             /// <remarks>
-            /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx">Source</a>
+            /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
             /// </remarks>
             public uint LenData { get { return _lenData; } }
             public uint OfsData { get { return _ofsData; } }
@@ -532,7 +532,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
         /// </remarks>
         public partial class Thread : KaitaiStruct
         {
@@ -582,7 +582,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
         /// </remarks>
         public partial class MemoryList : KaitaiStruct
         {
@@ -617,7 +617,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
         /// </remarks>
         public partial class MemoryDescriptor : KaitaiStruct
         {
@@ -648,7 +648,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
         /// </remarks>
         public partial class ExceptionStream : KaitaiStruct
         {

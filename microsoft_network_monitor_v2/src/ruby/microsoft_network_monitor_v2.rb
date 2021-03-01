@@ -16,7 +16,7 @@ end
 # 
 # There are at least 2 different versions of the format: v1 and
 # v2. Netmon v3 seems to use the same file format as v1.
-# @see https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx Source
+# @see https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values Source
 class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
 
   LINKTYPE = {
@@ -205,7 +205,7 @@ class MicrosoftNetworkMonitorV2 < Kaitai::Struct::Struct
   # A container for actually captured network data. Allow to
   # timestamp individual frames and designates how much data from
   # the original packet was actually written into the file.
-  # @see https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx Source
+  # @see https://docs.microsoft.com/en-us/windows/win32/netmon2/frame Source
   class Frame < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

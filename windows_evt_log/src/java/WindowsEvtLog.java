@@ -25,14 +25,14 @@ import java.util.HashMap;
  * file using relevant option in Event Viewer application.
  * 
  * A Windows application can submit an entry into these logs using
- * [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
+ * [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
  * function of Windows API.
  * 
  * Internally, EVT files consist of a fixed-size header and event
  * records. There are several usage scenarios (non-wrapping vs wrapping
  * log files) which result in slightly different organization of
  * records.
- * @see <a href="https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx">Source</a>
+ * @see <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format">Source</a>
  */
 public class WindowsEvtLog extends KaitaiStruct {
     public static WindowsEvtLog fromFile(String fileName) throws IOException {
@@ -66,7 +66,7 @@ public class WindowsEvtLog extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)">Source</a>
      */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -222,7 +222,7 @@ public class WindowsEvtLog extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
      */
     public static class Record extends KaitaiStruct {
         public static Record fromFile(String fileName) throws IOException {
@@ -303,7 +303,7 @@ public class WindowsEvtLog extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
      */
     public static class RecordBody extends KaitaiStruct {
         public static RecordBody fromFile(String fileName) throws IOException {
@@ -416,7 +416,7 @@ public class WindowsEvtLog extends KaitaiStruct {
 
         /**
          * Type of event.
-         * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx">Source</a>
+         * @see <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-types">Source</a>
          */
         public EventTypes eventType() { return eventType; }
 
@@ -426,7 +426,7 @@ public class WindowsEvtLog extends KaitaiStruct {
         public int numStrings() { return numStrings; }
 
         /**
-         * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx">Source</a>
+         * @see <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-categories">Source</a>
          */
         public int eventCategory() { return eventCategory; }
         public byte[] reserved() { return reserved; }

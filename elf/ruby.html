@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -521,7 +521,7 @@ section#format-index .row {
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">69</span><span class="p">,</span> <span class="mi">76</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
     <span class="vi">@bits</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">BITS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
@@ -540,7 +540,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="nb">self</span>
     <span class="k">end</span>
     <span class="k">def</span> <span class="nf">read</span>
@@ -572,7 +572,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="nb">self</span>
     <span class="k">end</span>
 
@@ -696,7 +696,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="nb">self</span>
     <span class="k">end</span>
 
@@ -910,7 +910,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">endian</span>
       <span class="k">when</span> <span class="ss">:endian_le</span>
         <span class="vi">@_is_le</span> <span class="o">=</span> <span class="kp">true</span>
@@ -928,7 +928,7 @@ section#format-index .row {
       <span class="nb">self</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read_le</span>
+    <span class="k">def</span> <span class="n">_read_le</span>
       <span class="vi">@e_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">OBJ_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
       <span class="vi">@machine</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">MACHINE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
       <span class="vi">@e_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -960,7 +960,7 @@ section#format-index .row {
       <span class="nb">self</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read_be</span>
+    <span class="k">def</span> <span class="n">_read_be</span>
       <span class="vi">@e_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">OBJ_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">)</span>
       <span class="vi">@machine</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">MACHINE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">)</span>
       <span class="vi">@e_version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
@@ -998,7 +998,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1010,7 +1010,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@name_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
         <span class="vi">@other</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -1020,7 +1020,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@name_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
         <span class="vi">@info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
         <span class="vi">@other</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -1043,7 +1043,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1055,7 +1055,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">PH_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="ss">:bits_b64</span>
           <span class="vi">@flags64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -1102,7 +1102,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">PH_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="ss">:bits_b64</span>
           <span class="vi">@flags64</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
@@ -1194,7 +1194,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1206,7 +1206,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">bits</span>
         <span class="k">when</span> <span class="ss">:bits_b32</span>
           <span class="vi">@tag</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -1222,7 +1222,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">bits</span>
         <span class="k">when</span> <span class="ss">:bits_b32</span>
           <span class="vi">@tag</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
@@ -1263,7 +1263,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1275,7 +1275,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@ofs_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">SH_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
         <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">bits</span>
@@ -1319,7 +1319,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@ofs_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
         <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Elf</span><span class="o">::</span><span class="no">SH_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">)</span>
         <span class="k">case</span> <span class="n">_root</span><span class="o">.</span><span class="n">bits</span>
@@ -1454,7 +1454,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1466,7 +1466,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -1476,7 +1476,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -1494,7 +1494,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1506,7 +1506,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -1521,7 +1521,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -1544,7 +1544,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1556,7 +1556,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@name_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -1566,7 +1566,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@name_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
         <span class="vi">@value</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
         <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
@@ -1589,7 +1589,7 @@ section#format-index .row {
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
 
         <span class="k">if</span> <span class="vi">@_is_le</span> <span class="o">==</span> <span class="kp">true</span>
           <span class="n">_read_le</span>
@@ -1601,7 +1601,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_le</span>
+      <span class="k">def</span> <span class="n">_read_le</span>
         <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -1611,7 +1611,7 @@ section#format-index .row {
         <span class="nb">self</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read_be</span>
+      <span class="k">def</span> <span class="n">_read_be</span>
         <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>

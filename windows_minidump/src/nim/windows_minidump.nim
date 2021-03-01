@@ -179,7 +179,7 @@ used for that purpose in Windows and Google Chrome projects.
 The file itself is a container, which contains a number of typed
 "streams", which contain some data according to its type attribute.
 
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump =
   template this: untyped = result
@@ -223,7 +223,7 @@ proc fromFile*(_: typedesc[WindowsMinidump], filename: string): WindowsMinidump 
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_ThreadList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ThreadList =
   template this: untyped = result
@@ -244,7 +244,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_ThreadList], filename: string): Windo
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_LocationDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_LocationDescriptor =
   template this: untyped = result
@@ -279,7 +279,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_LocationDescriptor], filename: string
 Specific string serialization scheme used in MiniDump format is
 actually a simple 32-bit length-prefixed UTF-16 string.
 
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_MinidumpString], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_SystemInfo): WindowsMinidump_MinidumpString =
   template this: untyped = result
@@ -302,7 +302,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_MinidumpString], filename: string): W
 "System info" stream provides basic information about the
 hardware and operating system which produces this dump.
 
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_SystemInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_SystemInfo =
   template this: untyped = result
@@ -355,7 +355,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_SystemInfo], filename: string): Windo
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_ExceptionRecord], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ExceptionStream): WindowsMinidump_ExceptionRecord =
   template this: untyped = result
@@ -400,7 +400,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_ExceptionRecord], filename: string): 
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_MiscInfo], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MiscInfo =
   template this: untyped = result
@@ -438,7 +438,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_MiscInfo], filename: string): Windows
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump): WindowsMinidump_Dir =
   template this: untyped = result
@@ -452,7 +452,7 @@ proc read*(_: typedesc[WindowsMinidump_Dir], io: KaitaiStream, root: KaitaiStruc
   this.streamType = streamTypeExpr
 
   ##[
-  @see <a href="https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx">Source</a>
+  @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
   ]##
   let lenDataExpr = this.io.readU4le()
   this.lenData = lenDataExpr
@@ -508,7 +508,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_Dir], filename: string): WindowsMinid
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_Thread], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_ThreadList): WindowsMinidump_Thread =
   template this: untyped = result
@@ -542,7 +542,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_Thread], filename: string): WindowsMi
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_MemoryList], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_MemoryList =
   template this: untyped = result
@@ -563,7 +563,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_MemoryList], filename: string): Windo
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_MemoryDescriptor], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsMinidump_MemoryDescriptor =
   template this: untyped = result
@@ -583,7 +583,7 @@ proc fromFile*(_: typedesc[WindowsMinidump_MemoryDescriptor], filename: string):
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
 ]##
 proc read*(_: typedesc[WindowsMinidump_ExceptionStream], io: KaitaiStream, root: KaitaiStruct, parent: WindowsMinidump_Dir): WindowsMinidump_ExceptionStream =
   template this: untyped = result

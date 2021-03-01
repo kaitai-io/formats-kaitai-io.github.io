@@ -25,7 +25,7 @@
  * determined by `orders`, which is essentially an array of pattern IDs
  * - this way it's possible to reuse certain patterns more than once
  * for repetitive musical phrases.
- * @see {@link http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt|Source}
+ * @see {@link http://hackipedia.org/browse.cgi/File%20formats/Music%20tracker/S3M%2c%20ScreamTracker%203/Scream%20Tracker%203.20%20by%20Future%20Crew.txt|Source}
  */
 
 var S3m = (function() {

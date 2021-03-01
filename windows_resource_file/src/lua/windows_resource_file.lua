@@ -55,7 +55,7 @@ end
 -- Each resource has a `type` and a `name`, which can be used to
 -- identify it, and a `value`. Both `type` and `name` can be a
 -- number or a string.
--- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/ms648027.aspx)
+-- See also: Source (https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader)
 WindowsResourceFile.Resource = class.class(KaitaiStruct)
 
 WindowsResourceFile.Resource.PredefTypes = enum.Enum {

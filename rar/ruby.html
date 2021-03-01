@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -371,7 +371,7 @@ how to process a certain block type.</p>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@magic</span> <span class="o">=</span> <span class="no">MagicSignature</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="vi">@blocks</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -401,7 +401,7 @@ how to process a certain block type.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/magic_signature/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">97</span><span class="p">,</span> <span class="mi">114</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -436,7 +436,7 @@ how to process a certain block type.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@crc16</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
       <span class="vi">@block_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Rar</span><span class="o">::</span><span class="no">BLOCK_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
@@ -502,7 +502,7 @@ how to process a certain block type.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@low_unp_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@host_os</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Rar</span><span class="o">::</span><span class="no">OSES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="vi">@file_crc32</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -565,7 +565,7 @@ how to process a certain block type.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="nb">self</span>
     <span class="k">end</span>
   <span class="k">end</span>

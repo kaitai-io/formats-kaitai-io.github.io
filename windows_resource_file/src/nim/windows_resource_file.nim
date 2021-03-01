@@ -115,7 +115,7 @@ Each resource has a `type` and a `name`, which can be used to
 identify it, and a `value`. Both `type` and `name` can be a
 number or a string.
 
-@see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms648027.aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader">Source</a>
 ]##
 proc read*(_: typedesc[WindowsResourceFile_Resource], io: KaitaiStream, root: KaitaiStruct, parent: WindowsResourceFile): WindowsResourceFile_Resource =
   template this: untyped = result

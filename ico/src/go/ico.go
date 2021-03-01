@@ -12,7 +12,7 @@ import (
  * icons - ICO. This is a container that contains one or more image
  * files (effectively, DIB parts of BMP files or full PNG files are
  * contained inside).
- * @see <a href="https://msdn.microsoft.com/en-us/library/ms997538.aspx">Source</a>
+ * @see <a href="https://docs.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)">Source</a>
  */
 type Ico struct {
 	Magic []byte

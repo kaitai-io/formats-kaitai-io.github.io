@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://msdn.microsoft.com/en-us/library/ms779636.aspx Source
+# @see https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85) Source
 class Avi < Kaitai::Struct::Struct
 
   CHUNK_TYPE = {
@@ -110,7 +110,7 @@ class Avi < Kaitai::Struct::Struct
 
   ##
   # Main header of an AVI file, defined as AVIMAINHEADER structure
-  # @see https://msdn.microsoft.com/en-us/library/ms779632.aspx Source
+  # @see https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85) Source
   class AvihBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -178,7 +178,7 @@ class Avi < Kaitai::Struct::Struct
 
   ##
   # Stream header (one header per stream), defined as AVISTREAMHEADER structure
-  # @see https://msdn.microsoft.com/en-us/library/ms779638.aspx Source
+  # @see https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85) Source
   class StrhBody < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

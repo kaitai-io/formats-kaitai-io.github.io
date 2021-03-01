@@ -266,7 +266,7 @@ public:
              * This attribute is not documented in Inside Macintosh and is not defined in <CarbonCore/Resources.h>.
              * It is documented in technote PR510,
              * and ResEdit has a checkbox called "Printer Driver MultiFinder Compatible" for this attribute.
-             * \sa https://www.fenestrated.net/mirrors/Apple%20Technotes%20(As%20of%202002)/pr/pr_510.html Apple Technical Note PR510 - Printer Driver Q&As, section '"Printer driver is MultiFinder compatible" bit'
+             * \sa https://developer.apple.com/library/archive/technotes/pr/pr_510.html Apple Technical Note PR510 - Printer Driver Q&As, section '"Printer driver is MultiFinder compatible" bit'
              */
             bool printer_driver_multifinder_compatible() const { return m_printer_driver_multifinder_compatible; }
 

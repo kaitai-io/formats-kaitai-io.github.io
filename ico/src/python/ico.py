@@ -15,7 +15,7 @@ class Ico(KaitaiStruct):
     contained inside).
     
     .. seealso::
-       Source - https://msdn.microsoft.com/en-us/library/ms997538.aspx
+       Source - https://docs.microsoft.com/en-us/previous-versions/ms997538(v=msdn.10)
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

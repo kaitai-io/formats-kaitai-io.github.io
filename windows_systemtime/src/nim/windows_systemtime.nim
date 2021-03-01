@@ -21,7 +21,7 @@ proc read*(_: typedesc[WindowsSystemtime], io: KaitaiStream, root: KaitaiStruct,
 Microsoft Windows SYSTEMTIME structure, stores individual components
 of date and time as individual fields, up to millisecond precision.
 
-@see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms724950.aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minwinbase/ns-minwinbase-systemtime">Source</a>
 ]##
 proc read*(_: typedesc[WindowsSystemtime], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): WindowsSystemtime =
   template this: untyped = result

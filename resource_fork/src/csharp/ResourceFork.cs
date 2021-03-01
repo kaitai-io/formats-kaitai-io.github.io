@@ -305,7 +305,7 @@ namespace Kaitai
                 /// and ResEdit has a checkbox called &quot;Printer Driver MultiFinder Compatible&quot; for this attribute.
                 /// </summary>
                 /// <remarks>
-                /// Reference: <a href="https://www.fenestrated.net/mirrors/Apple%20Technotes%20(As%20of%202002)/pr/pr_510.html">Apple Technical Note PR510 - Printer Driver Q&As, section '"Printer driver is MultiFinder compatible" bit'</a>
+                /// Reference: <a href="https://developer.apple.com/library/archive/technotes/pr/pr_510.html">Apple Technical Note PR510 - Printer Driver Q&As, section '"Printer driver is MultiFinder compatible" bit'</a>
                 /// </remarks>
                 public bool PrinterDriverMultifinderCompatible { get { return _printerDriverMultifinderCompatible; } }
 

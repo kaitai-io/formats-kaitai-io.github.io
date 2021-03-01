@@ -20,7 +20,7 @@ import java.nio.charset.Charset;
  * 
  * The file itself is a container, which contains a number of typed
  * "streams", which contain some data according to its type attribute.
- * @see <a href="https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx">Source</a>
+ * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header">Source</a>
  */
 public class WindowsMinidump extends KaitaiStruct {
     public static WindowsMinidump fromFile(String fileName) throws IOException {
@@ -121,7 +121,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list">Source</a>
      */
     public static class ThreadList extends KaitaiStruct {
         public static ThreadList fromFile(String fileName) throws IOException {
@@ -160,7 +160,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
      */
     public static class LocationDescriptor extends KaitaiStruct {
         public static LocationDescriptor fromFile(String fileName) throws IOException {
@@ -209,7 +209,7 @@ public class WindowsMinidump extends KaitaiStruct {
     /**
      * Specific string serialization scheme used in MiniDump format is
      * actually a simple 32-bit length-prefixed UTF-16 string.
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string">Source</a>
      */
     public static class MinidumpString extends KaitaiStruct {
         public static MinidumpString fromFile(String fileName) throws IOException {
@@ -247,7 +247,7 @@ public class WindowsMinidump extends KaitaiStruct {
     /**
      * "System info" stream provides basic information about the
      * hardware and operating system which produces this dump.
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info">Source</a>
      */
     public static class SystemInfo extends KaitaiStruct {
         public static SystemInfo fromFile(String fileName) throws IOException {
@@ -344,7 +344,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception">Source</a>
      */
     public static class ExceptionRecord extends KaitaiStruct {
         public static ExceptionRecord fromFile(String fileName) throws IOException {
@@ -411,7 +411,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info">Source</a>
      */
     public static class MiscInfo extends KaitaiStruct {
         public static MiscInfo fromFile(String fileName) throws IOException {
@@ -474,7 +474,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory">Source</a>
      */
     public static class Dir extends KaitaiStruct {
         public static Dir fromFile(String fileName) throws IOException {
@@ -561,7 +561,7 @@ public class WindowsMinidump extends KaitaiStruct {
         public StreamTypes streamType() { return streamType; }
 
         /**
-         * @see <a href="https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx">Source</a>
+         * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor">Source</a>
          */
         public long lenData() { return lenData; }
         public long ofsData() { return ofsData; }
@@ -571,7 +571,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread">Source</a>
      */
     public static class Thread extends KaitaiStruct {
         public static Thread fromFile(String fileName) throws IOException {
@@ -626,7 +626,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list">Source</a>
      */
     public static class MemoryList extends KaitaiStruct {
         public static MemoryList fromFile(String fileName) throws IOException {
@@ -665,7 +665,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor">Source</a>
      */
     public static class MemoryDescriptor extends KaitaiStruct {
         public static MemoryDescriptor fromFile(String fileName) throws IOException {
@@ -701,7 +701,7 @@ public class WindowsMinidump extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream">Source</a>
      */
     public static class ExceptionStream extends KaitaiStruct {
         public static ExceptionStream fromFile(String fileName) throws IOException {

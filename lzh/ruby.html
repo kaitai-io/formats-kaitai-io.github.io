@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -328,7 +328,7 @@ records.</p>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -343,7 +343,7 @@ records.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@header_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">if</span> <span class="n">header_len</span> <span class="o">&gt;</span> <span class="mi">0</span>
         <span class="vi">@file_record</span> <span class="o">=</span> <span class="no">FileRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -359,7 +359,7 @@ records.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@_raw_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">_parent</span><span class="o">.</span><span class="n">header_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
       <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header</span><span class="p">)</span>
       <span class="vi">@header</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -380,7 +380,7 @@ records.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@header1</span> <span class="o">=</span> <span class="no">Header1</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">if</span> <span class="n">header1</span><span class="o">.</span><span class="n">lha_level</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="vi">@filename_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -415,7 +415,7 @@ records.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@header_checksum</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="vi">@method_id</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
       <span class="vi">@file_size_compr</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>

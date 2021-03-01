@@ -24,7 +24,7 @@ class WindowsEvtLog(KaitaiStruct):
     file using relevant option in Event Viewer application.
     
     A Windows application can submit an entry into these logs using
-    [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
+    [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
     function of Windows API.
     
     Internally, EVT files consist of a fixed-size header and event
@@ -33,7 +33,7 @@ class WindowsEvtLog(KaitaiStruct):
     records.
     
     .. seealso::
-       Source - https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx
+       Source - https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -53,7 +53,7 @@ class WindowsEvtLog(KaitaiStruct):
     class Header(KaitaiStruct):
         """
         .. seealso::
-           Source - https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx
+           Source - https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -96,7 +96,7 @@ class WindowsEvtLog(KaitaiStruct):
     class Record(KaitaiStruct):
         """
         .. seealso::
-           Source - https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx
+           Source - https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -124,7 +124,7 @@ class WindowsEvtLog(KaitaiStruct):
     class RecordBody(KaitaiStruct):
         """
         .. seealso::
-           Source - https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx
+           Source - https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord
         """
 
         class EventTypes(Enum):

@@ -22,14 +22,14 @@ end
 # file using relevant option in Event Viewer application.
 # 
 # A Windows application can submit an entry into these logs using
-# [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
+# [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
 # function of Windows API.
 # 
 # Internally, EVT files consist of a fixed-size header and event
 # records. There are several usage scenarios (non-wrapping vs wrapping
 # log files) which result in slightly different organization of
 # records.
-# @see https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx Source
+# @see https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format Source
 class WindowsEvtLog < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -48,7 +48,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx Source
+  # @see https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85) Source
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -141,7 +141,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source
+  # @see https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord Source
   class Record < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -190,7 +190,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx Source
+  # @see https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord Source
   class RecordBody < Kaitai::Struct::Struct
 
     EVENT_TYPES = {
@@ -258,7 +258,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
 
     ##
     # Type of event.
-    # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx Source
+    # @see https://docs.microsoft.com/en-us/windows/win32/eventlog/event-types Source
     attr_reader :event_type
 
     ##
@@ -266,7 +266,7 @@ class WindowsEvtLog < Kaitai::Struct::Struct
     attr_reader :num_strings
 
     ##
-    # @see https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx Source
+    # @see https://docs.microsoft.com/en-us/windows/win32/eventlog/event-categories Source
     attr_reader :event_category
     attr_reader :reserved
 

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -299,7 +299,7 @@ section#format-index .row {
 
 
 <span class="c1">##</span>
-<span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms779636.aspx Source</span>
+<span class="c1"># @see https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85) Source</span>
 <span class="k">class</span> <span class="nc">Avi</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
   <span class="no">CHUNK_TYPE</span> <span class="o">=</span> <span class="p">{</span>
@@ -338,7 +338,7 @@ section#format-index .row {
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">82</span><span class="p">,</span> <span class="mi">73</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
     <span class="vi">@file_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -355,7 +355,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@list_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Avi</span><span class="o">::</span><span class="no">CHUNK_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
       <span class="vi">@data</span> <span class="o">=</span> <span class="no">Blocks</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="nb">self</span>
@@ -369,7 +369,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@left</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
       <span class="vi">@top</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
       <span class="vi">@right</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
@@ -387,7 +387,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@entries</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
       <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -401,14 +401,14 @@ section#format-index .row {
 
   <span class="c1">##</span>
   <span class="c1"># Main header of an AVI file, defined as AVIMAINHEADER structure</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms779632.aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85) Source</span>
   <span class="k">class</span> <span class="nc">AvihBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@micro_sec_per_frame</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@max_bytes_per_sec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@padding_granularity</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -440,7 +440,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@four_cc</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Avi</span><span class="o">::</span><span class="no">CHUNK_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
       <span class="vi">@block_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="k">case</span> <span class="n">four_cc</span>
@@ -469,14 +469,14 @@ section#format-index .row {
 
   <span class="c1">##</span>
   <span class="c1"># Stream header (one header per stream), defined as AVISTREAMHEADER structure</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms779638.aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85) Source</span>
   <span class="k">class</span> <span class="nc">StrhBody</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@fcc_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Avi</span><span class="o">::</span><span class="no">STREAM_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
       <span class="vi">@fcc_handler</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Avi</span><span class="o">::</span><span class="no">HANDLER_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
       <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -523,7 +523,7 @@ section#format-index .row {
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="nb">self</span>
     <span class="k">end</span>
   <span class="k">end</span>

@@ -215,7 +215,7 @@ class Bmp < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.microsoft.com/en-us/previous-versions/windows/desktop/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
+    # @see https://docs.microsoft.com/en-us/windows/win32/wcs/using-structures-in-wcs-1-0 "If the profile is embedded, profile data is the actual profile, and if it is linked, the profile data is the null-terminated file name of the profile. This cannot be a Unicode string. It must be composed exclusively of characters from the Windows character set (code page 1252)."
     def profile_data
       return @profile_data unless @profile_data.nil?
       if has_profile

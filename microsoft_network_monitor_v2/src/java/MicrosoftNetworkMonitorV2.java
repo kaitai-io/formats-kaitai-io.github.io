@@ -19,7 +19,7 @@ import java.util.ArrayList;
  * 
  * There are at least 2 different versions of the format: v1 and
  * v2. Netmon v3 seems to use the same file format as v1.
- * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx">Source</a>
+ * @see <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values">Source</a>
  */
 public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
     public static MicrosoftNetworkMonitorV2 fromFile(String fileName) throws IOException {
@@ -273,7 +273,7 @@ public class MicrosoftNetworkMonitorV2 extends KaitaiStruct {
      * A container for actually captured network data. Allow to
      * timestamp individual frames and designates how much data from
      * the original packet was actually written into the file.
-     * @see <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx">Source</a>
+     * @see <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
      */
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {

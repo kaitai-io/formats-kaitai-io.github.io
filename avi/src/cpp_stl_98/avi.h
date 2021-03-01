@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa https://msdn.microsoft.com/en-us/library/ms779636.aspx Source
+ * \sa https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85) Source
  */
 
 class avi_t : public kaitai::kstruct {
@@ -146,7 +146,7 @@ public:
 
     /**
      * Main header of an AVI file, defined as AVIMAINHEADER structure
-     * \sa https://msdn.microsoft.com/en-us/library/ms779632.aspx Source
+     * \sa https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85) Source
      */
 
     class avih_body_t : public kaitai::kstruct {
@@ -233,7 +233,7 @@ public:
 
     /**
      * Stream header (one header per stream), defined as AVISTREAMHEADER structure
-     * \sa https://msdn.microsoft.com/en-us/library/ms779638.aspx Source
+     * \sa https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85) Source
      */
 
     class strh_body_t : public kaitai::kstruct {

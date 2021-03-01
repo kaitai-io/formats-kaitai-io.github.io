@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -281,7 +281,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
 <span class="c1"># </span>
 <span class="c1"># The file itself is a container, which contains a number of typed</span>
 <span class="c1"># &quot;streams&quot;, which contain some data according to its type attribute.</span>
-<span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680378(VS.85).aspx Source</span>
+<span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_header Source</span>
 <span class="k">class</span> <span class="nc">WindowsMinidump</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
   <span class="no">STREAM_TYPES</span> <span class="o">=</span> <span class="p">{</span>
@@ -341,7 +341,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@magic1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic1</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic1</span> <span class="o">==</span> <span class="o">[</span><span class="mi">77</span><span class="p">,</span> <span class="mi">68</span><span class="p">,</span> <span class="mi">77</span><span class="p">,</span> <span class="mi">80</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
     <span class="vi">@magic2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -356,14 +356,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680515(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread_list Source</span>
   <span class="k">class</span> <span class="nc">ThreadList</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_threads</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@threads</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_threads</span><span class="p">)</span>
       <span class="p">(</span><span class="n">num_threads</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
@@ -376,14 +376,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source</span>
   <span class="k">class</span> <span class="nc">LocationDescriptor</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@ofs_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="nb">self</span>
@@ -404,14 +404,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="c1">##</span>
   <span class="c1"># Specific string serialization scheme used in MiniDump format is</span>
   <span class="c1"># actually a simple 32-bit length-prefixed UTF-16 string.</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680395(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_string Source</span>
   <span class="k">class</span> <span class="nc">MinidumpString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@len_str</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@str</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_str</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-16LE&quot;</span><span class="p">)</span>
       <span class="nb">self</span>
@@ -423,7 +423,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="c1">##</span>
   <span class="c1"># &quot;System info&quot; stream provides basic information about the</span>
   <span class="c1"># hardware and operating system which produces this dump.</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680396(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_system_info Source</span>
   <span class="k">class</span> <span class="nc">SystemInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
     <span class="no">CPU_ARCHS</span> <span class="o">=</span> <span class="p">{</span>
@@ -439,7 +439,7 @@ used for that purpose in Windows and Google Chrome projects.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@cpu_arch</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CPU_ARCHS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
       <span class="vi">@cpu_level</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
       <span class="vi">@cpu_revision</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
@@ -480,14 +480,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680367(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception Source</span>
   <span class="k">class</span> <span class="nc">ExceptionRecord</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@inner_exception</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
@@ -521,14 +521,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680389(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_misc_info Source</span>
   <span class="k">class</span> <span class="nc">MiscInfo</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@len_info</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@flags1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@process_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -556,14 +556,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680365(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_directory Source</span>
   <span class="k">class</span> <span class="nc">Dir</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@stream_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">WindowsMinidump</span><span class="o">::</span><span class="no">STREAM_TYPES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
       <span class="vi">@len_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@ofs_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -603,21 +603,21 @@ used for that purpose in Windows and Google Chrome projects.</p>
     <span class="kp">attr_reader</span> <span class="ss">:stream_type</span>
 
     <span class="c1">##</span>
-    <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680383(v=vs.85).aspx Source</span>
+    <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_location_descriptor Source</span>
     <span class="kp">attr_reader</span> <span class="ss">:len_data</span>
     <span class="kp">attr_reader</span> <span class="ss">:ofs_data</span>
     <span class="kp">attr_reader</span> <span class="ss">:_raw_data</span>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680517(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_thread Source</span>
   <span class="k">class</span> <span class="nc">Thread</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@thread_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@suspend_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@priority_class</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -640,14 +640,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680387(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory64_list Source</span>
   <span class="k">class</span> <span class="nc">MemoryList</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@num_mem_ranges</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@mem_ranges</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">num_mem_ranges</span><span class="p">)</span>
       <span class="p">(</span><span class="n">num_mem_ranges</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
@@ -660,14 +660,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680384(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_memory_descriptor Source</span>
   <span class="k">class</span> <span class="nc">MemoryDescriptor</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@addr_memory_range</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u8le</span>
       <span class="vi">@memory</span> <span class="o">=</span> <span class="no">LocationDescriptor</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="nb">self</span>
@@ -677,14 +677,14 @@ used for that purpose in Windows and Google Chrome projects.</p>
   <span class="k">end</span>
 
   <span class="c1">##</span>
-  <span class="c1"># @see https://msdn.microsoft.com/en-us/library/ms680368(v=vs.85).aspx Source</span>
+  <span class="c1"># @see https://docs.microsoft.com/en-us/windows/win32/api/minidumpapiset/ns-minidumpapiset-minidump_exception_stream Source</span>
   <span class="k">class</span> <span class="nc">ExceptionStream</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@thread_id</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@exception_rec</span> <span class="o">=</span> <span class="no">ExceptionRecord</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>

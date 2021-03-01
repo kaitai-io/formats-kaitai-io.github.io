@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms779636.aspx">Source</a>
+    /// Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)">Source</a>
     /// </remarks>
     public partial class Avi : KaitaiStruct
     {
@@ -166,7 +166,7 @@ namespace Kaitai
         /// Main header of an AVI file, defined as AVIMAINHEADER structure
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms779632.aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)">Source</a>
         /// </remarks>
         public partial class AvihBody : KaitaiStruct
         {
@@ -282,7 +282,7 @@ namespace Kaitai
         /// Stream header (one header per stream), defined as AVISTREAMHEADER structure
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/ms779638.aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)">Source</a>
         /// </remarks>
         public partial class StrhBody : KaitaiStruct
         {

@@ -20,7 +20,7 @@ namespace Kaitai
     /// file using relevant option in Event Viewer application.
     /// 
     /// A Windows application can submit an entry into these logs using
-    /// [ReportEvent](https://msdn.microsoft.com/en-us/library/aa363679(v=vs.85).aspx)
+    /// [ReportEventA](https://docs.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-reporteventa)
     /// function of Windows API.
     /// 
     /// Internally, EVT files consist of a fixed-size header and event
@@ -29,7 +29,7 @@ namespace Kaitai
     /// records.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://msdn.microsoft.com/en-us/library/bb309026(v=vs.85).aspx">Source</a>
+    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-log-file-format">Source</a>
     /// </remarks>
     public partial class WindowsEvtLog : KaitaiStruct
     {
@@ -58,7 +58,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/bb309024(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/windows/desktop/legacy/bb309024(v=vs.85)">Source</a>
         /// </remarks>
         public partial class Header : KaitaiStruct
         {
@@ -205,7 +205,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
         /// </remarks>
         public partial class Record : KaitaiStruct
         {
@@ -281,7 +281,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363646(v=vs.85).aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-eventlogrecord">Source</a>
         /// </remarks>
         public partial class RecordBody : KaitaiStruct
         {
@@ -396,7 +396,7 @@ namespace Kaitai
             /// Type of event.
             /// </summary>
             /// <remarks>
-            /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363662(v=vs.85).aspx">Source</a>
+            /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-types">Source</a>
             /// </remarks>
             public EventTypes EventType { get { return _eventType; } }
 
@@ -406,7 +406,7 @@ namespace Kaitai
             public ushort NumStrings { get { return _numStrings; } }
 
             /// <remarks>
-            /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363649(v=vs.85).aspx">Source</a>
+            /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/eventlog/event-categories">Source</a>
             /// </remarks>
             public ushort EventCategory { get { return _eventCategory; } }
             public byte[] Reserved { get { return _reserved; } }

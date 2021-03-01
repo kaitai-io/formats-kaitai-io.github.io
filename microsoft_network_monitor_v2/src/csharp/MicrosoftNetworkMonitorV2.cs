@@ -16,7 +16,7 @@ namespace Kaitai
     /// v2. Netmon v3 seems to use the same file format as v1.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx">Source</a>
+    /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values">Source</a>
     /// </remarks>
     public partial class MicrosoftNetworkMonitorV2 : KaitaiStruct
     {
@@ -257,7 +257,7 @@ namespace Kaitai
         /// the original packet was actually written into the file.
         /// </summary>
         /// <remarks>
-        /// Reference: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx">Source</a>
+        /// Reference: <a href="https://docs.microsoft.com/en-us/windows/win32/netmon2/frame">Source</a>
         /// </remarks>
         public partial class Frame : KaitaiStruct
         {

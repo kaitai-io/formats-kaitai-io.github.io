@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -347,7 +347,7 @@ a simple header prepended.</p>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@version_magic</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">VERSION</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
     <span class="vi">@crlf</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
     <span class="vi">@modification_timestamp</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -367,7 +367,7 @@ a simple header prepended.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@arg_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@local_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@stack_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -405,7 +405,7 @@ a simple header prepended.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@string_magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">115</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">string_magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/assembly/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">string_magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">115</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
       <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -548,7 +548,7 @@ a simple header prepended.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@op_code</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OP_CODE_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="k">if</span> <span class="no">I__OP_CODE_ENUM</span><span class="o">[</span><span class="n">op_code</span><span class="o">]</span> <span class="o">&gt;=</span> <span class="no">I__OP_CODE_ENUM</span><span class="o">[</span><span class="ss">:op_code_enum_store_name</span><span class="o">]</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
@@ -578,7 +578,7 @@ a simple header prepended.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">OBJECT_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
       <span class="k">case</span> <span class="n">type</span>
       <span class="k">when</span> <span class="ss">:object_type_string</span>
@@ -608,7 +608,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="nb">self</span>
       <span class="k">end</span>
     <span class="k">end</span>
@@ -618,7 +618,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="nb">self</span>
       <span class="k">end</span>
     <span class="k">end</span>
@@ -628,7 +628,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@interned_list_index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -640,7 +640,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="nb">self</span>
       <span class="k">end</span>
     <span class="k">end</span>
@@ -650,7 +650,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@items</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
         <span class="p">(</span><span class="n">count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
@@ -667,7 +667,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="nb">self</span>
@@ -681,7 +681,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
         <span class="nb">self</span>
@@ -695,7 +695,7 @@ a simple header prepended.</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">length</span><span class="p">)</span>
         <span class="nb">self</span>
@@ -712,7 +712,7 @@ a simple header prepended.</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@items</span> <span class="o">=</span> <span class="o">[]</span>
       <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
       <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>

@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -138,7 +138,7 @@ or you can convert images of other formats.</li>
                     </div>
                     
                     <div class="panel-body">
-                        License: <a href="https://spdx.org/licenses/GPL3.0+.html">GPL3.0+</a>
+                        License: <a href="https://spdx.org/licenses/GPL-3.0-or-later.html">GPL-3.0-or-later</a>
                     </div>
                     
                     
@@ -339,7 +339,7 @@ or you can convert images of other formats.</li>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@header</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -349,7 +349,7 @@ or you can convert images of other formats.</li>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@text</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">64</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
       <span class="vi">@signature</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
       <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">218</span><span class="p">,</span> <span class="mi">190</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">signature</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header/seq/1&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">signature</span> <span class="o">==</span> <span class="o">[</span><span class="mi">127</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">218</span><span class="p">,</span> <span class="mi">190</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
@@ -368,7 +368,7 @@ or you can convert images of other formats.</li>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@uuid</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -380,7 +380,7 @@ or you can convert images of other formats.</li>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="vi">@minor</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="nb">self</span>
@@ -394,7 +394,7 @@ or you can convert images of other formats.</li>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@image_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Vdi</span><span class="o">::</span><span class="no">IMAGE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">)</span>
         <span class="vi">@image_flags</span> <span class="o">=</span> <span class="no">Flags</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@description</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
@@ -432,7 +432,7 @@ or you can convert images of other formats.</li>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@cylinders</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
           <span class="vi">@heads</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
           <span class="vi">@sectors</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -450,7 +450,7 @@ or you can convert images of other formats.</li>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@reserved0</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
           <span class="vi">@zero_expand</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
           <span class="vi">@reserved1</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
@@ -530,7 +530,7 @@ or you can convert images of other formats.</li>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@index</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_main</span><span class="o">.</span><span class="n">blocks_in_image</span><span class="p">)</span>
       <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_main</span><span class="o">.</span><span class="n">blocks_in_image</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
         <span class="vi">@index</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">BlockIndex</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -543,7 +543,7 @@ or you can convert images of other formats.</li>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@index</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="nb">self</span>
       <span class="k">end</span>
@@ -569,7 +569,7 @@ or you can convert images of other formats.</li>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@blocks</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_main</span><span class="o">.</span><span class="n">blocks_in_image</span><span class="p">)</span>
       <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_main</span><span class="o">.</span><span class="n">blocks_in_image</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
         <span class="vi">@blocks</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Block</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -582,7 +582,7 @@ or you can convert images of other formats.</li>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@metadata</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_main</span><span class="o">.</span><span class="n">block_metadata_size</span><span class="p">)</span>
         <span class="vi">@_raw_data</span> <span class="o">=</span> <span class="o">[]</span>
         <span class="vi">@data</span> <span class="o">=</span> <span class="o">[]</span>
@@ -601,7 +601,7 @@ or you can convert images of other formats.</li>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">header_main</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">sector_size</span><span class="p">)</span>
           <span class="nb">self</span>
         <span class="k">end</span>

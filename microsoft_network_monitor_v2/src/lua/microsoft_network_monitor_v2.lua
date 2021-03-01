@@ -7,8 +7,8 @@ require("kaitaistruct")
 local enum = require("enum")
 local stringstream = require("string_stream")
 
-require("windows_systemtime")
 require("ethernet_frame")
+require("windows_systemtime")
 -- 
 -- Microsoft Network Monitor (AKA Netmon) is a proprietary Microsoft's
 -- network packet sniffing and analysis tool. It can save captured
@@ -18,7 +18,7 @@ require("ethernet_frame")
 -- 
 -- There are at least 2 different versions of the format: v1 and
 -- v2. Netmon v3 seems to use the same file format as v1.
--- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/ee817717.aspx)
+-- See also: Source (https://docs.microsoft.com/en-us/windows/win32/netmon2/capturefile-header-values)
 MicrosoftNetworkMonitorV2 = class.class(KaitaiStruct)
 
 MicrosoftNetworkMonitorV2.Linktype = enum.Enum {
@@ -242,7 +242,7 @@ end
 -- A container for actually captured network data. Allow to
 -- timestamp individual frames and designates how much data from
 -- the original packet was actually written into the file.
--- See also: Source (https://msdn.microsoft.com/en-us/library/windows/desktop/ee831821.aspx)
+-- See also: Source (https://docs.microsoft.com/en-us/windows/win32/netmon2/frame)
 MicrosoftNetworkMonitorV2.Frame = class.class(KaitaiStruct)
 
 function MicrosoftNetworkMonitorV2.Frame:_init(io, parent, root)

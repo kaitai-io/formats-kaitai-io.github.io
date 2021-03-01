@@ -55,7 +55,7 @@ class WindowsResourceFile(KaitaiStruct):
         number or a string.
         
         .. seealso::
-           Source - https://msdn.microsoft.com/en-us/library/windows/desktop/ms648027.aspx
+           Source - https://docs.microsoft.com/en-us/windows/win32/menurc/resourceheader
         """
 
         class PredefTypes(Enum):

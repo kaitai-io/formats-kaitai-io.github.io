@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
-  <link rel="stylesheet" href="../pygments-default.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
   <style>
 .diagram-img {
     display: block;
@@ -142,7 +142,7 @@ any of:</p>
                     </div>
                     
                     <div class="panel-body">
-                        License: <a href="https://spdx.org/licenses/GPL-3.0+.html">GPL-3.0+</a>
+                        License: <a href="https://spdx.org/licenses/GPL-3.0-or-later.html">GPL-3.0-or-later</a>
                     </div>
                     
                     
@@ -469,7 +469,7 @@ any of:</p>
     <span class="n">_read</span>
   <span class="k">end</span>
 
-  <span class="k">def</span> <span class="nf">_read</span>
+  <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@signature</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">176</span><span class="p">,</span> <span class="mi">147</span><span class="p">,</span> <span class="mi">255</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">signature</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">signature</span> <span class="o">==</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">176</span><span class="p">,</span> <span class="mi">147</span><span class="p">,</span> <span class="mi">255</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
     <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -488,7 +488,7 @@ any of:</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@data</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
       <span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
         <span class="vi">@data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -503,7 +503,7 @@ any of:</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@frames</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">last_frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
       <span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">last_frame</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
         <span class="vi">@frames</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Frame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -530,7 +530,7 @@ any of:</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@_raw_main</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">size</span> <span class="o">-</span> <span class="mi">4</span><span class="p">))</span>
       <span class="n">_io__raw_main</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_main</span><span class="p">)</span>
@@ -543,7 +543,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@fm_ndots</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
         <span class="k">if</span> <span class="n">fm_ndots</span> <span class="o">&gt;</span> <span class="mi">0</span>
           <span class="vi">@coord_header</span> <span class="o">=</span> <span class="no">DotsHeader</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -564,7 +564,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@header_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
           <span class="vi">@_raw_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">header_size</span><span class="p">)</span>
           <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header</span><span class="p">)</span>
@@ -577,7 +577,7 @@ any of:</p>
             <span class="n">_read</span>
           <span class="k">end</span>
 
-          <span class="k">def</span> <span class="nf">_read</span>
+          <span class="k">def</span> <span class="n">_read</span>
             <span class="vi">@coord_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
             <span class="vi">@version</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
             <span class="vi">@xyunits</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">NtMdt</span><span class="o">::</span><span class="no">UNIT</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">)</span>
@@ -597,7 +597,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@coord_x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
           <span class="vi">@coord_y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
           <span class="vi">@forward_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s4le</span>
@@ -616,7 +616,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@forward</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">coordinates</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="n">forward_size</span><span class="p">)</span>
           <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">coordinates</span><span class="o">[</span><span class="n">index</span><span class="o">].</span><span class="n">forward_size</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
             <span class="vi">@forward</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
@@ -642,7 +642,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">NtMdt</span><span class="o">::</span><span class="no">Frame</span><span class="o">::</span><span class="no">FRAME_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
         <span class="vi">@version</span> <span class="o">=</span> <span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@date_time</span> <span class="o">=</span> <span class="no">DateTime</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -695,7 +695,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@block_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@blocks_headers</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">block_count</span><span class="p">)</span>
         <span class="p">(</span><span class="n">block_count</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
@@ -717,7 +717,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@name_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
           <span class="vi">@len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
           <span class="nb">self</span>
@@ -736,7 +736,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@head_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@tot_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
         <span class="vi">@guids</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -775,7 +775,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@image</span> <span class="o">=</span> <span class="o">[]</span>
           <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
           <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
@@ -790,7 +790,7 @@ any of:</p>
             <span class="n">_read</span>
           <span class="k">end</span>
 
-          <span class="k">def</span> <span class="nf">_read</span>
+          <span class="k">def</span> <span class="n">_read</span>
             <span class="vi">@items</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">n_mesurands</span><span class="p">)</span>
             <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">n_mesurands</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
               <span class="k">case</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">mesurands</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">data_type</span>
@@ -828,7 +828,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@len_tot</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
           <span class="vi">@len_struct</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
           <span class="vi">@len_name</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
@@ -912,7 +912,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@_raw_vars</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">var_size</span><span class="p">)</span>
         <span class="n">_io__raw_vars</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_vars</span><span class="p">)</span>
         <span class="vi">@vars</span> <span class="o">=</span> <span class="no">Vars</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_vars</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -934,7 +934,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@x_scale</span> <span class="o">=</span> <span class="no">AxisScale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
           <span class="vi">@y_scale</span> <span class="o">=</span> <span class="no">AxisScale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
           <span class="vi">@z_scale</span> <span class="o">=</span> <span class="no">AxisScale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -994,7 +994,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@date</span> <span class="o">=</span> <span class="no">Date</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="vi">@time</span> <span class="o">=</span> <span class="no">Time</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
         <span class="nb">self</span>
@@ -1005,7 +1005,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@year</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
           <span class="vi">@month</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
           <span class="vi">@day</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
@@ -1030,7 +1030,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@hour</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
           <span class="vi">@min</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
           <span class="vi">@sec</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
@@ -1058,7 +1058,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
         <span class="vi">@step</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_f4le</span>
         <span class="vi">@unit</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">NtMdt</span><span class="o">::</span><span class="no">UNIT</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span><span class="p">)</span>
@@ -1109,7 +1109,7 @@ any of:</p>
         <span class="n">_read</span>
       <span class="k">end</span>
 
-      <span class="k">def</span> <span class="nf">_read</span>
+      <span class="k">def</span> <span class="n">_read</span>
         <span class="vi">@_raw_vars</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">var_size</span><span class="p">)</span>
         <span class="n">_io__raw_vars</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_vars</span><span class="p">)</span>
         <span class="vi">@vars</span> <span class="o">=</span> <span class="no">Vars</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_vars</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -1146,7 +1146,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@x_scale</span> <span class="o">=</span> <span class="no">AxisScale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
           <span class="vi">@y_scale</span> <span class="o">=</span> <span class="no">AxisScale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
           <span class="vi">@z_scale</span> <span class="o">=</span> <span class="no">AxisScale</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
@@ -1264,7 +1264,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@x</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
           <span class="vi">@y</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_s2le</span>
           <span class="nb">self</span>
@@ -1278,7 +1278,7 @@ any of:</p>
           <span class="n">_read</span>
         <span class="k">end</span>
 
-        <span class="k">def</span> <span class="nf">_read</span>
+        <span class="k">def</span> <span class="n">_read</span>
           <span class="vi">@unkn</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
           <span class="vi">@double_pass</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
           <span class="vi">@bottom</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
@@ -1353,7 +1353,7 @@ any of:</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@minor</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="vi">@major</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="nb">self</span>
@@ -1367,7 +1367,7 @@ any of:</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@xml_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@xml</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">xml_len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-16LE&quot;</span><span class="p">)</span>
       <span class="nb">self</span>
@@ -1381,7 +1381,7 @@ any of:</p>
       <span class="n">_read</span>
     <span class="k">end</span>
 
-    <span class="k">def</span> <span class="nf">_read</span>
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@title_len</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@title</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">title_len</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;cp1251&quot;</span><span class="p">)</span>
       <span class="nb">self</span>

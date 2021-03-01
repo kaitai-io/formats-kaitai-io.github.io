@@ -27,7 +27,7 @@ class S3m(KaitaiStruct):
     for repetitive musical phrases.
     
     .. seealso::
-       Source - http://hackipedia.org/File%20formats/Music/Sample%20based/text/Scream%20Tracker%203.20%20file%20format.cp437.txt.utf-8.txt
+       Source - http://hackipedia.org/browse.cgi/File%20formats/Music%20tracker/S3M%2c%20ScreamTracker%203/Scream%20Tracker%203.20%20by%20Future%20Crew.txt
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

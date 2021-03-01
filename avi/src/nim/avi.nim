@@ -95,7 +95,7 @@ proc read*(_: typedesc[Avi_StrfBody], io: KaitaiStream, root: KaitaiStruct, pare
 
 
 ##[
-@see <a href="https://msdn.microsoft.com/en-us/library/ms779636.aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/previous-versions/ms779636(v=vs.85)">Source</a>
 ]##
 proc read*(_: typedesc[Avi], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Avi =
   template this: untyped = result
@@ -177,7 +177,7 @@ proc fromFile*(_: typedesc[Avi_Blocks], filename: string): Avi_Blocks =
 
 ##[
 Main header of an AVI file, defined as AVIMAINHEADER structure
-@see <a href="https://msdn.microsoft.com/en-us/library/ms779632.aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/previous-versions/ms779632(v=vs.85)">Source</a>
 ]##
 proc read*(_: typedesc[Avi_AvihBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_AvihBody =
   template this: untyped = result
@@ -255,7 +255,7 @@ proc fromFile*(_: typedesc[Avi_Block], filename: string): Avi_Block =
 
 ##[
 Stream header (one header per stream), defined as AVISTREAMHEADER structure
-@see <a href="https://msdn.microsoft.com/en-us/library/ms779638.aspx">Source</a>
+@see <a href="https://docs.microsoft.com/en-us/previous-versions/ms779638(v=vs.85)">Source</a>
 ]##
 proc read*(_: typedesc[Avi_StrhBody], io: KaitaiStream, root: KaitaiStruct, parent: Avi_Block): Avi_StrhBody =
   template this: untyped = result
