@@ -188,6 +188,41 @@ namespace Uimage {
          * INTEGRITY
          */
         const INTEGRITY = 21;
+
+        /**
+         * OSE
+         */
+        const OSE = 22;
+
+        /**
+         * Plan 9
+         */
+        const PLAN9 = 23;
+
+        /**
+         * OpenRTOS
+         */
+        const OPENRTOS = 24;
+
+        /**
+         * ARM Trusted Firmware
+         */
+        const ARM_TRUSTED_FIRMWARE = 25;
+
+        /**
+         * Trusted Execution Environment
+         */
+        const TEE = 26;
+
+        /**
+         * RISC-V OpenSBI
+         */
+        const OPENSBI = 27;
+
+        /**
+         * EFI Firmware (e.g. GRUB2)
+         */
+        const EFI = 28;
     }
 }
 
@@ -288,6 +323,46 @@ namespace Uimage {
          * STMicroelectronics ST200
          */
         const ST200 = 18;
+
+        /**
+         * Sandbox architecture (test only)
+         */
+        const SANDBOX = 19;
+
+        /**
+         * ANDES Technology - NDS32
+         */
+        const NDS32 = 20;
+
+        /**
+         * OpenRISC 1000
+         */
+        const OPENRISC = 21;
+
+        /**
+         * ARM64
+         */
+        const ARM64 = 22;
+
+        /**
+         * Synopsys DesignWare ARC
+         */
+        const ARC = 23;
+
+        /**
+         * AMD x86_64, Intel and Via
+         */
+        const X86_64 = 24;
+
+        /**
+         * Xtensa
+         */
+        const XTENSA = 25;
+
+        /**
+         * RISC-V
+         */
+        const RISCV = 26;
     }
 }
 
@@ -318,6 +393,16 @@ namespace Uimage {
          * lzo Compression Used
          */
         const LZO = 4;
+
+        /**
+         * lz4 Compression Used
+         */
+        const LZ4 = 5;
+
+        /**
+         * zstd Compression Used
+         */
+        const ZSTD = 6;
     }
 }
 
@@ -378,5 +463,155 @@ namespace Uimage {
          * Freescale IMXBoot Image
          */
         const IMXIMAGE = 10;
+
+        /**
+         * Davinci UBL Image
+         */
+        const UBLIMAGE = 11;
+
+        /**
+         * TI OMAP Config Header Image
+         */
+        const OMAPIMAGE = 12;
+
+        /**
+         * TI Davinci AIS Image
+         */
+        const AISIMAGE = 13;
+
+        /**
+         * OS Kernel Image, can run from any load address
+         */
+        const KERNEL_NOLOAD = 14;
+
+        /**
+         * Freescale PBL Boot Image
+         */
+        const PBLIMAGE = 15;
+
+        /**
+         * Freescale MXSBoot Image
+         */
+        const MXSIMAGE = 16;
+
+        /**
+         * TI Keystone GPHeader Image
+         */
+        const GPIMAGE = 17;
+
+        /**
+         * ATMEL ROM bootable Image
+         */
+        const ATMELIMAGE = 18;
+
+        /**
+         * Altera SOCFPGA CV/AV Preloader
+         */
+        const SOCFPGAIMAGE = 19;
+
+        /**
+         * x86 setup.bin Image
+         */
+        const X86_SETUP = 20;
+
+        /**
+         * x86 setup.bin Image
+         */
+        const LPC32XXIMAGE = 21;
+
+        /**
+         * A list of typeless images
+         */
+        const LOADABLE = 22;
+
+        /**
+         * Rockchip Boot Image
+         */
+        const RKIMAGE = 23;
+
+        /**
+         * Rockchip SD card
+         */
+        const RKSD = 24;
+
+        /**
+         * Rockchip SPI image
+         */
+        const RKSPI = 25;
+
+        /**
+         * Xilinx Zynq Boot Image
+         */
+        const ZYNQIMAGE = 26;
+
+        /**
+         * Xilinx ZynqMP Boot Image
+         */
+        const ZYNQMPIMAGE = 27;
+
+        /**
+         * Xilinx ZynqMP Boot Image (bif)
+         */
+        const ZYNQMPBIF = 28;
+
+        /**
+         * FPGA Image
+         */
+        const FPGA = 29;
+
+        /**
+         * VYBRID .vyb Image
+         */
+        const VYBRIDIMAGE = 30;
+
+        /**
+         * Trusted Execution Environment OS Image
+         */
+        const TEE = 31;
+
+        /**
+         * Firmware Image with HABv4 IVT
+         */
+        const FIRMWARE_IVT = 32;
+
+        /**
+         * TI Power Management Micro-Controller Firmware
+         */
+        const PMMC = 33;
+
+        /**
+         * STMicroelectronics STM32 Image
+         */
+        const STM32IMAGE = 34;
+
+        /**
+         * Altera SOCFPGA A10 Preloader
+         */
+        const SOCFPGAIMAGE_V1 = 35;
+
+        /**
+         * MediaTek BootROM loadable Image
+         */
+        const MTKIMAGE = 36;
+
+        /**
+         * Freescale IMX8MBoot Image
+         */
+        const IMX8MIMAGE = 37;
+
+        /**
+         * Freescale IMX8Boot Image
+         */
+        const IMX8IMAGE = 38;
+
+        /**
+         * Coprocessor Image for remoteproc
+         */
+        const COPRO = 39;
+
+        /**
+         * Allwinner eGON Boot Image
+         */
+        const SUNXI_EGON = 40;
     }
 }

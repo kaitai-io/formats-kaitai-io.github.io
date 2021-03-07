@@ -15,7 +15,7 @@ class Uimage(KaitaiStruct):
     with sha1 and md5 checksums.
     
     .. seealso::
-       Source - https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h
+       Source - https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h
     """
 
     class UimageOs(Enum):
@@ -41,6 +41,13 @@ class Uimage(KaitaiStruct):
         artos = 19
         unity = 20
         integrity = 21
+        ose = 22
+        plan9 = 23
+        openrtos = 24
+        arm_trusted_firmware = 25
+        tee = 26
+        opensbi = 27
+        efi = 28
 
     class UimageArch(Enum):
         invalid = 0
@@ -62,6 +69,14 @@ class Uimage(KaitaiStruct):
         blackfin = 16
         avr32 = 17
         st200 = 18
+        sandbox = 19
+        nds32 = 20
+        openrisc = 21
+        arm64 = 22
+        arc = 23
+        x86_64 = 24
+        xtensa = 25
+        riscv = 26
 
     class UimageComp(Enum):
         none = 0
@@ -69,6 +84,8 @@ class Uimage(KaitaiStruct):
         bzip2 = 2
         lzma = 3
         lzo = 4
+        lz4 = 5
+        zstd = 6
 
     class UimageType(Enum):
         invalid = 0
@@ -82,6 +99,36 @@ class Uimage(KaitaiStruct):
         flatdt = 8
         kwbimage = 9
         imximage = 10
+        ublimage = 11
+        omapimage = 12
+        aisimage = 13
+        kernel_noload = 14
+        pblimage = 15
+        mxsimage = 16
+        gpimage = 17
+        atmelimage = 18
+        socfpgaimage = 19
+        x86_setup = 20
+        lpc32xximage = 21
+        loadable = 22
+        rkimage = 23
+        rksd = 24
+        rkspi = 25
+        zynqimage = 26
+        zynqmpimage = 27
+        zynqmpbif = 28
+        fpga = 29
+        vybridimage = 30
+        tee = 31
+        firmware_ivt = 32
+        pmmc = 33
+        stm32image = 34
+        socfpgaimage_v1 = 35
+        mtkimage = 36
+        imx8mimage = 37
+        imx8image = 38
+        copro = 39
+        sunxi_egon = 40
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent

@@ -14,7 +14,7 @@
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * \sa https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h Source
+ * \sa https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h Source
  */
 
 class uimage_t : public kaitai::kstruct {
@@ -44,7 +44,14 @@ public:
         UIMAGE_OS_RTEMS = 18,
         UIMAGE_OS_ARTOS = 19,
         UIMAGE_OS_UNITY = 20,
-        UIMAGE_OS_INTEGRITY = 21
+        UIMAGE_OS_INTEGRITY = 21,
+        UIMAGE_OS_OSE = 22,
+        UIMAGE_OS_PLAN9 = 23,
+        UIMAGE_OS_OPENRTOS = 24,
+        UIMAGE_OS_ARM_TRUSTED_FIRMWARE = 25,
+        UIMAGE_OS_TEE = 26,
+        UIMAGE_OS_OPENSBI = 27,
+        UIMAGE_OS_EFI = 28
     };
 
     enum uimage_arch_t {
@@ -66,7 +73,15 @@ public:
         UIMAGE_ARCH_NIOS2 = 15,
         UIMAGE_ARCH_BLACKFIN = 16,
         UIMAGE_ARCH_AVR32 = 17,
-        UIMAGE_ARCH_ST200 = 18
+        UIMAGE_ARCH_ST200 = 18,
+        UIMAGE_ARCH_SANDBOX = 19,
+        UIMAGE_ARCH_NDS32 = 20,
+        UIMAGE_ARCH_OPENRISC = 21,
+        UIMAGE_ARCH_ARM64 = 22,
+        UIMAGE_ARCH_ARC = 23,
+        UIMAGE_ARCH_X86_64 = 24,
+        UIMAGE_ARCH_XTENSA = 25,
+        UIMAGE_ARCH_RISCV = 26
     };
 
     enum uimage_comp_t {
@@ -74,7 +89,9 @@ public:
         UIMAGE_COMP_GZIP = 1,
         UIMAGE_COMP_BZIP2 = 2,
         UIMAGE_COMP_LZMA = 3,
-        UIMAGE_COMP_LZO = 4
+        UIMAGE_COMP_LZO = 4,
+        UIMAGE_COMP_LZ4 = 5,
+        UIMAGE_COMP_ZSTD = 6
     };
 
     enum uimage_type_t {
@@ -88,7 +105,37 @@ public:
         UIMAGE_TYPE_FILESYSTEM = 7,
         UIMAGE_TYPE_FLATDT = 8,
         UIMAGE_TYPE_KWBIMAGE = 9,
-        UIMAGE_TYPE_IMXIMAGE = 10
+        UIMAGE_TYPE_IMXIMAGE = 10,
+        UIMAGE_TYPE_UBLIMAGE = 11,
+        UIMAGE_TYPE_OMAPIMAGE = 12,
+        UIMAGE_TYPE_AISIMAGE = 13,
+        UIMAGE_TYPE_KERNEL_NOLOAD = 14,
+        UIMAGE_TYPE_PBLIMAGE = 15,
+        UIMAGE_TYPE_MXSIMAGE = 16,
+        UIMAGE_TYPE_GPIMAGE = 17,
+        UIMAGE_TYPE_ATMELIMAGE = 18,
+        UIMAGE_TYPE_SOCFPGAIMAGE = 19,
+        UIMAGE_TYPE_X86_SETUP = 20,
+        UIMAGE_TYPE_LPC32XXIMAGE = 21,
+        UIMAGE_TYPE_LOADABLE = 22,
+        UIMAGE_TYPE_RKIMAGE = 23,
+        UIMAGE_TYPE_RKSD = 24,
+        UIMAGE_TYPE_RKSPI = 25,
+        UIMAGE_TYPE_ZYNQIMAGE = 26,
+        UIMAGE_TYPE_ZYNQMPIMAGE = 27,
+        UIMAGE_TYPE_ZYNQMPBIF = 28,
+        UIMAGE_TYPE_FPGA = 29,
+        UIMAGE_TYPE_VYBRIDIMAGE = 30,
+        UIMAGE_TYPE_TEE = 31,
+        UIMAGE_TYPE_FIRMWARE_IVT = 32,
+        UIMAGE_TYPE_PMMC = 33,
+        UIMAGE_TYPE_STM32IMAGE = 34,
+        UIMAGE_TYPE_SOCFPGAIMAGE_V1 = 35,
+        UIMAGE_TYPE_MTKIMAGE = 36,
+        UIMAGE_TYPE_IMX8MIMAGE = 37,
+        UIMAGE_TYPE_IMX8IMAGE = 38,
+        UIMAGE_TYPE_COPRO = 39,
+        UIMAGE_TYPE_SUNXI_EGON = 40
     };
 
     uimage_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, uimage_t* p__root = 0);

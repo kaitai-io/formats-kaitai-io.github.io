@@ -13,7 +13,7 @@
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see {@link https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h|Source}
+ * @see {@link https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h|Source}
  */
 
 var Uimage = (function() {
@@ -40,6 +40,13 @@ var Uimage = (function() {
     ARTOS: 19,
     UNITY: 20,
     INTEGRITY: 21,
+    OSE: 22,
+    PLAN9: 23,
+    OPENRTOS: 24,
+    ARM_TRUSTED_FIRMWARE: 25,
+    TEE: 26,
+    OPENSBI: 27,
+    EFI: 28,
 
     0: "INVALID",
     1: "OPENBSD",
@@ -63,6 +70,13 @@ var Uimage = (function() {
     19: "ARTOS",
     20: "UNITY",
     21: "INTEGRITY",
+    22: "OSE",
+    23: "PLAN9",
+    24: "OPENRTOS",
+    25: "ARM_TRUSTED_FIRMWARE",
+    26: "TEE",
+    27: "OPENSBI",
+    28: "EFI",
   });
 
   Uimage.UimageArch = Object.freeze({
@@ -85,6 +99,14 @@ var Uimage = (function() {
     BLACKFIN: 16,
     AVR32: 17,
     ST200: 18,
+    SANDBOX: 19,
+    NDS32: 20,
+    OPENRISC: 21,
+    ARM64: 22,
+    ARC: 23,
+    X86_64: 24,
+    XTENSA: 25,
+    RISCV: 26,
 
     0: "INVALID",
     1: "ALPHA",
@@ -105,6 +127,14 @@ var Uimage = (function() {
     16: "BLACKFIN",
     17: "AVR32",
     18: "ST200",
+    19: "SANDBOX",
+    20: "NDS32",
+    21: "OPENRISC",
+    22: "ARM64",
+    23: "ARC",
+    24: "X86_64",
+    25: "XTENSA",
+    26: "RISCV",
   });
 
   Uimage.UimageComp = Object.freeze({
@@ -113,12 +143,16 @@ var Uimage = (function() {
     BZIP2: 2,
     LZMA: 3,
     LZO: 4,
+    LZ4: 5,
+    ZSTD: 6,
 
     0: "NONE",
     1: "GZIP",
     2: "BZIP2",
     3: "LZMA",
     4: "LZO",
+    5: "LZ4",
+    6: "ZSTD",
   });
 
   Uimage.UimageType = Object.freeze({
@@ -133,6 +167,36 @@ var Uimage = (function() {
     FLATDT: 8,
     KWBIMAGE: 9,
     IMXIMAGE: 10,
+    UBLIMAGE: 11,
+    OMAPIMAGE: 12,
+    AISIMAGE: 13,
+    KERNEL_NOLOAD: 14,
+    PBLIMAGE: 15,
+    MXSIMAGE: 16,
+    GPIMAGE: 17,
+    ATMELIMAGE: 18,
+    SOCFPGAIMAGE: 19,
+    X86_SETUP: 20,
+    LPC32XXIMAGE: 21,
+    LOADABLE: 22,
+    RKIMAGE: 23,
+    RKSD: 24,
+    RKSPI: 25,
+    ZYNQIMAGE: 26,
+    ZYNQMPIMAGE: 27,
+    ZYNQMPBIF: 28,
+    FPGA: 29,
+    VYBRIDIMAGE: 30,
+    TEE: 31,
+    FIRMWARE_IVT: 32,
+    PMMC: 33,
+    STM32IMAGE: 34,
+    SOCFPGAIMAGE_V1: 35,
+    MTKIMAGE: 36,
+    IMX8MIMAGE: 37,
+    IMX8IMAGE: 38,
+    COPRO: 39,
+    SUNXI_EGON: 40,
 
     0: "INVALID",
     1: "STANDALONE",
@@ -145,6 +209,36 @@ var Uimage = (function() {
     8: "FLATDT",
     9: "KWBIMAGE",
     10: "IMXIMAGE",
+    11: "UBLIMAGE",
+    12: "OMAPIMAGE",
+    13: "AISIMAGE",
+    14: "KERNEL_NOLOAD",
+    15: "PBLIMAGE",
+    16: "MXSIMAGE",
+    17: "GPIMAGE",
+    18: "ATMELIMAGE",
+    19: "SOCFPGAIMAGE",
+    20: "X86_SETUP",
+    21: "LPC32XXIMAGE",
+    22: "LOADABLE",
+    23: "RKIMAGE",
+    24: "RKSD",
+    25: "RKSPI",
+    26: "ZYNQIMAGE",
+    27: "ZYNQMPIMAGE",
+    28: "ZYNQMPBIF",
+    29: "FPGA",
+    30: "VYBRIDIMAGE",
+    31: "TEE",
+    32: "FIRMWARE_IVT",
+    33: "PMMC",
+    34: "STM32IMAGE",
+    35: "SOCFPGAIMAGE_V1",
+    36: "MTKIMAGE",
+    37: "IMX8MIMAGE",
+    38: "IMX8IMAGE",
+    39: "COPRO",
+    40: "SUNXI_EGON",
   });
 
   function Uimage(_io, _parent, _root) {

@@ -333,7 +333,7 @@ and build them along with your project.</p>
 <span class="cm"> * The new uImage format allows more flexibility in handling images of various</span>
 <span class="cm"> * types (kernel, ramdisk, etc.), it also enhances integrity protection of images</span>
 <span class="cm"> * with sha1 and md5 checksums.</span>
-<span class="cm"> * \sa https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h Source</span>
+<span class="cm"> * \sa https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h Source</span>
 <span class="cm"> */</span>
 
 <span class="k">class</span> <span class="nc">uimage_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -363,7 +363,14 @@ and build them along with your project.</p>
         <span class="n">UIMAGE_OS_RTEMS</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
         <span class="n">UIMAGE_OS_ARTOS</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
         <span class="n">UIMAGE_OS_UNITY</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
-        <span class="n">UIMAGE_OS_INTEGRITY</span> <span class="o">=</span> <span class="mi">21</span>
+        <span class="n">UIMAGE_OS_INTEGRITY</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_OSE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_PLAN9</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_OPENRTOS</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_ARM_TRUSTED_FIRMWARE</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_TEE</span> <span class="o">=</span> <span class="mi">26</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_OPENSBI</span> <span class="o">=</span> <span class="mi">27</span><span class="p">,</span>
+        <span class="n">UIMAGE_OS_EFI</span> <span class="o">=</span> <span class="mi">28</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">uimage_arch_t</span> <span class="p">{</span>
@@ -385,7 +392,15 @@ and build them along with your project.</p>
         <span class="n">UIMAGE_ARCH_NIOS2</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
         <span class="n">UIMAGE_ARCH_BLACKFIN</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">UIMAGE_ARCH_AVR32</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
-        <span class="n">UIMAGE_ARCH_ST200</span> <span class="o">=</span> <span class="mi">18</span>
+        <span class="n">UIMAGE_ARCH_ST200</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_SANDBOX</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_NDS32</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_OPENRISC</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_ARM64</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_ARC</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_X86_64</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_XTENSA</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="n">UIMAGE_ARCH_RISCV</span> <span class="o">=</span> <span class="mi">26</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">uimage_comp_t</span> <span class="p">{</span>
@@ -393,7 +408,9 @@ and build them along with your project.</p>
         <span class="n">UIMAGE_COMP_GZIP</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">UIMAGE_COMP_BZIP2</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">UIMAGE_COMP_LZMA</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-        <span class="n">UIMAGE_COMP_LZO</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">UIMAGE_COMP_LZO</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">UIMAGE_COMP_LZ4</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">UIMAGE_COMP_ZSTD</span> <span class="o">=</span> <span class="mi">6</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">uimage_type_t</span> <span class="p">{</span>
@@ -407,7 +424,37 @@ and build them along with your project.</p>
         <span class="n">UIMAGE_TYPE_FILESYSTEM</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
         <span class="n">UIMAGE_TYPE_FLATDT</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
         <span class="n">UIMAGE_TYPE_KWBIMAGE</span> <span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
-        <span class="n">UIMAGE_TYPE_IMXIMAGE</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">UIMAGE_TYPE_IMXIMAGE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_UBLIMAGE</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_OMAPIMAGE</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_AISIMAGE</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_KERNEL_NOLOAD</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_PBLIMAGE</span> <span class="o">=</span> <span class="mi">15</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_MXSIMAGE</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_GPIMAGE</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_ATMELIMAGE</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_SOCFPGAIMAGE</span> <span class="o">=</span> <span class="mi">19</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_X86_SETUP</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_LPC32XXIMAGE</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_LOADABLE</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_RKIMAGE</span> <span class="o">=</span> <span class="mi">23</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_RKSD</span> <span class="o">=</span> <span class="mi">24</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_RKSPI</span> <span class="o">=</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_ZYNQIMAGE</span> <span class="o">=</span> <span class="mi">26</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_ZYNQMPIMAGE</span> <span class="o">=</span> <span class="mi">27</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_ZYNQMPBIF</span> <span class="o">=</span> <span class="mi">28</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_FPGA</span> <span class="o">=</span> <span class="mi">29</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_VYBRIDIMAGE</span> <span class="o">=</span> <span class="mi">30</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_TEE</span> <span class="o">=</span> <span class="mi">31</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_FIRMWARE_IVT</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_PMMC</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_STM32IMAGE</span> <span class="o">=</span> <span class="mi">34</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_SOCFPGAIMAGE_V1</span> <span class="o">=</span> <span class="mi">35</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_MTKIMAGE</span> <span class="o">=</span> <span class="mi">36</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_IMX8MIMAGE</span> <span class="o">=</span> <span class="mi">37</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_IMX8IMAGE</span> <span class="o">=</span> <span class="mi">38</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_COPRO</span> <span class="o">=</span> <span class="mi">39</span><span class="p">,</span>
+        <span class="n">UIMAGE_TYPE_SUNXI_EGON</span> <span class="o">=</span> <span class="mi">40</span>
     <span class="p">};</span>
 
     <span class="n">uimage_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">uimage_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>

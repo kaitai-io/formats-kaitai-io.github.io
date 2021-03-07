@@ -11,7 +11,7 @@ namespace Kaitai
     /// with sha1 and md5 checksums.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h">Source</a>
+    /// Reference: <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h">Source</a>
     /// </remarks>
     public partial class Uimage : KaitaiStruct
     {
@@ -45,6 +45,13 @@ namespace Kaitai
             Artos = 19,
             Unity = 20,
             Integrity = 21,
+            Ose = 22,
+            Plan9 = 23,
+            Openrtos = 24,
+            ArmTrustedFirmware = 25,
+            Tee = 26,
+            Opensbi = 27,
+            Efi = 28,
         }
 
         public enum UimageArch
@@ -68,6 +75,14 @@ namespace Kaitai
             Blackfin = 16,
             Avr32 = 17,
             St200 = 18,
+            Sandbox = 19,
+            Nds32 = 20,
+            Openrisc = 21,
+            Arm64 = 22,
+            Arc = 23,
+            X8664 = 24,
+            Xtensa = 25,
+            Riscv = 26,
         }
 
         public enum UimageComp
@@ -77,6 +92,8 @@ namespace Kaitai
             Bzip2 = 2,
             Lzma = 3,
             Lzo = 4,
+            Lz4 = 5,
+            Zstd = 6,
         }
 
         public enum UimageType
@@ -92,6 +109,36 @@ namespace Kaitai
             Flatdt = 8,
             Kwbimage = 9,
             Imximage = 10,
+            Ublimage = 11,
+            Omapimage = 12,
+            Aisimage = 13,
+            KernelNoload = 14,
+            Pblimage = 15,
+            Mxsimage = 16,
+            Gpimage = 17,
+            Atmelimage = 18,
+            Socfpgaimage = 19,
+            X86Setup = 20,
+            Lpc32xximage = 21,
+            Loadable = 22,
+            Rkimage = 23,
+            Rksd = 24,
+            Rkspi = 25,
+            Zynqimage = 26,
+            Zynqmpimage = 27,
+            Zynqmpbif = 28,
+            Fpga = 29,
+            Vybridimage = 30,
+            Tee = 31,
+            FirmwareIvt = 32,
+            Pmmc = 33,
+            Stm32image = 34,
+            SocfpgaimageV1 = 35,
+            Mtkimage = 36,
+            Imx8mimage = 37,
+            Imx8image = 38,
+            Copro = 39,
+            SunxiEgon = 40,
         }
         public Uimage(KaitaiStream p__io, KaitaiStruct p__parent = null, Uimage p__root = null) : base(p__io)
         {

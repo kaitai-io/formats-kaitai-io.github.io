@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see <a href="https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h">Source</a>
+ * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h">Source</a>
  */
 public class Uimage extends KaitaiStruct {
     public static Uimage fromFile(String fileName) throws IOException {
@@ -43,12 +43,19 @@ public class Uimage extends KaitaiStruct {
         RTEMS(18),
         ARTOS(19),
         UNITY(20),
-        INTEGRITY(21);
+        INTEGRITY(21),
+        OSE(22),
+        PLAN9(23),
+        OPENRTOS(24),
+        ARM_TRUSTED_FIRMWARE(25),
+        TEE(26),
+        OPENSBI(27),
+        EFI(28);
 
         private final long id;
         UimageOs(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageOs> byId = new HashMap<Long, UimageOs>(22);
+        private static final Map<Long, UimageOs> byId = new HashMap<Long, UimageOs>(29);
         static {
             for (UimageOs e : UimageOs.values())
                 byId.put(e.id(), e);
@@ -75,12 +82,20 @@ public class Uimage extends KaitaiStruct {
         NIOS2(15),
         BLACKFIN(16),
         AVR32(17),
-        ST200(18);
+        ST200(18),
+        SANDBOX(19),
+        NDS32(20),
+        OPENRISC(21),
+        ARM64(22),
+        ARC(23),
+        X86_64(24),
+        XTENSA(25),
+        RISCV(26);
 
         private final long id;
         UimageArch(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageArch> byId = new HashMap<Long, UimageArch>(19);
+        private static final Map<Long, UimageArch> byId = new HashMap<Long, UimageArch>(27);
         static {
             for (UimageArch e : UimageArch.values())
                 byId.put(e.id(), e);
@@ -93,12 +108,14 @@ public class Uimage extends KaitaiStruct {
         GZIP(1),
         BZIP2(2),
         LZMA(3),
-        LZO(4);
+        LZO(4),
+        LZ4(5),
+        ZSTD(6);
 
         private final long id;
         UimageComp(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageComp> byId = new HashMap<Long, UimageComp>(5);
+        private static final Map<Long, UimageComp> byId = new HashMap<Long, UimageComp>(7);
         static {
             for (UimageComp e : UimageComp.values())
                 byId.put(e.id(), e);
@@ -117,12 +134,42 @@ public class Uimage extends KaitaiStruct {
         FILESYSTEM(7),
         FLATDT(8),
         KWBIMAGE(9),
-        IMXIMAGE(10);
+        IMXIMAGE(10),
+        UBLIMAGE(11),
+        OMAPIMAGE(12),
+        AISIMAGE(13),
+        KERNEL_NOLOAD(14),
+        PBLIMAGE(15),
+        MXSIMAGE(16),
+        GPIMAGE(17),
+        ATMELIMAGE(18),
+        SOCFPGAIMAGE(19),
+        X86_SETUP(20),
+        LPC32XXIMAGE(21),
+        LOADABLE(22),
+        RKIMAGE(23),
+        RKSD(24),
+        RKSPI(25),
+        ZYNQIMAGE(26),
+        ZYNQMPIMAGE(27),
+        ZYNQMPBIF(28),
+        FPGA(29),
+        VYBRIDIMAGE(30),
+        TEE(31),
+        FIRMWARE_IVT(32),
+        PMMC(33),
+        STM32IMAGE(34),
+        SOCFPGAIMAGE_V1(35),
+        MTKIMAGE(36),
+        IMX8MIMAGE(37),
+        IMX8IMAGE(38),
+        COPRO(39),
+        SUNXI_EGON(40);
 
         private final long id;
         UimageType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, UimageType> byId = new HashMap<Long, UimageType>(11);
+        private static final Map<Long, UimageType> byId = new HashMap<Long, UimageType>(41);
         static {
             for (UimageType e : UimageType.values())
                 byId.put(e.id(), e);

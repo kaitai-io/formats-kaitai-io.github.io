@@ -11,7 +11,7 @@ end
 # The new uImage format allows more flexibility in handling images of various
 # types (kernel, ramdisk, etc.), it also enhances integrity protection of images
 # with sha1 and md5 checksums.
-# @see https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h Source
+# @see https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h Source
 class Uimage < Kaitai::Struct::Struct
 
   UIMAGE_OS = {
@@ -37,6 +37,13 @@ class Uimage < Kaitai::Struct::Struct
     19 => :uimage_os_artos,
     20 => :uimage_os_unity,
     21 => :uimage_os_integrity,
+    22 => :uimage_os_ose,
+    23 => :uimage_os_plan9,
+    24 => :uimage_os_openrtos,
+    25 => :uimage_os_arm_trusted_firmware,
+    26 => :uimage_os_tee,
+    27 => :uimage_os_opensbi,
+    28 => :uimage_os_efi,
   }
   I__UIMAGE_OS = UIMAGE_OS.invert
 
@@ -60,6 +67,14 @@ class Uimage < Kaitai::Struct::Struct
     16 => :uimage_arch_blackfin,
     17 => :uimage_arch_avr32,
     18 => :uimage_arch_st200,
+    19 => :uimage_arch_sandbox,
+    20 => :uimage_arch_nds32,
+    21 => :uimage_arch_openrisc,
+    22 => :uimage_arch_arm64,
+    23 => :uimage_arch_arc,
+    24 => :uimage_arch_x86_64,
+    25 => :uimage_arch_xtensa,
+    26 => :uimage_arch_riscv,
   }
   I__UIMAGE_ARCH = UIMAGE_ARCH.invert
 
@@ -69,6 +84,8 @@ class Uimage < Kaitai::Struct::Struct
     2 => :uimage_comp_bzip2,
     3 => :uimage_comp_lzma,
     4 => :uimage_comp_lzo,
+    5 => :uimage_comp_lz4,
+    6 => :uimage_comp_zstd,
   }
   I__UIMAGE_COMP = UIMAGE_COMP.invert
 
@@ -84,6 +101,36 @@ class Uimage < Kaitai::Struct::Struct
     8 => :uimage_type_flatdt,
     9 => :uimage_type_kwbimage,
     10 => :uimage_type_imximage,
+    11 => :uimage_type_ublimage,
+    12 => :uimage_type_omapimage,
+    13 => :uimage_type_aisimage,
+    14 => :uimage_type_kernel_noload,
+    15 => :uimage_type_pblimage,
+    16 => :uimage_type_mxsimage,
+    17 => :uimage_type_gpimage,
+    18 => :uimage_type_atmelimage,
+    19 => :uimage_type_socfpgaimage,
+    20 => :uimage_type_x86_setup,
+    21 => :uimage_type_lpc32xximage,
+    22 => :uimage_type_loadable,
+    23 => :uimage_type_rkimage,
+    24 => :uimage_type_rksd,
+    25 => :uimage_type_rkspi,
+    26 => :uimage_type_zynqimage,
+    27 => :uimage_type_zynqmpimage,
+    28 => :uimage_type_zynqmpbif,
+    29 => :uimage_type_fpga,
+    30 => :uimage_type_vybridimage,
+    31 => :uimage_type_tee,
+    32 => :uimage_type_firmware_ivt,
+    33 => :uimage_type_pmmc,
+    34 => :uimage_type_stm32image,
+    35 => :uimage_type_socfpgaimage_v1,
+    36 => :uimage_type_mtkimage,
+    37 => :uimage_type_imx8mimage,
+    38 => :uimage_type_imx8image,
+    39 => :uimage_type_copro,
+    40 => :uimage_type_sunxi_egon,
   }
   I__UIMAGE_TYPE = UIMAGE_TYPE.invert
   def initialize(_io, _parent = nil, _root = self)

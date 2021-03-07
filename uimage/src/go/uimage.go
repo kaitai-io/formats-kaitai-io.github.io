@@ -10,7 +10,7 @@ import (
  * The new uImage format allows more flexibility in handling images of various
  * types (kernel, ramdisk, etc.), it also enhances integrity protection of images
  * with sha1 and md5 checksums.
- * @see <a href="https://github.com/EmcraftSystems/u-boot/blob/master/include/image.h">Source</a>
+ * @see <a href="https://source.denx.de/u-boot/u-boot/-/raw/e4dba4b/include/image.h">Source</a>
  */
 
 type Uimage_UimageOs int
@@ -37,6 +37,13 @@ const (
 	Uimage_UimageOs__Artos Uimage_UimageOs = 19
 	Uimage_UimageOs__Unity Uimage_UimageOs = 20
 	Uimage_UimageOs__Integrity Uimage_UimageOs = 21
+	Uimage_UimageOs__Ose Uimage_UimageOs = 22
+	Uimage_UimageOs__Plan9 Uimage_UimageOs = 23
+	Uimage_UimageOs__Openrtos Uimage_UimageOs = 24
+	Uimage_UimageOs__ArmTrustedFirmware Uimage_UimageOs = 25
+	Uimage_UimageOs__Tee Uimage_UimageOs = 26
+	Uimage_UimageOs__Opensbi Uimage_UimageOs = 27
+	Uimage_UimageOs__Efi Uimage_UimageOs = 28
 )
 
 type Uimage_UimageArch int
@@ -60,6 +67,14 @@ const (
 	Uimage_UimageArch__Blackfin Uimage_UimageArch = 16
 	Uimage_UimageArch__Avr32 Uimage_UimageArch = 17
 	Uimage_UimageArch__St200 Uimage_UimageArch = 18
+	Uimage_UimageArch__Sandbox Uimage_UimageArch = 19
+	Uimage_UimageArch__Nds32 Uimage_UimageArch = 20
+	Uimage_UimageArch__Openrisc Uimage_UimageArch = 21
+	Uimage_UimageArch__Arm64 Uimage_UimageArch = 22
+	Uimage_UimageArch__Arc Uimage_UimageArch = 23
+	Uimage_UimageArch__X8664 Uimage_UimageArch = 24
+	Uimage_UimageArch__Xtensa Uimage_UimageArch = 25
+	Uimage_UimageArch__Riscv Uimage_UimageArch = 26
 )
 
 type Uimage_UimageComp int
@@ -69,6 +84,8 @@ const (
 	Uimage_UimageComp__Bzip2 Uimage_UimageComp = 2
 	Uimage_UimageComp__Lzma Uimage_UimageComp = 3
 	Uimage_UimageComp__Lzo Uimage_UimageComp = 4
+	Uimage_UimageComp__Lz4 Uimage_UimageComp = 5
+	Uimage_UimageComp__Zstd Uimage_UimageComp = 6
 )
 
 type Uimage_UimageType int
@@ -84,6 +101,36 @@ const (
 	Uimage_UimageType__Flatdt Uimage_UimageType = 8
 	Uimage_UimageType__Kwbimage Uimage_UimageType = 9
 	Uimage_UimageType__Imximage Uimage_UimageType = 10
+	Uimage_UimageType__Ublimage Uimage_UimageType = 11
+	Uimage_UimageType__Omapimage Uimage_UimageType = 12
+	Uimage_UimageType__Aisimage Uimage_UimageType = 13
+	Uimage_UimageType__KernelNoload Uimage_UimageType = 14
+	Uimage_UimageType__Pblimage Uimage_UimageType = 15
+	Uimage_UimageType__Mxsimage Uimage_UimageType = 16
+	Uimage_UimageType__Gpimage Uimage_UimageType = 17
+	Uimage_UimageType__Atmelimage Uimage_UimageType = 18
+	Uimage_UimageType__Socfpgaimage Uimage_UimageType = 19
+	Uimage_UimageType__X86Setup Uimage_UimageType = 20
+	Uimage_UimageType__Lpc32xximage Uimage_UimageType = 21
+	Uimage_UimageType__Loadable Uimage_UimageType = 22
+	Uimage_UimageType__Rkimage Uimage_UimageType = 23
+	Uimage_UimageType__Rksd Uimage_UimageType = 24
+	Uimage_UimageType__Rkspi Uimage_UimageType = 25
+	Uimage_UimageType__Zynqimage Uimage_UimageType = 26
+	Uimage_UimageType__Zynqmpimage Uimage_UimageType = 27
+	Uimage_UimageType__Zynqmpbif Uimage_UimageType = 28
+	Uimage_UimageType__Fpga Uimage_UimageType = 29
+	Uimage_UimageType__Vybridimage Uimage_UimageType = 30
+	Uimage_UimageType__Tee Uimage_UimageType = 31
+	Uimage_UimageType__FirmwareIvt Uimage_UimageType = 32
+	Uimage_UimageType__Pmmc Uimage_UimageType = 33
+	Uimage_UimageType__Stm32image Uimage_UimageType = 34
+	Uimage_UimageType__SocfpgaimageV1 Uimage_UimageType = 35
+	Uimage_UimageType__Mtkimage Uimage_UimageType = 36
+	Uimage_UimageType__Imx8mimage Uimage_UimageType = 37
+	Uimage_UimageType__Imx8image Uimage_UimageType = 38
+	Uimage_UimageType__Copro Uimage_UimageType = 39
+	Uimage_UimageType__SunxiEgon Uimage_UimageType = 40
 )
 type Uimage struct {
 	Header *Uimage_Uheader
