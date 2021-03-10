@@ -50,6 +50,7 @@ type
     agfa_cmm = 1094929747
     adobe_cmm = 1094992453
     color_gear_cmm = 1128484179
+    demoiccmax_cmm = 1145654616
     logosync_cmm = 1147629395
     efi_cmm = 1162234144
     exact_scan_cmm = 1163411779
@@ -58,7 +59,9 @@ type
     heidelberg_cmm = 1212435744
     kodak_cmm = 1262701907
     konica_minolta_cmm = 1296256324
+    onyx_graphics_cmm = 1330534744
     device_link_cmm = 1380404563
+    reficcmax_cmm = 1380535640
     sample_icc_cmm = 1397310275
     mutoh_cmm = 1397311310
     toshiba_cmm = 1413696845
@@ -69,6 +72,7 @@ type
     apple_cmm = 1634758764
     argyll_cms_cmm = 1634887532
     little_cms_cmm = 1818455411
+    vivo_cmm = 1986623087
     zoran_cmm = 2053320752
   Icc4_ProfileHeader_PrimaryPlatforms* = enum
     apple_computer_inc = 1095782476
