@@ -936,10 +936,10 @@ namespace OpenpgpMessage {
         const MD5 = 1;
         const SHA1 = 2;
         const RIPEMD160 = 3;
-        const RESERVED_4 = 4;
-        const RESERVED_5 = 5;
-        const RESERVED_6 = 6;
-        const RESERVED_7 = 7;
+        const RESERVED4 = 4;
+        const RESERVED5 = 5;
+        const RESERVED6 = 6;
+        const RESERVED7 = 7;
         const SHA256 = 8;
         const SHA384 = 9;
         const SHA512 = 10;
@@ -965,8 +965,8 @@ namespace OpenpgpMessage {
         const TRIPLE_DES = 2;
         const CAST5 = 3;
         const BLOWFISCH = 4;
-        const RESERVED_5 = 5;
-        const RESERVED_6 = 6;
+        const RESERVED5 = 5;
+        const RESERVED6 = 6;
         const AES_128 = 7;
         const AES_192 = 8;
         const AES_256 = 9;
@@ -987,26 +987,26 @@ namespace OpenpgpMessage {
 
 namespace OpenpgpMessage {
     class SubpacketTypes {
-        const RESERVED = 0;
-        const RESERVED = 1;
+        const RESERVED0 = 0;
+        const RESERVED1 = 1;
         const SIGNATURE_CREATION_TIME = 2;
         const SIGNATURE_EXPIRATION_TIME = 3;
         const EXPORTABLE_CERTIFICATION = 4;
         const TRUST_SIGNATURE = 5;
         const REGULAR_EXPRESSION = 6;
         const REVOCABLE = 7;
-        const RESERVED = 8;
+        const RESERVED8 = 8;
         const KEY_EXPIRATION_TIME = 9;
         const PLACEHOLDER_FOR_BACKWARD_COMPATIBILITY = 10;
         const PREFERRED_SYMMETRIC_ALGORITHMS = 11;
         const REVOCATION_KEY = 12;
-        const RESERVED = 13;
-        const RESERVED = 14;
-        const RESERVED = 15;
+        const RESERVED13 = 13;
+        const RESERVED14 = 14;
+        const RESERVED15 = 15;
         const ISSUER = 16;
-        const RESERVED = 17;
-        const RESERVED = 18;
-        const RESERVED = 19;
+        const RESERVED17 = 17;
+        const RESERVED18 = 18;
+        const RESERVED19 = 19;
         const NOTATION_DATA = 20;
         const PREFERRED_HASH_ALGORITHMS = 21;
         const PREFERRED_COMPRESSION_ALGORITHMS = 22;
