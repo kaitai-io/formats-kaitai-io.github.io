@@ -45,10 +45,13 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD>&quot;PLTE&quot;</TD><TD PORT="case3">PlteChunk</TD></TR>
 	<TR><TD>&quot;bKGD&quot;</TD><TD PORT="case4">BkgdChunk</TD></TR>
 	<TR><TD>&quot;pHYs&quot;</TD><TD PORT="case5">PhysChunk</TD></TR>
-	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case6">TextChunk</TD></TR>
-	<TR><TD>&quot;cHRM&quot;</TD><TD PORT="case7">ChrmChunk</TD></TR>
-	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case8">SrgbChunk</TD></TR>
-	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case9">CompressedTextChunk</TD></TR>
+	<TR><TD>&quot;fdAT&quot;</TD><TD PORT="case6">FrameDataChunk</TD></TR>
+	<TR><TD>&quot;tEXt&quot;</TD><TD PORT="case7">TextChunk</TD></TR>
+	<TR><TD>&quot;cHRM&quot;</TD><TD PORT="case8">ChrmChunk</TD></TR>
+	<TR><TD>&quot;acTL&quot;</TD><TD PORT="case9">AnimationControlChunk</TD></TR>
+	<TR><TD>&quot;sRGB&quot;</TD><TD PORT="case10">SrgbChunk</TD></TR>
+	<TR><TD>&quot;zTXt&quot;</TD><TD PORT="case11">CompressedTextChunk</TD></TR>
+	<TR><TD>&quot;fcTL&quot;</TD><TD PORT="case12">FrameControlChunk</TD></TR>
 </TABLE>>];
 		}
 		subgraph cluster__bkgd_indexed {
@@ -144,6 +147,16 @@ chunk__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="text_datastream_pos">...</TD><TD PORT="text_datastream_size">⇲</TD><TD></TD><TD PORT="text_datastream_type">text_datastream</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__frame_data_chunk {
+			label="Png::FrameDataChunk";
+			graph[style=dotted];
+
+			frame_data_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sequence_number_pos">0</TD><TD PORT="sequence_number_size">4</TD><TD>u4be</TD><TD PORT="sequence_number_type">sequence_number</TD></TR>
+				<TR><TD PORT="frame_data_pos">4</TD><TD PORT="frame_data_size">⇲</TD><TD></TD><TD PORT="frame_data_type">frame_data</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__bkgd_truecolor {
 			label="Png::BkgdTruecolor";
 			graph[style=dotted];
@@ -196,6 +209,27 @@ bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD PORT="unit_pos">8</TD><TD PORT="unit_size">1</TD><TD>u1→PhysUnit</TD><TD PORT="unit_type">unit</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__frame_control_chunk {
+			label="Png::FrameControlChunk";
+			graph[style=dotted];
+
+			frame_control_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="sequence_number_pos">0</TD><TD PORT="sequence_number_size">4</TD><TD>u4be</TD><TD PORT="sequence_number_type">sequence_number</TD></TR>
+				<TR><TD PORT="width_pos">4</TD><TD PORT="width_size">4</TD><TD>u4be</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="height_pos">8</TD><TD PORT="height_size">4</TD><TD>u4be</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="x_offset_pos">12</TD><TD PORT="x_offset_size">4</TD><TD>u4be</TD><TD PORT="x_offset_type">x_offset</TD></TR>
+				<TR><TD PORT="y_offset_pos">16</TD><TD PORT="y_offset_size">4</TD><TD>u4be</TD><TD PORT="y_offset_type">y_offset</TD></TR>
+				<TR><TD PORT="delay_num_pos">20</TD><TD PORT="delay_num_size">2</TD><TD>u2be</TD><TD PORT="delay_num_type">delay_num</TD></TR>
+				<TR><TD PORT="delay_den_pos">22</TD><TD PORT="delay_den_size">2</TD><TD>u2be</TD><TD PORT="delay_den_type">delay_den</TD></TR>
+				<TR><TD PORT="dispose_op_pos">24</TD><TD PORT="dispose_op_size">1</TD><TD>u1→DisposeOpValues</TD><TD PORT="dispose_op_type">dispose_op</TD></TR>
+				<TR><TD PORT="blend_op_pos">25</TD><TD PORT="blend_op_size">1</TD><TD>u1→BlendOpValues</TD><TD PORT="blend_op_type">blend_op</TD></TR>
+			</TABLE>>];
+			frame_control_chunk__inst__delay [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>delay</TD><TD>(delay_num / (delay_den == 0 ? 100.0 : delay_den))</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__international_text_chunk {
 			label="Png::InternationalTextChunk";
 			graph[style=dotted];
@@ -218,6 +252,16 @@ bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="keyword_pos">0</TD><TD PORT="keyword_size">...</TD><TD>str(iso8859-1)</TD><TD PORT="keyword_type">keyword</TD></TR>
 				<TR><TD PORT="text_pos">...</TD><TD PORT="text_size">⇲</TD><TD>str(iso8859-1)</TD><TD PORT="text_type">text</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__animation_control_chunk {
+			label="Png::AnimationControlChunk";
+			graph[style=dotted];
+
+			animation_control_chunk__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="num_frames_pos">0</TD><TD PORT="num_frames_size">4</TD><TD>u4be</TD><TD PORT="num_frames_type">num_frames</TD></TR>
+				<TR><TD PORT="num_plays_pos">4</TD><TD PORT="num_plays_size">4</TD><TD>u4be</TD><TD PORT="num_plays_type">num_plays</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__time_chunk {
@@ -245,10 +289,13 @@ bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	chunk__seq_body_switch:case3 -> plte_chunk__seq [style=bold];
 	chunk__seq_body_switch:case4 -> bkgd_chunk__seq [style=bold];
 	chunk__seq_body_switch:case5 -> phys_chunk__seq [style=bold];
-	chunk__seq_body_switch:case6 -> text_chunk__seq [style=bold];
-	chunk__seq_body_switch:case7 -> chrm_chunk__seq [style=bold];
-	chunk__seq_body_switch:case8 -> srgb_chunk__seq [style=bold];
-	chunk__seq_body_switch:case9 -> compressed_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case6 -> frame_data_chunk__seq [style=bold];
+	chunk__seq_body_switch:case7 -> text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case8 -> chrm_chunk__seq [style=bold];
+	chunk__seq_body_switch:case9 -> animation_control_chunk__seq [style=bold];
+	chunk__seq_body_switch:case10 -> srgb_chunk__seq [style=bold];
+	chunk__seq_body_switch:case11 -> compressed_text_chunk__seq [style=bold];
+	chunk__seq_body_switch:case12 -> frame_control_chunk__seq [style=bold];
 	chunk__seq:type_type -> chunk__seq:body_type [color="#404040"];
 	point__seq:x_int_type -> point__inst__x [color="#404040"];
 	point__seq:y_int_type -> point__inst__y [color="#404040"];
@@ -265,4 +312,7 @@ bkgd_chunk__seq_bkgd_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING
 	bkgd_chunk__seq_bkgd_switch:case3 -> bkgd_truecolor__seq [style=bold];
 	bkgd_chunk__seq_bkgd_switch:case4 -> bkgd_greyscale__seq [style=bold];
 	ihdr_chunk__seq:color_type_type -> bkgd_chunk__seq:bkgd_type [color="#404040"];
+	frame_control_chunk__seq:delay_num_type -> frame_control_chunk__inst__delay [color="#404040"];
+	frame_control_chunk__seq:delay_den_type -> frame_control_chunk__inst__delay [color="#404040"];
+	frame_control_chunk__seq:delay_den_type -> frame_control_chunk__inst__delay [color="#404040"];
 }

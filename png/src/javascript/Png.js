@@ -9,7 +9,46 @@
     root.Png = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * Test files for APNG can be found at the following locations:
+ * 
+ *   - https://philip.html5.org/tests/apng/tests.html
+ *   - http://littlesvr.ca/apng/
+ */
+
 var Png = (function() {
+  Png.PhysUnit = Object.freeze({
+    UNKNOWN: 0,
+    METER: 1,
+
+    0: "UNKNOWN",
+    1: "METER",
+  });
+
+  Png.BlendOpValues = Object.freeze({
+    SOURCE: 0,
+    OVER: 1,
+
+    0: "SOURCE",
+    1: "OVER",
+  });
+
+  Png.CompressionMethods = Object.freeze({
+    ZLIB: 0,
+
+    0: "ZLIB",
+  });
+
+  Png.DisposeOpValues = Object.freeze({
+    NONE: 0,
+    BACKGROUND: 1,
+    PREVIOUS: 2,
+
+    0: "NONE",
+    1: "BACKGROUND",
+    2: "PREVIOUS",
+  });
+
   Png.ColorType = Object.freeze({
     GREYSCALE: 0,
     TRUECOLOR: 2,
@@ -22,20 +61,6 @@ var Png = (function() {
     3: "INDEXED",
     4: "GREYSCALE_ALPHA",
     6: "TRUECOLOR_ALPHA",
-  });
-
-  Png.PhysUnit = Object.freeze({
-    UNKNOWN: 0,
-    METER: 1,
-
-    0: "UNKNOWN",
-    1: "METER",
-  });
-
-  Png.CompressionMethods = Object.freeze({
-    ZLIB: 0,
-
-    0: "ZLIB",
   });
 
   function Png(_io, _parent, _root) {
@@ -128,6 +153,11 @@ var Png = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new PhysChunk(_io__raw_body, this, this._root);
         break;
+      case "fdAT":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new FrameDataChunk(_io__raw_body, this, this._root);
+        break;
       case "tEXt":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -138,6 +168,11 @@ var Png = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new ChrmChunk(_io__raw_body, this, this._root);
         break;
+      case "acTL":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new AnimationControlChunk(_io__raw_body, this, this._root);
+        break;
       case "sRGB":
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -147,6 +182,11 @@ var Png = (function() {
         this._raw_body = this._io.readBytes(this.len);
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new CompressedTextChunk(_io__raw_body, this, this._root);
+        break;
+      case "fcTL":
+        this._raw_body = this._io.readBytes(this.len);
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new FrameControlChunk(_io__raw_body, this, this._root);
         break;
       default:
         this.body = this._io.readBytes(this.len);
@@ -360,6 +400,40 @@ var Png = (function() {
   })();
 
   /**
+   * @see {@link https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk|Source}
+   */
+
+  var FrameDataChunk = Png.FrameDataChunk = (function() {
+    function FrameDataChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FrameDataChunk.prototype._read = function() {
+      this.sequenceNumber = this._io.readU4be();
+      this.frameData = this._io.readBytesFull();
+    }
+
+    /**
+     * Sequence number of the animation chunk. The fcTL and fdAT chunks
+     * have a 4 byte sequence number. Both chunk types share the sequence.
+     * The first fcTL chunk must contain sequence number 0, and the sequence
+     * numbers in the remaining fcTL and fdAT chunks must be in order, with
+     * no gaps or duplicates.
+     */
+
+    /**
+     * Frame data for the frame. At least one fdAT chunk is required for
+     * each frame. The compressed datastream is the concatenation of the
+     * contents of the data fields of all the fdAT chunks within a frame.
+     */
+
+    return FrameDataChunk;
+  })();
+
+  /**
    * Background chunk for truecolor images.
    */
 
@@ -478,6 +552,99 @@ var Png = (function() {
   })();
 
   /**
+   * @see {@link https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk|Source}
+   */
+
+  var FrameControlChunk = Png.FrameControlChunk = (function() {
+    function FrameControlChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FrameControlChunk.prototype._read = function() {
+      this.sequenceNumber = this._io.readU4be();
+      this.width = this._io.readU4be();
+      if (!(this.width >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.width, this._io, "/types/frame_control_chunk/seq/1");
+      }
+      if (!(this.width <= this._root.ihdr.width)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._root.ihdr.width, this.width, this._io, "/types/frame_control_chunk/seq/1");
+      }
+      this.height = this._io.readU4be();
+      if (!(this.height >= 1)) {
+        throw new KaitaiStream.ValidationLessThanError(1, this.height, this._io, "/types/frame_control_chunk/seq/2");
+      }
+      if (!(this.height <= this._root.ihdr.height)) {
+        throw new KaitaiStream.ValidationGreaterThanError(this._root.ihdr.height, this.height, this._io, "/types/frame_control_chunk/seq/2");
+      }
+      this.xOffset = this._io.readU4be();
+      if (!(this.xOffset <= (this._root.ihdr.width - this.width))) {
+        throw new KaitaiStream.ValidationGreaterThanError((this._root.ihdr.width - this.width), this.xOffset, this._io, "/types/frame_control_chunk/seq/3");
+      }
+      this.yOffset = this._io.readU4be();
+      if (!(this.yOffset <= (this._root.ihdr.height - this.height))) {
+        throw new KaitaiStream.ValidationGreaterThanError((this._root.ihdr.height - this.height), this.yOffset, this._io, "/types/frame_control_chunk/seq/4");
+      }
+      this.delayNum = this._io.readU2be();
+      this.delayDen = this._io.readU2be();
+      this.disposeOp = this._io.readU1();
+      this.blendOp = this._io.readU1();
+    }
+
+    /**
+     * Time to display this frame, in seconds
+     */
+    Object.defineProperty(FrameControlChunk.prototype, 'delay', {
+      get: function() {
+        if (this._m_delay !== undefined)
+          return this._m_delay;
+        this._m_delay = (this.delayNum / (this.delayDen == 0 ? 100.0 : this.delayDen));
+        return this._m_delay;
+      }
+    });
+
+    /**
+     * Sequence number of the animation chunk
+     */
+
+    /**
+     * Width of the following frame
+     */
+
+    /**
+     * Height of the following frame
+     */
+
+    /**
+     * X position at which to render the following frame
+     */
+
+    /**
+     * Y position at which to render the following frame
+     */
+
+    /**
+     * Frame delay fraction numerator
+     */
+
+    /**
+     * Frame delay fraction denominator
+     */
+
+    /**
+     * Type of frame area disposal to be done after rendering this frame
+     */
+
+    /**
+     * Type of frame area rendering for this frame
+     */
+
+    return FrameControlChunk;
+  })();
+
+  /**
    * International text chunk effectively allows to store key-value string pairs in
    * PNG container. Both "key" (keyword) and "value" (text) parts are
    * given in pre-defined subset of iso8859-1 without control
@@ -557,6 +724,34 @@ var Png = (function() {
      */
 
     return TextChunk;
+  })();
+
+  /**
+   * @see {@link https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk|Source}
+   */
+
+  var AnimationControlChunk = Png.AnimationControlChunk = (function() {
+    function AnimationControlChunk(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    AnimationControlChunk.prototype._read = function() {
+      this.numFrames = this._io.readU4be();
+      this.numPlays = this._io.readU4be();
+    }
+
+    /**
+     * Number of frames, must be equal to the number of `frame_control_chunk`s
+     */
+
+    /**
+     * Number of times to loop, 0 indicates infinite looping.
+     */
+
+    return AnimationControlChunk;
   })();
 
   /**

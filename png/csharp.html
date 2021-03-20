@@ -104,7 +104,12 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>Test files for APNG can be found at the following locations:</p>
+<ul>
+<li>https://philip.html5.org/tests/apng/tests.html</li>
+<li>http://littlesvr.ca/apng/</li>
+</ul>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -114,7 +119,7 @@ section#format-index .row {
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        png
+                        ["png", "apng"]
                     </div>
                     
                     
@@ -128,7 +133,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -149,12 +154,15 @@ section#format-index .row {
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/11">PRONOM fmt/11</a></li>
 <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/12">PRONOM fmt/12</a></li>
 <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/13">PRONOM fmt/13</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/935">PRONOM fmt/935</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q178051">Wikidata Q178051</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q433224">Wikidata Q433224</a></li>
                             
                             <li><a href="https://forensicswiki.xyz/page/Portable_Network_Graphics_(PNG)">Portable Network Graphics (PNG) in ForensicsWiki</a></li>
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/PNG">PNG in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/APNG">APNG in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -269,7 +277,7 @@ can also be found there.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">Png</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.png&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="kt">var</span> <span class="n">data</span> <span class="p">=</span> <span class="n">Png</span><span class="p">.</span><span class="n">FromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">png</span><span class="s">&quot;, &quot;</span><span class="n">apng</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
@@ -315,6 +323,13 @@ can also be found there.</p>
 
 <span class="k">namespace</span> <span class="nn">Kaitai</span>
 <span class="p">{</span>
+
+    <span class="c1">/// &lt;summary&gt;</span>
+    <span class="c1">/// Test files for APNG can be found at the following locations:</span>
+    <span class="c1">/// </span>
+    <span class="c1">///   - https://philip.html5.org/tests/apng/tests.html</span>
+    <span class="c1">///   - http://littlesvr.ca/apng/</span>
+    <span class="c1">/// &lt;/summary&gt;</span>
     <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Png</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">{</span>
         <span class="k">public</span> <span class="k">static</span> <span class="n">Png</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
@@ -323,6 +338,30 @@ can also be found there.</p>
         <span class="p">}</span>
 
 
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">PhysUnit</span>
+        <span class="p">{</span>
+            <span class="n">Unknown</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Meter</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">BlendOpValues</span>
+        <span class="p">{</span>
+            <span class="n">Source</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Over</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">CompressionMethods</span>
+        <span class="p">{</span>
+            <span class="n">Zlib</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">DisposeOpValues</span>
+        <span class="p">{</span>
+            <span class="n">None</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Background</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Previous</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+        <span class="p">}</span>
+
         <span class="k">public</span> <span class="k">enum</span> <span class="n">ColorType</span>
         <span class="p">{</span>
             <span class="n">Greyscale</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
@@ -330,17 +369,6 @@ can also be found there.</p>
             <span class="n">Indexed</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
             <span class="n">GreyscaleAlpha</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
             <span class="n">TruecolorAlpha</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">PhysUnit</span>
-        <span class="p">{</span>
-            <span class="n">Unknown</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
-            <span class="n">Meter</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
-        <span class="p">}</span>
-
-        <span class="k">public</span> <span class="k">enum</span> <span class="n">CompressionMethods</span>
-        <span class="p">{</span>
-            <span class="n">Zlib</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
         <span class="p">}</span>
         <span class="k">public</span> <span class="nf">Png</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
         <span class="p">{</span>
@@ -462,6 +490,12 @@ can also be found there.</p>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PhysChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;fdAT&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FrameDataChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="s">&quot;tEXt&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -474,6 +508,12 @@ can also be found there.</p>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ChrmChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;acTL&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">AnimationControlChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="s">&quot;sRGB&quot;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -484,6 +524,12 @@ can also be found there.</p>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CompressedTextChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="s">&quot;fcTL&quot;</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">Len</span><span class="p">);</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FrameControlChunk</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -820,6 +866,51 @@ can also be found there.</p>
             <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawTextDatastream</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_textDatastream</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
 
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">FrameDataChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">FrameDataChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">FrameDataChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">FrameDataChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_sequenceNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_frameData</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_sequenceNumber</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_frameData</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
+            <span class="c1">/// have a 4 byte sequence number. Both chunk types share the sequence.</span>
+            <span class="c1">/// The first fcTL chunk must contain sequence number 0, and the sequence</span>
+            <span class="c1">/// numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
+            <span class="c1">/// no gaps or duplicates.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">SequenceNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sequenceNumber</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Frame data for the frame. At least one fdAT chunk is required for</span>
+            <span class="c1">/// each frame. The compressed datastream is the concatenation of the</span>
+            <span class="c1">/// contents of the data fields of all the fdAT chunks within a frame.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">FrameData</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_frameData</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
         <span class="c1">/// &lt;summary&gt;</span>
         <span class="c1">/// Background chunk for truecolor images.</span>
         <span class="c1">/// &lt;/summary&gt;</span>
@@ -997,6 +1088,136 @@ can also be found there.</p>
             <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
 
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">FrameControlChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">FrameControlChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">FrameControlChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">FrameControlChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_delay</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_sequenceNumber</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_width</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">Width</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">Width</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">Width</span> <span class="p">&lt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Width</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Width</span><span class="p">,</span> <span class="n">Width</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_height</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">Height</span> <span class="p">&gt;=</span> <span class="m">1</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationLessThanError</span><span class="p">(</span><span class="m">1</span><span class="p">,</span> <span class="n">Height</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">Height</span> <span class="p">&lt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Height</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Height</span><span class="p">,</span> <span class="n">Height</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_xOffset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">XOffset</span> <span class="p">&lt;=</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Width</span> <span class="p">-</span> <span class="n">Width</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">((</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Width</span> <span class="p">-</span> <span class="n">Width</span><span class="p">),</span> <span class="n">XOffset</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/frame_control_chunk/seq/3&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_yOffset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">YOffset</span> <span class="p">&lt;=</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Height</span> <span class="p">-</span> <span class="n">Height</span><span class="p">)))</span>
+                <span class="p">{</span>
+                    <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationGreaterThanError</span><span class="p">((</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Ihdr</span><span class="p">.</span><span class="n">Height</span> <span class="p">-</span> <span class="n">Height</span><span class="p">),</span> <span class="n">YOffset</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/types/frame_control_chunk/seq/4&quot;</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="n">_delayNum</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_delayDen</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="n">_disposeOp</span> <span class="p">=</span> <span class="p">((</span><span class="n">Png</span><span class="p">.</span><span class="n">DisposeOpValues</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+                <span class="n">_blendOp</span> <span class="p">=</span> <span class="p">((</span><span class="n">Png</span><span class="p">.</span><span class="n">BlendOpValues</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_delay</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">double</span> <span class="n">_delay</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Time to display this frame, in seconds</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">double</span> <span class="n">Delay</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_delay</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_delay</span><span class="p">;</span>
+                    <span class="n">_delay</span> <span class="p">=</span> <span class="p">(</span><span class="kt">double</span><span class="p">)</span> <span class="p">((</span><span class="n">DelayNum</span> <span class="p">/</span> <span class="p">(</span><span class="n">DelayDen</span> <span class="p">==</span> <span class="m">0</span> <span class="p">?</span> <span class="m">100.0</span> <span class="p">:</span> <span class="n">DelayDen</span><span class="p">)));</span>
+                    <span class="n">f_delay</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_delay</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_sequenceNumber</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_width</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_height</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_xOffset</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_yOffset</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_delayNum</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_delayDen</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">DisposeOpValues</span> <span class="n">_disposeOp</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">BlendOpValues</span> <span class="n">_blendOp</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Sequence number of the animation chunk</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">SequenceNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sequenceNumber</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Width of the following frame</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Width</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_width</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Height of the following frame</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Height</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_height</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// X position at which to render the following frame</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">XOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_xOffset</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Y position at which to render the following frame</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">YOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_yOffset</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Frame delay fraction numerator</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">DelayNum</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_delayNum</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Frame delay fraction denominator</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">DelayDen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_delayDen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Type of frame area disposal to be done after rendering this frame</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">DisposeOpValues</span> <span class="n">DisposeOp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_disposeOp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Type of frame area rendering for this frame</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">BlendOpValues</span> <span class="n">BlendOp</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_blendOp</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
         <span class="c1">/// &lt;summary&gt;</span>
         <span class="c1">/// International text chunk effectively allows to store key-value string pairs in</span>
         <span class="c1">/// PNG container. Both &amp;quot;key&amp;quot; (keyword) and &amp;quot;value&amp;quot; (text) parts are</span>
@@ -1109,6 +1330,45 @@ can also be found there.</p>
             <span class="c1">/// &lt;/summary&gt;</span>
             <span class="k">public</span> <span class="kt">string</span> <span class="n">Keyword</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_keyword</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="kt">string</span> <span class="n">Text</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_text</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">AnimationControlChunk</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">AnimationControlChunk</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">AnimationControlChunk</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">AnimationControlChunk</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Png</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+                <span class="n">_numFrames</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                <span class="n">_numPlays</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numFrames</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_numPlays</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of frames, must be equal to the number of `frame_control_chunk`s</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumFrames</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numFrames</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Number of times to loop, 0 indicates infinite looping.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">NumPlays</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numPlays</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Png</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>

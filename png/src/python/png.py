@@ -11,6 +11,27 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
 class Png(KaitaiStruct):
+    """Test files for APNG can be found at the following locations:
+    
+      - https://philip.html5.org/tests/apng/tests.html
+      - http://littlesvr.ca/apng/
+    """
+
+    class PhysUnit(Enum):
+        unknown = 0
+        meter = 1
+
+    class BlendOpValues(Enum):
+        source = 0
+        over = 1
+
+    class CompressionMethods(Enum):
+        zlib = 0
+
+    class DisposeOpValues(Enum):
+        none = 0
+        background = 1
+        previous = 2
 
     class ColorType(Enum):
         greyscale = 0
@@ -18,13 +39,6 @@ class Png(KaitaiStruct):
         indexed = 3
         greyscale_alpha = 4
         truecolor_alpha = 6
-
-    class PhysUnit(Enum):
-        unknown = 0
-        meter = 1
-
-    class CompressionMethods(Enum):
-        zlib = 0
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -100,6 +114,10 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.PhysChunk(_io__raw_body, self, self._root)
+            elif _on == u"fdAT":
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.FrameDataChunk(_io__raw_body, self, self._root)
             elif _on == u"tEXt":
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
@@ -108,6 +126,10 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.ChrmChunk(_io__raw_body, self, self._root)
+            elif _on == u"acTL":
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.AnimationControlChunk(_io__raw_body, self, self._root)
             elif _on == u"sRGB":
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
@@ -116,6 +138,10 @@ class Png(KaitaiStruct):
                 self._raw_body = self._io.read_bytes(self.len)
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = Png.CompressedTextChunk(_io__raw_body, self, self._root)
+            elif _on == u"fcTL":
+                self._raw_body = self._io.read_bytes(self.len)
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = Png.FrameControlChunk(_io__raw_body, self, self._root)
             else:
                 self.body = self._io.read_bytes(self.len)
             self.crc = self._io.read_bytes(4)
@@ -274,6 +300,22 @@ class Png(KaitaiStruct):
             self.text_datastream = zlib.decompress(self._raw_text_datastream)
 
 
+    class FrameDataChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.sequence_number = self._io.read_u4be()
+            self.frame_data = self._io.read_bytes_full()
+
+
     class BkgdTruecolor(KaitaiStruct):
         """Background chunk for truecolor images."""
         def __init__(self, _io, _parent=None, _root=None):
@@ -357,6 +399,50 @@ class Png(KaitaiStruct):
             self.unit = KaitaiStream.resolve_enum(Png.PhysUnit, self._io.read_u1())
 
 
+    class FrameControlChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.sequence_number = self._io.read_u4be()
+            self.width = self._io.read_u4be()
+            if not self.width >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.width, self._io, u"/types/frame_control_chunk/seq/1")
+            if not self.width <= self._root.ihdr.width:
+                raise kaitaistruct.ValidationGreaterThanError(self._root.ihdr.width, self.width, self._io, u"/types/frame_control_chunk/seq/1")
+            self.height = self._io.read_u4be()
+            if not self.height >= 1:
+                raise kaitaistruct.ValidationLessThanError(1, self.height, self._io, u"/types/frame_control_chunk/seq/2")
+            if not self.height <= self._root.ihdr.height:
+                raise kaitaistruct.ValidationGreaterThanError(self._root.ihdr.height, self.height, self._io, u"/types/frame_control_chunk/seq/2")
+            self.x_offset = self._io.read_u4be()
+            if not self.x_offset <= (self._root.ihdr.width - self.width):
+                raise kaitaistruct.ValidationGreaterThanError((self._root.ihdr.width - self.width), self.x_offset, self._io, u"/types/frame_control_chunk/seq/3")
+            self.y_offset = self._io.read_u4be()
+            if not self.y_offset <= (self._root.ihdr.height - self.height):
+                raise kaitaistruct.ValidationGreaterThanError((self._root.ihdr.height - self.height), self.y_offset, self._io, u"/types/frame_control_chunk/seq/4")
+            self.delay_num = self._io.read_u2be()
+            self.delay_den = self._io.read_u2be()
+            self.dispose_op = KaitaiStream.resolve_enum(Png.DisposeOpValues, self._io.read_u1())
+            self.blend_op = KaitaiStream.resolve_enum(Png.BlendOpValues, self._io.read_u1())
+
+        @property
+        def delay(self):
+            """Time to display this frame, in seconds."""
+            if hasattr(self, '_m_delay'):
+                return self._m_delay if hasattr(self, '_m_delay') else None
+
+            self._m_delay = (self.delay_num / (100.0 if self.delay_den == 0 else self.delay_den))
+            return self._m_delay if hasattr(self, '_m_delay') else None
+
+
     class InternationalTextChunk(KaitaiStruct):
         """International text chunk effectively allows to store key-value string pairs in
         PNG container. Both "key" (keyword) and "value" (text) parts are
@@ -399,6 +485,22 @@ class Png(KaitaiStruct):
         def _read(self):
             self.keyword = (self._io.read_bytes_term(0, False, True, True)).decode(u"iso8859-1")
             self.text = (self._io.read_bytes_full()).decode(u"iso8859-1")
+
+
+    class AnimationControlChunk(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_frames = self._io.read_u4be()
+            self.num_plays = self._io.read_u4be()
 
 
     class TimeChunk(KaitaiStruct):

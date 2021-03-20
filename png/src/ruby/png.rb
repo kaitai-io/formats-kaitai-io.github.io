@@ -7,7 +7,37 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# Test files for APNG can be found at the following locations:
+# 
+#   - https://philip.html5.org/tests/apng/tests.html
+#   - http://littlesvr.ca/apng/
 class Png < Kaitai::Struct::Struct
+
+  PHYS_UNIT = {
+    0 => :phys_unit_unknown,
+    1 => :phys_unit_meter,
+  }
+  I__PHYS_UNIT = PHYS_UNIT.invert
+
+  BLEND_OP_VALUES = {
+    0 => :blend_op_values_source,
+    1 => :blend_op_values_over,
+  }
+  I__BLEND_OP_VALUES = BLEND_OP_VALUES.invert
+
+  COMPRESSION_METHODS = {
+    0 => :compression_methods_zlib,
+  }
+  I__COMPRESSION_METHODS = COMPRESSION_METHODS.invert
+
+  DISPOSE_OP_VALUES = {
+    0 => :dispose_op_values_none,
+    1 => :dispose_op_values_background,
+    2 => :dispose_op_values_previous,
+  }
+  I__DISPOSE_OP_VALUES = DISPOSE_OP_VALUES.invert
 
   COLOR_TYPE = {
     0 => :color_type_greyscale,
@@ -17,17 +47,6 @@ class Png < Kaitai::Struct::Struct
     6 => :color_type_truecolor_alpha,
   }
   I__COLOR_TYPE = COLOR_TYPE.invert
-
-  PHYS_UNIT = {
-    0 => :phys_unit_unknown,
-    1 => :phys_unit_meter,
-  }
-  I__PHYS_UNIT = PHYS_UNIT.invert
-
-  COMPRESSION_METHODS = {
-    0 => :compression_methods_zlib,
-  }
-  I__COMPRESSION_METHODS = COMPRESSION_METHODS.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
@@ -101,6 +120,10 @@ class Png < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes(len)
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = PhysChunk.new(_io__raw_body, self, @_root)
+      when "fdAT"
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = FrameDataChunk.new(_io__raw_body, self, @_root)
       when "tEXt"
         @_raw_body = @_io.read_bytes(len)
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
@@ -109,6 +132,10 @@ class Png < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes(len)
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = ChrmChunk.new(_io__raw_body, self, @_root)
+      when "acTL"
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = AnimationControlChunk.new(_io__raw_body, self, @_root)
       when "sRGB"
         @_raw_body = @_io.read_bytes(len)
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
@@ -117,6 +144,10 @@ class Png < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes(len)
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = CompressedTextChunk.new(_io__raw_body, self, @_root)
+      when "fcTL"
+        @_raw_body = @_io.read_bytes(len)
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = FrameControlChunk.new(_io__raw_body, self, @_root)
       else
         @body = @_io.read_bytes(len)
       end
@@ -303,6 +334,35 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
+  class FrameDataChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @sequence_number = @_io.read_u4be
+      @frame_data = @_io.read_bytes_full
+      self
+    end
+
+    ##
+    # Sequence number of the animation chunk. The fcTL and fdAT chunks
+    # have a 4 byte sequence number. Both chunk types share the sequence.
+    # The first fcTL chunk must contain sequence number 0, and the sequence
+    # numbers in the remaining fcTL and fdAT chunks must be in order, with
+    # no gaps or duplicates.
+    attr_reader :sequence_number
+
+    ##
+    # Frame data for the frame. At least one fdAT chunk is required for
+    # each frame. The compressed datastream is the concatenation of the
+    # contents of the data fields of all the fdAT chunks within a frame.
+    attr_reader :frame_data
+  end
+
+  ##
   # Background chunk for truecolor images.
   class BkgdTruecolor < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -399,6 +459,78 @@ class Png < Kaitai::Struct::Struct
   end
 
   ##
+  # @see https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+  class FrameControlChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @sequence_number = @_io.read_u4be
+      @width = @_io.read_u4be
+      raise Kaitai::Struct::ValidationLessThanError.new(1, width, _io, "/types/frame_control_chunk/seq/1") if not width >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_root.ihdr.width, width, _io, "/types/frame_control_chunk/seq/1") if not width <= _root.ihdr.width
+      @height = @_io.read_u4be
+      raise Kaitai::Struct::ValidationLessThanError.new(1, height, _io, "/types/frame_control_chunk/seq/2") if not height >= 1
+      raise Kaitai::Struct::ValidationGreaterThanError.new(_root.ihdr.height, height, _io, "/types/frame_control_chunk/seq/2") if not height <= _root.ihdr.height
+      @x_offset = @_io.read_u4be
+      raise Kaitai::Struct::ValidationGreaterThanError.new((_root.ihdr.width - width), x_offset, _io, "/types/frame_control_chunk/seq/3") if not x_offset <= (_root.ihdr.width - width)
+      @y_offset = @_io.read_u4be
+      raise Kaitai::Struct::ValidationGreaterThanError.new((_root.ihdr.height - height), y_offset, _io, "/types/frame_control_chunk/seq/4") if not y_offset <= (_root.ihdr.height - height)
+      @delay_num = @_io.read_u2be
+      @delay_den = @_io.read_u2be
+      @dispose_op = Kaitai::Struct::Stream::resolve_enum(Png::DISPOSE_OP_VALUES, @_io.read_u1)
+      @blend_op = Kaitai::Struct::Stream::resolve_enum(Png::BLEND_OP_VALUES, @_io.read_u1)
+      self
+    end
+
+    ##
+    # Time to display this frame, in seconds
+    def delay
+      return @delay unless @delay.nil?
+      @delay = (delay_num / (delay_den == 0 ? 100.0 : delay_den))
+      @delay
+    end
+
+    ##
+    # Sequence number of the animation chunk
+    attr_reader :sequence_number
+
+    ##
+    # Width of the following frame
+    attr_reader :width
+
+    ##
+    # Height of the following frame
+    attr_reader :height
+
+    ##
+    # X position at which to render the following frame
+    attr_reader :x_offset
+
+    ##
+    # Y position at which to render the following frame
+    attr_reader :y_offset
+
+    ##
+    # Frame delay fraction numerator
+    attr_reader :delay_num
+
+    ##
+    # Frame delay fraction denominator
+    attr_reader :delay_den
+
+    ##
+    # Type of frame area disposal to be done after rendering this frame
+    attr_reader :dispose_op
+
+    ##
+    # Type of frame area rendering for this frame
+    attr_reader :blend_op
+  end
+
+  ##
   # International text chunk effectively allows to store key-value string pairs in
   # PNG container. Both "key" (keyword) and "value" (text) parts are
   # given in pre-defined subset of iso8859-1 without control
@@ -470,6 +602,29 @@ class Png < Kaitai::Struct::Struct
     # Indicates purpose of the following text data.
     attr_reader :keyword
     attr_reader :text
+  end
+
+  ##
+  # @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
+  class AnimationControlChunk < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_frames = @_io.read_u4be
+      @num_plays = @_io.read_u4be
+      self
+    end
+
+    ##
+    # Number of frames, must be equal to the number of `frame_control_chunk`s
+    attr_reader :num_frames
+
+    ##
+    # Number of times to loop, 0 indicates infinite looping.
+    attr_reader :num_plays
   end
 
   ##

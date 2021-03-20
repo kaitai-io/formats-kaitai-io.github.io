@@ -104,7 +104,12 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>Test files for APNG can be found at the following locations:</p>
+<ul>
+<li>https://philip.html5.org/tests/apng/tests.html</li>
+<li>http://littlesvr.ca/apng/</li>
+</ul>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -114,7 +119,7 @@ section#format-index .row {
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        png
+                        ["png", "apng"]
                     </div>
                     
                     
@@ -128,7 +133,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -149,12 +154,15 @@ section#format-index .row {
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/11">PRONOM fmt/11</a></li>
 <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/12">PRONOM fmt/12</a></li>
 <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/13">PRONOM fmt/13</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/935">PRONOM fmt/935</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q178051">Wikidata Q178051</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q433224">Wikidata Q433224</a></li>
                             
                             <li><a href="https://forensicswiki.xyz/page/Portable_Network_Graphics_(PNG)">Portable Network Graphics (PNG) in ForensicsWiki</a></li>
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/PNG">PNG in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/APNG">APNG in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -279,17 +287,24 @@ section#format-index .row {
     <span class="p">`</span><span class="n">ihdrCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">chunks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Png_Chunk</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">Png_PhysUnit</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">meter</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">Png_BlendOpValues</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">over</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">Png_CompressionMethods</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">zlib</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">Png_DisposeOpValues</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">none</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">background</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">previous</span> <span class="o">=</span> <span class="mi">2</span>
   <span class="n">Png_ColorType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">greyscale</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">truecolor</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">indexed</span> <span class="o">=</span> <span class="mi">3</span>
     <span class="n">greyscale_alpha</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">truecolor_alpha</span> <span class="o">=</span> <span class="mi">6</span>
-  <span class="n">Png_PhysUnit</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">unknown</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="n">meter</span> <span class="o">=</span> <span class="mi">1</span>
-  <span class="n">Png_CompressionMethods</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">zlib</span> <span class="o">=</span> <span class="mi">0</span>
   <span class="n">Png_Rgb</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">r</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">g</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -346,6 +361,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">textDatastream</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
     <span class="p">`</span><span class="n">rawTextDatastream</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+  <span class="n">Png_FrameDataChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">sequenceNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">frameData</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
   <span class="n">Png_BkgdTruecolor</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">red</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">green</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -363,6 +382,18 @@ section#format-index .row {
     <span class="p">`</span><span class="n">pixelsPerUnitY</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">unit</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_PhysUnit</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
+  <span class="n">Png_FrameControlChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">sequenceNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">width</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">height</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">xOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">yOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">delayNum</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">delayDen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">disposeOp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_DisposeOpValues</span>
+    <span class="p">`</span><span class="n">blendOp</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_BlendOpValues</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
+    <span class="p">`</span><span class="n">delayInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">float64</span>
   <span class="n">Png_InternationalTextChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">keyword</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">compressionFlag</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
@@ -374,6 +405,10 @@ section#format-index .row {
   <span class="n">Png_TextChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">keyword</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">text</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
+  <span class="n">Png_AnimationControlChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">numFrames</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">numPlays</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_Chunk</span>
   <span class="n">Png_TimeChunk</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">year</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -395,18 +430,30 @@ section#format-index .row {
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_PlteChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_PlteChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_SrgbChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_SrgbChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_CompressedTextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_CompressedTextChunk</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameDataChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameDataChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_BkgdTruecolor], io: KaitaiStream, root: KaitaiStruct, parent: Png_BkgdChunk): Png_BkgdTruecolor</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_GamaChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_GamaChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_BkgdChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_BkgdChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_PhysChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_PhysChunk</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameControlChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_InternationalTextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_InternationalTextChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_TextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_TextChunk</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_AnimationControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_AnimationControlChunk</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_TimeChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_TimeChunk</span>
 
 <span class="k">proc </span><span class="nf">x</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_Point</span><span class="p">):</span> <span class="kt">float64</span>
 <span class="k">proc </span><span class="nf">y</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_Point</span><span class="p">):</span> <span class="kt">float64</span>
 <span class="k">proc </span><span class="nf">gammaRatio</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_GamaChunk</span><span class="p">):</span> <span class="kt">float64</span>
+<span class="k">proc </span><span class="nf">delay</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_FrameControlChunk</span><span class="p">):</span> <span class="kt">float64</span>
 
+
+<span class="sd">##[</span>
+<span class="n">Test</span> <span class="n">files</span> <span class="k">for</span> <span class="n">APNG</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">at</span> <span class="n">the</span> <span class="n">following</span> <span class="n">locations</span><span class="p">:</span>
+
+  <span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">philip</span><span class="p">.</span><span class="n">html5</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">apng</span><span class="o">/</span><span class="n">tests</span><span class="p">.</span><span class="n">html</span>
+  <span class="o">-</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">littlesvr</span><span class="p">.</span><span class="n">ca</span><span class="o">/</span><span class="n">apng</span><span class="o">/</span>
+
+<span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Png =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
   <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Png</span><span class="p">)</span>
@@ -505,6 +552,12 @@ section#format-index .row {
       <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
       <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Png_PhysChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;fdAT&quot;</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Png_FrameDataChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;tEXt&quot;</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">))</span>
       <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
@@ -517,6 +570,12 @@ section#format-index .row {
       <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
       <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Png_ChrmChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;acTL&quot;</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Png_AnimationControlChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;sRGB&quot;</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">))</span>
       <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
@@ -528,6 +587,12 @@ section#format-index .row {
       <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
       <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
       <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Png_CompressedTextChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="s">&quot;fcTL&quot;</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">rawBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">))</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">rawBody</span> <span class="o">=</span> <span class="n">rawBodyExpr</span>
+      <span class="k">let</span> <span class="n">rawBodyIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyExpr</span><span class="p">)</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Png_FrameControlChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
     <span class="k">else</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">len</span><span class="p">))</span>
@@ -734,6 +799,42 @@ section#format-index .row {
 
 
 <span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameDataChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameDataChunk =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Png_FrameDataChunk</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Png</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Png</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Sequence</span> <span class="n">number</span> <span class="k">of</span> <span class="n">the</span> <span class="n">animation</span> <span class="n">chunk</span><span class="p">.</span> <span class="n">The</span> <span class="n">fcTL</span> <span class="ow">and</span> <span class="n">fdAT</span> <span class="n">chunks</span>
+<span class="n">have</span> <span class="n">a</span> <span class="mi">4</span> <span class="n">byte</span> <span class="n">sequence</span> <span class="n">number</span><span class="p">.</span> <span class="n">Both</span> <span class="n">chunk</span> <span class="n">types</span> <span class="n">share</span> <span class="n">the</span> <span class="n">sequence</span><span class="p">.</span>
+<span class="n">The</span> <span class="n">first</span> <span class="n">fcTL</span> <span class="n">chunk</span> <span class="n">must</span> <span class="n">contain</span> <span class="n">sequence</span> <span class="n">number</span> <span class="mi">0</span><span class="p">,</span> <span class="ow">and</span> <span class="n">the</span> <span class="n">sequence</span>
+<span class="n">numbers</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">remaining</span> <span class="n">fcTL</span> <span class="ow">and</span> <span class="n">fdAT</span> <span class="n">chunks</span> <span class="n">must</span> <span class="n">be</span> <span class="ow">in</span> <span class="n">order</span><span class="p">,</span> <span class="n">with</span>
+<span class="n">no</span> <span class="n">gaps</span> <span class="ow">or</span> <span class="n">duplicates</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">sequenceNumberExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sequenceNumber</span> <span class="o">=</span> <span class="n">sequenceNumberExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Frame</span> <span class="n">data</span> <span class="k">for</span> <span class="n">the</span> <span class="n">frame</span><span class="p">.</span> <span class="n">At</span> <span class="n">least</span> <span class="n">one</span> <span class="n">fdAT</span> <span class="n">chunk</span> <span class="ow">is</span> <span class="n">required</span> <span class="k">for</span>
+<span class="n">each</span> <span class="n">frame</span><span class="p">.</span> <span class="n">The</span> <span class="n">compressed</span> <span class="n">datastream</span> <span class="ow">is</span> <span class="n">the</span> <span class="n">concatenation</span> <span class="k">of</span> <span class="n">the</span>
+<span class="n">contents</span> <span class="k">of</span> <span class="n">the</span> <span class="n">data</span> <span class="n">fields</span> <span class="k">of</span> <span class="n">all</span> <span class="n">the</span> <span class="n">fdAT</span> <span class="n">chunks</span> <span class="n">within</span> <span class="n">a</span> <span class="n">frame</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">frameDataExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesFull</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">frameData</span> <span class="o">=</span> <span class="n">frameDataExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameDataChunk], filename: string): Png_FrameDataChunk =</span>
+  <span class="n">Png_FrameDataChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
 <span class="n">Background</span> <span class="n">chunk</span> <span class="k">for</span> <span class="n">truecolor</span> <span class="n">images</span><span class="p">.</span>
 <span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_BkgdTruecolor], io: KaitaiStream, root: KaitaiStruct, parent: Png_BkgdChunk): Png_BkgdTruecolor =</span>
@@ -855,6 +956,88 @@ section#format-index .row {
 
 
 <span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameControlChunk =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Png_FrameControlChunk</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Png</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Png</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Sequence</span> <span class="n">number</span> <span class="k">of</span> <span class="n">the</span> <span class="n">animation</span> <span class="n">chunk</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">sequenceNumberExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">sequenceNumber</span> <span class="o">=</span> <span class="n">sequenceNumberExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Width</span> <span class="k">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">frame</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">widthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">widthExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Height</span> <span class="k">of</span> <span class="n">the</span> <span class="n">following</span> <span class="n">frame</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">heightExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">heightExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">X</span> <span class="n">position</span> <span class="n">at</span> <span class="n">which</span> <span class="n">to</span> <span class="n">render</span> <span class="n">the</span> <span class="n">following</span> <span class="n">frame</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">xOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">xOffset</span> <span class="o">=</span> <span class="n">xOffsetExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Y</span> <span class="n">position</span> <span class="n">at</span> <span class="n">which</span> <span class="n">to</span> <span class="n">render</span> <span class="n">the</span> <span class="n">following</span> <span class="n">frame</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">yOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">yOffset</span> <span class="o">=</span> <span class="n">yOffsetExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Frame</span> <span class="n">delay</span> <span class="n">fraction</span> <span class="n">numerator</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">delayNumExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">delayNum</span> <span class="o">=</span> <span class="n">delayNumExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Frame</span> <span class="n">delay</span> <span class="n">fraction</span> <span class="n">denominator</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">delayDenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">delayDen</span> <span class="o">=</span> <span class="n">delayDenExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">Type</span> <span class="k">of</span> <span class="n">frame</span> <span class="n">area</span> <span class="n">disposal</span> <span class="n">to</span> <span class="n">be</span> <span class="n">done</span> <span class="n">after</span> <span class="n">rendering</span> <span class="n">this</span> <span class="n">frame</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">disposeOpExpr</span> <span class="o">=</span> <span class="n">Png_DisposeOpValues</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">disposeOp</span> <span class="o">=</span> <span class="n">disposeOpExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="k">Type</span> <span class="k">of</span> <span class="n">frame</span> <span class="n">area</span> <span class="n">rendering</span> <span class="k">for</span> <span class="n">this</span> <span class="n">frame</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">blendOpExpr</span> <span class="o">=</span> <span class="n">Png_BlendOpValues</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blendOp</span> <span class="o">=</span> <span class="n">blendOpExpr</span>
+
+<span class="k">proc </span><span class="nf">delay</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Png_FrameControlChunk</span><span class="p">):</span> <span class="kt">float64</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">Time</span> <span class="n">to</span> <span class="n">display</span> <span class="n">this</span> <span class="n">frame</span><span class="p">,</span> <span class="ow">in</span> <span class="n">seconds</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span>
+  <span class="k">let</span> <span class="n">delayInstExpr</span> <span class="o">=</span> <span class="kt">float64</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">delayNum</span> <span class="ow">div</span> <span class="p">(</span><span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayDen</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="mf">100.0</span> <span class="k">else</span><span class="p">:</span> <span class="n">this</span><span class="p">.</span><span class="n">delayDen</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span> <span class="o">=</span> <span class="n">delayInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">delayInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_FrameControlChunk], filename: string): Png_FrameControlChunk =</span>
+  <span class="n">Png_FrameControlChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
 <span class="n">International</span> <span class="n">text</span> <span class="n">chunk</span> <span class="n">effectively</span> <span class="n">allows</span> <span class="n">to</span> <span class="n">store</span> <span class="n">key</span><span class="o">-</span><span class="n">value</span> <span class="kt">string</span> <span class="n">pairs</span> <span class="ow">in</span>
 <span class="n">PNG</span> <span class="n">container</span><span class="p">.</span> <span class="n">Both</span> <span class="s">&quot;key&quot;</span> <span class="p">(</span><span class="n">keyword</span><span class="p">)</span> <span class="ow">and</span> <span class="s">&quot;value&quot;</span> <span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="n">parts</span> <span class="n">are</span>
 <span class="n">given</span> <span class="ow">in</span> <span class="n">pre</span><span class="o">-</span><span class="n">defined</span> <span class="n">subset</span> <span class="k">of</span> <span class="n">iso8859</span><span class="o">-</span><span class="mi">1</span> <span class="n">without</span> <span class="n">control</span>
@@ -944,6 +1127,34 @@ section#format-index .row {
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_TextChunk], filename: string): Png_TextChunk =</span>
   <span class="n">Png_TextChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_AnimationControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_AnimationControlChunk =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Png_AnimationControlChunk</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Png</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Png</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">frames</span><span class="p">,</span> <span class="n">must</span> <span class="n">be</span> <span class="n">equal</span> <span class="n">to</span> <span class="n">the</span> <span class="n">number</span> <span class="k">of</span> <span class="p">`</span><span class="n">frame_control_chunk</span><span class="p">`</span><span class="n">s</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">numFramesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numFrames</span> <span class="o">=</span> <span class="n">numFramesExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Number</span> <span class="k">of</span> <span class="n">times</span> <span class="n">to</span> <span class="n">loop</span><span class="p">,</span> <span class="mi">0</span> <span class="n">indicates</span> <span class="n">infinite</span> <span class="n">looping</span><span class="p">.</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">numPlaysExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numPlays</span> <span class="o">=</span> <span class="n">numPlaysExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png_AnimationControlChunk], filename: string): Png_AnimationControlChunk =</span>
+  <span class="n">Png_AnimationControlChunk</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="sd">##[</span>

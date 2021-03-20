@@ -1,6 +1,13 @@
 <?php
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
+/**
+ * Test files for APNG can be found at the following locations:
+ * 
+ *   - https://philip.html5.org/tests/apng/tests.html
+ *   - http://littlesvr.ca/apng/
+ */
+
 namespace {
     class Png extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Png $_root = null) {
@@ -108,6 +115,11 @@ namespace Png {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\PhysChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "fdAT":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\FrameDataChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "tEXt":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -118,6 +130,11 @@ namespace Png {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\ChrmChunk($_io__raw_body, $this, $this->_root);
                     break;
+                case "acTL":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\AnimationControlChunk($_io__raw_body, $this, $this->_root);
+                    break;
                 case "sRGB":
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -127,6 +144,11 @@ namespace Png {
                     $this->_m__raw_body = $this->_io->readBytes($this->len());
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \Png\CompressedTextChunk($_io__raw_body, $this, $this->_root);
+                    break;
+                case "fcTL":
+                    $this->_m__raw_body = $this->_io->readBytes($this->len());
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Png\FrameControlChunk($_io__raw_body, $this, $this->_root);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytes($this->len());
@@ -352,6 +374,38 @@ namespace Png {
     }
 }
 
+namespace Png {
+    class FrameDataChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_sequenceNumber = $this->_io->readU4be();
+            $this->_m_frameData = $this->_io->readBytesFull();
+        }
+        protected $_m_sequenceNumber;
+        protected $_m_frameData;
+
+        /**
+         * Sequence number of the animation chunk. The fcTL and fdAT chunks
+         * have a 4 byte sequence number. Both chunk types share the sequence.
+         * The first fcTL chunk must contain sequence number 0, and the sequence
+         * numbers in the remaining fcTL and fdAT chunks must be in order, with
+         * no gaps or duplicates.
+         */
+        public function sequenceNumber() { return $this->_m_sequenceNumber; }
+
+        /**
+         * Frame data for the frame. At least one fdAT chunk is required for
+         * each frame. The compressed datastream is the concatenation of the
+         * contents of the data fields of all the fdAT chunks within a frame.
+         */
+        public function frameData() { return $this->_m_frameData; }
+    }
+}
+
 /**
  * Background chunk for truecolor images.
  */
@@ -471,6 +525,110 @@ namespace Png {
     }
 }
 
+namespace Png {
+    class FrameControlChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_sequenceNumber = $this->_io->readU4be();
+            $this->_m_width = $this->_io->readU4be();
+            if (!($this->width() >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->width(), $this->_io(), "/types/frame_control_chunk/seq/1");
+            }
+            if (!($this->width() <= $this->_root()->ihdr()->width())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_root()->ihdr()->width(), $this->width(), $this->_io(), "/types/frame_control_chunk/seq/1");
+            }
+            $this->_m_height = $this->_io->readU4be();
+            if (!($this->height() >= 1)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(1, $this->height(), $this->_io(), "/types/frame_control_chunk/seq/2");
+            }
+            if (!($this->height() <= $this->_root()->ihdr()->height())) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError($this->_root()->ihdr()->height(), $this->height(), $this->_io(), "/types/frame_control_chunk/seq/2");
+            }
+            $this->_m_xOffset = $this->_io->readU4be();
+            if (!($this->xOffset() <= ($this->_root()->ihdr()->width() - $this->width()))) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->_root()->ihdr()->width() - $this->width()), $this->xOffset(), $this->_io(), "/types/frame_control_chunk/seq/3");
+            }
+            $this->_m_yOffset = $this->_io->readU4be();
+            if (!($this->yOffset() <= ($this->_root()->ihdr()->height() - $this->height()))) {
+                throw new \Kaitai\Struct\Error\ValidationGreaterThanError(($this->_root()->ihdr()->height() - $this->height()), $this->yOffset(), $this->_io(), "/types/frame_control_chunk/seq/4");
+            }
+            $this->_m_delayNum = $this->_io->readU2be();
+            $this->_m_delayDen = $this->_io->readU2be();
+            $this->_m_disposeOp = $this->_io->readU1();
+            $this->_m_blendOp = $this->_io->readU1();
+        }
+        protected $_m_delay;
+
+        /**
+         * Time to display this frame, in seconds
+         */
+        public function delay() {
+            if ($this->_m_delay !== null)
+                return $this->_m_delay;
+            $this->_m_delay = ($this->delayNum() / ($this->delayDen() == 0 ? 100.0 : $this->delayDen()));
+            return $this->_m_delay;
+        }
+        protected $_m_sequenceNumber;
+        protected $_m_width;
+        protected $_m_height;
+        protected $_m_xOffset;
+        protected $_m_yOffset;
+        protected $_m_delayNum;
+        protected $_m_delayDen;
+        protected $_m_disposeOp;
+        protected $_m_blendOp;
+
+        /**
+         * Sequence number of the animation chunk
+         */
+        public function sequenceNumber() { return $this->_m_sequenceNumber; }
+
+        /**
+         * Width of the following frame
+         */
+        public function width() { return $this->_m_width; }
+
+        /**
+         * Height of the following frame
+         */
+        public function height() { return $this->_m_height; }
+
+        /**
+         * X position at which to render the following frame
+         */
+        public function xOffset() { return $this->_m_xOffset; }
+
+        /**
+         * Y position at which to render the following frame
+         */
+        public function yOffset() { return $this->_m_yOffset; }
+
+        /**
+         * Frame delay fraction numerator
+         */
+        public function delayNum() { return $this->_m_delayNum; }
+
+        /**
+         * Frame delay fraction denominator
+         */
+        public function delayDen() { return $this->_m_delayDen; }
+
+        /**
+         * Type of frame area disposal to be done after rendering this frame
+         */
+        public function disposeOp() { return $this->_m_disposeOp; }
+
+        /**
+         * Type of frame area rendering for this frame
+         */
+        public function blendOp() { return $this->_m_blendOp; }
+    }
+}
+
 /**
  * International text chunk effectively allows to store key-value string pairs in
  * PNG container. Both "key" (keyword) and "value" (text) parts are
@@ -563,6 +721,32 @@ namespace Png {
     }
 }
 
+namespace Png {
+    class AnimationControlChunk extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Png\Chunk $_parent = null, \Png $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numFrames = $this->_io->readU4be();
+            $this->_m_numPlays = $this->_io->readU4be();
+        }
+        protected $_m_numFrames;
+        protected $_m_numPlays;
+
+        /**
+         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         */
+        public function numFrames() { return $this->_m_numFrames; }
+
+        /**
+         * Number of times to loop, 0 indicates infinite looping.
+         */
+        public function numPlays() { return $this->_m_numPlays; }
+    }
+}
+
 /**
  * Time chunk stores time stamp of last modification of this image,
  * up to 1 second precision in UTC timezone.
@@ -599,16 +783,6 @@ namespace Png {
 }
 
 namespace Png {
-    class ColorType {
-        const GREYSCALE = 0;
-        const TRUECOLOR = 2;
-        const INDEXED = 3;
-        const GREYSCALE_ALPHA = 4;
-        const TRUECOLOR_ALPHA = 6;
-    }
-}
-
-namespace Png {
     class PhysUnit {
         const UNKNOWN = 0;
         const METER = 1;
@@ -616,7 +790,56 @@ namespace Png {
 }
 
 namespace Png {
+    class BlendOpValues {
+
+        /**
+         * All color components of the frame, including alpha,
+         * overwrite the current contents of the frame's output buffer region.
+         */
+        const SOURCE = 0;
+
+        /**
+         * The frame is composited onto the output buffer based on its alpha
+         */
+        const OVER = 1;
+    }
+}
+
+namespace Png {
     class CompressionMethods {
         const ZLIB = 0;
+    }
+}
+
+namespace Png {
+    class DisposeOpValues {
+
+        /**
+         * No disposal is done on this frame before rendering the next;
+         * the contents of the output buffer are left as is.
+         */
+        const NONE = 0;
+
+        /**
+         * The frame's region of the output buffer is to be cleared to
+         * fully transparent black before rendering the next frame.
+         */
+        const BACKGROUND = 1;
+
+        /**
+         * The frame's region of the output buffer is to be reverted
+         * to the previous contents before rendering the next frame.
+         */
+        const PREVIOUS = 2;
+    }
+}
+
+namespace Png {
+    class ColorType {
+        const GREYSCALE = 0;
+        const TRUECOLOR = 2;
+        const INDEXED = 3;
+        const GREYSCALE_ALPHA = 4;
+        const TRUECOLOR_ALPHA = 6;
     }
 }

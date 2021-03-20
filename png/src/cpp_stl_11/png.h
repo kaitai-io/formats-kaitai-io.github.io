@@ -11,6 +11,13 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
 
+/**
+ * Test files for APNG can be found at the following locations:
+ * 
+ *   - https://philip.html5.org/tests/apng/tests.html
+ *   - http://littlesvr.ca/apng/
+ */
+
 class png_t : public kaitai::kstruct {
 
 public:
@@ -24,13 +31,36 @@ public:
     class plte_chunk_t;
     class srgb_chunk_t;
     class compressed_text_chunk_t;
+    class frame_data_chunk_t;
     class bkgd_truecolor_t;
     class gama_chunk_t;
     class bkgd_chunk_t;
     class phys_chunk_t;
+    class frame_control_chunk_t;
     class international_text_chunk_t;
     class text_chunk_t;
+    class animation_control_chunk_t;
     class time_chunk_t;
+
+    enum phys_unit_t {
+        PHYS_UNIT_UNKNOWN = 0,
+        PHYS_UNIT_METER = 1
+    };
+
+    enum blend_op_values_t {
+        BLEND_OP_VALUES_SOURCE = 0,
+        BLEND_OP_VALUES_OVER = 1
+    };
+
+    enum compression_methods_t {
+        COMPRESSION_METHODS_ZLIB = 0
+    };
+
+    enum dispose_op_values_t {
+        DISPOSE_OP_VALUES_NONE = 0,
+        DISPOSE_OP_VALUES_BACKGROUND = 1,
+        DISPOSE_OP_VALUES_PREVIOUS = 2
+    };
 
     enum color_type_t {
         COLOR_TYPE_GREYSCALE = 0,
@@ -38,15 +68,6 @@ public:
         COLOR_TYPE_INDEXED = 3,
         COLOR_TYPE_GREYSCALE_ALPHA = 4,
         COLOR_TYPE_TRUECOLOR_ALPHA = 6
-    };
-
-    enum phys_unit_t {
-        PHYS_UNIT_UNKNOWN = 0,
-        PHYS_UNIT_METER = 1
-    };
-
-    enum compression_methods_t {
-        COMPRESSION_METHODS_ZLIB = 0
     };
 
     png_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, png_t* p__root = nullptr);
@@ -403,6 +424,50 @@ public:
     };
 
     /**
+     * \sa https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source
+     */
+
+    class frame_data_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        frame_data_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~frame_data_chunk_t();
+
+    private:
+        uint32_t m_sequence_number;
+        std::string m_frame_data;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Sequence number of the animation chunk. The fcTL and fdAT chunks
+         * have a 4 byte sequence number. Both chunk types share the sequence.
+         * The first fcTL chunk must contain sequence number 0, and the sequence
+         * numbers in the remaining fcTL and fdAT chunks must be in order, with
+         * no gaps or duplicates.
+         */
+        uint32_t sequence_number() const { return m_sequence_number; }
+
+        /**
+         * Frame data for the frame. At least one fdAT chunk is required for
+         * each frame. The compressed datastream is the concatenation of the
+         * contents of the data fields of all the fdAT chunks within a frame.
+         */
+        std::string frame_data() const { return m_frame_data; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * Background chunk for truecolor images.
      */
 
@@ -550,6 +615,97 @@ public:
     };
 
     /**
+     * \sa https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source
+     */
+
+    class frame_control_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        frame_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~frame_control_chunk_t();
+
+    private:
+        bool f_delay;
+        double m_delay;
+
+    public:
+
+        /**
+         * Time to display this frame, in seconds
+         */
+        double delay();
+
+    private:
+        uint32_t m_sequence_number;
+        uint32_t m_width;
+        uint32_t m_height;
+        uint32_t m_x_offset;
+        uint32_t m_y_offset;
+        uint16_t m_delay_num;
+        uint16_t m_delay_den;
+        dispose_op_values_t m_dispose_op;
+        blend_op_values_t m_blend_op;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Sequence number of the animation chunk
+         */
+        uint32_t sequence_number() const { return m_sequence_number; }
+
+        /**
+         * Width of the following frame
+         */
+        uint32_t width() const { return m_width; }
+
+        /**
+         * Height of the following frame
+         */
+        uint32_t height() const { return m_height; }
+
+        /**
+         * X position at which to render the following frame
+         */
+        uint32_t x_offset() const { return m_x_offset; }
+
+        /**
+         * Y position at which to render the following frame
+         */
+        uint32_t y_offset() const { return m_y_offset; }
+
+        /**
+         * Frame delay fraction numerator
+         */
+        uint16_t delay_num() const { return m_delay_num; }
+
+        /**
+         * Frame delay fraction denominator
+         */
+        uint16_t delay_den() const { return m_delay_den; }
+
+        /**
+         * Type of frame area disposal to be done after rendering this frame
+         */
+        dispose_op_values_t dispose_op() const { return m_dispose_op; }
+
+        /**
+         * Type of frame area rendering for this frame
+         */
+        blend_op_values_t blend_op() const { return m_blend_op; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
      * International text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
@@ -651,6 +807,44 @@ public:
          */
         std::string keyword() const { return m_keyword; }
         std::string text() const { return m_text; }
+        png_t* _root() const { return m__root; }
+        png_t::chunk_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source
+     */
+
+    class animation_control_chunk_t : public kaitai::kstruct {
+
+    public:
+
+        animation_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent = nullptr, png_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~animation_control_chunk_t();
+
+    private:
+        uint32_t m_num_frames;
+        uint32_t m_num_plays;
+        png_t* m__root;
+        png_t::chunk_t* m__parent;
+
+    public:
+
+        /**
+         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         */
+        uint32_t num_frames() const { return m_num_frames; }
+
+        /**
+         * Number of times to loop, 0 indicates infinite looping.
+         */
+        uint32_t num_plays() const { return m_num_plays; }
         png_t* _root() const { return m__root; }
         png_t::chunk_t* _parent() const { return m__parent; }
     };

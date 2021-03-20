@@ -10,9 +10,76 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
+
+/**
+ * Test files for APNG can be found at the following locations:
+ * 
+ *   - https://philip.html5.org/tests/apng/tests.html
+ *   - http://littlesvr.ca/apng/
+ */
 public class Png extends KaitaiStruct {
     public static Png fromFile(String fileName) throws IOException {
         return new Png(new ByteBufferKaitaiStream(fileName));
+    }
+
+    public enum PhysUnit {
+        UNKNOWN(0),
+        METER(1);
+
+        private final long id;
+        PhysUnit(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, PhysUnit> byId = new HashMap<Long, PhysUnit>(2);
+        static {
+            for (PhysUnit e : PhysUnit.values())
+                byId.put(e.id(), e);
+        }
+        public static PhysUnit byId(long id) { return byId.get(id); }
+    }
+
+    public enum BlendOpValues {
+        SOURCE(0),
+        OVER(1);
+
+        private final long id;
+        BlendOpValues(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, BlendOpValues> byId = new HashMap<Long, BlendOpValues>(2);
+        static {
+            for (BlendOpValues e : BlendOpValues.values())
+                byId.put(e.id(), e);
+        }
+        public static BlendOpValues byId(long id) { return byId.get(id); }
+    }
+
+    public enum CompressionMethods {
+        ZLIB(0);
+
+        private final long id;
+        CompressionMethods(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, CompressionMethods> byId = new HashMap<Long, CompressionMethods>(1);
+        static {
+            for (CompressionMethods e : CompressionMethods.values())
+                byId.put(e.id(), e);
+        }
+        public static CompressionMethods byId(long id) { return byId.get(id); }
+    }
+
+    public enum DisposeOpValues {
+        NONE(0),
+        BACKGROUND(1),
+        PREVIOUS(2);
+
+        private final long id;
+        DisposeOpValues(long id) { this.id = id; }
+        public long id() { return id; }
+        private static final Map<Long, DisposeOpValues> byId = new HashMap<Long, DisposeOpValues>(3);
+        static {
+            for (DisposeOpValues e : DisposeOpValues.values())
+                byId.put(e.id(), e);
+        }
+        public static DisposeOpValues byId(long id) { return byId.get(id); }
     }
 
     public enum ColorType {
@@ -31,35 +98,6 @@ public class Png extends KaitaiStruct {
                 byId.put(e.id(), e);
         }
         public static ColorType byId(long id) { return byId.get(id); }
-    }
-
-    public enum PhysUnit {
-        UNKNOWN(0),
-        METER(1);
-
-        private final long id;
-        PhysUnit(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, PhysUnit> byId = new HashMap<Long, PhysUnit>(2);
-        static {
-            for (PhysUnit e : PhysUnit.values())
-                byId.put(e.id(), e);
-        }
-        public static PhysUnit byId(long id) { return byId.get(id); }
-    }
-
-    public enum CompressionMethods {
-        ZLIB(0);
-
-        private final long id;
-        CompressionMethods(long id) { this.id = id; }
-        public long id() { return id; }
-        private static final Map<Long, CompressionMethods> byId = new HashMap<Long, CompressionMethods>(1);
-        static {
-            for (CompressionMethods e : CompressionMethods.values())
-                byId.put(e.id(), e);
-        }
-        public static CompressionMethods byId(long id) { return byId.get(id); }
     }
 
     public Png(KaitaiStream _io) {
@@ -196,6 +234,12 @@ public class Png extends KaitaiStruct {
                 this.body = new PhysChunk(_io__raw_body, this, _root);
                 break;
             }
+            case "fdAT": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new FrameDataChunk(_io__raw_body, this, _root);
+                break;
+            }
             case "tEXt": {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -208,6 +252,12 @@ public class Png extends KaitaiStruct {
                 this.body = new ChrmChunk(_io__raw_body, this, _root);
                 break;
             }
+            case "acTL": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new AnimationControlChunk(_io__raw_body, this, _root);
+                break;
+            }
             case "sRGB": {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -218,6 +268,12 @@ public class Png extends KaitaiStruct {
                 this._raw_body = this._io.readBytes(len());
                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                 this.body = new CompressedTextChunk(_io__raw_body, this, _root);
+                break;
+            }
+            case "fcTL": {
+                this._raw_body = this._io.readBytes(len());
+                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                this.body = new FrameControlChunk(_io__raw_body, this, _root);
                 break;
             }
             default: {
@@ -590,6 +646,56 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
+     */
+    public static class FrameDataChunk extends KaitaiStruct {
+        public static FrameDataChunk fromFile(String fileName) throws IOException {
+            return new FrameDataChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FrameDataChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FrameDataChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FrameDataChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sequenceNumber = this._io.readU4be();
+            this.frameData = this._io.readBytesFull();
+        }
+        private long sequenceNumber;
+        private byte[] frameData;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Sequence number of the animation chunk. The fcTL and fdAT chunks
+         * have a 4 byte sequence number. Both chunk types share the sequence.
+         * The first fcTL chunk must contain sequence number 0, and the sequence
+         * numbers in the remaining fcTL and fdAT chunks must be in order, with
+         * no gaps or duplicates.
+         */
+        public long sequenceNumber() { return sequenceNumber; }
+
+        /**
+         * Frame data for the frame. At least one fdAT chunk is required for
+         * each frame. The compressed datastream is the concatenation of the
+         * contents of the data fields of all the fdAT chunks within a frame.
+         */
+        public byte[] frameData() { return frameData; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
      * Background chunk for truecolor images.
      */
     public static class BkgdTruecolor extends KaitaiStruct {
@@ -782,6 +888,129 @@ public class Png extends KaitaiStruct {
     }
 
     /**
+     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk">Source</a>
+     */
+    public static class FrameControlChunk extends KaitaiStruct {
+        public static FrameControlChunk fromFile(String fileName) throws IOException {
+            return new FrameControlChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FrameControlChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FrameControlChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FrameControlChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.sequenceNumber = this._io.readU4be();
+            this.width = this._io.readU4be();
+            if (!(width() >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, width(), _io(), "/types/frame_control_chunk/seq/1");
+            }
+            if (!(width() <= _root.ihdr().width())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root.ihdr().width(), width(), _io(), "/types/frame_control_chunk/seq/1");
+            }
+            this.height = this._io.readU4be();
+            if (!(height() >= 1)) {
+                throw new KaitaiStream.ValidationLessThanError(1, height(), _io(), "/types/frame_control_chunk/seq/2");
+            }
+            if (!(height() <= _root.ihdr().height())) {
+                throw new KaitaiStream.ValidationGreaterThanError(_root.ihdr().height(), height(), _io(), "/types/frame_control_chunk/seq/2");
+            }
+            this.xOffset = this._io.readU4be();
+            if (!(xOffset() <= (_root.ihdr().width() - width()))) {
+                throw new KaitaiStream.ValidationGreaterThanError((_root.ihdr().width() - width()), xOffset(), _io(), "/types/frame_control_chunk/seq/3");
+            }
+            this.yOffset = this._io.readU4be();
+            if (!(yOffset() <= (_root.ihdr().height() - height()))) {
+                throw new KaitaiStream.ValidationGreaterThanError((_root.ihdr().height() - height()), yOffset(), _io(), "/types/frame_control_chunk/seq/4");
+            }
+            this.delayNum = this._io.readU2be();
+            this.delayDen = this._io.readU2be();
+            this.disposeOp = Png.DisposeOpValues.byId(this._io.readU1());
+            this.blendOp = Png.BlendOpValues.byId(this._io.readU1());
+        }
+        private Double delay;
+
+        /**
+         * Time to display this frame, in seconds
+         */
+        public Double delay() {
+            if (this.delay != null)
+                return this.delay;
+            double _tmp = (double) ((delayNum() / (delayDen() == 0 ? 100.0 : delayDen())));
+            this.delay = _tmp;
+            return this.delay;
+        }
+        private long sequenceNumber;
+        private long width;
+        private long height;
+        private long xOffset;
+        private long yOffset;
+        private int delayNum;
+        private int delayDen;
+        private DisposeOpValues disposeOp;
+        private BlendOpValues blendOp;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Sequence number of the animation chunk
+         */
+        public long sequenceNumber() { return sequenceNumber; }
+
+        /**
+         * Width of the following frame
+         */
+        public long width() { return width; }
+
+        /**
+         * Height of the following frame
+         */
+        public long height() { return height; }
+
+        /**
+         * X position at which to render the following frame
+         */
+        public long xOffset() { return xOffset; }
+
+        /**
+         * Y position at which to render the following frame
+         */
+        public long yOffset() { return yOffset; }
+
+        /**
+         * Frame delay fraction numerator
+         */
+        public int delayNum() { return delayNum; }
+
+        /**
+         * Frame delay fraction denominator
+         */
+        public int delayDen() { return delayDen; }
+
+        /**
+         * Type of frame area disposal to be done after rendering this frame
+         */
+        public DisposeOpValues disposeOp() { return disposeOp; }
+
+        /**
+         * Type of frame area rendering for this frame
+         */
+        public BlendOpValues blendOp() { return blendOp; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
      * International text chunk effectively allows to store key-value string pairs in
      * PNG container. Both "key" (keyword) and "value" (text) parts are
      * given in pre-defined subset of iso8859-1 without control
@@ -899,6 +1128,50 @@ public class Png extends KaitaiStruct {
          */
         public String keyword() { return keyword; }
         public String text() { return text; }
+        public Png _root() { return _root; }
+        public Png.Chunk _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
+     */
+    public static class AnimationControlChunk extends KaitaiStruct {
+        public static AnimationControlChunk fromFile(String fileName) throws IOException {
+            return new AnimationControlChunk(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public AnimationControlChunk(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AnimationControlChunk(KaitaiStream _io, Png.Chunk _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AnimationControlChunk(KaitaiStream _io, Png.Chunk _parent, Png _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numFrames = this._io.readU4be();
+            this.numPlays = this._io.readU4be();
+        }
+        private long numFrames;
+        private long numPlays;
+        private Png _root;
+        private Png.Chunk _parent;
+
+        /**
+         * Number of frames, must be equal to the number of `frame_control_chunk`s
+         */
+        public long numFrames() { return numFrames; }
+
+        /**
+         * Number of times to loop, 0 indicates infinite looping.
+         */
+        public long numPlays() { return numPlays; }
         public Png _root() { return _root; }
         public Png.Chunk _parent() { return _parent; }
     }

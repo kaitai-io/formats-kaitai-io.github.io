@@ -4,6 +4,13 @@ using System.Collections.Generic;
 
 namespace Kaitai
 {
+
+    /// <summary>
+    /// Test files for APNG can be found at the following locations:
+    /// 
+    ///   - https://philip.html5.org/tests/apng/tests.html
+    ///   - http://littlesvr.ca/apng/
+    /// </summary>
     public partial class Png : KaitaiStruct
     {
         public static Png FromFile(string fileName)
@@ -12,6 +19,30 @@ namespace Kaitai
         }
 
 
+        public enum PhysUnit
+        {
+            Unknown = 0,
+            Meter = 1,
+        }
+
+        public enum BlendOpValues
+        {
+            Source = 0,
+            Over = 1,
+        }
+
+        public enum CompressionMethods
+        {
+            Zlib = 0,
+        }
+
+        public enum DisposeOpValues
+        {
+            None = 0,
+            Background = 1,
+            Previous = 2,
+        }
+
         public enum ColorType
         {
             Greyscale = 0,
@@ -19,17 +50,6 @@ namespace Kaitai
             Indexed = 3,
             GreyscaleAlpha = 4,
             TruecolorAlpha = 6,
-        }
-
-        public enum PhysUnit
-        {
-            Unknown = 0,
-            Meter = 1,
-        }
-
-        public enum CompressionMethods
-        {
-            Zlib = 0,
         }
         public Png(KaitaiStream p__io, KaitaiStruct p__parent = null, Png p__root = null) : base(p__io)
         {
@@ -151,6 +171,12 @@ namespace Kaitai
                     _body = new PhysChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "fdAT": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new FrameDataChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "tEXt": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -163,6 +189,12 @@ namespace Kaitai
                     _body = new ChrmChunk(io___raw_body, this, m_root);
                     break;
                 }
+                case "acTL": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new AnimationControlChunk(io___raw_body, this, m_root);
+                    break;
+                }
                 case "sRGB": {
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -173,6 +205,12 @@ namespace Kaitai
                     __raw_body = m_io.ReadBytes(Len);
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new CompressedTextChunk(io___raw_body, this, m_root);
+                    break;
+                }
+                case "fcTL": {
+                    __raw_body = m_io.ReadBytes(Len);
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new FrameControlChunk(io___raw_body, this, m_root);
                     break;
                 }
                 default: {
@@ -509,6 +547,51 @@ namespace Kaitai
             public byte[] M_RawTextDatastream { get { return __raw_textDatastream; } }
         }
 
+        /// <remarks>
+        /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
+        /// </remarks>
+        public partial class FrameDataChunk : KaitaiStruct
+        {
+            public static FrameDataChunk FromFile(string fileName)
+            {
+                return new FrameDataChunk(new KaitaiStream(fileName));
+            }
+
+            public FrameDataChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _sequenceNumber = m_io.ReadU4be();
+                _frameData = m_io.ReadBytesFull();
+            }
+            private uint _sequenceNumber;
+            private byte[] _frameData;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Sequence number of the animation chunk. The fcTL and fdAT chunks
+            /// have a 4 byte sequence number. Both chunk types share the sequence.
+            /// The first fcTL chunk must contain sequence number 0, and the sequence
+            /// numbers in the remaining fcTL and fdAT chunks must be in order, with
+            /// no gaps or duplicates.
+            /// </summary>
+            public uint SequenceNumber { get { return _sequenceNumber; } }
+
+            /// <summary>
+            /// Frame data for the frame. At least one fdAT chunk is required for
+            /// each frame. The compressed datastream is the concatenation of the
+            /// contents of the data fields of all the fdAT chunks within a frame.
+            /// </summary>
+            public byte[] FrameData { get { return _frameData; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
         /// <summary>
         /// Background chunk for truecolor images.
         /// </summary>
@@ -686,6 +769,136 @@ namespace Kaitai
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
 
+        /// <remarks>
+        /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk">Source</a>
+        /// </remarks>
+        public partial class FrameControlChunk : KaitaiStruct
+        {
+            public static FrameControlChunk FromFile(string fileName)
+            {
+                return new FrameControlChunk(new KaitaiStream(fileName));
+            }
+
+            public FrameControlChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                f_delay = false;
+                _read();
+            }
+            private void _read()
+            {
+                _sequenceNumber = m_io.ReadU4be();
+                _width = m_io.ReadU4be();
+                if (!(Width >= 1))
+                {
+                    throw new ValidationLessThanError(1, Width, M_Io, "/types/frame_control_chunk/seq/1");
+                }
+                if (!(Width <= M_Root.Ihdr.Width))
+                {
+                    throw new ValidationGreaterThanError(M_Root.Ihdr.Width, Width, M_Io, "/types/frame_control_chunk/seq/1");
+                }
+                _height = m_io.ReadU4be();
+                if (!(Height >= 1))
+                {
+                    throw new ValidationLessThanError(1, Height, M_Io, "/types/frame_control_chunk/seq/2");
+                }
+                if (!(Height <= M_Root.Ihdr.Height))
+                {
+                    throw new ValidationGreaterThanError(M_Root.Ihdr.Height, Height, M_Io, "/types/frame_control_chunk/seq/2");
+                }
+                _xOffset = m_io.ReadU4be();
+                if (!(XOffset <= (M_Root.Ihdr.Width - Width)))
+                {
+                    throw new ValidationGreaterThanError((M_Root.Ihdr.Width - Width), XOffset, M_Io, "/types/frame_control_chunk/seq/3");
+                }
+                _yOffset = m_io.ReadU4be();
+                if (!(YOffset <= (M_Root.Ihdr.Height - Height)))
+                {
+                    throw new ValidationGreaterThanError((M_Root.Ihdr.Height - Height), YOffset, M_Io, "/types/frame_control_chunk/seq/4");
+                }
+                _delayNum = m_io.ReadU2be();
+                _delayDen = m_io.ReadU2be();
+                _disposeOp = ((Png.DisposeOpValues) m_io.ReadU1());
+                _blendOp = ((Png.BlendOpValues) m_io.ReadU1());
+            }
+            private bool f_delay;
+            private double _delay;
+
+            /// <summary>
+            /// Time to display this frame, in seconds
+            /// </summary>
+            public double Delay
+            {
+                get
+                {
+                    if (f_delay)
+                        return _delay;
+                    _delay = (double) ((DelayNum / (DelayDen == 0 ? 100.0 : DelayDen)));
+                    f_delay = true;
+                    return _delay;
+                }
+            }
+            private uint _sequenceNumber;
+            private uint _width;
+            private uint _height;
+            private uint _xOffset;
+            private uint _yOffset;
+            private ushort _delayNum;
+            private ushort _delayDen;
+            private DisposeOpValues _disposeOp;
+            private BlendOpValues _blendOp;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Sequence number of the animation chunk
+            /// </summary>
+            public uint SequenceNumber { get { return _sequenceNumber; } }
+
+            /// <summary>
+            /// Width of the following frame
+            /// </summary>
+            public uint Width { get { return _width; } }
+
+            /// <summary>
+            /// Height of the following frame
+            /// </summary>
+            public uint Height { get { return _height; } }
+
+            /// <summary>
+            /// X position at which to render the following frame
+            /// </summary>
+            public uint XOffset { get { return _xOffset; } }
+
+            /// <summary>
+            /// Y position at which to render the following frame
+            /// </summary>
+            public uint YOffset { get { return _yOffset; } }
+
+            /// <summary>
+            /// Frame delay fraction numerator
+            /// </summary>
+            public ushort DelayNum { get { return _delayNum; } }
+
+            /// <summary>
+            /// Frame delay fraction denominator
+            /// </summary>
+            public ushort DelayDen { get { return _delayDen; } }
+
+            /// <summary>
+            /// Type of frame area disposal to be done after rendering this frame
+            /// </summary>
+            public DisposeOpValues DisposeOp { get { return _disposeOp; } }
+
+            /// <summary>
+            /// Type of frame area rendering for this frame
+            /// </summary>
+            public BlendOpValues BlendOp { get { return _blendOp; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
         /// <summary>
         /// International text chunk effectively allows to store key-value string pairs in
         /// PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are
@@ -798,6 +1011,45 @@ namespace Kaitai
             /// </summary>
             public string Keyword { get { return _keyword; } }
             public string Text { get { return _text; } }
+            public Png M_Root { get { return m_root; } }
+            public Png.Chunk M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
+        /// </remarks>
+        public partial class AnimationControlChunk : KaitaiStruct
+        {
+            public static AnimationControlChunk FromFile(string fileName)
+            {
+                return new AnimationControlChunk(new KaitaiStream(fileName));
+            }
+
+            public AnimationControlChunk(KaitaiStream p__io, Png.Chunk p__parent = null, Png p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numFrames = m_io.ReadU4be();
+                _numPlays = m_io.ReadU4be();
+            }
+            private uint _numFrames;
+            private uint _numPlays;
+            private Png m_root;
+            private Png.Chunk m_parent;
+
+            /// <summary>
+            /// Number of frames, must be equal to the number of `frame_control_chunk`s
+            /// </summary>
+            public uint NumFrames { get { return _numFrames; } }
+
+            /// <summary>
+            /// Number of times to loop, 0 indicates infinite looping.
+            /// </summary>
+            public uint NumPlays { get { return _numPlays; } }
             public Png M_Root { get { return m_root; } }
             public Png.Chunk M_Parent { get { return m_parent; } }
         }

@@ -20,16 +20,23 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
+our $PHYS_UNIT_UNKNOWN = 0;
+our $PHYS_UNIT_METER = 1;
+
+our $BLEND_OP_VALUES_SOURCE = 0;
+our $BLEND_OP_VALUES_OVER = 1;
+
+our $COMPRESSION_METHODS_ZLIB = 0;
+
+our $DISPOSE_OP_VALUES_NONE = 0;
+our $DISPOSE_OP_VALUES_BACKGROUND = 1;
+our $DISPOSE_OP_VALUES_PREVIOUS = 2;
+
 our $COLOR_TYPE_GREYSCALE = 0;
 our $COLOR_TYPE_TRUECOLOR = 2;
 our $COLOR_TYPE_INDEXED = 3;
 our $COLOR_TYPE_GREYSCALE_ALPHA = 4;
 our $COLOR_TYPE_TRUECOLOR_ALPHA = 6;
-
-our $PHYS_UNIT_UNKNOWN = 0;
-our $PHYS_UNIT_METER = 1;
-
-our $COMPRESSION_METHODS_ZLIB = 0;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -202,6 +209,11 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::PhysChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "fdAT") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::FrameDataChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "tEXt") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -212,6 +224,11 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::ChrmChunk->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on eq "acTL") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::AnimationControlChunk->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on eq "sRGB") {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -221,6 +238,11 @@ sub _read {
         $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = Png::CompressedTextChunk->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on eq "fcTL") {
+        $self->{_raw_body} = $self->{_io}->read_bytes($self->len());
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Png::FrameControlChunk->new($io__raw_body, $self, $self->{_root});
     }
     else {
         $self->{body} = $self->{_io}->read_bytes($self->len());
@@ -658,6 +680,50 @@ sub _raw_text_datastream {
 }
 
 ########################################################################
+package Png::FrameDataChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{sequence_number} = $self->{_io}->read_u4be();
+    $self->{frame_data} = $self->{_io}->read_bytes_full();
+}
+
+sub sequence_number {
+    my ($self) = @_;
+    return $self->{sequence_number};
+}
+
+sub frame_data {
+    my ($self) = @_;
+    return $self->{frame_data};
+}
+
+########################################################################
 package Png::BkgdTruecolor;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -856,6 +922,99 @@ sub unit {
 }
 
 ########################################################################
+package Png::FrameControlChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{sequence_number} = $self->{_io}->read_u4be();
+    $self->{width} = $self->{_io}->read_u4be();
+    $self->{height} = $self->{_io}->read_u4be();
+    $self->{x_offset} = $self->{_io}->read_u4be();
+    $self->{y_offset} = $self->{_io}->read_u4be();
+    $self->{delay_num} = $self->{_io}->read_u2be();
+    $self->{delay_den} = $self->{_io}->read_u2be();
+    $self->{dispose_op} = $self->{_io}->read_u1();
+    $self->{blend_op} = $self->{_io}->read_u1();
+}
+
+sub delay {
+    my ($self) = @_;
+    return $self->{delay} if ($self->{delay});
+    $self->{delay} = ($self->delay_num() / ($self->delay_den() == 0 ? 100.0 : $self->delay_den()));
+    return $self->{delay};
+}
+
+sub sequence_number {
+    my ($self) = @_;
+    return $self->{sequence_number};
+}
+
+sub width {
+    my ($self) = @_;
+    return $self->{width};
+}
+
+sub height {
+    my ($self) = @_;
+    return $self->{height};
+}
+
+sub x_offset {
+    my ($self) = @_;
+    return $self->{x_offset};
+}
+
+sub y_offset {
+    my ($self) = @_;
+    return $self->{y_offset};
+}
+
+sub delay_num {
+    my ($self) = @_;
+    return $self->{delay_num};
+}
+
+sub delay_den {
+    my ($self) = @_;
+    return $self->{delay_den};
+}
+
+sub dispose_op {
+    my ($self) = @_;
+    return $self->{dispose_op};
+}
+
+sub blend_op {
+    my ($self) = @_;
+    return $self->{blend_op};
+}
+
+########################################################################
 package Png::InternationalTextChunk;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -965,6 +1124,50 @@ sub keyword {
 sub text {
     my ($self) = @_;
     return $self->{text};
+}
+
+########################################################################
+package Png::AnimationControlChunk;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{num_frames} = $self->{_io}->read_u4be();
+    $self->{num_plays} = $self->{_io}->read_u4be();
+}
+
+sub num_frames {
+    my ($self) = @_;
+    return $self->{num_frames};
+}
+
+sub num_plays {
+    my ($self) = @_;
+    return $self->{num_plays};
 }
 
 ########################################################################

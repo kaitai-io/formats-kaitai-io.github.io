@@ -104,7 +104,12 @@ section#format-index .row {
 
         <div class="row">
             <div class="col-md-8">
-                <p></p>
+                <p><p>Test files for APNG can be found at the following locations:</p>
+<ul>
+<li>https://philip.html5.org/tests/apng/tests.html</li>
+<li>http://littlesvr.ca/apng/</li>
+</ul>
+</p>
             </div>
             <div class="col-md-4">
                 <div class="panel panel-info">
@@ -114,7 +119,7 @@ section#format-index .row {
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        png
+                        ["png", "apng"]
                     </div>
                     
                     
@@ -128,7 +133,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -149,12 +154,15 @@ section#format-index .row {
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/11">PRONOM fmt/11</a></li>
 <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/12">PRONOM fmt/12</a></li>
 <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/13">PRONOM fmt/13</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/935">PRONOM fmt/935</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q178051">Wikidata Q178051</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q433224">Wikidata Q433224</a></li>
                             
                             <li><a href="https://forensicswiki.xyz/page/Portable_Network_Graphics_(PNG)">Portable Network Graphics (PNG) in ForensicsWiki</a></li>
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/PNG">PNG in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/APNG">APNG in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -269,7 +277,7 @@ section#format-index .row {
 
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Png</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.png&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Png</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.[&quot;</span><span class="n">png</span><span class="s2">&quot;, &quot;</span><span class="n">apng</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
 </pre></div>
 
 <p>Or parse structure from a string of bytes:</p>
@@ -318,7 +326,37 @@ section#format-index .row {
   <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
 <span class="k">end</span>
 
+
+<span class="c1">##</span>
+<span class="c1"># Test files for APNG can be found at the following locations:</span>
+<span class="c1"># </span>
+<span class="c1">#   - https://philip.html5.org/tests/apng/tests.html</span>
+<span class="c1">#   - http://littlesvr.ca/apng/</span>
 <span class="k">class</span> <span class="nc">Png</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+
+  <span class="no">PHYS_UNIT</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:phys_unit_unknown</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:phys_unit_meter</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__PHYS_UNIT</span> <span class="o">=</span> <span class="no">PHYS_UNIT</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">BLEND_OP_VALUES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:blend_op_values_source</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:blend_op_values_over</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__BLEND_OP_VALUES</span> <span class="o">=</span> <span class="no">BLEND_OP_VALUES</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">COMPRESSION_METHODS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:compression_methods_zlib</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__COMPRESSION_METHODS</span> <span class="o">=</span> <span class="no">COMPRESSION_METHODS</span><span class="o">.</span><span class="n">invert</span>
+
+  <span class="no">DISPOSE_OP_VALUES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:dispose_op_values_none</span><span class="p">,</span>
+    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:dispose_op_values_background</span><span class="p">,</span>
+    <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:dispose_op_values_previous</span><span class="p">,</span>
+  <span class="p">}</span>
+  <span class="no">I__DISPOSE_OP_VALUES</span> <span class="o">=</span> <span class="no">DISPOSE_OP_VALUES</span><span class="o">.</span><span class="n">invert</span>
 
   <span class="no">COLOR_TYPE</span> <span class="o">=</span> <span class="p">{</span>
     <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:color_type_greyscale</span><span class="p">,</span>
@@ -328,17 +366,6 @@ section#format-index .row {
     <span class="mi">6</span> <span class="o">=&gt;</span> <span class="ss">:color_type_truecolor_alpha</span><span class="p">,</span>
   <span class="p">}</span>
   <span class="no">I__COLOR_TYPE</span> <span class="o">=</span> <span class="no">COLOR_TYPE</span><span class="o">.</span><span class="n">invert</span>
-
-  <span class="no">PHYS_UNIT</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:phys_unit_unknown</span><span class="p">,</span>
-    <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:phys_unit_meter</span><span class="p">,</span>
-  <span class="p">}</span>
-  <span class="no">I__PHYS_UNIT</span> <span class="o">=</span> <span class="no">PHYS_UNIT</span><span class="o">.</span><span class="n">invert</span>
-
-  <span class="no">COMPRESSION_METHODS</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="mi">0</span> <span class="o">=&gt;</span> <span class="ss">:compression_methods_zlib</span><span class="p">,</span>
-  <span class="p">}</span>
-  <span class="no">I__COMPRESSION_METHODS</span> <span class="o">=</span> <span class="no">COMPRESSION_METHODS</span><span class="o">.</span><span class="n">invert</span>
   <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
     <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
     <span class="n">_read</span>
@@ -412,6 +439,10 @@ section#format-index .row {
         <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
         <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
         <span class="vi">@body</span> <span class="o">=</span> <span class="no">PhysChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="s2">&quot;fdAT&quot;</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">FrameDataChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="s2">&quot;tEXt&quot;</span>
         <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
         <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
@@ -420,6 +451,10 @@ section#format-index .row {
         <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
         <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
         <span class="vi">@body</span> <span class="o">=</span> <span class="no">ChrmChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="s2">&quot;acTL&quot;</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">AnimationControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="s2">&quot;sRGB&quot;</span>
         <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
         <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
@@ -428,6 +463,10 @@ section#format-index .row {
         <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
         <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
         <span class="vi">@body</span> <span class="o">=</span> <span class="no">CompressedTextChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="s2">&quot;fcTL&quot;</span>
+        <span class="vi">@_raw_body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
+        <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_body</span><span class="p">)</span>
+        <span class="vi">@body</span> <span class="o">=</span> <span class="no">FrameControlChunk</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">else</span>
         <span class="vi">@body</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len</span><span class="p">)</span>
       <span class="k">end</span>
@@ -614,6 +653,35 @@ section#format-index .row {
   <span class="k">end</span>
 
   <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk Source</span>
+  <span class="k">class</span> <span class="nc">FrameDataChunk</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@sequence_number</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@frame_data</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Sequence number of the animation chunk. The fcTL and fdAT chunks</span>
+    <span class="c1"># have a 4 byte sequence number. Both chunk types share the sequence.</span>
+    <span class="c1"># The first fcTL chunk must contain sequence number 0, and the sequence</span>
+    <span class="c1"># numbers in the remaining fcTL and fdAT chunks must be in order, with</span>
+    <span class="c1"># no gaps or duplicates.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sequence_number</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Frame data for the frame. At least one fdAT chunk is required for</span>
+    <span class="c1"># each frame. The compressed datastream is the concatenation of the</span>
+    <span class="c1"># contents of the data fields of all the fdAT chunks within a frame.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:frame_data</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
   <span class="c1"># Background chunk for truecolor images.</span>
   <span class="k">class</span> <span class="nc">BkgdTruecolor</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
@@ -710,6 +778,78 @@ section#format-index .row {
   <span class="k">end</span>
 
   <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk Source</span>
+  <span class="k">class</span> <span class="nc">FrameControlChunk</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@sequence_number</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@width</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">width</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/frame_control_chunk/seq/1&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">width</span> <span class="o">&lt;=</span> <span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span>
+      <span class="vi">@height</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationLessThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">height</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/frame_control_chunk/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">height</span> <span class="o">&lt;=</span> <span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span>
+      <span class="vi">@x_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">width</span><span class="p">),</span> <span class="n">x_offset</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/frame_control_chunk/seq/3&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x_offset</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">width</span> <span class="o">-</span> <span class="n">width</span><span class="p">)</span>
+      <span class="vi">@y_offset</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationGreaterThanError</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">height</span><span class="p">),</span> <span class="n">y_offset</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/frame_control_chunk/seq/4&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">y_offset</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">_root</span><span class="o">.</span><span class="n">ihdr</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">height</span><span class="p">)</span>
+      <span class="vi">@delay_num</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@delay_den</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="vi">@dispose_op</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">DISPOSE_OP_VALUES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="vi">@blend_op</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">Png</span><span class="o">::</span><span class="no">BLEND_OP_VALUES</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Time to display this frame, in seconds</span>
+    <span class="k">def</span> <span class="nf">delay</span>
+      <span class="k">return</span> <span class="vi">@delay</span> <span class="k">unless</span> <span class="vi">@delay</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@delay</span> <span class="o">=</span> <span class="p">(</span><span class="n">delay_num</span> <span class="o">/</span> <span class="p">(</span><span class="n">delay_den</span> <span class="o">==</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">100</span><span class="o">.</span><span class="mi">0</span> <span class="p">:</span> <span class="n">delay_den</span><span class="p">))</span>
+      <span class="vi">@delay</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Sequence number of the animation chunk</span>
+    <span class="kp">attr_reader</span> <span class="ss">:sequence_number</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Width of the following frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:width</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Height of the following frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:height</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># X position at which to render the following frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:x_offset</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Y position at which to render the following frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:y_offset</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Frame delay fraction numerator</span>
+    <span class="kp">attr_reader</span> <span class="ss">:delay_num</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Frame delay fraction denominator</span>
+    <span class="kp">attr_reader</span> <span class="ss">:delay_den</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Type of frame area disposal to be done after rendering this frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:dispose_op</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Type of frame area rendering for this frame</span>
+    <span class="kp">attr_reader</span> <span class="ss">:blend_op</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
   <span class="c1"># International text chunk effectively allows to store key-value string pairs in</span>
   <span class="c1"># PNG container. Both &quot;key&quot; (keyword) and &quot;value&quot; (text) parts are</span>
   <span class="c1"># given in pre-defined subset of iso8859-1 without control</span>
@@ -781,6 +921,29 @@ section#format-index .row {
     <span class="c1"># Indicates purpose of the following text data.</span>
     <span class="kp">attr_reader</span> <span class="ss">:keyword</span>
     <span class="kp">attr_reader</span> <span class="ss">:text</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk Source</span>
+  <span class="k">class</span> <span class="nc">AnimationControlChunk</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@num_frames</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="vi">@num_plays</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4be</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Number of frames, must be equal to the number of `frame_control_chunk`s</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_frames</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Number of times to loop, 0 indicates infinite looping.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_plays</span>
   <span class="k">end</span>
 
   <span class="c1">##</span>

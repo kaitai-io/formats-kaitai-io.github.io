@@ -113,6 +113,12 @@ void png_t::chunk_t::_read() {
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<phys_chunk_t>(new phys_chunk_t(m__io__raw_body.get(), this, m__root));
         }
+        else if (on == std::string("fdAT")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<frame_data_chunk_t>(new frame_data_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
         else if (on == std::string("tEXt")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
@@ -125,6 +131,12 @@ void png_t::chunk_t::_read() {
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<chrm_chunk_t>(new chrm_chunk_t(m__io__raw_body.get(), this, m__root));
         }
+        else if (on == std::string("acTL")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<animation_control_chunk_t>(new animation_control_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
         else if (on == std::string("sRGB")) {
             n_body = false;
             m__raw_body = m__io->read_bytes(len());
@@ -136,6 +148,12 @@ void png_t::chunk_t::_read() {
             m__raw_body = m__io->read_bytes(len());
             m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
             m_body = std::unique_ptr<compressed_text_chunk_t>(new compressed_text_chunk_t(m__io__raw_body.get(), this, m__root));
+        }
+        else if (on == std::string("fcTL")) {
+            n_body = false;
+            m__raw_body = m__io->read_bytes(len());
+            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+            m_body = std::unique_ptr<frame_control_chunk_t>(new frame_control_chunk_t(m__io__raw_body.get(), this, m__root));
         }
         else {
             m__raw_body = m__io->read_bytes(len());
@@ -333,6 +351,24 @@ png_t::compressed_text_chunk_t::~compressed_text_chunk_t() {
 void png_t::compressed_text_chunk_t::_clean_up() {
 }
 
+png_t::frame_data_chunk_t::frame_data_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void png_t::frame_data_chunk_t::_read() {
+    m_sequence_number = m__io->read_u4be();
+    m_frame_data = m__io->read_bytes_full();
+}
+
+png_t::frame_data_chunk_t::~frame_data_chunk_t() {
+    _clean_up();
+}
+
+void png_t::frame_data_chunk_t::_clean_up() {
+}
+
 png_t::bkgd_truecolor_t::bkgd_truecolor_t(kaitai::kstream* p__io, png_t::bkgd_chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -443,6 +479,58 @@ png_t::phys_chunk_t::~phys_chunk_t() {
 void png_t::phys_chunk_t::_clean_up() {
 }
 
+png_t::frame_control_chunk_t::frame_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_delay = false;
+    _read();
+}
+
+void png_t::frame_control_chunk_t::_read() {
+    m_sequence_number = m__io->read_u4be();
+    m_width = m__io->read_u4be();
+    if (!(width() >= 1)) {
+        throw kaitai::validation_less_than_error<uint32_t>(1, width(), _io(), std::string("/types/frame_control_chunk/seq/1"));
+    }
+    if (!(width() <= _root()->ihdr()->width())) {
+        throw kaitai::validation_greater_than_error<uint32_t>(_root()->ihdr()->width(), width(), _io(), std::string("/types/frame_control_chunk/seq/1"));
+    }
+    m_height = m__io->read_u4be();
+    if (!(height() >= 1)) {
+        throw kaitai::validation_less_than_error<uint32_t>(1, height(), _io(), std::string("/types/frame_control_chunk/seq/2"));
+    }
+    if (!(height() <= _root()->ihdr()->height())) {
+        throw kaitai::validation_greater_than_error<uint32_t>(_root()->ihdr()->height(), height(), _io(), std::string("/types/frame_control_chunk/seq/2"));
+    }
+    m_x_offset = m__io->read_u4be();
+    if (!(x_offset() <= (_root()->ihdr()->width() - width()))) {
+        throw kaitai::validation_greater_than_error<uint32_t>((_root()->ihdr()->width() - width()), x_offset(), _io(), std::string("/types/frame_control_chunk/seq/3"));
+    }
+    m_y_offset = m__io->read_u4be();
+    if (!(y_offset() <= (_root()->ihdr()->height() - height()))) {
+        throw kaitai::validation_greater_than_error<uint32_t>((_root()->ihdr()->height() - height()), y_offset(), _io(), std::string("/types/frame_control_chunk/seq/4"));
+    }
+    m_delay_num = m__io->read_u2be();
+    m_delay_den = m__io->read_u2be();
+    m_dispose_op = static_cast<png_t::dispose_op_values_t>(m__io->read_u1());
+    m_blend_op = static_cast<png_t::blend_op_values_t>(m__io->read_u1());
+}
+
+png_t::frame_control_chunk_t::~frame_control_chunk_t() {
+    _clean_up();
+}
+
+void png_t::frame_control_chunk_t::_clean_up() {
+}
+
+double png_t::frame_control_chunk_t::delay() {
+    if (f_delay)
+        return m_delay;
+    m_delay = (delay_num() / ((delay_den() == 0) ? (100.0) : (delay_den())));
+    f_delay = true;
+    return m_delay;
+}
+
 png_t::international_text_chunk_t::international_text_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -481,6 +569,24 @@ png_t::text_chunk_t::~text_chunk_t() {
 }
 
 void png_t::text_chunk_t::_clean_up() {
+}
+
+png_t::animation_control_chunk_t::animation_control_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void png_t::animation_control_chunk_t::_read() {
+    m_num_frames = m__io->read_u4be();
+    m_num_plays = m__io->read_u4be();
+}
+
+png_t::animation_control_chunk_t::~animation_control_chunk_t() {
+    _clean_up();
+}
+
+void png_t::animation_control_chunk_t::_clean_up() {
 }
 
 png_t::time_chunk_t::time_chunk_t(kaitai::kstream* p__io, png_t::chunk_t* p__parent, png_t* p__root) : kaitai::kstruct(p__io) {

@@ -10,17 +10,24 @@ type
     `ihdrCrc`*: seq[byte]
     `chunks`*: seq[Png_Chunk]
     `parent`*: KaitaiStruct
+  Png_PhysUnit* = enum
+    unknown = 0
+    meter = 1
+  Png_BlendOpValues* = enum
+    source = 0
+    over = 1
+  Png_CompressionMethods* = enum
+    zlib = 0
+  Png_DisposeOpValues* = enum
+    none = 0
+    background = 1
+    previous = 2
   Png_ColorType* = enum
     greyscale = 0
     truecolor = 2
     indexed = 3
     greyscale_alpha = 4
     truecolor_alpha = 6
-  Png_PhysUnit* = enum
-    unknown = 0
-    meter = 1
-  Png_CompressionMethods* = enum
-    zlib = 0
   Png_Rgb* = ref object of KaitaiStruct
     `r`*: uint8
     `g`*: uint8
@@ -77,6 +84,10 @@ type
     `textDatastream`*: seq[byte]
     `parent`*: Png_Chunk
     `rawTextDatastream`*: seq[byte]
+  Png_FrameDataChunk* = ref object of KaitaiStruct
+    `sequenceNumber`*: uint32
+    `frameData`*: seq[byte]
+    `parent`*: Png_Chunk
   Png_BkgdTruecolor* = ref object of KaitaiStruct
     `red`*: uint16
     `green`*: uint16
@@ -94,6 +105,18 @@ type
     `pixelsPerUnitY`*: uint32
     `unit`*: Png_PhysUnit
     `parent`*: Png_Chunk
+  Png_FrameControlChunk* = ref object of KaitaiStruct
+    `sequenceNumber`*: uint32
+    `width`*: uint32
+    `height`*: uint32
+    `xOffset`*: uint32
+    `yOffset`*: uint32
+    `delayNum`*: uint16
+    `delayDen`*: uint16
+    `disposeOp`*: Png_DisposeOpValues
+    `blendOp`*: Png_BlendOpValues
+    `parent`*: Png_Chunk
+    `delayInst`*: float64
   Png_InternationalTextChunk* = ref object of KaitaiStruct
     `keyword`*: string
     `compressionFlag`*: uint8
@@ -105,6 +128,10 @@ type
   Png_TextChunk* = ref object of KaitaiStruct
     `keyword`*: string
     `text`*: string
+    `parent`*: Png_Chunk
+  Png_AnimationControlChunk* = ref object of KaitaiStruct
+    `numFrames`*: uint32
+    `numPlays`*: uint32
     `parent`*: Png_Chunk
   Png_TimeChunk* = ref object of KaitaiStruct
     `year`*: uint16
@@ -126,18 +153,30 @@ proc read*(_: typedesc[Png_IhdrChunk], io: KaitaiStream, root: KaitaiStruct, par
 proc read*(_: typedesc[Png_PlteChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_PlteChunk
 proc read*(_: typedesc[Png_SrgbChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_SrgbChunk
 proc read*(_: typedesc[Png_CompressedTextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_CompressedTextChunk
+proc read*(_: typedesc[Png_FrameDataChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameDataChunk
 proc read*(_: typedesc[Png_BkgdTruecolor], io: KaitaiStream, root: KaitaiStruct, parent: Png_BkgdChunk): Png_BkgdTruecolor
 proc read*(_: typedesc[Png_GamaChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_GamaChunk
 proc read*(_: typedesc[Png_BkgdChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_BkgdChunk
 proc read*(_: typedesc[Png_PhysChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_PhysChunk
+proc read*(_: typedesc[Png_FrameControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameControlChunk
 proc read*(_: typedesc[Png_InternationalTextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_InternationalTextChunk
 proc read*(_: typedesc[Png_TextChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_TextChunk
+proc read*(_: typedesc[Png_AnimationControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_AnimationControlChunk
 proc read*(_: typedesc[Png_TimeChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_TimeChunk
 
 proc x*(this: Png_Point): float64
 proc y*(this: Png_Point): float64
 proc gammaRatio*(this: Png_GamaChunk): float64
+proc delay*(this: Png_FrameControlChunk): float64
 
+
+##[
+Test files for APNG can be found at the following locations:
+
+  - https://philip.html5.org/tests/apng/tests.html
+  - http://littlesvr.ca/apng/
+
+]##
 proc read*(_: typedesc[Png], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Png =
   template this: untyped = result
   this = new(Png)
@@ -236,6 +275,12 @@ proc read*(_: typedesc[Png_Chunk], io: KaitaiStream, root: KaitaiStruct, parent:
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Png_PhysChunk.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
+    elif on == "fdAT":
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Png_FrameDataChunk.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
     elif on == "tEXt":
       let rawBodyExpr = this.io.readBytes(int(this.len))
       this.rawBody = rawBodyExpr
@@ -248,6 +293,12 @@ proc read*(_: typedesc[Png_Chunk], io: KaitaiStream, root: KaitaiStruct, parent:
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Png_ChrmChunk.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
+    elif on == "acTL":
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Png_AnimationControlChunk.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
     elif on == "sRGB":
       let rawBodyExpr = this.io.readBytes(int(this.len))
       this.rawBody = rawBodyExpr
@@ -259,6 +310,12 @@ proc read*(_: typedesc[Png_Chunk], io: KaitaiStream, root: KaitaiStruct, parent:
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = Png_CompressedTextChunk.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == "fcTL":
+      let rawBodyExpr = this.io.readBytes(int(this.len))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Png_FrameControlChunk.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytes(int(this.len))
@@ -465,6 +522,42 @@ proc fromFile*(_: typedesc[Png_CompressedTextChunk], filename: string): Png_Comp
 
 
 ##[
+@see <a href="https://wiki.mozilla.org/APNG_Specification#.60fdAT.60:_The_Frame_Data_Chunk">Source</a>
+]##
+proc read*(_: typedesc[Png_FrameDataChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameDataChunk =
+  template this: untyped = result
+  this = new(Png_FrameDataChunk)
+  let root = if root == nil: cast[Png](this) else: cast[Png](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Sequence number of the animation chunk. The fcTL and fdAT chunks
+have a 4 byte sequence number. Both chunk types share the sequence.
+The first fcTL chunk must contain sequence number 0, and the sequence
+numbers in the remaining fcTL and fdAT chunks must be in order, with
+no gaps or duplicates.
+
+  ]##
+  let sequenceNumberExpr = this.io.readU4be()
+  this.sequenceNumber = sequenceNumberExpr
+
+  ##[
+  Frame data for the frame. At least one fdAT chunk is required for
+each frame. The compressed datastream is the concatenation of the
+contents of the data fields of all the fdAT chunks within a frame.
+
+  ]##
+  let frameDataExpr = this.io.readBytesFull()
+  this.frameData = frameDataExpr
+
+proc fromFile*(_: typedesc[Png_FrameDataChunk], filename: string): Png_FrameDataChunk =
+  Png_FrameDataChunk.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
 Background chunk for truecolor images.
 ]##
 proc read*(_: typedesc[Png_BkgdTruecolor], io: KaitaiStream, root: KaitaiStruct, parent: Png_BkgdChunk): Png_BkgdTruecolor =
@@ -586,6 +679,88 @@ proc fromFile*(_: typedesc[Png_PhysChunk], filename: string): Png_PhysChunk =
 
 
 ##[
+@see <a href="https://wiki.mozilla.org/APNG_Specification#.60fcTL.60:_The_Frame_Control_Chunk">Source</a>
+]##
+proc read*(_: typedesc[Png_FrameControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_FrameControlChunk =
+  template this: untyped = result
+  this = new(Png_FrameControlChunk)
+  let root = if root == nil: cast[Png](this) else: cast[Png](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Sequence number of the animation chunk
+  ]##
+  let sequenceNumberExpr = this.io.readU4be()
+  this.sequenceNumber = sequenceNumberExpr
+
+  ##[
+  Width of the following frame
+  ]##
+  let widthExpr = this.io.readU4be()
+  this.width = widthExpr
+
+  ##[
+  Height of the following frame
+  ]##
+  let heightExpr = this.io.readU4be()
+  this.height = heightExpr
+
+  ##[
+  X position at which to render the following frame
+  ]##
+  let xOffsetExpr = this.io.readU4be()
+  this.xOffset = xOffsetExpr
+
+  ##[
+  Y position at which to render the following frame
+  ]##
+  let yOffsetExpr = this.io.readU4be()
+  this.yOffset = yOffsetExpr
+
+  ##[
+  Frame delay fraction numerator
+  ]##
+  let delayNumExpr = this.io.readU2be()
+  this.delayNum = delayNumExpr
+
+  ##[
+  Frame delay fraction denominator
+  ]##
+  let delayDenExpr = this.io.readU2be()
+  this.delayDen = delayDenExpr
+
+  ##[
+  Type of frame area disposal to be done after rendering this frame
+  ]##
+  let disposeOpExpr = Png_DisposeOpValues(this.io.readU1())
+  this.disposeOp = disposeOpExpr
+
+  ##[
+  Type of frame area rendering for this frame
+  ]##
+  let blendOpExpr = Png_BlendOpValues(this.io.readU1())
+  this.blendOp = blendOpExpr
+
+proc delay(this: Png_FrameControlChunk): float64 = 
+
+  ##[
+  Time to display this frame, in seconds
+  ]##
+  if this.delayInst != nil:
+    return this.delayInst
+  let delayInstExpr = float64((this.delayNum div (if this.delayDen == 0: 100.0 else: this.delayDen)))
+  this.delayInst = delayInstExpr
+  if this.delayInst != nil:
+    return this.delayInst
+
+proc fromFile*(_: typedesc[Png_FrameControlChunk], filename: string): Png_FrameControlChunk =
+  Png_FrameControlChunk.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
 International text chunk effectively allows to store key-value string pairs in
 PNG container. Both "key" (keyword) and "value" (text) parts are
 given in pre-defined subset of iso8859-1 without control
@@ -675,6 +850,34 @@ proc read*(_: typedesc[Png_TextChunk], io: KaitaiStream, root: KaitaiStruct, par
 
 proc fromFile*(_: typedesc[Png_TextChunk], filename: string): Png_TextChunk =
   Png_TextChunk.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://wiki.mozilla.org/APNG_Specification#.60acTL.60:_The_Animation_Control_Chunk">Source</a>
+]##
+proc read*(_: typedesc[Png_AnimationControlChunk], io: KaitaiStream, root: KaitaiStruct, parent: Png_Chunk): Png_AnimationControlChunk =
+  template this: untyped = result
+  this = new(Png_AnimationControlChunk)
+  let root = if root == nil: cast[Png](this) else: cast[Png](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+
+  ##[
+  Number of frames, must be equal to the number of `frame_control_chunk`s
+  ]##
+  let numFramesExpr = this.io.readU4be()
+  this.numFrames = numFramesExpr
+
+  ##[
+  Number of times to loop, 0 indicates infinite looping.
+  ]##
+  let numPlaysExpr = this.io.readU4be()
+  this.numPlays = numPlaysExpr
+
+proc fromFile*(_: typedesc[Png_AnimationControlChunk], filename: string): Png_AnimationControlChunk =
+  Png_AnimationControlChunk.read(newKaitaiFileStream(filename), nil, nil)
 
 
 ##[
