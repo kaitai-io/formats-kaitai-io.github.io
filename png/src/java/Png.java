@@ -14,8 +14,8 @@ import java.nio.charset.Charset;
 /**
  * Test files for APNG can be found at the following locations:
  * 
- *   - https://philip.html5.org/tests/apng/tests.html
- *   - http://littlesvr.ca/apng/
+ *   * <https://philip.html5.org/tests/apng/tests.html>
+ *   * <http://littlesvr.ca/apng/>
  */
 public class Png extends KaitaiStruct {
     public static Png fromFile(String fileName) throws IOException {
@@ -119,9 +119,9 @@ public class Png extends KaitaiStruct {
         if (!(Arrays.equals(magic(), new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }))) {
             throw new KaitaiStream.ValidationNotEqualError(new byte[] { -119, 80, 78, 71, 13, 10, 26, 10 }, magic(), _io(), "/seq/0");
         }
-        this.ihdrLen = this._io.readBytes(4);
-        if (!(Arrays.equals(ihdrLen(), new byte[] { 0, 0, 0, 13 }))) {
-            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 13 }, ihdrLen(), _io(), "/seq/1");
+        this.ihdrLen = this._io.readU4be();
+        if (!(ihdrLen() == 13)) {
+            throw new KaitaiStream.ValidationNotEqualError(13, ihdrLen(), _io(), "/seq/1");
         }
         this.ihdrType = this._io.readBytes(4);
         if (!(Arrays.equals(ihdrType(), new byte[] { 73, 72, 68, 82 }))) {
@@ -1226,7 +1226,7 @@ public class Png extends KaitaiStruct {
         public Png.Chunk _parent() { return _parent; }
     }
     private byte[] magic;
-    private byte[] ihdrLen;
+    private long ihdrLen;
     private byte[] ihdrType;
     private IhdrChunk ihdr;
     private byte[] ihdrCrc;
@@ -1234,7 +1234,7 @@ public class Png extends KaitaiStruct {
     private Png _root;
     private KaitaiStruct _parent;
     public byte[] magic() { return magic; }
-    public byte[] ihdrLen() { return ihdrLen; }
+    public long ihdrLen() { return ihdrLen; }
     public byte[] ihdrType() { return ihdrType; }
     public IhdrChunk ihdr() { return ihdr; }
     public byte[] ihdrCrc() { return ihdrCrc; }

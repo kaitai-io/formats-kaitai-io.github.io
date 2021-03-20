@@ -8,8 +8,8 @@ namespace Kaitai
     /// <summary>
     /// Test files for APNG can be found at the following locations:
     /// 
-    ///   - https://philip.html5.org/tests/apng/tests.html
-    ///   - http://littlesvr.ca/apng/
+    ///   * &lt;https://philip.html5.org/tests/apng/tests.html&gt;
+    ///   * &lt;http://littlesvr.ca/apng/&gt;
     /// </summary>
     public partial class Png : KaitaiStruct
     {
@@ -64,10 +64,10 @@ namespace Kaitai
             {
                 throw new ValidationNotEqualError(new byte[] { 137, 80, 78, 71, 13, 10, 26, 10 }, Magic, M_Io, "/seq/0");
             }
-            _ihdrLen = m_io.ReadBytes(4);
-            if (!((KaitaiStream.ByteArrayCompare(IhdrLen, new byte[] { 0, 0, 0, 13 }) == 0)))
+            _ihdrLen = m_io.ReadU4be();
+            if (!(IhdrLen == 13))
             {
-                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 13 }, IhdrLen, M_Io, "/seq/1");
+                throw new ValidationNotEqualError(13, IhdrLen, M_Io, "/seq/1");
             }
             _ihdrType = m_io.ReadBytes(4);
             if (!((KaitaiStream.ByteArrayCompare(IhdrType, new byte[] { 73, 72, 68, 82 }) == 0)))
@@ -1101,7 +1101,7 @@ namespace Kaitai
             public Png.Chunk M_Parent { get { return m_parent; } }
         }
         private byte[] _magic;
-        private byte[] _ihdrLen;
+        private uint _ihdrLen;
         private byte[] _ihdrType;
         private IhdrChunk _ihdr;
         private byte[] _ihdrCrc;
@@ -1109,7 +1109,7 @@ namespace Kaitai
         private Png m_root;
         private KaitaiStruct m_parent;
         public byte[] Magic { get { return _magic; } }
-        public byte[] IhdrLen { get { return _ihdrLen; } }
+        public uint IhdrLen { get { return _ihdrLen; } }
         public byte[] IhdrType { get { return _ihdrType; } }
         public IhdrChunk Ihdr { get { return _ihdr; } }
         public byte[] IhdrCrc { get { return _ihdrCrc; } }

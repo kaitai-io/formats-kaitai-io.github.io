@@ -106,8 +106,8 @@ section#format-index .row {
             <div class="col-md-8">
                 <p><p>Test files for APNG can be found at the following locations:</p>
 <ul>
-<li>https://philip.html5.org/tests/apng/tests.html</li>
-<li>http://littlesvr.ca/apng/</li>
+<li><a href="https://philip.html5.org/tests/apng/tests.html">https://philip.html5.org/tests/apng/tests.html</a></li>
+<li><a href="http://littlesvr.ca/apng/">http://littlesvr.ca/apng/</a></li>
 </ul>
 </p>
             </div>
@@ -334,8 +334,8 @@ section#format-index .row {
 <span class="k">class</span> <span class="nc">Png</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Test files for APNG can be found at the following locations:</span>
 <span class="sd">    </span>
-<span class="sd">      - https://philip.html5.org/tests/apng/tests.html</span>
-<span class="sd">      - http://littlesvr.ca/apng/</span>
+<span class="sd">      * &lt;https://philip.html5.org/tests/apng/tests.html&gt;</span>
+<span class="sd">      * &lt;http://littlesvr.ca/apng/&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">class</span> <span class="nc">PhysUnit</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -370,9 +370,9 @@ section#format-index .row {
         <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x89\x50\x4E\x47\x0D\x0A\x1A\x0A</span><span class="s2">&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x89\x50\x4E\x47\x0D\x0A\x1A\x0A</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">magic</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_len</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x0D</span><span class="s2">&quot;</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00\x00\x00\x0D</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/seq/1&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_len</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_len</span> <span class="o">==</span> <span class="mi">13</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_len</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/seq/1&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_type</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_type</span> <span class="o">==</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x49\x48\x44\x52</span><span class="s2">&quot;</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">ValidationNotEqualError</span><span class="p">(</span><span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x49\x48\x44\x52</span><span class="s2">&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ihdr_type</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="sa">u</span><span class="s2">&quot;/seq/2&quot;</span><span class="p">)</span>

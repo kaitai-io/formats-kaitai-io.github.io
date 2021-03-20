@@ -106,8 +106,8 @@ section#format-index .row {
             <div class="col-md-8">
                 <p><p>Test files for APNG can be found at the following locations:</p>
 <ul>
-<li>https://philip.html5.org/tests/apng/tests.html</li>
-<li>http://littlesvr.ca/apng/</li>
+<li><a href="https://philip.html5.org/tests/apng/tests.html">https://philip.html5.org/tests/apng/tests.html</a></li>
+<li><a href="http://littlesvr.ca/apng/">http://littlesvr.ca/apng/</a></li>
 </ul>
 </p>
             </div>
@@ -287,8 +287,8 @@ section#format-index .row {
 <span class="cm">/**</span>
 <span class="cm"> * Test files for APNG can be found at the following locations:</span>
 <span class="cm"> * </span>
-<span class="cm"> *   - https://philip.html5.org/tests/apng/tests.html</span>
-<span class="cm"> *   - http://littlesvr.ca/apng/</span>
+<span class="cm"> *   * &lt;https://philip.html5.org/tests/apng/tests.html&gt;</span>
+<span class="cm"> *   * &lt;http://littlesvr.ca/apng/&gt;</span>
 <span class="cm"> */</span>
 
 <span class="kd">type</span> <span class="nx">Png_PhysUnit</span> <span class="kt">int</span>
@@ -325,7 +325,7 @@ section#format-index .row {
 <span class="p">)</span>
 <span class="kd">type</span> <span class="nx">Png</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
-	<span class="nx">IhdrLen</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">IhdrLen</span> <span class="kt">uint32</span>
 	<span class="nx">IhdrType</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">Ihdr</span> <span class="o">*</span><span class="nx">Png_IhdrChunk</span>
 	<span class="nx">IhdrCrc</span> <span class="p">[]</span><span class="kt">byte</span>
@@ -353,14 +353,13 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">137</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">10</span><span class="p">}))</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">137</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">78</span><span class="p">,</span> <span class="mi">71</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">10</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp2</span> <span class="p">=</span> <span class="nx">tmp2</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">IhdrLen</span> <span class="p">=</span> <span class="nx">tmp2</span>
-	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">IhdrLen</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">}))</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">13</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IhdrLen</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/1&quot;</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">IhdrLen</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp2</span><span class="p">)</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">IhdrLen</span> <span class="o">==</span> <span class="mi">13</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IhdrLen</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/1&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
 	<span class="nx">tmp3</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>

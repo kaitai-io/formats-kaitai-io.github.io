@@ -4,8 +4,8 @@
 /**
  * Test files for APNG can be found at the following locations:
  * 
- *   - https://philip.html5.org/tests/apng/tests.html
- *   - http://littlesvr.ca/apng/
+ *   * <https://philip.html5.org/tests/apng/tests.html>
+ *   * <http://littlesvr.ca/apng/>
  */
 
 namespace {
@@ -20,9 +20,9 @@ namespace {
             if (!($this->magic() == "\x89\x50\x4E\x47\x0D\x0A\x1A\x0A")) {
                 throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", $this->magic(), $this->_io(), "/seq/0");
             }
-            $this->_m_ihdrLen = $this->_io->readBytes(4);
-            if (!($this->ihdrLen() == "\x00\x00\x00\x0D")) {
-                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x0D", $this->ihdrLen(), $this->_io(), "/seq/1");
+            $this->_m_ihdrLen = $this->_io->readU4be();
+            if (!($this->ihdrLen() == 13)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(13, $this->ihdrLen(), $this->_io(), "/seq/1");
             }
             $this->_m_ihdrType = $this->_io->readBytes(4);
             if (!($this->ihdrType() == "\x49\x48\x44\x52")) {

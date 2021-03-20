@@ -13,8 +13,8 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 class Png(KaitaiStruct):
     """Test files for APNG can be found at the following locations:
     
-      - https://philip.html5.org/tests/apng/tests.html
-      - http://littlesvr.ca/apng/
+      * <https://philip.html5.org/tests/apng/tests.html>
+      * <http://littlesvr.ca/apng/>
     """
 
     class PhysUnit(Enum):
@@ -49,9 +49,9 @@ class Png(KaitaiStruct):
         self.magic = self._io.read_bytes(8)
         if not self.magic == b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A":
             raise kaitaistruct.ValidationNotEqualError(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", self.magic, self._io, u"/seq/0")
-        self.ihdr_len = self._io.read_bytes(4)
-        if not self.ihdr_len == b"\x00\x00\x00\x0D":
-            raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x0D", self.ihdr_len, self._io, u"/seq/1")
+        self.ihdr_len = self._io.read_u4be()
+        if not self.ihdr_len == 13:
+            raise kaitaistruct.ValidationNotEqualError(13, self.ihdr_len, self._io, u"/seq/1")
         self.ihdr_type = self._io.read_bytes(4)
         if not self.ihdr_type == b"\x49\x48\x44\x52":
             raise kaitaistruct.ValidationNotEqualError(b"\x49\x48\x44\x52", self.ihdr_type, self._io, u"/seq/2")

@@ -106,8 +106,8 @@ section#format-index .row {
             <div class="col-md-8">
                 <p><p>Test files for APNG can be found at the following locations:</p>
 <ul>
-<li>https://philip.html5.org/tests/apng/tests.html</li>
-<li>http://littlesvr.ca/apng/</li>
+<li><a href="https://philip.html5.org/tests/apng/tests.html">https://philip.html5.org/tests/apng/tests.html</a></li>
+<li><a href="http://littlesvr.ca/apng/">http://littlesvr.ca/apng/</a></li>
 </ul>
 </p>
             </div>
@@ -281,7 +281,7 @@ section#format-index .row {
 <span class="k">type</span>
   <span class="n">Png</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">ihdrLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">ihdrLen</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">ihdrType</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">ihdr</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Png_IhdrChunk</span>
     <span class="p">`</span><span class="n">ihdrCrc</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -450,8 +450,8 @@ section#format-index .row {
 <span class="sd">##[</span>
 <span class="n">Test</span> <span class="n">files</span> <span class="k">for</span> <span class="n">APNG</span> <span class="n">can</span> <span class="n">be</span> <span class="n">found</span> <span class="n">at</span> <span class="n">the</span> <span class="n">following</span> <span class="n">locations</span><span class="p">:</span>
 
-  <span class="o">-</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">philip</span><span class="p">.</span><span class="n">html5</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">apng</span><span class="o">/</span><span class="n">tests</span><span class="p">.</span><span class="n">html</span>
-  <span class="o">-</span> <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">littlesvr</span><span class="p">.</span><span class="n">ca</span><span class="o">/</span><span class="n">apng</span><span class="o">/</span>
+  <span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">philip</span><span class="p">.</span><span class="n">html5</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">tests</span><span class="o">/</span><span class="n">apng</span><span class="o">/</span><span class="n">tests</span><span class="p">.</span><span class="n">html</span><span class="o">&gt;</span>
+  <span class="o">*</span> <span class="o">&lt;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">littlesvr</span><span class="p">.</span><span class="n">ca</span><span class="o">/</span><span class="n">apng</span><span class="o">/&gt;</span>
 
 <span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Png], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Png =</span>
@@ -464,7 +464,7 @@ section#format-index .row {
 
   <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-  <span class="k">let</span> <span class="n">ihdrLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">ihdrLenExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ihdrLen</span> <span class="o">=</span> <span class="n">ihdrLenExpr</span>
   <span class="k">let</span> <span class="n">ihdrTypeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">ihdrType</span> <span class="o">=</span> <span class="n">ihdrTypeExpr</span>

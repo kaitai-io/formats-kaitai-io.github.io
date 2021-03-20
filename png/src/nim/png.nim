@@ -4,7 +4,7 @@ import options
 type
   Png* = ref object of KaitaiStruct
     `magic`*: seq[byte]
-    `ihdrLen`*: seq[byte]
+    `ihdrLen`*: uint32
     `ihdrType`*: seq[byte]
     `ihdr`*: Png_IhdrChunk
     `ihdrCrc`*: seq[byte]
@@ -173,8 +173,8 @@ proc delay*(this: Png_FrameControlChunk): float64
 ##[
 Test files for APNG can be found at the following locations:
 
-  - https://philip.html5.org/tests/apng/tests.html
-  - http://littlesvr.ca/apng/
+  * <https://philip.html5.org/tests/apng/tests.html>
+  * <http://littlesvr.ca/apng/>
 
 ]##
 proc read*(_: typedesc[Png], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Png =
@@ -187,7 +187,7 @@ proc read*(_: typedesc[Png], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 
   let magicExpr = this.io.readBytes(int(8))
   this.magic = magicExpr
-  let ihdrLenExpr = this.io.readBytes(int(4))
+  let ihdrLenExpr = this.io.readU4be()
   this.ihdrLen = ihdrLenExpr
   let ihdrTypeExpr = this.io.readBytes(int(4))
   this.ihdrType = ihdrTypeExpr

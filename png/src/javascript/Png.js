@@ -12,8 +12,8 @@
 /**
  * Test files for APNG can be found at the following locations:
  * 
- *   - https://philip.html5.org/tests/apng/tests.html
- *   - http://littlesvr.ca/apng/
+ *   * <https://philip.html5.org/tests/apng/tests.html>
+ *   * <http://littlesvr.ca/apng/>
  */
 
 var Png = (function() {
@@ -75,9 +75,9 @@ var Png = (function() {
     if (!((KaitaiStream.byteArrayCompare(this.magic, [137, 80, 78, 71, 13, 10, 26, 10]) == 0))) {
       throw new KaitaiStream.ValidationNotEqualError([137, 80, 78, 71, 13, 10, 26, 10], this.magic, this._io, "/seq/0");
     }
-    this.ihdrLen = this._io.readBytes(4);
-    if (!((KaitaiStream.byteArrayCompare(this.ihdrLen, [0, 0, 0, 13]) == 0))) {
-      throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 13], this.ihdrLen, this._io, "/seq/1");
+    this.ihdrLen = this._io.readU4be();
+    if (!(this.ihdrLen == 13)) {
+      throw new KaitaiStream.ValidationNotEqualError(13, this.ihdrLen, this._io, "/seq/1");
     }
     this.ihdrType = this._io.readBytes(4);
     if (!((KaitaiStream.byteArrayCompare(this.ihdrType, [73, 72, 68, 82]) == 0))) {

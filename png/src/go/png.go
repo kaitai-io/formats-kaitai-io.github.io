@@ -10,8 +10,8 @@ import (
 /**
  * Test files for APNG can be found at the following locations:
  * 
- *   - https://philip.html5.org/tests/apng/tests.html
- *   - http://littlesvr.ca/apng/
+ *   * <https://philip.html5.org/tests/apng/tests.html>
+ *   * <http://littlesvr.ca/apng/>
  */
 
 type Png_PhysUnit int
@@ -48,7 +48,7 @@ const (
 )
 type Png struct {
 	Magic []byte
-	IhdrLen []byte
+	IhdrLen uint32
 	IhdrType []byte
 	Ihdr *Png_IhdrChunk
 	IhdrCrc []byte
@@ -76,14 +76,13 @@ func (this *Png) Read(io *kaitai.Stream, parent interface{}, root *Png) (err err
 	if !(bytes.Equal(this.Magic, []uint8{137, 80, 78, 71, 13, 10, 26, 10})) {
 		return kaitai.NewValidationNotEqualError([]uint8{137, 80, 78, 71, 13, 10, 26, 10}, this.Magic, this._io, "/seq/0")
 	}
-	tmp2, err := this._io.ReadBytes(int(4))
+	tmp2, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	tmp2 = tmp2
-	this.IhdrLen = tmp2
-	if !(bytes.Equal(this.IhdrLen, []uint8{0, 0, 0, 13})) {
-		return kaitai.NewValidationNotEqualError([]uint8{0, 0, 0, 13}, this.IhdrLen, this._io, "/seq/1")
+	this.IhdrLen = uint32(tmp2)
+	if !(this.IhdrLen == 13) {
+		return kaitai.NewValidationNotEqualError(13, this.IhdrLen, this._io, "/seq/1")
 	}
 	tmp3, err := this._io.ReadBytes(int(4))
 	if err != nil {

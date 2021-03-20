@@ -55,7 +55,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = $self->{_io}->read_bytes(8);
-    $self->{ihdr_len} = $self->{_io}->read_bytes(4);
+    $self->{ihdr_len} = $self->{_io}->read_u4be();
     $self->{ihdr_type} = $self->{_io}->read_bytes(4);
     $self->{ihdr} = Png::IhdrChunk->new($self->{_io}, $self, $self->{_root});
     $self->{ihdr_crc} = $self->{_io}->read_bytes(4);

@@ -22,9 +22,9 @@ void png_t::_read() {
     if (!(magic() == std::string("\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", 8))) {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\x89\x50\x4E\x47\x0D\x0A\x1A\x0A", 8), magic(), _io(), std::string("/seq/0"));
     }
-    m_ihdr_len = m__io->read_bytes(4);
-    if (!(ihdr_len() == std::string("\x00\x00\x00\x0D", 4))) {
-        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x0D", 4), ihdr_len(), _io(), std::string("/seq/1"));
+    m_ihdr_len = m__io->read_u4be();
+    if (!(ihdr_len() == 13)) {
+        throw kaitai::validation_not_equal_error<uint32_t>(13, ihdr_len(), _io(), std::string("/seq/1"));
     }
     m_ihdr_type = m__io->read_bytes(4);
     if (!(ihdr_type() == std::string("\x49\x48\x44\x52", 4))) {

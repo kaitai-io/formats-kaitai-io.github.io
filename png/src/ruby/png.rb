@@ -11,8 +11,8 @@ end
 ##
 # Test files for APNG can be found at the following locations:
 # 
-#   - https://philip.html5.org/tests/apng/tests.html
-#   - http://littlesvr.ca/apng/
+#   * <https://philip.html5.org/tests/apng/tests.html>
+#   * <http://littlesvr.ca/apng/>
 class Png < Kaitai::Struct::Struct
 
   PHYS_UNIT = {
@@ -55,8 +55,8 @@ class Png < Kaitai::Struct::Struct
   def _read
     @magic = @_io.read_bytes(8)
     raise Kaitai::Struct::ValidationNotEqualError.new([137, 80, 78, 71, 13, 10, 26, 10].pack('C*'), magic, _io, "/seq/0") if not magic == [137, 80, 78, 71, 13, 10, 26, 10].pack('C*')
-    @ihdr_len = @_io.read_bytes(4)
-    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 13].pack('C*'), ihdr_len, _io, "/seq/1") if not ihdr_len == [0, 0, 0, 13].pack('C*')
+    @ihdr_len = @_io.read_u4be
+    raise Kaitai::Struct::ValidationNotEqualError.new(13, ihdr_len, _io, "/seq/1") if not ihdr_len == 13
     @ihdr_type = @_io.read_bytes(4)
     raise Kaitai::Struct::ValidationNotEqualError.new([73, 72, 68, 82].pack('C*'), ihdr_type, _io, "/seq/2") if not ihdr_type == [73, 72, 68, 82].pack('C*')
     @ihdr = IhdrChunk.new(@_io, self, @_root)

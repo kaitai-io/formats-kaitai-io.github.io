@@ -106,8 +106,8 @@ section#format-index .row {
             <div class="col-md-8">
                 <p><p>Test files for APNG can be found at the following locations:</p>
 <ul>
-<li>https://philip.html5.org/tests/apng/tests.html</li>
-<li>http://littlesvr.ca/apng/</li>
+<li><a href="https://philip.html5.org/tests/apng/tests.html">https://philip.html5.org/tests/apng/tests.html</a></li>
+<li><a href="http://littlesvr.ca/apng/">http://littlesvr.ca/apng/</a></li>
 </ul>
 </p>
             </div>
@@ -327,8 +327,8 @@ can also be found there.</p>
     <span class="c1">/// &lt;summary&gt;</span>
     <span class="c1">/// Test files for APNG can be found at the following locations:</span>
     <span class="c1">/// </span>
-    <span class="c1">///   - https://philip.html5.org/tests/apng/tests.html</span>
-    <span class="c1">///   - http://littlesvr.ca/apng/</span>
+    <span class="c1">///   * &amp;lt;https://philip.html5.org/tests/apng/tests.html&amp;gt;</span>
+    <span class="c1">///   * &amp;lt;http://littlesvr.ca/apng/&amp;gt;</span>
     <span class="c1">/// &lt;/summary&gt;</span>
     <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Png</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">{</span>
@@ -383,10 +383,10 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">137</span><span class="p">,</span> <span class="m">80</span><span class="p">,</span> <span class="m">78</span><span class="p">,</span> <span class="m">71</span><span class="p">,</span> <span class="m">13</span><span class="p">,</span> <span class="m">10</span><span class="p">,</span> <span class="m">26</span><span class="p">,</span> <span class="m">10</span> <span class="p">},</span> <span class="n">Magic</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">);</span>
             <span class="p">}</span>
-            <span class="n">_ihdrLen</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">IhdrLen</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">13</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
+            <span class="n">_ihdrLen</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(!(</span><span class="n">IhdrLen</span> <span class="p">==</span> <span class="m">13</span><span class="p">))</span>
             <span class="p">{</span>
-                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">13</span> <span class="p">},</span> <span class="n">IhdrLen</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/1&quot;</span><span class="p">);</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nf">ValidationNotEqualError</span><span class="p">(</span><span class="m">13</span><span class="p">,</span> <span class="n">IhdrLen</span><span class="p">,</span> <span class="n">M_Io</span><span class="p">,</span> <span class="s">&quot;/seq/1&quot;</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="n">_ihdrType</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">4</span><span class="p">);</span>
             <span class="k">if</span> <span class="p">(!((</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">ByteArrayCompare</span><span class="p">(</span><span class="n">IhdrType</span><span class="p">,</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[]</span> <span class="p">{</span> <span class="m">73</span><span class="p">,</span> <span class="m">72</span><span class="p">,</span> <span class="m">68</span><span class="p">,</span> <span class="m">82</span> <span class="p">})</span> <span class="p">==</span> <span class="m">0</span><span class="p">)))</span>
@@ -1420,7 +1420,7 @@ can also be found there.</p>
             <span class="k">public</span> <span class="n">Png</span><span class="p">.</span><span class="n">Chunk</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
-        <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_ihdrLen</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ihdrLen</span><span class="p">;</span>
         <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_ihdrType</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">IhdrChunk</span> <span class="n">_ihdr</span><span class="p">;</span>
         <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_ihdrCrc</span><span class="p">;</span>
@@ -1428,7 +1428,7 @@ can also be found there.</p>
         <span class="k">private</span> <span class="n">Png</span> <span class="n">m_root</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">m_parent</span><span class="p">;</span>
         <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Magic</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_magic</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">IhdrLen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrLen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">uint</span> <span class="n">IhdrLen</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrLen</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">IhdrType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="n">IhdrChunk</span> <span class="n">Ihdr</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdr</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">IhdrCrc</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ihdrCrc</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>

@@ -14,8 +14,8 @@
 /**
  * Test files for APNG can be found at the following locations:
  * 
- *   - https://philip.html5.org/tests/apng/tests.html
- *   - http://littlesvr.ca/apng/
+ *   * <https://philip.html5.org/tests/apng/tests.html>
+ *   * <http://littlesvr.ca/apng/>
  */
 
 class png_t : public kaitai::kstruct {
@@ -891,7 +891,7 @@ public:
 
 private:
     std::string m_magic;
-    std::string m_ihdr_len;
+    uint32_t m_ihdr_len;
     std::string m_ihdr_type;
     ihdr_chunk_t* m_ihdr;
     std::string m_ihdr_crc;
@@ -901,7 +901,7 @@ private:
 
 public:
     std::string magic() const { return m_magic; }
-    std::string ihdr_len() const { return m_ihdr_len; }
+    uint32_t ihdr_len() const { return m_ihdr_len; }
     std::string ihdr_type() const { return m_ihdr_type; }
     ihdr_chunk_t* ihdr() const { return m_ihdr; }
     std::string ihdr_crc() const { return m_ihdr_crc; }
