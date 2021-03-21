@@ -73,18 +73,29 @@ type
     cloudabi = 17
     openvos = 18
   Elf_Machine* = enum
-    not_set = 0
+    no_machine = 0
+    m32 = 1
     sparc = 2
     x86 = 3
+    m68k = 4
+    m88k = 5
     mips = 8
     powerpc = 20
+    powerpc64 = 21
+    s390 = 22
     arm = 40
     superh = 42
+    sparcv9 = 43
     ia_64 = 50
     x86_64 = 62
+    avr = 83
+    qdsp6 = 164
     aarch64 = 183
+    avr32 = 185
+    amdgpu = 224
     riscv = 243
     bpf = 247
+    csky = 252
   Elf_DynamicArrayTags* = enum
     null = 0
     needed = 1
@@ -185,10 +196,12 @@ type
     gnu_eh_frame = 1685382480
     gnu_stack = 1685382481
     gnu_relro = 1685382482
+    gnu_property = 1685382483
     pax_flags = 1694766464
     hios = 1879048191
     arm_exidx = 1879048193
   Elf_ObjType* = enum
+    no_file_type = 0
     relocatable = 1
     executable = 2
     shared = 3
@@ -1419,11 +1432,23 @@ proc flagsObj(this: Elf_EndianElf_ProgramHeader): Elf_PhdrTypeFlags =
   if this.flagsObjInst != nil:
     return this.flagsObjInst
   if this.isLe:
-    let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, (this.flags64 or this.flags32))
-    this.flagsObjInst = flagsObjInstExpr
+    block:
+      let on = Elf(this.root).bits
+      if on == elf.b32:
+        let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, this.flags32)
+        this.flagsObjInst = flagsObjInstExpr
+      elif on == elf.b64:
+        let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, this.flags64)
+        this.flagsObjInst = flagsObjInstExpr
   else:
-    let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, (this.flags64 or this.flags32))
-    this.flagsObjInst = flagsObjInstExpr
+    block:
+      let on = Elf(this.root).bits
+      if on == elf.b32:
+        let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, this.flags32)
+        this.flagsObjInst = flagsObjInstExpr
+      elif on == elf.b64:
+        let flagsObjInstExpr = Elf_PhdrTypeFlags.read(this.io, this.root, this, this.flags64)
+        this.flagsObjInst = flagsObjInstExpr
   if this.flagsObjInst != nil:
     return this.flagsObjInst
 

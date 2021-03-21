@@ -1275,9 +1275,23 @@ section#format-index .row {
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span><span class="p">;</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\PhdrTypeFlags</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags64</span><span class="p">()</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags32</span><span class="p">()),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="nx">\Elf\Bits</span><span class="o">::</span><span class="na">B32</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\PhdrTypeFlags</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags32</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\Elf\Bits</span><span class="o">::</span><span class="na">B64</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\PhdrTypeFlags</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags64</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
             <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\PhdrTypeFlags</span><span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags64</span><span class="p">()</span> <span class="o">|</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags32</span><span class="p">()),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">bits</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="nx">\Elf\Bits</span><span class="o">::</span><span class="na">B32</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\PhdrTypeFlags</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags32</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="k">case</span> <span class="nx">\Elf\Bits</span><span class="o">::</span><span class="na">B64</span><span class="o">:</span>
+                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\PhdrTypeFlags</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">flags64</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagsObj</span><span class="p">;</span>
         <span class="p">}</span>
@@ -1903,18 +1917,29 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Machine</span> <span class="p">{</span>
-        <span class="k">const</span> <span class="no">NOT_SET</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">NO_MACHINE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">M32</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SPARC</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">X86</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">M68K</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">M88K</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">MIPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">POWERPC</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">POWERPC64</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">S390</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">ARM</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUPERH</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SPARCV9</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">IA_64</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">X86_64</span> <span class="o">=</span> <span class="mi">62</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AVR</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">QDSP6</span> <span class="o">=</span> <span class="mi">164</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">AARCH64</span> <span class="o">=</span> <span class="mi">183</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AVR32</span> <span class="o">=</span> <span class="mi">185</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AMDGPU</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">RISCV</span> <span class="o">=</span> <span class="mi">243</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">BPF</span> <span class="o">=</span> <span class="mi">247</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">CSKY</span> <span class="o">=</span> <span class="mi">252</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -2027,6 +2052,7 @@ section#format-index .row {
         <span class="k">const</span> <span class="no">GNU_EH_FRAME</span> <span class="o">=</span> <span class="mi">1685382480</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">GNU_STACK</span> <span class="o">=</span> <span class="mi">1685382481</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">GNU_RELRO</span> <span class="o">=</span> <span class="mi">1685382482</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GNU_PROPERTY</span> <span class="o">=</span> <span class="mi">1685382483</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">PAX_FLAGS</span> <span class="o">=</span> <span class="mi">1694766464</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">HIOS</span> <span class="o">=</span> <span class="mi">1879048191</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">ARM_EXIDX</span> <span class="o">=</span> <span class="mi">1879048193</span><span class="p">;</span>
@@ -2035,6 +2061,7 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ObjType</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">NO_FILE_TYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">RELOCATABLE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">EXECUTABLE</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SHARED</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>

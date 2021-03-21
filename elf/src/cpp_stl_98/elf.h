@@ -90,18 +90,29 @@ public:
     };
 
     enum machine_t {
-        MACHINE_NOT_SET = 0,
+        MACHINE_NO_MACHINE = 0,
+        MACHINE_M32 = 1,
         MACHINE_SPARC = 2,
         MACHINE_X86 = 3,
+        MACHINE_M68K = 4,
+        MACHINE_M88K = 5,
         MACHINE_MIPS = 8,
         MACHINE_POWERPC = 20,
+        MACHINE_POWERPC64 = 21,
+        MACHINE_S390 = 22,
         MACHINE_ARM = 40,
         MACHINE_SUPERH = 42,
+        MACHINE_SPARCV9 = 43,
         MACHINE_IA_64 = 50,
         MACHINE_X86_64 = 62,
+        MACHINE_AVR = 83,
+        MACHINE_QDSP6 = 164,
         MACHINE_AARCH64 = 183,
+        MACHINE_AVR32 = 185,
+        MACHINE_AMDGPU = 224,
         MACHINE_RISCV = 243,
-        MACHINE_BPF = 247
+        MACHINE_BPF = 247,
+        MACHINE_CSKY = 252
     };
 
     enum dynamic_array_tags_t {
@@ -208,12 +219,14 @@ public:
         PH_TYPE_GNU_EH_FRAME = 1685382480,
         PH_TYPE_GNU_STACK = 1685382481,
         PH_TYPE_GNU_RELRO = 1685382482,
+        PH_TYPE_GNU_PROPERTY = 1685382483,
         PH_TYPE_PAX_FLAGS = 1694766464,
         PH_TYPE_HIOS = 1879048191,
         PH_TYPE_ARM_EXIDX = 1879048193
     };
 
     enum obj_type_t {
+        OBJ_TYPE_NO_FILE_TYPE = 0,
         OBJ_TYPE_RELOCATABLE = 1,
         OBJ_TYPE_EXECUTABLE = 2,
         OBJ_TYPE_SHARED = 3,
@@ -868,6 +881,12 @@ public:
         private:
             bool f_flags_obj;
             phdr_type_flags_t* m_flags_obj;
+            bool n_flags_obj;
+
+        public:
+            bool _is_null_flags_obj() { flags_obj(); return n_flags_obj; };
+
+        private:
 
         public:
             phdr_type_flags_t* flags_obj();

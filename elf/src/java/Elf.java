@@ -116,23 +116,34 @@ public class Elf extends KaitaiStruct {
     }
 
     public enum Machine {
-        NOT_SET(0),
+        NO_MACHINE(0),
+        M32(1),
         SPARC(2),
         X86(3),
+        M68K(4),
+        M88K(5),
         MIPS(8),
         POWERPC(20),
+        POWERPC64(21),
+        S390(22),
         ARM(40),
         SUPERH(42),
+        SPARCV9(43),
         IA_64(50),
         X86_64(62),
+        AVR(83),
+        QDSP6(164),
         AARCH64(183),
+        AVR32(185),
+        AMDGPU(224),
         RISCV(243),
-        BPF(247);
+        BPF(247),
+        CSKY(252);
 
         private final long id;
         Machine(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(12);
+        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(23);
         static {
             for (Machine e : Machine.values())
                 byId.put(e.id(), e);
@@ -264,6 +275,7 @@ public class Elf extends KaitaiStruct {
         GNU_EH_FRAME(1685382480),
         GNU_STACK(1685382481),
         GNU_RELRO(1685382482),
+        GNU_PROPERTY(1685382483),
         PAX_FLAGS(1694766464),
         HIOS(1879048191),
         ARM_EXIDX(1879048193);
@@ -271,7 +283,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         PhType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(14);
+        private static final Map<Long, PhType> byId = new HashMap<Long, PhType>(15);
         static {
             for (PhType e : PhType.values())
                 byId.put(e.id(), e);
@@ -280,6 +292,7 @@ public class Elf extends KaitaiStruct {
     }
 
     public enum ObjType {
+        NO_FILE_TYPE(0),
         RELOCATABLE(1),
         EXECUTABLE(2),
         SHARED(3),
@@ -288,7 +301,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         ObjType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ObjType> byId = new HashMap<Long, ObjType>(4);
+        private static final Map<Long, ObjType> byId = new HashMap<Long, ObjType>(5);
         static {
             for (ObjType e : ObjType.values())
                 byId.put(e.id(), e);
@@ -1367,9 +1380,37 @@ public class Elf extends KaitaiStruct {
                 if (this.flagsObj != null)
                     return this.flagsObj;
                 if (_is_le) {
-                    this.flagsObj = new PhdrTypeFlags(this._io, this, _root, (flags64() | flags32()));
+                    {
+                        Bits on = _root.bits();
+                        if (on != null) {
+                            switch (_root.bits()) {
+                            case B32: {
+                                this.flagsObj = new PhdrTypeFlags(this._io, this, _root, flags32());
+                                break;
+                            }
+                            case B64: {
+                                this.flagsObj = new PhdrTypeFlags(this._io, this, _root, flags64());
+                                break;
+                            }
+                            }
+                        }
+                    }
                 } else {
-                    this.flagsObj = new PhdrTypeFlags(this._io, this, _root, (flags64() | flags32()));
+                    {
+                        Bits on = _root.bits();
+                        if (on != null) {
+                            switch (_root.bits()) {
+                            case B32: {
+                                this.flagsObj = new PhdrTypeFlags(this._io, this, _root, flags32());
+                                break;
+                            }
+                            case B64: {
+                                this.flagsObj = new PhdrTypeFlags(this._io, this, _root, flags64());
+                                break;
+                            }
+                            }
+                        }
+                    }
                 }
                 return this.flagsObj;
             }

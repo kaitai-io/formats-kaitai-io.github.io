@@ -444,18 +444,29 @@ and build them along with your project.</p>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">machine_t</span> <span class="p">{</span>
-        <span class="n">MACHINE_NOT_SET</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">MACHINE_NO_MACHINE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">MACHINE_M32</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">MACHINE_SPARC</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">MACHINE_X86</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">MACHINE_M68K</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">MACHINE_M88K</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
         <span class="n">MACHINE_MIPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">,</span>
         <span class="n">MACHINE_POWERPC</span> <span class="o">=</span> <span class="mi">20</span><span class="p">,</span>
+        <span class="n">MACHINE_POWERPC64</span> <span class="o">=</span> <span class="mi">21</span><span class="p">,</span>
+        <span class="n">MACHINE_S390</span> <span class="o">=</span> <span class="mi">22</span><span class="p">,</span>
         <span class="n">MACHINE_ARM</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span>
         <span class="n">MACHINE_SUPERH</span> <span class="o">=</span> <span class="mi">42</span><span class="p">,</span>
+        <span class="n">MACHINE_SPARCV9</span> <span class="o">=</span> <span class="mi">43</span><span class="p">,</span>
         <span class="n">MACHINE_IA_64</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span>
         <span class="n">MACHINE_X86_64</span> <span class="o">=</span> <span class="mi">62</span><span class="p">,</span>
+        <span class="n">MACHINE_AVR</span> <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
+        <span class="n">MACHINE_QDSP6</span> <span class="o">=</span> <span class="mi">164</span><span class="p">,</span>
         <span class="n">MACHINE_AARCH64</span> <span class="o">=</span> <span class="mi">183</span><span class="p">,</span>
+        <span class="n">MACHINE_AVR32</span> <span class="o">=</span> <span class="mi">185</span><span class="p">,</span>
+        <span class="n">MACHINE_AMDGPU</span> <span class="o">=</span> <span class="mi">224</span><span class="p">,</span>
         <span class="n">MACHINE_RISCV</span> <span class="o">=</span> <span class="mi">243</span><span class="p">,</span>
-        <span class="n">MACHINE_BPF</span> <span class="o">=</span> <span class="mi">247</span>
+        <span class="n">MACHINE_BPF</span> <span class="o">=</span> <span class="mi">247</span><span class="p">,</span>
+        <span class="n">MACHINE_CSKY</span> <span class="o">=</span> <span class="mi">252</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">dynamic_array_tags_t</span> <span class="p">{</span>
@@ -562,12 +573,14 @@ and build them along with your project.</p>
         <span class="n">PH_TYPE_GNU_EH_FRAME</span> <span class="o">=</span> <span class="mi">1685382480</span><span class="p">,</span>
         <span class="n">PH_TYPE_GNU_STACK</span> <span class="o">=</span> <span class="mi">1685382481</span><span class="p">,</span>
         <span class="n">PH_TYPE_GNU_RELRO</span> <span class="o">=</span> <span class="mi">1685382482</span><span class="p">,</span>
+        <span class="n">PH_TYPE_GNU_PROPERTY</span> <span class="o">=</span> <span class="mi">1685382483</span><span class="p">,</span>
         <span class="n">PH_TYPE_PAX_FLAGS</span> <span class="o">=</span> <span class="mi">1694766464</span><span class="p">,</span>
         <span class="n">PH_TYPE_HIOS</span> <span class="o">=</span> <span class="mi">1879048191</span><span class="p">,</span>
         <span class="n">PH_TYPE_ARM_EXIDX</span> <span class="o">=</span> <span class="mi">1879048193</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">obj_type_t</span> <span class="p">{</span>
+        <span class="n">OBJ_TYPE_NO_FILE_TYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">OBJ_TYPE_RELOCATABLE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
         <span class="n">OBJ_TYPE_EXECUTABLE</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">OBJ_TYPE_SHARED</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
@@ -1222,6 +1235,12 @@ and build them along with your project.</p>
         <span class="k">private</span><span class="o">:</span>
             <span class="kt">bool</span> <span class="n">f_flags_obj</span><span class="p">;</span>
             <span class="n">phdr_type_flags_t</span><span class="o">*</span> <span class="n">m_flags_obj</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_flags_obj</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_flags_obj</span><span class="p">()</span> <span class="p">{</span> <span class="n">flags_obj</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_flags_obj</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
 
         <span class="k">public</span><span class="o">:</span>
             <span class="n">phdr_type_flags_t</span><span class="o">*</span> <span class="n">flags_obj</span><span class="p">();</span>
@@ -2566,7 +2585,6 @@ and build them along with your project.</p>
     <span class="n">m__is_le</span> <span class="o">=</span> <span class="n">p_is_le</span><span class="p">;</span>
     <span class="n">m_dynamic</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">m__io__raw_dynamic</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
     <span class="n">f_dynamic</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_flags_obj</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 
@@ -2802,7 +2820,7 @@ and build them along with your project.</p>
             <span class="k">delete</span> <span class="n">m_dynamic</span><span class="p">;</span> <span class="n">m_dynamic</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_flags_obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_flags_obj</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_flags_obj</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">m_flags_obj</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">delete</span> <span class="n">m_flags_obj</span><span class="p">;</span> <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="p">}</span>
@@ -2837,9 +2855,33 @@ and build them along with your project.</p>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_flags_obj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_flags_obj</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">phdr_type_flags_t</span><span class="p">((</span><span class="n">flags64</span><span class="p">()</span> <span class="o">|</span> <span class="n">flags32</span><span class="p">()),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">n_flags_obj</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B32</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_flags_obj</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">phdr_type_flags_t</span><span class="p">(</span><span class="n">flags32</span><span class="p">(),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B64</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_flags_obj</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">phdr_type_flags_t</span><span class="p">(</span><span class="n">flags64</span><span class="p">(),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">phdr_type_flags_t</span><span class="p">((</span><span class="n">flags64</span><span class="p">()</span> <span class="o">|</span> <span class="n">flags32</span><span class="p">()),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="n">n_flags_obj</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B32</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_flags_obj</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">phdr_type_flags_t</span><span class="p">(</span><span class="n">flags32</span><span class="p">(),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B64</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">n_flags_obj</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+            <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">new</span> <span class="n">phdr_type_flags_t</span><span class="p">(</span><span class="n">flags64</span><span class="p">(),</span> <span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="p">}</span>
     <span class="p">}</span>
     <span class="n">f_flags_obj</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">m_flags_obj</span><span class="p">;</span>

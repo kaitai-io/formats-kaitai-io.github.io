@@ -707,7 +707,6 @@ elf_t::endian_elf_t::program_header_t::program_header_t(kaitai::kstream* p__io, 
     m__is_le = p_is_le;
     m_dynamic = nullptr;
     m__io__raw_dynamic = nullptr;
-    m_flags_obj = nullptr;
     f_dynamic = false;
     f_flags_obj = false;
     _read();
@@ -931,7 +930,7 @@ void elf_t::endian_elf_t::program_header_t::_clean_up() {
     }
     if (f_dynamic && !n_dynamic) {
     }
-    if (f_flags_obj) {
+    if (f_flags_obj && !n_flags_obj) {
     }
 }
 
@@ -963,9 +962,33 @@ elf_t::phdr_type_flags_t* elf_t::endian_elf_t::program_header_t::flags_obj() {
     if (f_flags_obj)
         return m_flags_obj.get();
     if (m__is_le == 1) {
-        m_flags_obj = std::unique_ptr<phdr_type_flags_t>(new phdr_type_flags_t((flags64() | flags32()), m__io, this, m__root));
+        n_flags_obj = true;
+        switch (_root()->bits()) {
+        case elf_t::BITS_B32: {
+            n_flags_obj = false;
+            m_flags_obj = std::unique_ptr<phdr_type_flags_t>(new phdr_type_flags_t(flags32(), m__io, this, m__root));
+            break;
+        }
+        case elf_t::BITS_B64: {
+            n_flags_obj = false;
+            m_flags_obj = std::unique_ptr<phdr_type_flags_t>(new phdr_type_flags_t(flags64(), m__io, this, m__root));
+            break;
+        }
+        }
     } else {
-        m_flags_obj = std::unique_ptr<phdr_type_flags_t>(new phdr_type_flags_t((flags64() | flags32()), m__io, this, m__root));
+        n_flags_obj = true;
+        switch (_root()->bits()) {
+        case elf_t::BITS_B32: {
+            n_flags_obj = false;
+            m_flags_obj = std::unique_ptr<phdr_type_flags_t>(new phdr_type_flags_t(flags32(), m__io, this, m__root));
+            break;
+        }
+        case elf_t::BITS_B64: {
+            n_flags_obj = false;
+            m_flags_obj = std::unique_ptr<phdr_type_flags_t>(new phdr_type_flags_t(flags64(), m__io, this, m__root));
+            break;
+        }
+        }
     }
     f_flags_obj = true;
     return m_flags_obj.get();

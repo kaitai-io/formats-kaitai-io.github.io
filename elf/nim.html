@@ -348,18 +348,29 @@ section#format-index .row {
     <span class="n">cloudabi</span> <span class="o">=</span> <span class="mi">17</span>
     <span class="n">openvos</span> <span class="o">=</span> <span class="mi">18</span>
   <span class="n">Elf_Machine</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
-    <span class="n">not_set</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">no_machine</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">m32</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">sparc</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">x86</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">m68k</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">m88k</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">mips</span> <span class="o">=</span> <span class="mi">8</span>
     <span class="n">powerpc</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">powerpc64</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">s390</span> <span class="o">=</span> <span class="mi">22</span>
     <span class="n">arm</span> <span class="o">=</span> <span class="mi">40</span>
     <span class="n">superh</span> <span class="o">=</span> <span class="mi">42</span>
+    <span class="n">sparcv9</span> <span class="o">=</span> <span class="mi">43</span>
     <span class="n">ia_64</span> <span class="o">=</span> <span class="mi">50</span>
     <span class="n">x86_64</span> <span class="o">=</span> <span class="mi">62</span>
+    <span class="n">avr</span> <span class="o">=</span> <span class="mi">83</span>
+    <span class="n">qdsp6</span> <span class="o">=</span> <span class="mi">164</span>
     <span class="n">aarch64</span> <span class="o">=</span> <span class="mi">183</span>
+    <span class="n">avr32</span> <span class="o">=</span> <span class="mi">185</span>
+    <span class="n">amdgpu</span> <span class="o">=</span> <span class="mi">224</span>
     <span class="n">riscv</span> <span class="o">=</span> <span class="mi">243</span>
     <span class="n">bpf</span> <span class="o">=</span> <span class="mi">247</span>
+    <span class="n">csky</span> <span class="o">=</span> <span class="mi">252</span>
   <span class="n">Elf_DynamicArrayTags</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">null</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">needed</span> <span class="o">=</span> <span class="mi">1</span>
@@ -460,10 +471,12 @@ section#format-index .row {
     <span class="n">gnu_eh_frame</span> <span class="o">=</span> <span class="mi">1685382480</span>
     <span class="n">gnu_stack</span> <span class="o">=</span> <span class="mi">1685382481</span>
     <span class="n">gnu_relro</span> <span class="o">=</span> <span class="mi">1685382482</span>
+    <span class="n">gnu_property</span> <span class="o">=</span> <span class="mi">1685382483</span>
     <span class="n">pax_flags</span> <span class="o">=</span> <span class="mi">1694766464</span>
     <span class="n">hios</span> <span class="o">=</span> <span class="mi">1879048191</span>
     <span class="n">arm_exidx</span> <span class="o">=</span> <span class="mi">1879048193</span>
   <span class="n">Elf_ObjType</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">no_file_type</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">relocatable</span> <span class="o">=</span> <span class="mi">1</span>
     <span class="n">executable</span> <span class="o">=</span> <span class="mi">2</span>
     <span class="n">shared</span> <span class="o">=</span> <span class="mi">3</span>
@@ -1694,11 +1707,23 @@ section#format-index .row {
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLe</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">flagsObjInstExpr</span> <span class="o">=</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">flags64</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">flags32</span><span class="p">))</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">=</span> <span class="n">flagsObjInstExpr</span>
+    <span class="k">block</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">flagsObjInstExpr</span> <span class="o">=</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">flags32</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">=</span> <span class="n">flagsObjInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">flagsObjInstExpr</span> <span class="o">=</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">flags64</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">=</span> <span class="n">flagsObjInstExpr</span>
   <span class="k">else</span><span class="p">:</span>
-    <span class="k">let</span> <span class="n">flagsObjInstExpr</span> <span class="o">=</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">flags64</span> <span class="ow">or</span> <span class="n">this</span><span class="p">.</span><span class="n">flags32</span><span class="p">))</span>
-    <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">=</span> <span class="n">flagsObjInstExpr</span>
+    <span class="k">block</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">flagsObjInstExpr</span> <span class="o">=</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">flags32</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">=</span> <span class="n">flagsObjInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">flagsObjInstExpr</span> <span class="o">=</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">flags64</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">=</span> <span class="n">flagsObjInstExpr</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">flagsObjInst</span>
 

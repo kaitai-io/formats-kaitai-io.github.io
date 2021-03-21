@@ -79,18 +79,29 @@ our $OS_ABI_FENIXOS = 16;
 our $OS_ABI_CLOUDABI = 17;
 our $OS_ABI_OPENVOS = 18;
 
-our $MACHINE_NOT_SET = 0;
+our $MACHINE_NO_MACHINE = 0;
+our $MACHINE_M32 = 1;
 our $MACHINE_SPARC = 2;
 our $MACHINE_X86 = 3;
+our $MACHINE_M68K = 4;
+our $MACHINE_M88K = 5;
 our $MACHINE_MIPS = 8;
 our $MACHINE_POWERPC = 20;
+our $MACHINE_POWERPC64 = 21;
+our $MACHINE_S390 = 22;
 our $MACHINE_ARM = 40;
 our $MACHINE_SUPERH = 42;
+our $MACHINE_SPARCV9 = 43;
 our $MACHINE_IA_64 = 50;
 our $MACHINE_X86_64 = 62;
+our $MACHINE_AVR = 83;
+our $MACHINE_QDSP6 = 164;
 our $MACHINE_AARCH64 = 183;
+our $MACHINE_AVR32 = 185;
+our $MACHINE_AMDGPU = 224;
 our $MACHINE_RISCV = 243;
 our $MACHINE_BPF = 247;
+our $MACHINE_CSKY = 252;
 
 our $DYNAMIC_ARRAY_TAGS_NULL = 0;
 our $DYNAMIC_ARRAY_TAGS_NEEDED = 1;
@@ -191,10 +202,12 @@ our $PH_TYPE_TLS = 7;
 our $PH_TYPE_GNU_EH_FRAME = 1685382480;
 our $PH_TYPE_GNU_STACK = 1685382481;
 our $PH_TYPE_GNU_RELRO = 1685382482;
+our $PH_TYPE_GNU_PROPERTY = 1685382483;
 our $PH_TYPE_PAX_FLAGS = 1694766464;
 our $PH_TYPE_HIOS = 1879048191;
 our $PH_TYPE_ARM_EXIDX = 1879048193;
 
+our $OBJ_TYPE_NO_FILE_TYPE = 0;
 our $OBJ_TYPE_RELOCATABLE = 1;
 our $OBJ_TYPE_EXECUTABLE = 2;
 our $OBJ_TYPE_SHARED = 3;
@@ -1236,9 +1249,21 @@ sub flags_obj {
     my ($self) = @_;
     return $self->{flags_obj} if ($self->{flags_obj});
     if ($self->{_is_le}) {
-        $self->{flags_obj} = Elf::PhdrTypeFlags->new($self->{_io}, $self, $self->{_root});
+        my $_on = $self->_root()->bits();
+        if ($_on == $Elf::BITS_B32) {
+            $self->{flags_obj} = Elf::PhdrTypeFlags->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $Elf::BITS_B64) {
+            $self->{flags_obj} = Elf::PhdrTypeFlags->new($self->{_io}, $self, $self->{_root});
+        }
     } else {
-        $self->{flags_obj} = Elf::PhdrTypeFlags->new($self->{_io}, $self, $self->{_root});
+        my $_on = $self->_root()->bits();
+        if ($_on == $Elf::BITS_B32) {
+            $self->{flags_obj} = Elf::PhdrTypeFlags->new($self->{_io}, $self, $self->{_root});
+        }
+        elsif ($_on == $Elf::BITS_B64) {
+            $self->{flags_obj} = Elf::PhdrTypeFlags->new($self->{_io}, $self, $self->{_root});
+        }
     }
     return $self->{flags_obj};
 }

@@ -593,7 +593,11 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section</span>
             <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ph_type::dynamic</span>
           <span class="nt">flags_obj</span><span class="p">:</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">phdr_type_flags(flags64|flags32)</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">phdr_type_flags(flags32)</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">phdr_type_flags(flags64)</span>
             <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
         <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{type}</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">f:{flags_obj:flags}</span><span class="nv"> </span><span class="s">(o:{offset},</span><span class="nv"> </span><span class="s">s:{filesz:dec})&quot;</span>
       <span class="nt">section_header</span><span class="p">:</span>
@@ -797,6 +801,8 @@ section#format-index .row {
     <span class="nt">0x12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">openvos</span> <span class="c1"># Stratus Technologies OpenVOS</span>
   <span class="c1"># e_type</span>
   <span class="nt">obj_type</span><span class="p">:</span>
+    <span class="c1"># ET_NONE</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_file_type</span>
     <span class="c1"># ET_REL</span>
     <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relocatable</span>
     <span class="c1"># ET_EXEC</span>
@@ -806,23 +812,40 @@ section#format-index .row {
     <span class="c1"># ET_CORE</span>
     <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">core</span>
   <span class="nt">machine</span><span class="p">:</span>
-    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not_set</span>
+    <span class="nt">0x00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_machine</span>
+    <span class="c1"># EM_M32</span>
+    <span class="nt">0x01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m32</span>
     <span class="c1"># EM_SPARC</span>
     <span class="nt">0x02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc</span>
     <span class="c1"># EM_386</span>
     <span class="nt">0x03</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86</span>
+    <span class="c1"># EM_68K</span>
+    <span class="nt">0x04</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m68k</span>
+    <span class="c1"># EM_88K</span>
+    <span class="nt">0x05</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m88k</span>
     <span class="nt">0x08</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips</span>
     <span class="nt">0x14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">powerpc</span>
+    <span class="c1"># EM_PPC64</span>
+    <span class="nt">0x15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">powerpc64</span>
+    <span class="c1"># EM_S390</span>
+    <span class="nt">0x16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s390</span>
     <span class="c1"># EM_ARM</span>
     <span class="nt">0x28</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm</span>
     <span class="c1"># EM_SH</span>
-    <span class="nt">0x2A</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">superh</span>
+    <span class="nt">0x2a</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">superh</span>
+    <span class="c1"># EM_SPARCV9</span>
+    <span class="nt">0x2b</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparcv9</span>
     <span class="nt">0x32</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ia_64</span>
     <span class="c1"># EM_X86_64</span>
-    <span class="nt">0x3E</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86_64</span>
-    <span class="nt">0xB7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aarch64</span>
-    <span class="nt">0xF3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv</span>
-    <span class="nt">0xF7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpf</span>
+    <span class="nt">0x3e</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86_64</span>
+    <span class="nt">0x53</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avr</span>
+    <span class="nt">0xa4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">qdsp6</span>
+    <span class="nt">0xb9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">avr32</span>
+    <span class="nt">0xb7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aarch64</span>
+    <span class="nt">0xe0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">amdgpu</span>
+    <span class="nt">0xf3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv</span>
+    <span class="nt">0xf7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bpf</span>
+    <span class="nt">0xfc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">csky</span>
   <span class="nt">ph_type</span><span class="p">:</span>
     <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">null_type</span>
     <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">load</span>
@@ -841,6 +864,7 @@ section#format-index .row {
     <span class="nt">0x6474e550</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_eh_frame</span>
     <span class="nt">0x6474e551</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_stack</span>
     <span class="nt">0x6474e552</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_relro</span>
+    <span class="nt">0x6474e553</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gnu_property</span>
   <span class="c1"># http://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-94076.html#chapter6-73445</span>
   <span class="nt">sh_type</span><span class="p">:</span>
     <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">null_type</span>

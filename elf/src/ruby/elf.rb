@@ -81,18 +81,29 @@ class Elf < Kaitai::Struct::Struct
   I__OS_ABI = OS_ABI.invert
 
   MACHINE = {
-    0 => :machine_not_set,
+    0 => :machine_no_machine,
+    1 => :machine_m32,
     2 => :machine_sparc,
     3 => :machine_x86,
+    4 => :machine_m68k,
+    5 => :machine_m88k,
     8 => :machine_mips,
     20 => :machine_powerpc,
+    21 => :machine_powerpc64,
+    22 => :machine_s390,
     40 => :machine_arm,
     42 => :machine_superh,
+    43 => :machine_sparcv9,
     50 => :machine_ia_64,
     62 => :machine_x86_64,
+    83 => :machine_avr,
+    164 => :machine_qdsp6,
     183 => :machine_aarch64,
+    185 => :machine_avr32,
+    224 => :machine_amdgpu,
     243 => :machine_riscv,
     247 => :machine_bpf,
+    252 => :machine_csky,
   }
   I__MACHINE = MACHINE.invert
 
@@ -202,6 +213,7 @@ class Elf < Kaitai::Struct::Struct
     1685382480 => :ph_type_gnu_eh_frame,
     1685382481 => :ph_type_gnu_stack,
     1685382482 => :ph_type_gnu_relro,
+    1685382483 => :ph_type_gnu_property,
     1694766464 => :ph_type_pax_flags,
     1879048191 => :ph_type_hios,
     1879048193 => :ph_type_arm_exidx,
@@ -209,6 +221,7 @@ class Elf < Kaitai::Struct::Struct
   I__PH_TYPE = PH_TYPE.invert
 
   OBJ_TYPE = {
+    0 => :obj_type_no_file_type,
     1 => :obj_type_relocatable,
     2 => :obj_type_executable,
     3 => :obj_type_shared,
@@ -869,9 +882,19 @@ class Elf < Kaitai::Struct::Struct
       def flags_obj
         return @flags_obj unless @flags_obj.nil?
         if @_is_le
-          @flags_obj = PhdrTypeFlags.new(@_io, self, @_root, (flags64 | flags32))
+          case _root.bits
+          when :bits_b32
+            @flags_obj = PhdrTypeFlags.new(@_io, self, @_root, flags32)
+          when :bits_b64
+            @flags_obj = PhdrTypeFlags.new(@_io, self, @_root, flags64)
+          end
         else
-          @flags_obj = PhdrTypeFlags.new(@_io, self, @_root, (flags64 | flags32))
+          case _root.bits
+          when :bits_b32
+            @flags_obj = PhdrTypeFlags.new(@_io, self, @_root, flags32)
+          when :bits_b64
+            @flags_obj = PhdrTypeFlags.new(@_io, self, @_root, flags64)
+          end
         end
         @flags_obj
       end

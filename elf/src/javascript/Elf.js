@@ -141,31 +141,53 @@ var Elf = (function() {
   });
 
   Elf.Machine = Object.freeze({
-    NOT_SET: 0,
+    NO_MACHINE: 0,
+    M32: 1,
     SPARC: 2,
     X86: 3,
+    M68K: 4,
+    M88K: 5,
     MIPS: 8,
     POWERPC: 20,
+    POWERPC64: 21,
+    S390: 22,
     ARM: 40,
     SUPERH: 42,
+    SPARCV9: 43,
     IA_64: 50,
     X86_64: 62,
+    AVR: 83,
+    QDSP6: 164,
     AARCH64: 183,
+    AVR32: 185,
+    AMDGPU: 224,
     RISCV: 243,
     BPF: 247,
+    CSKY: 252,
 
-    0: "NOT_SET",
+    0: "NO_MACHINE",
+    1: "M32",
     2: "SPARC",
     3: "X86",
+    4: "M68K",
+    5: "M88K",
     8: "MIPS",
     20: "POWERPC",
+    21: "POWERPC64",
+    22: "S390",
     40: "ARM",
     42: "SUPERH",
+    43: "SPARCV9",
     50: "IA_64",
     62: "X86_64",
+    83: "AVR",
+    164: "QDSP6",
     183: "AARCH64",
+    185: "AVR32",
+    224: "AMDGPU",
     243: "RISCV",
     247: "BPF",
+    252: "CSKY",
   });
 
   Elf.DynamicArrayTags = Object.freeze({
@@ -360,6 +382,7 @@ var Elf = (function() {
     GNU_EH_FRAME: 1685382480,
     GNU_STACK: 1685382481,
     GNU_RELRO: 1685382482,
+    GNU_PROPERTY: 1685382483,
     PAX_FLAGS: 1694766464,
     HIOS: 1879048191,
     ARM_EXIDX: 1879048193,
@@ -375,17 +398,20 @@ var Elf = (function() {
     1685382480: "GNU_EH_FRAME",
     1685382481: "GNU_STACK",
     1685382482: "GNU_RELRO",
+    1685382483: "GNU_PROPERTY",
     1694766464: "PAX_FLAGS",
     1879048191: "HIOS",
     1879048193: "ARM_EXIDX",
   });
 
   Elf.ObjType = Object.freeze({
+    NO_FILE_TYPE: 0,
     RELOCATABLE: 1,
     EXECUTABLE: 2,
     SHARED: 3,
     CORE: 4,
 
+    0: "NO_FILE_TYPE",
     1: "RELOCATABLE",
     2: "EXECUTABLE",
     3: "SHARED",
@@ -1264,9 +1290,23 @@ var Elf = (function() {
           if (this._m_flagsObj !== undefined)
             return this._m_flagsObj;
           if (this._is_le) {
-            this._m_flagsObj = new PhdrTypeFlags(this._io, this, this._root, (this.flags64 | this.flags32));
+            switch (this._root.bits) {
+            case Elf.Bits.B32:
+              this._m_flagsObj = new PhdrTypeFlags(this._io, this, this._root, this.flags32);
+              break;
+            case Elf.Bits.B64:
+              this._m_flagsObj = new PhdrTypeFlags(this._io, this, this._root, this.flags64);
+              break;
+            }
           } else {
-            this._m_flagsObj = new PhdrTypeFlags(this._io, this, this._root, (this.flags64 | this.flags32));
+            switch (this._root.bits) {
+            case Elf.Bits.B32:
+              this._m_flagsObj = new PhdrTypeFlags(this._io, this, this._root, this.flags32);
+              break;
+            case Elf.Bits.B64:
+              this._m_flagsObj = new PhdrTypeFlags(this._io, this, this._root, this.flags64);
+              break;
+            }
           }
           return this._m_flagsObj;
         }

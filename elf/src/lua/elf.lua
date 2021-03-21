@@ -79,18 +79,29 @@ Elf.OsAbi = enum.Enum {
 }
 
 Elf.Machine = enum.Enum {
-  not_set = 0,
+  no_machine = 0,
+  m32 = 1,
   sparc = 2,
   x86 = 3,
+  m68k = 4,
+  m88k = 5,
   mips = 8,
   powerpc = 20,
+  powerpc64 = 21,
+  s390 = 22,
   arm = 40,
   superh = 42,
+  sparcv9 = 43,
   ia_64 = 50,
   x86_64 = 62,
+  avr = 83,
+  qdsp6 = 164,
   aarch64 = 183,
+  avr32 = 185,
+  amdgpu = 224,
   riscv = 243,
   bpf = 247,
+  csky = 252,
 }
 
 Elf.DynamicArrayTags = enum.Enum {
@@ -197,12 +208,14 @@ Elf.PhType = enum.Enum {
   gnu_eh_frame = 1685382480,
   gnu_stack = 1685382481,
   gnu_relro = 1685382482,
+  gnu_property = 1685382483,
   pax_flags = 1694766464,
   hios = 1879048191,
   arm_exidx = 1879048193,
 }
 
 Elf.ObjType = enum.Enum {
+  no_file_type = 0,
   relocatable = 1,
   executable = 2,
   shared = 3,
@@ -1171,9 +1184,19 @@ function Elf.EndianElf.ProgramHeader.property.flags_obj:get()
   end
 
   if self._is_le then
-    self._m_flags_obj = Elf.PhdrTypeFlags((self.flags64 | self.flags32), self._io, self, self._root)
+    local _on = self._root.bits
+    if _on == Elf.Bits.b32 then
+      self._m_flags_obj = Elf.PhdrTypeFlags(self.flags32, self._io, self, self._root)
+    elseif _on == Elf.Bits.b64 then
+      self._m_flags_obj = Elf.PhdrTypeFlags(self.flags64, self._io, self, self._root)
+    end
   else
-    self._m_flags_obj = Elf.PhdrTypeFlags((self.flags64 | self.flags32), self._io, self, self._root)
+    local _on = self._root.bits
+    if _on == Elf.Bits.b32 then
+      self._m_flags_obj = Elf.PhdrTypeFlags(self.flags32, self._io, self, self._root)
+    elseif _on == Elf.Bits.b64 then
+      self._m_flags_obj = Elf.PhdrTypeFlags(self.flags64, self._io, self, self._root)
+    end
   end
   return self._m_flags_obj
 end

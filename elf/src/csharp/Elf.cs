@@ -88,18 +88,29 @@ namespace Kaitai
 
         public enum Machine
         {
-            NotSet = 0,
+            NoMachine = 0,
+            M32 = 1,
             Sparc = 2,
             X86 = 3,
+            M68k = 4,
+            M88k = 5,
             Mips = 8,
             Powerpc = 20,
+            Powerpc64 = 21,
+            S390 = 22,
             Arm = 40,
             Superh = 42,
+            Sparcv9 = 43,
             Ia64 = 50,
             X8664 = 62,
+            Avr = 83,
+            Qdsp6 = 164,
             Aarch64 = 183,
+            Avr32 = 185,
+            Amdgpu = 224,
             Riscv = 243,
             Bpf = 247,
+            Csky = 252,
         }
 
         public enum DynamicArrayTags
@@ -209,6 +220,7 @@ namespace Kaitai
             GnuEhFrame = 1685382480,
             GnuStack = 1685382481,
             GnuRelro = 1685382482,
+            GnuProperty = 1685382483,
             PaxFlags = 1694766464,
             Hios = 1879048191,
             ArmExidx = 1879048193,
@@ -216,6 +228,7 @@ namespace Kaitai
 
         public enum ObjType
         {
+            NoFileType = 0,
             Relocatable = 1,
             Executable = 2,
             Shared = 3,
@@ -1472,9 +1485,27 @@ namespace Kaitai
                         if (f_flagsObj)
                             return _flagsObj;
                         if (m_isLe == true) {
-                            _flagsObj = new PhdrTypeFlags((Flags64 | Flags32), m_io, this, m_root);
+                            switch (M_Root.Bits) {
+                            case Elf.Bits.B32: {
+                                _flagsObj = new PhdrTypeFlags(Flags32, m_io, this, m_root);
+                                break;
+                            }
+                            case Elf.Bits.B64: {
+                                _flagsObj = new PhdrTypeFlags(Flags64, m_io, this, m_root);
+                                break;
+                            }
+                            }
                         } else {
-                            _flagsObj = new PhdrTypeFlags((Flags64 | Flags32), m_io, this, m_root);
+                            switch (M_Root.Bits) {
+                            case Elf.Bits.B32: {
+                                _flagsObj = new PhdrTypeFlags(Flags32, m_io, this, m_root);
+                                break;
+                            }
+                            case Elf.Bits.B64: {
+                                _flagsObj = new PhdrTypeFlags(Flags64, m_io, this, m_root);
+                                break;
+                            }
+                            }
                         }
                         f_flagsObj = true;
                         return _flagsObj;

@@ -1000,9 +1000,23 @@ namespace Elf\EndianElf {
             if ($this->_m_flagsObj !== null)
                 return $this->_m_flagsObj;
             if ($this->_m__is_le) {
-                $this->_m_flagsObj = new \Elf\PhdrTypeFlags(($this->flags64() | $this->flags32()), $this->_io, $this, $this->_root);
+                switch ($this->_root()->bits()) {
+                    case \Elf\Bits::B32:
+                        $this->_m_flagsObj = new \Elf\PhdrTypeFlags($this->flags32(), $this->_io, $this, $this->_root);
+                        break;
+                    case \Elf\Bits::B64:
+                        $this->_m_flagsObj = new \Elf\PhdrTypeFlags($this->flags64(), $this->_io, $this, $this->_root);
+                        break;
+                }
             } else {
-                $this->_m_flagsObj = new \Elf\PhdrTypeFlags(($this->flags64() | $this->flags32()), $this->_io, $this, $this->_root);
+                switch ($this->_root()->bits()) {
+                    case \Elf\Bits::B32:
+                        $this->_m_flagsObj = new \Elf\PhdrTypeFlags($this->flags32(), $this->_io, $this, $this->_root);
+                        break;
+                    case \Elf\Bits::B64:
+                        $this->_m_flagsObj = new \Elf\PhdrTypeFlags($this->flags64(), $this->_io, $this, $this->_root);
+                        break;
+                }
             }
             return $this->_m_flagsObj;
         }
@@ -1628,18 +1642,29 @@ namespace Elf {
 
 namespace Elf {
     class Machine {
-        const NOT_SET = 0;
+        const NO_MACHINE = 0;
+        const M32 = 1;
         const SPARC = 2;
         const X86 = 3;
+        const M68K = 4;
+        const M88K = 5;
         const MIPS = 8;
         const POWERPC = 20;
+        const POWERPC64 = 21;
+        const S390 = 22;
         const ARM = 40;
         const SUPERH = 42;
+        const SPARCV9 = 43;
         const IA_64 = 50;
         const X86_64 = 62;
+        const AVR = 83;
+        const QDSP6 = 164;
         const AARCH64 = 183;
+        const AVR32 = 185;
+        const AMDGPU = 224;
         const RISCV = 243;
         const BPF = 247;
+        const CSKY = 252;
     }
 }
 
@@ -1752,6 +1777,7 @@ namespace Elf {
         const GNU_EH_FRAME = 1685382480;
         const GNU_STACK = 1685382481;
         const GNU_RELRO = 1685382482;
+        const GNU_PROPERTY = 1685382483;
         const PAX_FLAGS = 1694766464;
         const HIOS = 1879048191;
         const ARM_EXIDX = 1879048193;
@@ -1760,6 +1786,7 @@ namespace Elf {
 
 namespace Elf {
     class ObjType {
+        const NO_FILE_TYPE = 0;
         const RELOCATABLE = 1;
         const EXECUTABLE = 2;
         const SHARED = 3;

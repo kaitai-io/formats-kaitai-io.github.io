@@ -303,7 +303,7 @@ endian_elf__seq_section_header_offset_switch [label=<<TABLE BORDER="0" CELLBORDE
 				</TABLE>>];
 				program_header__inst__flags_obj [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="flags_obj_pos">...</TD><TD PORT="flags_obj_size">0</TD><TD>PhdrTypeFlags</TD><TD PORT="flags_obj_type">flags_obj</TD></TR>
+					<TR><TD PORT="flags_obj_pos">...</TD><TD PORT="flags_obj_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="flags_obj_type">flags_obj</TD></TR>
 				</TABLE>>];
 program_header__seq_offset_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -322,6 +322,11 @@ program_header__seq_memsz_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSP
 </TABLE>>];
 program_header__seq_align_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+</TABLE>>];
+program_header__inst__flags_obj_flags_obj_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:bits_b32</TD><TD PORT="case0">PhdrTypeFlags</TD></TR>
+	<TR><TD>:bits_b64</TD><TD PORT="case1">PhdrTypeFlags</TD></TR>
 </TABLE>>];
 			}
 			subgraph cluster__dynamic_section_entry {
@@ -533,7 +538,10 @@ dynsym_section__seq_entries_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELL
 	program_header__seq:offset_type -> program_header__inst__dynamic:dynamic_pos [color="#404040"];
 	program_header__seq:filesz_type -> program_header__inst__dynamic:dynamic_size [color="#404040"];
 	program_header__inst__dynamic:dynamic_type -> dynamic_section__seq [style=bold];
-	program_header__inst__flags_obj:flags_obj_type -> phdr_type_flags__seq [style=bold];
+	program_header__inst__flags_obj:flags_obj_type -> program_header__inst__flags_obj_flags_obj_switch [style=bold];
+	program_header__inst__flags_obj_flags_obj_switch:case0 -> phdr_type_flags__seq [style=bold];
+	program_header__inst__flags_obj_flags_obj_switch:case1 -> phdr_type_flags__seq [style=bold];
+	elf__seq:bits_type -> program_header__inst__flags_obj:flags_obj_type [color="#404040"];
 	dynamic_section_entry__seq:tag_type -> dynamic_section_entry__seq_tag_switch [style=bold];
 	elf__seq:bits_type -> dynamic_section_entry__seq:tag_type [color="#404040"];
 	dynamic_section_entry__seq:value_or_ptr_type -> dynamic_section_entry__seq_value_or_ptr_switch [style=bold];
