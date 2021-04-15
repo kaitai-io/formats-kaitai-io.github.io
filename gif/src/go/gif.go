@@ -599,8 +599,48 @@ func (this *Gif_Subblock) Read(io *kaitai.Stream, parent interface{}, root *Gif)
 	this.Bytes = tmp42
 	return err
 }
+type Gif_ApplicationId struct {
+	LenBytes uint8
+	ApplicationIdentifier string
+	ApplicationAuthCode []byte
+	_io *kaitai.Stream
+	_root *Gif
+	_parent *Gif_ExtApplication
+}
+func NewGif_ApplicationId() *Gif_ApplicationId {
+	return &Gif_ApplicationId{
+	}
+}
+
+func (this *Gif_ApplicationId) Read(io *kaitai.Stream, parent *Gif_ExtApplication, root *Gif) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp43, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.LenBytes = tmp43
+	if !(this.LenBytes == 11) {
+		return kaitai.NewValidationNotEqualError(11, this.LenBytes, this._io, "/types/application_id/seq/0")
+	}
+	tmp44, err := this._io.ReadBytes(int(8))
+	if err != nil {
+		return err
+	}
+	tmp44 = tmp44
+	this.ApplicationIdentifier = string(tmp44)
+	tmp45, err := this._io.ReadBytes(int(3))
+	if err != nil {
+		return err
+	}
+	tmp45 = tmp45
+	this.ApplicationAuthCode = tmp45
+	return err
+}
 type Gif_ExtApplication struct {
-	ApplicationId *Gif_Subblock
+	ApplicationId *Gif_ApplicationId
 	Subblocks []*Gif_Subblock
 	_io *kaitai.Stream
 	_root *Gif
@@ -616,19 +656,19 @@ func (this *Gif_ExtApplication) Read(io *kaitai.Stream, parent *Gif_Extension, r
 	this._parent = parent
 	this._root = root
 
-	tmp43 := NewGif_Subblock()
-	err = tmp43.Read(this._io, this, this._root)
+	tmp46 := NewGif_ApplicationId()
+	err = tmp46.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ApplicationId = tmp43
+	this.ApplicationId = tmp46
 	for i := 1;; i++ {
-		tmp44 := NewGif_Subblock()
-		err = tmp44.Read(this._io, this, this._root)
+		tmp47 := NewGif_Subblock()
+		err = tmp47.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		_it := tmp44
+		_it := tmp47
 		this.Subblocks = append(this.Subblocks, _it)
 		if _it.LenBytes == 0 {
 			break
@@ -653,12 +693,12 @@ func (this *Gif_Subblocks) Read(io *kaitai.Stream, parent interface{}, root *Gif
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp45 := NewGif_Subblock()
-		err = tmp45.Read(this._io, this, this._root)
+		tmp48 := NewGif_Subblock()
+		err = tmp48.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		_it := tmp45
+		_it := tmp48
 		this.Entries = append(this.Entries, _it)
 		if _it.LenBytes == 0 {
 			break
@@ -683,40 +723,40 @@ func (this *Gif_Extension) Read(io *kaitai.Stream, parent *Gif_Block, root *Gif)
 	this._parent = parent
 	this._root = root
 
-	tmp46, err := this._io.ReadU1()
+	tmp49, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Label = Gif_ExtensionLabel(tmp46)
+	this.Label = Gif_ExtensionLabel(tmp49)
 	switch (this.Label) {
 	case Gif_ExtensionLabel__Application:
-		tmp47 := NewGif_ExtApplication()
-		err = tmp47.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp47
-	case Gif_ExtensionLabel__Comment:
-		tmp48 := NewGif_Subblocks()
-		err = tmp48.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp48
-	case Gif_ExtensionLabel__GraphicControl:
-		tmp49 := NewGif_ExtGraphicControl()
-		err = tmp49.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp49
-	default:
-		tmp50 := NewGif_Subblocks()
+		tmp50 := NewGif_ExtApplication()
 		err = tmp50.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp50
+	case Gif_ExtensionLabel__Comment:
+		tmp51 := NewGif_Subblocks()
+		err = tmp51.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp51
+	case Gif_ExtensionLabel__GraphicControl:
+		tmp52 := NewGif_ExtGraphicControl()
+		err = tmp52.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp52
+	default:
+		tmp53 := NewGif_Subblocks()
+		err = tmp53.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp53
 	}
 	return err
 }

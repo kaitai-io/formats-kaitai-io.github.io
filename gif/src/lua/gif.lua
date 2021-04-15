@@ -329,6 +329,25 @@ self.bytes = self._io:read_bytes(self.len_bytes)
 end
 
 
+Gif.ApplicationId = class.class(KaitaiStruct)
+
+function Gif.ApplicationId:_init(io, parent, root)
+KaitaiStruct._init(self, io)
+self._parent = parent
+self._root = root or self
+self:_read()
+end
+
+function Gif.ApplicationId:_read()
+self.len_bytes = self._io:read_u1()
+if not(self.len_bytes == 11) then
+  error("not equal, expected " ..  11 .. ", but got " .. self.len_bytes)
+end
+self.application_identifier = str_decode.decode(self._io:read_bytes(8), "ASCII")
+self.application_auth_code = self._io:read_bytes(3)
+end
+
+
 Gif.ExtApplication = class.class(KaitaiStruct)
 
 function Gif.ExtApplication:_init(io, parent, root)
@@ -339,7 +358,7 @@ self:_read()
 end
 
 function Gif.ExtApplication:_read()
-self.application_id = Gif.Subblock(self._io, self, self._root)
+self.application_id = Gif.ApplicationId(self._io, self, self._root)
 self.subblocks = {}
 local i = 0
 while true do

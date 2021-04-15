@@ -333,6 +333,28 @@ gif_t::subblock_t::~subblock_t() {
 void gif_t::subblock_t::_clean_up() {
 }
 
+gif_t::application_id_t::application_id_t(kaitai::kstream* p__io, gif_t::ext_application_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void gif_t::application_id_t::_read() {
+    m_len_bytes = m__io->read_u1();
+    if (!(len_bytes() == 11)) {
+        throw kaitai::validation_not_equal_error<uint8_t>(11, len_bytes(), _io(), std::string("/types/application_id/seq/0"));
+    }
+    m_application_identifier = kaitai::kstream::bytes_to_str(m__io->read_bytes(8), std::string("ASCII"));
+    m_application_auth_code = m__io->read_bytes(3);
+}
+
+gif_t::application_id_t::~application_id_t() {
+    _clean_up();
+}
+
+void gif_t::application_id_t::_clean_up() {
+}
+
 gif_t::ext_application_t::ext_application_t(kaitai::kstream* p__io, gif_t::extension_t* p__parent, gif_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -342,7 +364,7 @@ gif_t::ext_application_t::ext_application_t(kaitai::kstream* p__io, gif_t::exten
 }
 
 void gif_t::ext_application_t::_read() {
-    m_application_id = std::unique_ptr<subblock_t>(new subblock_t(m__io, this, m__root));
+    m_application_id = std::unique_ptr<application_id_t>(new application_id_t(m__io, this, m__root));
     m_subblocks = std::unique_ptr<std::vector<std::unique_ptr<subblock_t>>>(new std::vector<std::unique_ptr<subblock_t>>());
     {
         int i = 0;

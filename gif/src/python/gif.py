@@ -283,6 +283,21 @@ class Gif(KaitaiStruct):
             self.bytes = self._io.read_bytes(self.len_bytes)
 
 
+    class ApplicationId(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.len_bytes = self._io.read_u1()
+            if not self.len_bytes == 11:
+                raise kaitaistruct.ValidationNotEqualError(11, self.len_bytes, self._io, u"/types/application_id/seq/0")
+            self.application_identifier = (self._io.read_bytes(8)).decode(u"ASCII")
+            self.application_auth_code = self._io.read_bytes(3)
+
+
     class ExtApplication(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -291,7 +306,7 @@ class Gif(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.application_id = Gif.Subblock(self._io, self, self._root)
+            self.application_id = Gif.ApplicationId(self._io, self, self._root)
             self.subblocks = []
             i = 0
             while True:

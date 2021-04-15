@@ -356,8 +356,13 @@ metainformation or image data.</p>
     <span class="p">`</span><span class="n">lenBytes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">bytes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+  <span class="n">Gif_ApplicationId</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenBytes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">applicationIdentifier</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">applicationAuthCode</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gif_ExtApplication</span>
   <span class="n">Gif_ExtApplication</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
-    <span class="p">`</span><span class="n">applicationId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gif_Subblock</span>
+    <span class="p">`</span><span class="n">applicationId</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gif_ApplicationId</span>
     <span class="p">`</span><span class="n">subblocks</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Gif_Subblock</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Gif_Extension</span>
   <span class="n">Gif_Subblocks</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
@@ -378,6 +383,7 @@ metainformation or image data.</p>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_Header], io: KaitaiStream, root: KaitaiStruct, parent: Gif): Gif_Header</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_ExtGraphicControl], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Extension): Gif_ExtGraphicControl</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_Subblock], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gif_Subblock</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_ApplicationId], io: KaitaiStream, root: KaitaiStruct, parent: Gif_ExtApplication): Gif_ApplicationId</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_ExtApplication], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Extension): Gif_ExtApplication</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_Subblocks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gif_Subblocks</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_Extension], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Block): Gif_Extension</span>
@@ -710,6 +716,24 @@ metainformation or image data.</p>
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_Subblock], filename: string): Gif_Subblock =</span>
   <span class="n">Gif_Subblock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_ApplicationId], io: KaitaiStream, root: KaitaiStruct, parent: Gif_ExtApplication): Gif_ApplicationId =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gif_ApplicationId</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gif</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Gif</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">lenBytesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenBytes</span> <span class="o">=</span> <span class="n">lenBytesExpr</span>
+  <span class="k">let</span> <span class="n">applicationIdentifierExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">8</span><span class="p">)),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">applicationIdentifier</span> <span class="o">=</span> <span class="n">applicationIdentifierExpr</span>
+  <span class="k">let</span> <span class="n">applicationAuthCodeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">applicationAuthCode</span> <span class="o">=</span> <span class="n">applicationAuthCodeExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_ApplicationId], filename: string): Gif_ApplicationId =</span>
+  <span class="n">Gif_ApplicationId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Gif_ExtApplication], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Extension): Gif_ExtApplication =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
   <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Gif_ExtApplication</span><span class="p">)</span>
@@ -718,7 +742,7 @@ metainformation or image data.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
   <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
-  <span class="k">let</span> <span class="n">applicationIdExpr</span> <span class="o">=</span> <span class="n">Gif_Subblock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">applicationIdExpr</span> <span class="o">=</span> <span class="n">Gif_ApplicationId</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">applicationId</span> <span class="o">=</span> <span class="n">applicationIdExpr</span>
   <span class="k">block</span><span class="p">:</span>
     <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>

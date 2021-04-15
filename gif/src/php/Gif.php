@@ -336,6 +336,30 @@ namespace Gif {
 }
 
 namespace Gif {
+    class ApplicationId extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Gif\ExtApplication $_parent = null, \Gif $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_lenBytes = $this->_io->readU1();
+            if (!($this->lenBytes() == 11)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(11, $this->lenBytes(), $this->_io(), "/types/application_id/seq/0");
+            }
+            $this->_m_applicationIdentifier = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes(8), "ASCII");
+            $this->_m_applicationAuthCode = $this->_io->readBytes(3);
+        }
+        protected $_m_lenBytes;
+        protected $_m_applicationIdentifier;
+        protected $_m_applicationAuthCode;
+        public function lenBytes() { return $this->_m_lenBytes; }
+        public function applicationIdentifier() { return $this->_m_applicationIdentifier; }
+        public function applicationAuthCode() { return $this->_m_applicationAuthCode; }
+    }
+}
+
+namespace Gif {
     class ExtApplication extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Gif\Extension $_parent = null, \Gif $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -343,7 +367,7 @@ namespace Gif {
         }
 
         private function _read() {
-            $this->_m_applicationId = new \Gif\Subblock($this->_io, $this, $this->_root);
+            $this->_m_applicationId = new \Gif\ApplicationId($this->_io, $this, $this->_root);
             $this->_m_subblocks = [];
             $i = 0;
             do {

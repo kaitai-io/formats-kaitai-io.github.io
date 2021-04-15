@@ -338,6 +338,26 @@ var Gif = (function() {
     return Subblock;
   })();
 
+  var ApplicationId = Gif.ApplicationId = (function() {
+    function ApplicationId(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ApplicationId.prototype._read = function() {
+      this.lenBytes = this._io.readU1();
+      if (!(this.lenBytes == 11)) {
+        throw new KaitaiStream.ValidationNotEqualError(11, this.lenBytes, this._io, "/types/application_id/seq/0");
+      }
+      this.applicationIdentifier = KaitaiStream.bytesToStr(this._io.readBytes(8), "ASCII");
+      this.applicationAuthCode = this._io.readBytes(3);
+    }
+
+    return ApplicationId;
+  })();
+
   var ExtApplication = Gif.ExtApplication = (function() {
     function ExtApplication(_io, _parent, _root) {
       this._io = _io;
@@ -347,7 +367,7 @@ var Gif = (function() {
       this._read();
     }
     ExtApplication.prototype._read = function() {
-      this.applicationId = new Subblock(this._io, this, this._root);
+      this.applicationId = new ApplicationId(this._io, this, this._root);
       this.subblocks = []
       var i = 0;
       do {

@@ -73,8 +73,13 @@ type
     `lenBytes`*: uint8
     `bytes`*: seq[byte]
     `parent`*: KaitaiStruct
+  Gif_ApplicationId* = ref object of KaitaiStruct
+    `lenBytes`*: uint8
+    `applicationIdentifier`*: string
+    `applicationAuthCode`*: seq[byte]
+    `parent`*: Gif_ExtApplication
   Gif_ExtApplication* = ref object of KaitaiStruct
-    `applicationId`*: Gif_Subblock
+    `applicationId`*: Gif_ApplicationId
     `subblocks`*: seq[Gif_Subblock]
     `parent`*: Gif_Extension
   Gif_Subblocks* = ref object of KaitaiStruct
@@ -95,6 +100,7 @@ proc read*(_: typedesc[Gif_ColorTable], io: KaitaiStream, root: KaitaiStruct, pa
 proc read*(_: typedesc[Gif_Header], io: KaitaiStream, root: KaitaiStruct, parent: Gif): Gif_Header
 proc read*(_: typedesc[Gif_ExtGraphicControl], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Extension): Gif_ExtGraphicControl
 proc read*(_: typedesc[Gif_Subblock], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gif_Subblock
+proc read*(_: typedesc[Gif_ApplicationId], io: KaitaiStream, root: KaitaiStruct, parent: Gif_ExtApplication): Gif_ApplicationId
 proc read*(_: typedesc[Gif_ExtApplication], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Extension): Gif_ExtApplication
 proc read*(_: typedesc[Gif_Subblocks], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Gif_Subblocks
 proc read*(_: typedesc[Gif_Extension], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Block): Gif_Extension
@@ -427,6 +433,24 @@ proc read*(_: typedesc[Gif_Subblock], io: KaitaiStream, root: KaitaiStruct, pare
 proc fromFile*(_: typedesc[Gif_Subblock], filename: string): Gif_Subblock =
   Gif_Subblock.read(newKaitaiFileStream(filename), nil, nil)
 
+proc read*(_: typedesc[Gif_ApplicationId], io: KaitaiStream, root: KaitaiStruct, parent: Gif_ExtApplication): Gif_ApplicationId =
+  template this: untyped = result
+  this = new(Gif_ApplicationId)
+  let root = if root == nil: cast[Gif](this) else: cast[Gif](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let lenBytesExpr = this.io.readU1()
+  this.lenBytes = lenBytesExpr
+  let applicationIdentifierExpr = encode(this.io.readBytes(int(8)), "ASCII")
+  this.applicationIdentifier = applicationIdentifierExpr
+  let applicationAuthCodeExpr = this.io.readBytes(int(3))
+  this.applicationAuthCode = applicationAuthCodeExpr
+
+proc fromFile*(_: typedesc[Gif_ApplicationId], filename: string): Gif_ApplicationId =
+  Gif_ApplicationId.read(newKaitaiFileStream(filename), nil, nil)
+
 proc read*(_: typedesc[Gif_ExtApplication], io: KaitaiStream, root: KaitaiStruct, parent: Gif_Extension): Gif_ExtApplication =
   template this: untyped = result
   this = new(Gif_ExtApplication)
@@ -435,7 +459,7 @@ proc read*(_: typedesc[Gif_ExtApplication], io: KaitaiStream, root: KaitaiStruct
   this.root = root
   this.parent = parent
 
-  let applicationIdExpr = Gif_Subblock.read(this.io, this.root, this)
+  let applicationIdExpr = Gif_ApplicationId.read(this.io, this.root, this)
   this.applicationId = applicationIdExpr
   block:
     var i: int

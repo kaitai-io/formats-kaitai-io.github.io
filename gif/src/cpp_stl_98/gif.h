@@ -43,6 +43,7 @@ public:
     class header_t;
     class ext_graphic_control_t;
     class subblock_t;
+    class application_id_t;
     class ext_application_t;
     class subblocks_t;
     class extension_t;
@@ -422,6 +423,34 @@ public:
         kaitai::kstruct* _parent() const { return m__parent; }
     };
 
+    class application_id_t : public kaitai::kstruct {
+
+    public:
+
+        application_id_t(kaitai::kstream* p__io, gif_t::ext_application_t* p__parent = 0, gif_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~application_id_t();
+
+    private:
+        uint8_t m_len_bytes;
+        std::string m_application_identifier;
+        std::string m_application_auth_code;
+        gif_t* m__root;
+        gif_t::ext_application_t* m__parent;
+
+    public:
+        uint8_t len_bytes() const { return m_len_bytes; }
+        std::string application_identifier() const { return m_application_identifier; }
+        std::string application_auth_code() const { return m_application_auth_code; }
+        gif_t* _root() const { return m__root; }
+        gif_t::ext_application_t* _parent() const { return m__parent; }
+    };
+
     class ext_application_t : public kaitai::kstruct {
 
     public:
@@ -436,13 +465,13 @@ public:
         ~ext_application_t();
 
     private:
-        subblock_t* m_application_id;
+        application_id_t* m_application_id;
         std::vector<subblock_t*>* m_subblocks;
         gif_t* m__root;
         gif_t::extension_t* m__parent;
 
     public:
-        subblock_t* application_id() const { return m_application_id; }
+        application_id_t* application_id() const { return m_application_id; }
         std::vector<subblock_t*>* subblocks() const { return m_subblocks; }
         gif_t* _root() const { return m__root; }
         gif_t::extension_t* _parent() const { return m__parent; }

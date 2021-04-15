@@ -619,6 +619,56 @@ sub bytes {
 }
 
 ########################################################################
+package Gif::ApplicationId;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{len_bytes} = $self->{_io}->read_u1();
+    $self->{application_identifier} = Encode::decode("ASCII", $self->{_io}->read_bytes(8));
+    $self->{application_auth_code} = $self->{_io}->read_bytes(3);
+}
+
+sub len_bytes {
+    my ($self) = @_;
+    return $self->{len_bytes};
+}
+
+sub application_identifier {
+    my ($self) = @_;
+    return $self->{application_identifier};
+}
+
+sub application_auth_code {
+    my ($self) = @_;
+    return $self->{application_auth_code};
+}
+
+########################################################################
 package Gif::ExtApplication;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -648,7 +698,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{application_id} = Gif::Subblock->new($self->{_io}, $self, $self->{_root});
+    $self->{application_id} = Gif::ApplicationId->new($self->{_io}, $self, $self->{_root});
     $self->{subblocks} = ();
     do {
         $_ = Gif::Subblock->new($self->{_io}, $self, $self->{_root});

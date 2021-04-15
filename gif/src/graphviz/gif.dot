@@ -152,14 +152,25 @@ block__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD PORT="bytes_pos">1</TD><TD PORT="bytes_size">len_bytes</TD><TD></TD><TD PORT="bytes_type">bytes</TD></TR>
 			</TABLE>>];
 		}
+		subgraph cluster__application_id {
+			label="Gif::ApplicationId";
+			graph[style=dotted];
+
+			application_id__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_bytes_pos">0</TD><TD PORT="len_bytes_size">1</TD><TD>u1</TD><TD PORT="len_bytes_type">len_bytes</TD></TR>
+				<TR><TD PORT="application_identifier_pos">1</TD><TD PORT="application_identifier_size">8</TD><TD>str(ASCII)</TD><TD PORT="application_identifier_type">application_identifier</TD></TR>
+				<TR><TD PORT="application_auth_code_pos">9</TD><TD PORT="application_auth_code_size">3</TD><TD></TD><TD PORT="application_auth_code_type">application_auth_code</TD></TR>
+			</TABLE>>];
+		}
 		subgraph cluster__ext_application {
 			label="Gif::ExtApplication";
 			graph[style=dotted];
 
 			ext_application__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="application_id_pos">0</TD><TD PORT="application_id_size">...</TD><TD>Subblock</TD><TD PORT="application_id_type">application_id</TD></TR>
-				<TR><TD PORT="subblocks_pos">...</TD><TD PORT="subblocks_size">...</TD><TD>Subblock</TD><TD PORT="subblocks_type">subblocks</TD></TR>
+				<TR><TD PORT="application_id_pos">0</TD><TD PORT="application_id_size">12</TD><TD>ApplicationId</TD><TD PORT="application_id_type">application_id</TD></TR>
+				<TR><TD PORT="subblocks_pos">12</TD><TD PORT="subblocks_size">...</TD><TD>Subblock</TD><TD PORT="subblocks_type">subblocks</TD></TR>
 				<TR><TD COLSPAN="4" PORT="subblocks__repeat">repeat until _.len_bytes == 0</TD></TR>
 			</TABLE>>];
 		}
@@ -215,7 +226,7 @@ extension__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	ext_graphic_control__seq:flags_type -> ext_graphic_control__inst__transparent_color_flag [color="#404040"];
 	ext_graphic_control__seq:flags_type -> ext_graphic_control__inst__user_input_flag [color="#404040"];
 	subblock__seq:len_bytes_type -> subblock__seq:bytes_size [color="#404040"];
-	ext_application__seq:application_id_type -> subblock__seq [style=bold];
+	ext_application__seq:application_id_type -> application_id__seq [style=bold];
 	ext_application__seq:subblocks_type -> subblock__seq [style=bold];
 	subblock__seq:len_bytes_type -> ext_application__seq:subblocks__repeat [color="#404040"];
 	subblocks__seq:entries_type -> subblock__seq [style=bold];

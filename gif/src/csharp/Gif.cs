@@ -513,6 +513,40 @@ namespace Kaitai
             public Gif M_Root { get { return m_root; } }
             public KaitaiStruct M_Parent { get { return m_parent; } }
         }
+        public partial class ApplicationId : KaitaiStruct
+        {
+            public static ApplicationId FromFile(string fileName)
+            {
+                return new ApplicationId(new KaitaiStream(fileName));
+            }
+
+            public ApplicationId(KaitaiStream p__io, Gif.ExtApplication p__parent = null, Gif p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _lenBytes = m_io.ReadU1();
+                if (!(LenBytes == 11))
+                {
+                    throw new ValidationNotEqualError(11, LenBytes, M_Io, "/types/application_id/seq/0");
+                }
+                _applicationIdentifier = System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytes(8));
+                _applicationAuthCode = m_io.ReadBytes(3);
+            }
+            private byte _lenBytes;
+            private string _applicationIdentifier;
+            private byte[] _applicationAuthCode;
+            private Gif m_root;
+            private Gif.ExtApplication m_parent;
+            public byte LenBytes { get { return _lenBytes; } }
+            public string ApplicationIdentifier { get { return _applicationIdentifier; } }
+            public byte[] ApplicationAuthCode { get { return _applicationAuthCode; } }
+            public Gif M_Root { get { return m_root; } }
+            public Gif.ExtApplication M_Parent { get { return m_parent; } }
+        }
         public partial class ExtApplication : KaitaiStruct
         {
             public static ExtApplication FromFile(string fileName)
@@ -528,7 +562,7 @@ namespace Kaitai
             }
             private void _read()
             {
-                _applicationId = new Subblock(m_io, this, m_root);
+                _applicationId = new ApplicationId(m_io, this, m_root);
                 _subblocks = new List<Subblock>();
                 {
                     var i = 0;
@@ -540,11 +574,11 @@ namespace Kaitai
                     } while (!(M_.LenBytes == 0));
                 }
             }
-            private Subblock _applicationId;
+            private ApplicationId _applicationId;
             private List<Subblock> _subblocks;
             private Gif m_root;
             private Gif.Extension m_parent;
-            public Subblock ApplicationId { get { return _applicationId; } }
+            public ApplicationId ApplicationId { get { return _applicationId; } }
             public List<Subblock> Subblocks { get { return _subblocks; } }
             public Gif M_Root { get { return m_root; } }
             public Gif.Extension M_Parent { get { return m_parent; } }

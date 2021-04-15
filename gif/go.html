@@ -882,8 +882,48 @@ metainformation or image data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">Bytes</span> <span class="p">=</span> <span class="nx">tmp42</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+<span class="kd">type</span> <span class="nx">Gif_ApplicationId</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">LenBytes</span> <span class="kt">uint8</span>
+	<span class="nx">ApplicationIdentifier</span> <span class="kt">string</span>
+	<span class="nx">ApplicationAuthCode</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Gif</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Gif_ExtApplication</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewGif_ApplicationId</span><span class="p">()</span> <span class="o">*</span><span class="nx">Gif_ApplicationId</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Gif_ApplicationId</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Gif_ApplicationId</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Gif_ExtApplication</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Gif</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBytes</span> <span class="p">=</span> <span class="nx">tmp43</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBytes</span> <span class="o">==</span> <span class="mi">11</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">LenBytes</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/application_id/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp44</span> <span class="p">=</span> <span class="nx">tmp44</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ApplicationIdentifier</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp44</span><span class="p">)</span>
+	<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp45</span> <span class="p">=</span> <span class="nx">tmp45</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ApplicationAuthCode</span> <span class="p">=</span> <span class="nx">tmp45</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Gif_ExtApplication</span> <span class="kd">struct</span> <span class="p">{</span>
-	<span class="nx">ApplicationId</span> <span class="o">*</span><span class="nx">Gif_Subblock</span>
+	<span class="nx">ApplicationId</span> <span class="o">*</span><span class="nx">Gif_ApplicationId</span>
 	<span class="nx">Subblocks</span> <span class="p">[]</span><span class="o">*</span><span class="nx">Gif_Subblock</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Gif</span>
@@ -899,19 +939,19 @@ metainformation or image data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp43</span> <span class="o">:=</span> <span class="nx">NewGif_Subblock</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp43</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp46</span> <span class="o">:=</span> <span class="nx">NewGif_ApplicationId</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp46</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">ApplicationId</span> <span class="p">=</span> <span class="nx">tmp43</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ApplicationId</span> <span class="p">=</span> <span class="nx">tmp46</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">tmp44</span> <span class="o">:=</span> <span class="nx">NewGif_Subblock</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp44</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp47</span> <span class="o">:=</span> <span class="nx">NewGif_Subblock</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp47</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">_it</span> <span class="o">:=</span> <span class="nx">tmp44</span>
+		<span class="nx">_it</span> <span class="o">:=</span> <span class="nx">tmp47</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Subblocks</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Subblocks</span><span class="p">,</span> <span class="nx">_it</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">_it</span><span class="p">.</span><span class="nx">LenBytes</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
 			<span class="k">break</span>
@@ -936,12 +976,12 @@ metainformation or image data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">tmp45</span> <span class="o">:=</span> <span class="nx">NewGif_Subblock</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp45</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp48</span> <span class="o">:=</span> <span class="nx">NewGif_Subblock</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp48</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">_it</span> <span class="o">:=</span> <span class="nx">tmp45</span>
+		<span class="nx">_it</span> <span class="o">:=</span> <span class="nx">tmp48</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Entries</span><span class="p">,</span> <span class="nx">_it</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">_it</span><span class="p">.</span><span class="nx">LenBytes</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>
 			<span class="k">break</span>
@@ -966,40 +1006,40 @@ metainformation or image data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Label</span> <span class="p">=</span> <span class="nx">Gif_ExtensionLabel</span><span class="p">(</span><span class="nx">tmp46</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Label</span> <span class="p">=</span> <span class="nx">Gif_ExtensionLabel</span><span class="p">(</span><span class="nx">tmp49</span><span class="p">)</span>
 	<span class="k">switch</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Label</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">case</span> <span class="nx">Gif_ExtensionLabel__Application</span><span class="p">:</span>
-		<span class="nx">tmp47</span> <span class="o">:=</span> <span class="nx">NewGif_ExtApplication</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp47</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp47</span>
-	<span class="k">case</span> <span class="nx">Gif_ExtensionLabel__Comment</span><span class="p">:</span>
-		<span class="nx">tmp48</span> <span class="o">:=</span> <span class="nx">NewGif_Subblocks</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp48</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp48</span>
-	<span class="k">case</span> <span class="nx">Gif_ExtensionLabel__GraphicControl</span><span class="p">:</span>
-		<span class="nx">tmp49</span> <span class="o">:=</span> <span class="nx">NewGif_ExtGraphicControl</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp49</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
-		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-			<span class="k">return</span> <span class="nx">err</span>
-		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp49</span>
-	<span class="k">default</span><span class="p">:</span>
-		<span class="nx">tmp50</span> <span class="o">:=</span> <span class="nx">NewGif_Subblocks</span><span class="p">()</span>
+		<span class="nx">tmp50</span> <span class="o">:=</span> <span class="nx">NewGif_ExtApplication</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp50</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp50</span>
+	<span class="k">case</span> <span class="nx">Gif_ExtensionLabel__Comment</span><span class="p">:</span>
+		<span class="nx">tmp51</span> <span class="o">:=</span> <span class="nx">NewGif_Subblocks</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp51</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp51</span>
+	<span class="k">case</span> <span class="nx">Gif_ExtensionLabel__GraphicControl</span><span class="p">:</span>
+		<span class="nx">tmp52</span> <span class="o">:=</span> <span class="nx">NewGif_ExtGraphicControl</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp52</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp52</span>
+	<span class="k">default</span><span class="p">:</span>
+		<span class="nx">tmp53</span> <span class="o">:=</span> <span class="nx">NewGif_Subblocks</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp53</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp53</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>

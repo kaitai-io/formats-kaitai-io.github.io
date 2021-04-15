@@ -541,6 +541,44 @@ public class Gif extends KaitaiStruct {
         public Gif _root() { return _root; }
         public KaitaiStruct _parent() { return _parent; }
     }
+    public static class ApplicationId extends KaitaiStruct {
+        public static ApplicationId fromFile(String fileName) throws IOException {
+            return new ApplicationId(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public ApplicationId(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ApplicationId(KaitaiStream _io, Gif.ExtApplication _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ApplicationId(KaitaiStream _io, Gif.ExtApplication _parent, Gif _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.lenBytes = this._io.readU1();
+            if (!(lenBytes() == 11)) {
+                throw new KaitaiStream.ValidationNotEqualError(11, lenBytes(), _io(), "/types/application_id/seq/0");
+            }
+            this.applicationIdentifier = new String(this._io.readBytes(8), Charset.forName("ASCII"));
+            this.applicationAuthCode = this._io.readBytes(3);
+        }
+        private int lenBytes;
+        private String applicationIdentifier;
+        private byte[] applicationAuthCode;
+        private Gif _root;
+        private Gif.ExtApplication _parent;
+        public int lenBytes() { return lenBytes; }
+        public String applicationIdentifier() { return applicationIdentifier; }
+        public byte[] applicationAuthCode() { return applicationAuthCode; }
+        public Gif _root() { return _root; }
+        public Gif.ExtApplication _parent() { return _parent; }
+    }
     public static class ExtApplication extends KaitaiStruct {
         public static ExtApplication fromFile(String fileName) throws IOException {
             return new ExtApplication(new ByteBufferKaitaiStream(fileName));
@@ -561,7 +599,7 @@ public class Gif extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.applicationId = new Subblock(this._io, this, _root);
+            this.applicationId = new ApplicationId(this._io, this, _root);
             this.subblocks = new ArrayList<Subblock>();
             {
                 Subblock _it;
@@ -573,11 +611,11 @@ public class Gif extends KaitaiStruct {
                 } while (!(_it.lenBytes() == 0));
             }
         }
-        private Subblock applicationId;
+        private ApplicationId applicationId;
         private ArrayList<Subblock> subblocks;
         private Gif _root;
         private Gif.Extension _parent;
-        public Subblock applicationId() { return applicationId; }
+        public ApplicationId applicationId() { return applicationId; }
         public ArrayList<Subblock> subblocks() { return subblocks; }
         public Gif _root() { return _root; }
         public Gif.Extension _parent() { return _parent; }

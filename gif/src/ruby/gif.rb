@@ -283,6 +283,23 @@ class Gif < Kaitai::Struct::Struct
     attr_reader :len_bytes
     attr_reader :bytes
   end
+  class ApplicationId < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @len_bytes = @_io.read_u1
+      raise Kaitai::Struct::ValidationNotEqualError.new(11, len_bytes, _io, "/types/application_id/seq/0") if not len_bytes == 11
+      @application_identifier = (@_io.read_bytes(8)).force_encoding("ASCII")
+      @application_auth_code = @_io.read_bytes(3)
+      self
+    end
+    attr_reader :len_bytes
+    attr_reader :application_identifier
+    attr_reader :application_auth_code
+  end
   class ExtApplication < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -290,7 +307,7 @@ class Gif < Kaitai::Struct::Struct
     end
 
     def _read
-      @application_id = Subblock.new(@_io, self, @_root)
+      @application_id = ApplicationId.new(@_io, self, @_root)
       @subblocks = []
       i = 0
       begin
