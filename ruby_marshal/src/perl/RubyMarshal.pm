@@ -23,6 +23,7 @@ our $CODES_RUBY_STRING = 34;
 our $CODES_CONST_NIL = 48;
 our $CODES_RUBY_SYMBOL = 58;
 our $CODES_RUBY_SYMBOL_LINK = 59;
+our $CODES_RUBY_OBJECT_LINK = 64;
 our $CODES_CONST_FALSE = 70;
 our $CODES_INSTANCE_VAR = 73;
 our $CODES_RUBY_STRUCT = 83;
@@ -508,6 +509,9 @@ sub _read {
     }
     elsif ($_on == $RubyMarshal::CODES_RUBY_SYMBOL) {
         $self->{body} = RubyMarshal::RubySymbol->new($self->{_io}, $self, $self->{_root});
+    }
+    elsif ($_on == $RubyMarshal::CODES_RUBY_OBJECT_LINK) {
+        $self->{body} = RubyMarshal::PackedInt->new($self->{_io}, $self, $self->{_root});
     }
 }
 

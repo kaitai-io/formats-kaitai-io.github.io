@@ -54,6 +54,7 @@ public:
         CODES_CONST_NIL = 48,
         CODES_RUBY_SYMBOL = 58,
         CODES_RUBY_SYMBOL_LINK = 59,
+        CODES_RUBY_OBJECT_LINK = 64,
         CODES_CONST_FALSE = 70,
         CODES_INSTANCE_VAR = 73,
         CODES_RUBY_STRUCT = 83,

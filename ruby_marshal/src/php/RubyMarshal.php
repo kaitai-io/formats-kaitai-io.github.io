@@ -337,6 +337,9 @@ namespace RubyMarshal {
                 case \RubyMarshal\Codes::RUBY_SYMBOL:
                     $this->_m_body = new \RubyMarshal\RubySymbol($this->_io, $this, $this->_root);
                     break;
+                case \RubyMarshal\Codes::RUBY_OBJECT_LINK:
+                    $this->_m_body = new \RubyMarshal\PackedInt($this->_io, $this, $this->_root);
+                    break;
             }
         }
         protected $_m_code;
@@ -392,6 +395,7 @@ namespace RubyMarshal {
         const CONST_NIL = 48;
         const RUBY_SYMBOL = 58;
         const RUBY_SYMBOL_LINK = 59;
+        const RUBY_OBJECT_LINK = 64;
         const CONST_FALSE = 70;
         const INSTANCE_VAR = 73;
         const RUBY_STRUCT = 83;

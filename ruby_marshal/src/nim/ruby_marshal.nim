@@ -11,6 +11,7 @@ type
     const_nil = 48
     ruby_symbol = 58
     ruby_symbol_link = 59
+    ruby_object_link = 64
     const_false = 70
     instance_var = 73
     ruby_struct = 83
@@ -408,6 +409,9 @@ proc read*(_: typedesc[RubyMarshal_Record], io: KaitaiStream, root: KaitaiStruct
       this.body = bodyExpr
     elif on == ruby_marshal.ruby_symbol:
       let bodyExpr = RubyMarshal_RubySymbol.read(this.io, this.root, this)
+      this.body = bodyExpr
+    elif on == ruby_marshal.ruby_object_link:
+      let bodyExpr = RubyMarshal_PackedInt.read(this.io, this.root, this)
       this.body = bodyExpr
 
 proc fromFile*(_: typedesc[RubyMarshal_Record], filename: string): RubyMarshal_Record =

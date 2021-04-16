@@ -44,6 +44,7 @@ namespace Kaitai
             ConstNil = 48,
             RubySymbol = 58,
             RubySymbolLink = 59,
+            RubyObjectLink = 64,
             ConstFalse = 70,
             InstanceVar = 73,
             RubyStruct = 83,
@@ -480,6 +481,10 @@ namespace Kaitai
                 }
                 case RubyMarshal.Codes.RubySymbol: {
                     _body = new RubySymbol(m_io, this, m_root);
+                    break;
+                }
+                case RubyMarshal.Codes.RubyObjectLink: {
+                    _body = new PackedInt(m_io, this, m_root);
                     break;
                 }
                 }

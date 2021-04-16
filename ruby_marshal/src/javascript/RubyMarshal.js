@@ -39,6 +39,7 @@ var RubyMarshal = (function() {
     CONST_NIL: 48,
     RUBY_SYMBOL: 58,
     RUBY_SYMBOL_LINK: 59,
+    RUBY_OBJECT_LINK: 64,
     CONST_FALSE: 70,
     INSTANCE_VAR: 73,
     RUBY_STRUCT: 83,
@@ -52,6 +53,7 @@ var RubyMarshal = (function() {
     48: "CONST_NIL",
     58: "RUBY_SYMBOL",
     59: "RUBY_SYMBOL_LINK",
+    64: "RUBY_OBJECT_LINK",
     70: "CONST_FALSE",
     73: "INSTANCE_VAR",
     83: "RUBY_STRUCT",
@@ -363,6 +365,9 @@ var RubyMarshal = (function() {
         break;
       case RubyMarshal.Codes.RUBY_SYMBOL:
         this.body = new RubySymbol(this._io, this, this._root);
+        break;
+      case RubyMarshal.Codes.RUBY_OBJECT_LINK:
+        this.body = new PackedInt(this._io, this, this._root);
         break;
       }
     }

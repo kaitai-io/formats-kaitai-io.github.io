@@ -313,6 +313,11 @@ void ruby_marshal_t::record_t::_read() {
         m_body = std::unique_ptr<ruby_symbol_t>(new ruby_symbol_t(m__io, this, m__root));
         break;
     }
+    case ruby_marshal_t::CODES_RUBY_OBJECT_LINK: {
+        n_body = false;
+        m_body = std::unique_ptr<packed_int_t>(new packed_int_t(m__io, this, m__root));
+        break;
+    }
     }
 }
 

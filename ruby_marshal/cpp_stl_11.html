@@ -389,6 +389,7 @@ and build them along with your project.</p>
         <span class="n">CODES_CONST_NIL</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
         <span class="n">CODES_RUBY_SYMBOL</span> <span class="o">=</span> <span class="mi">58</span><span class="p">,</span>
         <span class="n">CODES_RUBY_SYMBOL_LINK</span> <span class="o">=</span> <span class="mi">59</span><span class="p">,</span>
+        <span class="n">CODES_RUBY_OBJECT_LINK</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
         <span class="n">CODES_CONST_FALSE</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span>
         <span class="n">CODES_INSTANCE_VAR</span> <span class="o">=</span> <span class="mi">73</span><span class="p">,</span>
         <span class="n">CODES_RUBY_STRUCT</span> <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
@@ -1133,6 +1134,11 @@ and build them along with your project.</p>
     <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_SYMBOL</span><span class="p">:</span> <span class="p">{</span>
         <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
         <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">ruby_symbol_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">ruby_symbol_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">ruby_marshal_t</span><span class="o">::</span><span class="nl">CODES_RUBY_OBJECT_LINK</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">packed_int_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">packed_int_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">));</span>
         <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="p">}</span>

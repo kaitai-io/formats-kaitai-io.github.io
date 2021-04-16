@@ -334,6 +334,7 @@ magic header and a record.</p>
     <span class="nx">CONST_NIL</span><span class="o">:</span> <span class="mf">48</span><span class="p">,</span>
     <span class="nx">RUBY_SYMBOL</span><span class="o">:</span> <span class="mf">58</span><span class="p">,</span>
     <span class="nx">RUBY_SYMBOL_LINK</span><span class="o">:</span> <span class="mf">59</span><span class="p">,</span>
+    <span class="nx">RUBY_OBJECT_LINK</span><span class="o">:</span> <span class="mf">64</span><span class="p">,</span>
     <span class="nx">CONST_FALSE</span><span class="o">:</span> <span class="mf">70</span><span class="p">,</span>
     <span class="nx">INSTANCE_VAR</span><span class="o">:</span> <span class="mf">73</span><span class="p">,</span>
     <span class="nx">RUBY_STRUCT</span><span class="o">:</span> <span class="mf">83</span><span class="p">,</span>
@@ -347,6 +348,7 @@ magic header and a record.</p>
     <span class="mf">48</span><span class="o">:</span> <span class="s2">&quot;CONST_NIL&quot;</span><span class="p">,</span>
     <span class="mf">58</span><span class="o">:</span> <span class="s2">&quot;RUBY_SYMBOL&quot;</span><span class="p">,</span>
     <span class="mf">59</span><span class="o">:</span> <span class="s2">&quot;RUBY_SYMBOL_LINK&quot;</span><span class="p">,</span>
+    <span class="mf">64</span><span class="o">:</span> <span class="s2">&quot;RUBY_OBJECT_LINK&quot;</span><span class="p">,</span>
     <span class="mf">70</span><span class="o">:</span> <span class="s2">&quot;CONST_FALSE&quot;</span><span class="p">,</span>
     <span class="mf">73</span><span class="o">:</span> <span class="s2">&quot;INSTANCE_VAR&quot;</span><span class="p">,</span>
     <span class="mf">83</span><span class="o">:</span> <span class="s2">&quot;RUBY_STRUCT&quot;</span><span class="p">,</span>
@@ -658,6 +660,9 @@ magic header and a record.</p>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_SYMBOL</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RubySymbol</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">RubyMarshal</span><span class="p">.</span><span class="nx">Codes</span><span class="p">.</span><span class="nx">RUBY_OBJECT_LINK</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>

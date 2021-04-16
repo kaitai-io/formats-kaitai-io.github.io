@@ -293,6 +293,7 @@ magic header and a record.</p>
   <span class="n">const_nil</span> <span class="o">=</span> <span class="mi">48</span><span class="p">,</span>
   <span class="n">ruby_symbol</span> <span class="o">=</span> <span class="mi">58</span><span class="p">,</span>
   <span class="n">ruby_symbol_link</span> <span class="o">=</span> <span class="mi">59</span><span class="p">,</span>
+  <span class="n">ruby_object_link</span> <span class="o">=</span> <span class="mi">64</span><span class="p">,</span>
   <span class="n">const_false</span> <span class="o">=</span> <span class="mi">70</span><span class="p">,</span>
   <span class="n">instance_var</span> <span class="o">=</span> <span class="mi">73</span><span class="p">,</span>
   <span class="n">ruby_struct</span> <span class="o">=</span> <span class="mi">83</span><span class="p">,</span>
@@ -561,6 +562,8 @@ magic header and a record.</p>
     <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">RubyHash</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">ruby_symbol</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">RubySymbol</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">Codes</span><span class="p">.</span><span class="n">ruby_object_link</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">RubyMarshal</span><span class="p">.</span><span class="n">PackedInt</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">end</span>
 <span class="kr">end</span>
 

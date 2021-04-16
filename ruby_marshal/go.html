@@ -292,6 +292,7 @@ magic header and a record.</p>
 	<span class="nx">RubyMarshal_Codes__ConstNil</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">48</span>
 	<span class="nx">RubyMarshal_Codes__RubySymbol</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">58</span>
 	<span class="nx">RubyMarshal_Codes__RubySymbolLink</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">59</span>
+	<span class="nx">RubyMarshal_Codes__RubyObjectLink</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">64</span>
 	<span class="nx">RubyMarshal_Codes__ConstFalse</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">70</span>
 	<span class="nx">RubyMarshal_Codes__InstanceVar</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">73</span>
 	<span class="nx">RubyMarshal_Codes__RubyStruct</span> <span class="nx">RubyMarshal_Codes</span> <span class="p">=</span> <span class="mi">83</span>
@@ -887,6 +888,13 @@ magic header and a record.</p>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp51</span>
+	<span class="k">case</span> <span class="nx">RubyMarshal_Codes__RubyObjectLink</span><span class="p">:</span>
+		<span class="nx">tmp52</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_PackedInt</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp52</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp52</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -911,24 +919,24 @@ magic header and a record.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp52</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_PackedInt</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp52</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp53</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_PackedInt</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp53</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">NumPairs</span> <span class="p">=</span> <span class="nx">tmp52</span>
-	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumPairs</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumPairs</span> <span class="p">=</span> <span class="nx">tmp53</span>
+	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">NumPairs</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Pairs</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">RubyMarshal_Pair</span><span class="p">,</span> <span class="nx">tmp53</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Pairs</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">RubyMarshal_Pair</span><span class="p">,</span> <span class="nx">tmp54</span><span class="p">)</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Pairs</span> <span class="p">{</span>
-		<span class="nx">tmp54</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_Pair</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp54</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp55</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_Pair</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp55</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">Pairs</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp54</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">Pairs</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp55</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -953,22 +961,22 @@ magic header and a record.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp55</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_PackedInt</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp55</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp56</span> <span class="o">:=</span> <span class="nx">NewRubyMarshal_PackedInt</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp56</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Len</span> <span class="p">=</span> <span class="nx">tmp55</span>
-	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Len</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Len</span> <span class="p">=</span> <span class="nx">tmp56</span>
+	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Len</span><span class="p">.</span><span class="nx">Value</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp56</span><span class="p">))</span>
+	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">tmp57</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp57</span> <span class="p">=</span> <span class="nx">tmp57</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp57</span>
+	<span class="nx">tmp58</span> <span class="p">=</span> <span class="nx">tmp58</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Body</span> <span class="p">=</span> <span class="nx">tmp58</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 </pre></div>

@@ -37,6 +37,7 @@ RubyMarshal.Codes = enum.Enum {
   const_nil = 48,
   ruby_symbol = 58,
   ruby_symbol_link = 59,
+  ruby_object_link = 64,
   const_false = 70,
   instance_var = 73,
   ruby_struct = 83,
@@ -305,6 +306,8 @@ function RubyMarshal.Record:_read()
     self.body = RubyMarshal.RubyHash(self._io, self, self._root)
   elseif _on == RubyMarshal.Codes.ruby_symbol then
     self.body = RubyMarshal.RubySymbol(self._io, self, self._root)
+  elseif _on == RubyMarshal.Codes.ruby_object_link then
+    self.body = RubyMarshal.PackedInt(self._io, self, self._root)
   end
 end
 

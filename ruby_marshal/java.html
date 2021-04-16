@@ -344,6 +344,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="n">CONST_NIL</span><span class="p">(</span><span class="mi">48</span><span class="p">),</span>
         <span class="n">RUBY_SYMBOL</span><span class="p">(</span><span class="mi">58</span><span class="p">),</span>
         <span class="n">RUBY_SYMBOL_LINK</span><span class="p">(</span><span class="mi">59</span><span class="p">),</span>
+        <span class="n">RUBY_OBJECT_LINK</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
         <span class="n">CONST_FALSE</span><span class="p">(</span><span class="mi">70</span><span class="p">),</span>
         <span class="n">INSTANCE_VAR</span><span class="p">(</span><span class="mi">73</span><span class="p">),</span>
         <span class="n">RUBY_STRUCT</span><span class="p">(</span><span class="mi">83</span><span class="p">),</span>
@@ -356,7 +357,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
         <span class="n">Codes</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Codes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Codes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">12</span><span class="p">);</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Codes</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Codes</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">13</span><span class="p">);</span>
         <span class="kd">static</span> <span class="p">{</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">Codes</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Codes</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                 <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -823,6 +824,10 @@ for instructions how to add it into your project with the build tool that you us
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">RUBY_SYMBOL</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RubySymbol</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">RUBY_OBJECT_LINK</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PackedInt</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="p">}</span>

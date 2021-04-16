@@ -44,6 +44,7 @@ public class RubyMarshal extends KaitaiStruct {
         CONST_NIL(48),
         RUBY_SYMBOL(58),
         RUBY_SYMBOL_LINK(59),
+        RUBY_OBJECT_LINK(64),
         CONST_FALSE(70),
         INSTANCE_VAR(73),
         RUBY_STRUCT(83),
@@ -56,7 +57,7 @@ public class RubyMarshal extends KaitaiStruct {
         private final long id;
         Codes(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Codes> byId = new HashMap<Long, Codes>(12);
+        private static final Map<Long, Codes> byId = new HashMap<Long, Codes>(13);
         static {
             for (Codes e : Codes.values())
                 byId.put(e.id(), e);
@@ -523,6 +524,10 @@ public class RubyMarshal extends KaitaiStruct {
                     }
                     case RUBY_SYMBOL: {
                         this.body = new RubySymbol(this._io, this, _root);
+                        break;
+                    }
+                    case RUBY_OBJECT_LINK: {
+                        this.body = new PackedInt(this._io, this, _root);
                         break;
                     }
                     }

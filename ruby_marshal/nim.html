@@ -267,6 +267,7 @@ magic header and a record.</p>
     <span class="n">const_nil</span> <span class="o">=</span> <span class="mi">48</span>
     <span class="n">ruby_symbol</span> <span class="o">=</span> <span class="mi">58</span>
     <span class="n">ruby_symbol_link</span> <span class="o">=</span> <span class="mi">59</span>
+    <span class="n">ruby_object_link</span> <span class="o">=</span> <span class="mi">64</span>
     <span class="n">const_false</span> <span class="o">=</span> <span class="mi">70</span>
     <span class="n">instance_var</span> <span class="o">=</span> <span class="mi">73</span>
     <span class="n">ruby_struct</span> <span class="o">=</span> <span class="mi">83</span>
@@ -664,6 +665,9 @@ magic header and a record.</p>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">ruby_marshal</span><span class="p">.</span><span class="n">ruby_symbol</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">RubyMarshal_RubySymbol</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">ruby_marshal</span><span class="p">.</span><span class="n">ruby_object_link</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">RubyMarshal_PackedInt</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[RubyMarshal_Record], filename: string): RubyMarshal_Record =</span>

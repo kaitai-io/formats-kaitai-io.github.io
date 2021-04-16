@@ -40,6 +40,7 @@ class RubyMarshal(KaitaiStruct):
         const_nil = 48
         ruby_symbol = 58
         ruby_symbol_link = 59
+        ruby_object_link = 64
         const_false = 70
         instance_var = 73
         ruby_struct = 83
@@ -270,6 +271,8 @@ class RubyMarshal(KaitaiStruct):
                 self.body = RubyMarshal.RubyHash(self._io, self, self._root)
             elif _on == RubyMarshal.Codes.ruby_symbol:
                 self.body = RubyMarshal.RubySymbol(self._io, self, self._root)
+            elif _on == RubyMarshal.Codes.ruby_object_link:
+                self.body = RubyMarshal.PackedInt(self._io, self, self._root)
 
 
     class RubyHash(KaitaiStruct):

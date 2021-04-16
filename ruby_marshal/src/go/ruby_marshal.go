@@ -36,6 +36,7 @@ const (
 	RubyMarshal_Codes__ConstNil RubyMarshal_Codes = 48
 	RubyMarshal_Codes__RubySymbol RubyMarshal_Codes = 58
 	RubyMarshal_Codes__RubySymbolLink RubyMarshal_Codes = 59
+	RubyMarshal_Codes__RubyObjectLink RubyMarshal_Codes = 64
 	RubyMarshal_Codes__ConstFalse RubyMarshal_Codes = 70
 	RubyMarshal_Codes__InstanceVar RubyMarshal_Codes = 73
 	RubyMarshal_Codes__RubyStruct RubyMarshal_Codes = 83
@@ -631,6 +632,13 @@ func (this *RubyMarshal_Record) Read(io *kaitai.Stream, parent interface{}, root
 			return err
 		}
 		this.Body = tmp51
+	case RubyMarshal_Codes__RubyObjectLink:
+		tmp52 := NewRubyMarshal_PackedInt()
+		err = tmp52.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp52
 	}
 	return err
 }
@@ -655,24 +663,24 @@ func (this *RubyMarshal_RubyHash) Read(io *kaitai.Stream, parent *RubyMarshal_Re
 	this._parent = parent
 	this._root = root
 
-	tmp52 := NewRubyMarshal_PackedInt()
-	err = tmp52.Read(this._io, this, this._root)
+	tmp53 := NewRubyMarshal_PackedInt()
+	err = tmp53.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.NumPairs = tmp52
-	tmp53, err := this.NumPairs.Value()
+	this.NumPairs = tmp53
+	tmp54, err := this.NumPairs.Value()
 	if err != nil {
 		return err
 	}
-	this.Pairs = make([]*RubyMarshal_Pair, tmp53)
+	this.Pairs = make([]*RubyMarshal_Pair, tmp54)
 	for i := range this.Pairs {
-		tmp54 := NewRubyMarshal_Pair()
-		err = tmp54.Read(this._io, this, this._root)
+		tmp55 := NewRubyMarshal_Pair()
+		err = tmp55.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Pairs[i] = tmp54
+		this.Pairs[i] = tmp55
 	}
 	return err
 }
@@ -697,21 +705,21 @@ func (this *RubyMarshal_RubyString) Read(io *kaitai.Stream, parent *RubyMarshal_
 	this._parent = parent
 	this._root = root
 
-	tmp55 := NewRubyMarshal_PackedInt()
-	err = tmp55.Read(this._io, this, this._root)
+	tmp56 := NewRubyMarshal_PackedInt()
+	err = tmp56.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Len = tmp55
-	tmp56, err := this.Len.Value()
+	this.Len = tmp56
+	tmp57, err := this.Len.Value()
 	if err != nil {
 		return err
 	}
-	tmp57, err := this._io.ReadBytes(int(tmp56))
+	tmp58, err := this._io.ReadBytes(int(tmp57))
 	if err != nil {
 		return err
 	}
-	tmp57 = tmp57
-	this.Body = tmp57
+	tmp58 = tmp58
+	this.Body = tmp58
 	return err
 }

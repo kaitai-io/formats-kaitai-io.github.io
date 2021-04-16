@@ -36,6 +36,7 @@ class RubyMarshal < Kaitai::Struct::Struct
     48 => :codes_const_nil,
     58 => :codes_ruby_symbol,
     59 => :codes_ruby_symbol_link,
+    64 => :codes_ruby_object_link,
     70 => :codes_const_false,
     73 => :codes_instance_var,
     83 => :codes_ruby_struct,
@@ -295,6 +296,8 @@ class RubyMarshal < Kaitai::Struct::Struct
         @body = RubyHash.new(@_io, self, @_root)
       when :codes_ruby_symbol
         @body = RubySymbol.new(@_io, self, @_root)
+      when :codes_ruby_object_link
+        @body = PackedInt.new(@_io, self, @_root)
       end
       self
     end
