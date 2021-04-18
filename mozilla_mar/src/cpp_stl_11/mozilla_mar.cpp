@@ -1,0 +1,211 @@
+// This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
+
+#include "mozilla_mar.h"
+#include "kaitai/exceptions.h"
+
+mozilla_mar_t::mozilla_mar_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = this;
+    m_signatures = nullptr;
+    m_additional_sections = nullptr;
+    m_index = nullptr;
+    f_index = false;
+    _read();
+}
+
+void mozilla_mar_t::_read() {
+    m_magic = m__io->read_bytes(4);
+    if (!(magic() == std::string("\x4D\x41\x52\x31", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x4D\x41\x52\x31", 4), magic(), _io(), std::string("/seq/0"));
+    }
+    m_ofs_index = m__io->read_u4be();
+    m_file_size = m__io->read_u8be();
+    m_len_signatures = m__io->read_u4be();
+    int l_signatures = len_signatures();
+    m_signatures = std::unique_ptr<std::vector<std::unique_ptr<signature_t>>>(new std::vector<std::unique_ptr<signature_t>>());
+    m_signatures->reserve(l_signatures);
+    for (int i = 0; i < l_signatures; i++) {
+        m_signatures->push_back(std::move(std::unique_ptr<signature_t>(new signature_t(m__io, this, m__root))));
+    }
+    m_len_additional_sections = m__io->read_u4be();
+    int l_additional_sections = len_additional_sections();
+    m_additional_sections = std::unique_ptr<std::vector<std::unique_ptr<additional_section_t>>>(new std::vector<std::unique_ptr<additional_section_t>>());
+    m_additional_sections->reserve(l_additional_sections);
+    for (int i = 0; i < l_additional_sections; i++) {
+        m_additional_sections->push_back(std::move(std::unique_ptr<additional_section_t>(new additional_section_t(m__io, this, m__root))));
+    }
+}
+
+mozilla_mar_t::~mozilla_mar_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::_clean_up() {
+    if (f_index) {
+    }
+}
+
+mozilla_mar_t::mar_index_t::mar_index_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_index_entries = nullptr;
+    m__io__raw_index_entries = nullptr;
+    _read();
+}
+
+void mozilla_mar_t::mar_index_t::_read() {
+    m_len_index = m__io->read_u4be();
+    m__raw_index_entries = m__io->read_bytes(len_index());
+    m__io__raw_index_entries = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_index_entries));
+    m_index_entries = std::unique_ptr<index_entries_t>(new index_entries_t(m__io__raw_index_entries.get(), this, m__root));
+}
+
+mozilla_mar_t::mar_index_t::~mar_index_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::mar_index_t::_clean_up() {
+}
+
+mozilla_mar_t::index_entries_t::index_entries_t(kaitai::kstream* p__io, mozilla_mar_t::mar_index_t* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_index_entry = nullptr;
+    _read();
+}
+
+void mozilla_mar_t::index_entries_t::_read() {
+    m_index_entry = std::unique_ptr<std::vector<std::unique_ptr<index_entry_t>>>(new std::vector<std::unique_ptr<index_entry_t>>());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_index_entry->push_back(std::move(std::unique_ptr<index_entry_t>(new index_entry_t(m__io, this, m__root))));
+            i++;
+        }
+    }
+}
+
+mozilla_mar_t::index_entries_t::~index_entries_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::index_entries_t::_clean_up() {
+}
+
+mozilla_mar_t::signature_t::signature_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mozilla_mar_t::signature_t::_read() {
+    m_algorithm = static_cast<mozilla_mar_t::signature_algorithms_t>(m__io->read_u4be());
+    m_len_signature = m__io->read_u4be();
+    m_signature = m__io->read_bytes(len_signature());
+}
+
+mozilla_mar_t::signature_t::~signature_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::signature_t::_clean_up() {
+}
+
+mozilla_mar_t::product_information_block_t::product_information_block_t(kaitai::kstream* p__io, mozilla_mar_t::additional_section_t* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mozilla_mar_t::product_information_block_t::_read() {
+    m_mar_channel_name = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(64), 0, false), std::string("UTF-8"));
+    m_product_version = kaitai::kstream::bytes_to_str(kaitai::kstream::bytes_terminate(m__io->read_bytes(32), 0, false), std::string("UTF-8"));
+}
+
+mozilla_mar_t::product_information_block_t::~product_information_block_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::product_information_block_t::_clean_up() {
+}
+
+mozilla_mar_t::index_entry_t::index_entry_t(kaitai::kstream* p__io, mozilla_mar_t::index_entries_t* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    f_body = false;
+    _read();
+}
+
+void mozilla_mar_t::index_entry_t::_read() {
+    m_ofs_content = m__io->read_u4be();
+    m_len_content = m__io->read_u4be();
+    m_flags = m__io->read_u4be();
+    m_file_name = kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8"));
+}
+
+mozilla_mar_t::index_entry_t::~index_entry_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::index_entry_t::_clean_up() {
+    if (f_body) {
+    }
+}
+
+std::string mozilla_mar_t::index_entry_t::body() {
+    if (f_body)
+        return m_body;
+    kaitai::kstream *io = _root()->_io();
+    std::streampos _pos = io->pos();
+    io->seek(ofs_content());
+    m_body = io->read_bytes(len_content());
+    io->seek(_pos);
+    f_body = true;
+    return m_body;
+}
+
+mozilla_mar_t::additional_section_t::additional_section_t(kaitai::kstream* p__io, mozilla_mar_t* p__parent, mozilla_mar_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m__io__raw_bytes = nullptr;
+    _read();
+}
+
+void mozilla_mar_t::additional_section_t::_read() {
+    m_len_block = m__io->read_u4be();
+    m_block_identifier = static_cast<mozilla_mar_t::block_identifiers_t>(m__io->read_u4be());
+    n_bytes = true;
+    switch (block_identifier()) {
+    case mozilla_mar_t::BLOCK_IDENTIFIERS_PRODUCT_INFORMATION: {
+        n_bytes = false;
+        m__raw_bytes = m__io->read_bytes(((len_block() - 4) - 4));
+        m__io__raw_bytes = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_bytes));
+        m_bytes = std::unique_ptr<product_information_block_t>(new product_information_block_t(m__io__raw_bytes.get(), this, m__root));
+        break;
+    }
+    default: {
+        m__raw_bytes = m__io->read_bytes(((len_block() - 4) - 4));
+        break;
+    }
+    }
+}
+
+mozilla_mar_t::additional_section_t::~additional_section_t() {
+    _clean_up();
+}
+
+void mozilla_mar_t::additional_section_t::_clean_up() {
+    if (!n_bytes) {
+    }
+}
+
+mozilla_mar_t::mar_index_t* mozilla_mar_t::index() {
+    if (f_index)
+        return m_index.get();
+    std::streampos _pos = m__io->pos();
+    m__io->seek(ofs_index());
+    m_index = std::unique_ptr<mar_index_t>(new mar_index_t(m__io, this, m__root));
+    m__io->seek(_pos);
+    f_index = true;
+    return m_index.get();
+}
