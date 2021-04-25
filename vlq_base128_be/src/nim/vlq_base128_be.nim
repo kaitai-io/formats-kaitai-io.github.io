@@ -31,6 +31,7 @@ This particular encoding is specified and used in:
 
 * Standard MIDI file format
 * ASN.1 BER encoding
+* RAR 5.0 file format
 
 More information on this encoding is available at
 https://en.wikipedia.org/wiki/Variable-length_quantity

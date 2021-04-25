@@ -12,6 +12,7 @@ import "github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
  * 
  * * Standard MIDI file format
  * * ASN.1 BER encoding
+ * * RAR 5.0 file format
  * 
  * More information on this encoding is available at
  * https://en.wikipedia.org/wiki/Variable-length_quantity
