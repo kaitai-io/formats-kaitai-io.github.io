@@ -26,7 +26,7 @@
  * PCX format was never made a formal standard. "ZSoft Corporation
  * Technical Reference Manual" for "Image File (.PCX) Format", last
  * updated in 1991, is likely the closest authoritative source.
- * \sa http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt Source
+ * \sa https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt Source
  */
 
 class pcx_t : public kaitai::kstruct {
@@ -58,7 +58,7 @@ public:
     ~pcx_t();
 
     /**
-     * \sa http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "ZSoft .PCX FILE HEADER FORMAT"
+     * \sa https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "ZSoft .PCX FILE HEADER FORMAT"
      */
 
     class header_t : public kaitai::kstruct {
@@ -192,7 +192,7 @@ private:
 public:
 
     /**
-     * \sa http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "VGA 256 Color Palette Information"
+     * \sa https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "VGA 256 Color Palette Information"
      */
     t_palette_256_t* palette_256();
 

@@ -21,7 +21,7 @@ import java.util.HashMap;
  * This is effectively a "router" type: it expects to get protocol
  * number as a parameter, and then invokes relevant type parser based
  * on that parameter.
- * @see <a href="http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">Source</a>
+ * @see <a href="https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">Source</a>
  */
 public class ProtocolBody extends KaitaiStruct {
 

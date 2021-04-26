@@ -33,7 +33,7 @@ class tcp_segment_t;
  * This is effectively a "router" type: it expects to get protocol
  * number as a parameter, and then invokes relevant type parser based
  * on that parameter.
- * \sa http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml Source
+ * \sa https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml Source
  */
 
 class protocol_body_t : public kaitai::kstruct {

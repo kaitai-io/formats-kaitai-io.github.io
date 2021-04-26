@@ -22,7 +22,7 @@ end
 # PCX format was never made a formal standard. "ZSoft Corporation
 # Technical Reference Manual" for "Image File (.PCX) Format", last
 # updated in 1991, is likely the closest authoritative source.
-# @see http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt Source
+# @see https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt Source
 class Pcx < Kaitai::Struct::Struct
 
   VERSIONS = {
@@ -51,7 +51,7 @@ class Pcx < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "ZSoft .PCX FILE HEADER FORMAT"
+  # @see https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "ZSoft .PCX FILE HEADER FORMAT"
   class Header < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -141,7 +141,7 @@ class Pcx < Kaitai::Struct::Struct
   end
 
   ##
-  # @see http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "VGA 256 Color Palette Information"
+  # @see https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt - "VGA 256 Color Palette Information"
   def palette_256
     return @palette_256 unless @palette_256.nil?
     if  ((hdr.version == :versions_v3_0) && (hdr.bits_per_pixel == 8) && (hdr.num_planes == 1)) 

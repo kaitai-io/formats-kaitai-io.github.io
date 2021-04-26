@@ -25,7 +25,7 @@ import java.util.ArrayList;
  * PCX format was never made a formal standard. "ZSoft Corporation
  * Technical Reference Manual" for "Image File (.PCX) Format", last
  * updated in 1991, is likely the closest authoritative source.
- * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
+ * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
  */
 public class Pcx extends KaitaiStruct {
     public static Pcx fromFile(String fileName) throws IOException {
@@ -85,7 +85,7 @@ public class Pcx extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
+     * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
      */
     public static class Header extends KaitaiStruct {
         public static Header fromFile(String fileName) throws IOException {
@@ -254,7 +254,7 @@ public class Pcx extends KaitaiStruct {
     private TPalette256 palette256;
 
     /**
-     * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
+     * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
      */
     public TPalette256 palette256() {
         if (this.palette256 != null)

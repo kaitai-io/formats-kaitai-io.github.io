@@ -24,7 +24,7 @@
  * PCX format was never made a formal standard. "ZSoft Corporation
  * Technical Reference Manual" for "Image File (.PCX) Format", last
  * updated in 1991, is likely the closest authoritative source.
- * @see {@link http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|Source}
+ * @see {@link https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|Source}
  */
 
 var Pcx = (function() {
@@ -62,7 +62,7 @@ var Pcx = (function() {
   }
 
   /**
-   * @see {@link http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|- "ZSoft .PCX FILE HEADER FORMAT"}
+   * @see {@link https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|- "ZSoft .PCX FILE HEADER FORMAT"}
    */
 
   var Header = Pcx.Header = (function() {
@@ -150,7 +150,7 @@ var Pcx = (function() {
   })();
 
   /**
-   * @see {@link http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|- "VGA 256 Color Palette Information"}
+   * @see {@link https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt|- "VGA 256 Color Palette Information"}
    */
   Object.defineProperty(Pcx.prototype, 'palette256', {
     get: function() {

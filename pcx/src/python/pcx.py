@@ -26,7 +26,7 @@ class Pcx(KaitaiStruct):
     updated in 1991, is likely the closest authoritative source.
     
     .. seealso::
-       Source - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+       Source - https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
     """
 
     class Versions(Enum):
@@ -52,7 +52,7 @@ class Pcx(KaitaiStruct):
     class Header(KaitaiStruct):
         """
         .. seealso::
-           - "ZSoft .PCX FILE HEADER FORMAT" - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+           - "ZSoft .PCX FILE HEADER FORMAT" - https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
         """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -118,7 +118,7 @@ class Pcx(KaitaiStruct):
     def palette_256(self):
         """
         .. seealso::
-           - "VGA 256 Color Palette Information" - http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
+           - "VGA 256 Color Palette Information" - https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt
         """
         if hasattr(self, '_m_palette_256'):
             return self._m_palette_256 if hasattr(self, '_m_palette_256') else None

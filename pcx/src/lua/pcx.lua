@@ -22,7 +22,7 @@ local stringstream = require("string_stream")
 -- PCX format was never made a formal standard. "ZSoft Corporation
 -- Technical Reference Manual" for "Image File (.PCX) Format", last
 -- updated in 1991, is likely the closest authoritative source.
--- See also: Source (http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
+-- See also: Source (https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
 Pcx = class.class(KaitaiStruct)
 
 Pcx.Versions = enum.Enum {
@@ -51,7 +51,7 @@ function Pcx:_read()
 end
 
 -- 
--- See also: - "VGA 256 Color Palette Information" (http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
+-- See also: - "VGA 256 Color Palette Information" (https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
 Pcx.property.palette_256 = {}
 function Pcx.property.palette_256:get()
   if self._m_palette_256 ~= nil then
@@ -69,7 +69,7 @@ end
 
 
 -- 
--- See also: - "ZSoft .PCX FILE HEADER FORMAT" (http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
+-- See also: - "ZSoft .PCX FILE HEADER FORMAT" (https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt)
 Pcx.Header = class.class(KaitaiStruct)
 
 function Pcx.Header:_init(io, parent, root)

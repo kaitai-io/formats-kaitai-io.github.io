@@ -24,7 +24,7 @@ require("tcp_segment")
 -- This is effectively a "router" type: it expects to get protocol
 -- number as a parameter, and then invokes relevant type parser based
 -- on that parameter.
--- See also: Source (http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)
+-- See also: Source (https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)
 ProtocolBody = class.class(KaitaiStruct)
 
 ProtocolBody.ProtocolEnum = enum.Enum {

@@ -22,7 +22,7 @@ import (
  * PCX format was never made a formal standard. "ZSoft Corporation
  * Technical Reference Manual" for "Image File (.PCX) Format", last
  * updated in 1991, is likely the closest authoritative source.
- * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
+ * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
  */
 
 type Pcx_Versions int
@@ -74,7 +74,7 @@ func (this *Pcx) Read(io *kaitai.Stream, parent interface{}, root *Pcx) (err err
 }
 
 /**
- * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
+ * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
  */
 func (this *Pcx) Palette256() (v *Pcx_TPalette256, err error) {
 	if (this._f_palette256) {
@@ -110,7 +110,7 @@ func (this *Pcx) Palette256() (v *Pcx_TPalette256, err error) {
 }
 
 /**
- * @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
+ * @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
  */
 type Pcx_Header struct {
 	Magic []byte

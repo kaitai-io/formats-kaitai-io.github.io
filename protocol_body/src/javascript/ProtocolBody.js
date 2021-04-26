@@ -22,7 +22,7 @@
  * This is effectively a "router" type: it expects to get protocol
  * number as a parameter, and then invokes relevant type parser based
  * on that parameter.
- * @see {@link http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml|Source}
+ * @see {@link https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml|Source}
  */
 
 var ProtocolBody = (function() {

@@ -20,7 +20,7 @@ namespace Kaitai
     /// on that parameter.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">Source</a>
+    /// Reference: <a href="https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml">Source</a>
     /// </remarks>
     public partial class ProtocolBody : KaitaiStruct
     {

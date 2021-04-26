@@ -22,7 +22,7 @@ namespace Kaitai
     /// updated in 1991, is likely the closest authoritative source.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
+    /// Reference: <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
     /// </remarks>
     public partial class Pcx : KaitaiStruct
     {
@@ -60,7 +60,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
+        /// Reference: <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
         /// </remarks>
         public partial class Header : KaitaiStruct
         {
@@ -219,7 +219,7 @@ namespace Kaitai
         private TPalette256 _palette256;
 
         /// <remarks>
-        /// Reference: <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
+        /// Reference: <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
         /// </remarks>
         public TPalette256 Palette256
         {

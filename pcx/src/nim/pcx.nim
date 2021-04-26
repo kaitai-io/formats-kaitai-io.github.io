@@ -68,7 +68,7 @@ PCX format was never made a formal standard. "ZSoft Corporation
 Technical Reference Manual" for "Image File (.PCX) Format", last
 updated in 1991, is likely the closest authoritative source.
 
-@see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
+@see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">Source</a>
 ]##
 proc read*(_: typedesc[Pcx], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Pcx =
   template this: untyped = result
@@ -87,7 +87,7 @@ proc read*(_: typedesc[Pcx], io: KaitaiStream, root: KaitaiStruct, parent: Kaita
 proc palette256(this: Pcx): Pcx_TPalette256 = 
 
   ##[
-  @see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
+  @see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "VGA 256 Color Palette Information"</a>
   ]##
   if this.palette256Inst != nil:
     return this.palette256Inst
@@ -105,7 +105,7 @@ proc fromFile*(_: typedesc[Pcx], filename: string): Pcx =
 
 
 ##[
-@see <a href="http://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
+@see <a href="https://web.archive.org/web/20100206055706/http://www.qzx.com/pc-gpe/pcx.txt">- "ZSoft .PCX FILE HEADER FORMAT"</a>
 ]##
 proc read*(_: typedesc[Pcx_Header], io: KaitaiStream, root: KaitaiStruct, parent: Pcx): Pcx_Header =
   template this: untyped = result

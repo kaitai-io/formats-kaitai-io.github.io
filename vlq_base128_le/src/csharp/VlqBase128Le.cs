@@ -17,10 +17,10 @@ namespace Kaitai
     /// * Google Protocol Buffers, where it's called &quot;Base 128 Varints&quot;.
     ///   https://developers.google.com/protocol-buffers/docs/encoding?csw=1#varints
     /// * Apache Lucene, where it's called &quot;VInt&quot;
-    ///   http://lucene.apache.org/core/3_5_0/fileformats.html#VInt
+    ///   https://lucene.apache.org/core/3_5_0/fileformats.html#VInt
     /// * Apache Avro uses this as a basis for integer encoding, adding ZigZag on
     ///   top of it for signed ints
-    ///   http://avro.apache.org/docs/current/spec.html#binary_encode_primitive
+    ///   https://avro.apache.org/docs/current/spec.html#binary_encode_primitive
     /// 
     /// More information on this encoding is available at https://en.wikipedia.org/wiki/LEB128
     /// 
