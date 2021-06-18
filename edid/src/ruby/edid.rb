@@ -15,7 +15,7 @@ class Edid < Kaitai::Struct::Struct
   def _read
     @magic = @_io.read_bytes(8)
     raise Kaitai::Struct::ValidationNotEqualError.new([0, 255, 255, 255, 255, 255, 255, 0].pack('C*'), magic, _io, "/seq/0") if not magic == [0, 255, 255, 255, 255, 255, 255, 0].pack('C*')
-    @mfg_bytes = @_io.read_u2le
+    @mfg_bytes = @_io.read_u2be
     @product_code = @_io.read_u2le
     @serial = @_io.read_u4le
     @mfg_week = @_io.read_u1
@@ -29,9 +29,12 @@ class Edid < Kaitai::Struct::Struct
     @features_flags = @_io.read_u1
     @chromacity = ChromacityInfo.new(@_io, self, @_root)
     @est_timings = EstTimingsInfo.new(@_io, self, @_root)
+    @_raw_std_timings = Array.new(8)
     @std_timings = Array.new(8)
     (8).times { |i|
-      @std_timings[i] = StdTiming.new(@_io, self, @_root)
+      @_raw_std_timings[i] = @_io.read_bytes(2)
+      _io__raw_std_timings = Kaitai::Struct::Stream.new(@_raw_std_timings[i])
+      @std_timings[i] = StdTiming.new(_io__raw_std_timings, self, @_root)
     }
     self
   end
@@ -349,15 +352,30 @@ class Edid < Kaitai::Struct::Struct
     def _read
       @horiz_active_pixels_mod = @_io.read_u1
       @aspect_ratio = Kaitai::Struct::Stream::resolve_enum(ASPECT_RATIOS, @_io.read_bits_int_be(2))
-      @refresh_rate_mod = @_io.read_bits_int_be(5)
+      @refresh_rate_mod = @_io.read_bits_int_be(6)
       self
+    end
+    def bytes_lookahead
+      return @bytes_lookahead unless @bytes_lookahead.nil?
+      _pos = @_io.pos
+      @_io.seek(0)
+      @bytes_lookahead = @_io.read_bytes(2)
+      @_io.seek(_pos)
+      @bytes_lookahead
+    end
+    def is_used
+      return @is_used unless @is_used.nil?
+      @is_used = bytes_lookahead != [1, 1].pack('C*')
+      @is_used
     end
 
     ##
     # Range of horizontal active pixels.
     def horiz_active_pixels
       return @horiz_active_pixels unless @horiz_active_pixels.nil?
-      @horiz_active_pixels = ((horiz_active_pixels_mod + 31) * 8)
+      if is_used
+        @horiz_active_pixels = ((horiz_active_pixels_mod + 31) * 8)
+      end
       @horiz_active_pixels
     end
 
@@ -365,7 +383,9 @@ class Edid < Kaitai::Struct::Struct
     # Vertical refresh rate, Hz.
     def refresh_rate
       return @refresh_rate unless @refresh_rate.nil?
-      @refresh_rate = (refresh_rate_mod + 60)
+      if is_used
+        @refresh_rate = (refresh_rate_mod + 60)
+      end
       @refresh_rate
     end
 
@@ -470,4 +490,5 @@ class Edid < Kaitai::Struct::Struct
   # used to specify up to 8 additional timings not included in
   # "established timings".
   attr_reader :std_timings
+  attr_reader :_raw_std_timings
 end

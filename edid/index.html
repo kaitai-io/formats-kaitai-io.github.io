@@ -261,7 +261,7 @@ section#format-index .row {
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
     <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x00</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">,</span> <span class="nv">0xff</span><span class="p p-Indicator">,</span> <span class="nv">0x00</span><span class="p p-Indicator">]</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mfg_bytes</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2be</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">product_code</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Manufacturer product code</span>
@@ -305,6 +305,7 @@ section#format-index .row {
       <span class="no">DMT (Discrete Monitor Timings) modes.</span>
     <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Standard, section 3.8</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">std_timings</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">std_timing</span>
     <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
       <span class="no">Array of descriptions of so called &quot;standard timings&quot;, which are</span>
@@ -483,16 +484,23 @@ section#format-index .row {
           <span class="no">Aspect ratio of the image. Can be used to calculate number</span>
           <span class="no">of vertical pixels.</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">refresh_rate_mod</span>
-        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b5</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">b6</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
           <span class="no">Refresh rate in Hz, written in modified form: `refresh_rate</span>
           <span class="no">- 60`. This yields an effective range of 60..123 Hz.</span>
     <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">bytes_lookahead</span><span class="p">:</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+      <span class="nt">is_used</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bytes_lookahead != [0x01, 0x01]</span>
       <span class="nt">horiz_active_pixels</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(horiz_active_pixels_mod + 31) * 8</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_used</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Range of horizontal active pixels.</span>
       <span class="nt">refresh_rate</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">refresh_rate_mod + 60</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_used</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Vertical refresh rate, Hz.</span>
     <span class="nt">enums</span><span class="p">:</span>
       <span class="nt">aspect_ratios</span><span class="p">:</span>

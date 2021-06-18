@@ -13,7 +13,7 @@ namespace {
             if (!($this->magic() == "\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00")) {
                 throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00", $this->magic(), $this->_io(), "/seq/0");
             }
-            $this->_m_mfgBytes = $this->_io->readU2le();
+            $this->_m_mfgBytes = $this->_io->readU2be();
             $this->_m_productCode = $this->_io->readU2le();
             $this->_m_serial = $this->_io->readU4le();
             $this->_m_mfgWeek = $this->_io->readU1();
@@ -27,10 +27,13 @@ namespace {
             $this->_m_featuresFlags = $this->_io->readU1();
             $this->_m_chromacity = new \Edid\ChromacityInfo($this->_io, $this, $this->_root);
             $this->_m_estTimings = new \Edid\EstTimingsInfo($this->_io, $this, $this->_root);
+            $this->_m__raw_stdTimings = [];
             $this->_m_stdTimings = [];
             $n = 8;
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_stdTimings[] = new \Edid\StdTiming($this->_io, $this, $this->_root);
+                $this->_m__raw_stdTimings[] = $this->_io->readBytes(2);
+                $_io__raw_stdTimings = new \Kaitai\Struct\Stream(end($this->_m__raw_stdTimings));
+                $this->_m_stdTimings[] = new \Edid\StdTiming($_io__raw_stdTimings, $this, $this->_root);
             }
         }
         protected $_m_mfgYear;
@@ -86,6 +89,7 @@ namespace {
         protected $_m_chromacity;
         protected $_m_estTimings;
         protected $_m_stdTimings;
+        protected $_m__raw_stdTimings;
         public function magic() { return $this->_m_magic; }
         public function mfgBytes() { return $this->_m_mfgBytes; }
 
@@ -154,6 +158,7 @@ namespace {
          * "established timings".
          */
         public function stdTimings() { return $this->_m_stdTimings; }
+        public function _raw_stdTimings() { return $this->_m__raw_stdTimings; }
     }
 }
 
@@ -576,7 +581,24 @@ namespace Edid {
         private function _read() {
             $this->_m_horizActivePixelsMod = $this->_io->readU1();
             $this->_m_aspectRatio = $this->_io->readBitsIntBe(2);
-            $this->_m_refreshRateMod = $this->_io->readBitsIntBe(5);
+            $this->_m_refreshRateMod = $this->_io->readBitsIntBe(6);
+        }
+        protected $_m_bytesLookahead;
+        public function bytesLookahead() {
+            if ($this->_m_bytesLookahead !== null)
+                return $this->_m_bytesLookahead;
+            $_pos = $this->_io->pos();
+            $this->_io->seek(0);
+            $this->_m_bytesLookahead = $this->_io->readBytes(2);
+            $this->_io->seek($_pos);
+            return $this->_m_bytesLookahead;
+        }
+        protected $_m_isUsed;
+        public function isUsed() {
+            if ($this->_m_isUsed !== null)
+                return $this->_m_isUsed;
+            $this->_m_isUsed = $this->bytesLookahead() != "\x01\x01";
+            return $this->_m_isUsed;
         }
         protected $_m_horizActivePixels;
 
@@ -586,7 +608,9 @@ namespace Edid {
         public function horizActivePixels() {
             if ($this->_m_horizActivePixels !== null)
                 return $this->_m_horizActivePixels;
-            $this->_m_horizActivePixels = (($this->horizActivePixelsMod() + 31) * 8);
+            if ($this->isUsed()) {
+                $this->_m_horizActivePixels = (($this->horizActivePixelsMod() + 31) * 8);
+            }
             return $this->_m_horizActivePixels;
         }
         protected $_m_refreshRate;
@@ -597,7 +621,9 @@ namespace Edid {
         public function refreshRate() {
             if ($this->_m_refreshRate !== null)
                 return $this->_m_refreshRate;
-            $this->_m_refreshRate = ($this->refreshRateMod() + 60);
+            if ($this->isUsed()) {
+                $this->_m_refreshRate = ($this->refreshRateMod() + 60);
+            }
             return $this->_m_refreshRate;
         }
         protected $_m_horizActivePixelsMod;

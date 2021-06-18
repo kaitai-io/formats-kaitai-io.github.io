@@ -281,6 +281,7 @@ section#format-index .row {
     <span class="p">`</span><span class="n">estTimings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Edid_EstTimingsInfo</span>
     <span class="p">`</span><span class="n">stdTimings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Edid_StdTiming</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawStdTimings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]]</span>
     <span class="p">`</span><span class="n">mfgYearInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
     <span class="p">`</span><span class="n">mfgIdCh1Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
     <span class="p">`</span><span class="n">mfgIdCh3Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
@@ -345,6 +346,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">aspectRatio</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Edid_StdTiming_AspectRatios</span>
     <span class="p">`</span><span class="n">refreshRateMod</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Edid</span>
+    <span class="p">`</span><span class="n">bytesLookaheadInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">isUsedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
     <span class="p">`</span><span class="n">horizActivePixelsInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
     <span class="p">`</span><span class="n">refreshRateInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
   <span class="n">Edid_StdTiming_AspectRatios</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
@@ -379,6 +382,8 @@ section#format-index .row {
 <span class="k">proc </span><span class="nf">blueY</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_ChromacityInfo</span><span class="p">):</span> <span class="kt">float64</span>
 <span class="k">proc </span><span class="nf">greenY</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_ChromacityInfo</span><span class="p">):</span> <span class="kt">float64</span>
 <span class="k">proc </span><span class="nf">blueYInt</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_ChromacityInfo</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">bytesLookahead</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+<span class="k">proc </span><span class="nf">isUsed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">bool</span>
 <span class="k">proc </span><span class="nf">horizActivePixels</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">int</span>
 <span class="k">proc </span><span class="nf">refreshRate</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">int</span>
 
@@ -392,7 +397,7 @@ section#format-index .row {
 
   <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
-  <span class="k">let</span> <span class="n">mfgBytesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2le</span><span class="p">()</span>
+  <span class="k">let</span> <span class="n">mfgBytesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">mfgBytes</span> <span class="o">=</span> <span class="n">mfgBytesExpr</span>
 
   <span class="sd">##[</span>
@@ -477,7 +482,10 @@ section#format-index .row {
 
   <span class="o">]</span><span class="sd">##</span>
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
-    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Edid_StdTiming</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">buf</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">rawStdTimings</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">rawStdTimingsIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">buf</span><span class="p">)</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Edid_StdTiming</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStdTimingsIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
     <span class="n">this</span><span class="p">.</span><span class="n">stdTimings</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">mfgYear</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
@@ -947,8 +955,27 @@ section#format-index .row {
 <span class="o">-</span> <span class="mi">60</span><span class="p">`.</span> <span class="n">This</span> <span class="n">yields</span> <span class="n">an</span> <span class="n">effective</span> <span class="kt">range</span> <span class="k">of</span> <span class="mf">60</span><span class="p">..</span><span class="mi">123</span> <span class="n">Hz</span><span class="p">.</span>
 
   <span class="o">]</span><span class="sd">##</span>
-  <span class="k">let</span> <span class="n">refreshRateModExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">refreshRateModExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBitsIntBe</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
   <span class="n">this</span><span class="p">.</span><span class="n">refreshRateMod</span> <span class="o">=</span> <span class="n">refreshRateModExpr</span>
+
+<span class="k">proc </span><span class="nf">bytesLookahead</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bytesLookaheadInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bytesLookaheadInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">bytesLookaheadInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bytesLookaheadInst</span> <span class="o">=</span> <span class="n">bytesLookaheadInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bytesLookaheadInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bytesLookaheadInst</span>
+
+<span class="k">proc </span><span class="nf">isUsed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span>
+  <span class="k">let</span> <span class="n">isUsedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">bytesLookahead</span> <span class="o">!=</span> <span class="o">@[</span><span class="mi">1</span><span class="sc">&#39;u8, 1&#39;</span><span class="n">u8</span><span class="o">]</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span> <span class="o">=</span> <span class="n">isUsedInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span>
 
 <span class="k">proc </span><span class="nf">horizActivePixels</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Edid_StdTiming</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
 
@@ -957,8 +984,9 @@ section#format-index .row {
   <span class="o">]</span><span class="sd">##</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsInst</span>
-  <span class="k">let</span> <span class="n">horizActivePixelsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsMod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsInst</span> <span class="o">=</span> <span class="n">horizActivePixelsInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsed</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">horizActivePixelsInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsMod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsInst</span> <span class="o">=</span> <span class="n">horizActivePixelsInstExpr</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">horizActivePixelsInst</span>
 
@@ -969,8 +997,9 @@ section#format-index .row {
   <span class="o">]</span><span class="sd">##</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">refreshRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">refreshRateInst</span>
-  <span class="k">let</span> <span class="n">refreshRateInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">refreshRateMod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">refreshRateInst</span> <span class="o">=</span> <span class="n">refreshRateInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsed</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">refreshRateInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">refreshRateMod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">refreshRateInst</span> <span class="o">=</span> <span class="n">refreshRateInstExpr</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">refreshRateInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">refreshRateInst</span>
 

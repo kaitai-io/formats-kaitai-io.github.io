@@ -442,8 +442,28 @@ public:
         ~std_timing_t();
 
     private:
+        bool f_bytes_lookahead;
+        std::string m_bytes_lookahead;
+
+    public:
+        std::string bytes_lookahead();
+
+    private:
+        bool f_is_used;
+        bool m_is_used;
+
+    public:
+        bool is_used();
+
+    private:
         bool f_horiz_active_pixels;
         int32_t m_horiz_active_pixels;
+        bool n_horiz_active_pixels;
+
+    public:
+        bool _is_null_horiz_active_pixels() { horiz_active_pixels(); return n_horiz_active_pixels; };
+
+    private:
 
     public:
 
@@ -455,6 +475,12 @@ public:
     private:
         bool f_refresh_rate;
         int32_t m_refresh_rate;
+        bool n_refresh_rate;
+
+    public:
+        bool _is_null_refresh_rate() { refresh_rate(); return n_refresh_rate; };
+
+    private:
 
     public:
 
@@ -554,6 +580,8 @@ private:
     std::unique_ptr<std::vector<std::unique_ptr<std_timing_t>>> m_std_timings;
     edid_t* m__root;
     kaitai::kstruct* m__parent;
+    std::unique_ptr<std::vector<std::string>> m__raw_std_timings;
+    std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>> m__io__raw_std_timings;
 
 public:
     std::string magic() const { return m_magic; }
@@ -628,4 +656,6 @@ public:
     std::vector<std::unique_ptr<std_timing_t>>* std_timings() const { return m_std_timings.get(); }
     edid_t* _root() const { return m__root; }
     kaitai::kstruct* _parent() const { return m__parent; }
+    std::vector<std::string>* _raw_std_timings() const { return m__raw_std_timings.get(); }
+    std::vector<std::unique_ptr<kaitai::kstream>>* _io__raw_std_timings() const { return m__io__raw_std_timings.get(); }
 };

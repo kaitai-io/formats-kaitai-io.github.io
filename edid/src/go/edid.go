@@ -3,6 +3,7 @@
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 	"bytes"
+	"io"
 )
 
 type Edid struct {
@@ -25,6 +26,7 @@ type Edid struct {
 	_io *kaitai.Stream
 	_root *Edid
 	_parent interface{}
+	_raw_StdTimings [][]byte
 	_f_mfgYear bool
 	mfgYear int
 	_f_mfgIdCh1 bool
@@ -55,7 +57,7 @@ func (this *Edid) Read(io *kaitai.Stream, parent interface{}, root *Edid) (err e
 	if !(bytes.Equal(this.Magic, []uint8{0, 255, 255, 255, 255, 255, 255, 0})) {
 		return kaitai.NewValidationNotEqualError([]uint8{0, 255, 255, 255, 255, 255, 255, 0}, this.Magic, this._io, "/seq/0")
 	}
-	tmp2, err := this._io.ReadU2le()
+	tmp2, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
@@ -127,14 +129,22 @@ func (this *Edid) Read(io *kaitai.Stream, parent interface{}, root *Edid) (err e
 		return err
 	}
 	this.EstTimings = tmp15
+	this._raw_StdTimings = make([][]byte, 8)
 	this.StdTimings = make([]*Edid_StdTiming, 8)
 	for i := range this.StdTimings {
-		tmp16 := NewEdid_StdTiming()
-		err = tmp16.Read(this._io, this, this._root)
+		tmp16, err := this._io.ReadBytes(int(2))
 		if err != nil {
 			return err
 		}
-		this.StdTimings[i] = tmp16
+		tmp16 = tmp16
+		this._raw_StdTimings[i] = tmp16
+		_io__raw_StdTimings := kaitai.NewStream(bytes.NewReader(this._raw_StdTimings[i]))
+		tmp17 := NewEdid_StdTiming()
+		err = tmp17.Read(_io__raw_StdTimings, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.StdTimings[i] = tmp17
 	}
 	return err
 }
@@ -303,87 +313,87 @@ func (this *Edid_ChromacityInfo) Read(io *kaitai.Stream, parent *Edid, root *Edi
 	this._parent = parent
 	this._root = root
 
-	tmp17, err := this._io.ReadBitsIntBe(2)
-	if err != nil {
-		return err
-	}
-	this.RedX10 = tmp17
 	tmp18, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.RedY10 = tmp18
+	this.RedX10 = tmp18
 	tmp19, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.GreenX10 = tmp19
+	this.RedY10 = tmp19
 	tmp20, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.GreenY10 = tmp20
+	this.GreenX10 = tmp20
 	tmp21, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.BlueX10 = tmp21
+	this.GreenY10 = tmp21
 	tmp22, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.BlueY10 = tmp22
+	this.BlueX10 = tmp22
 	tmp23, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.WhiteX10 = tmp23
+	this.BlueY10 = tmp23
 	tmp24, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.WhiteY10 = tmp24
-	this._io.AlignToByte()
-	tmp25, err := this._io.ReadU1()
+	this.WhiteX10 = tmp24
+	tmp25, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.RedX92 = tmp25
+	this.WhiteY10 = tmp25
+	this._io.AlignToByte()
 	tmp26, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.RedY92 = tmp26
+	this.RedX92 = tmp26
 	tmp27, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.GreenX92 = tmp27
+	this.RedY92 = tmp27
 	tmp28, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.GreenY92 = tmp28
+	this.GreenX92 = tmp28
 	tmp29, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BlueX92 = tmp29
+	this.GreenY92 = tmp29
 	tmp30, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.BlueY92 = tmp30
+	this.BlueX92 = tmp30
 	tmp31, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.WhiteX92 = tmp31
+	this.BlueY92 = tmp31
 	tmp32, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.WhiteY92 = tmp32
+	this.WhiteX92 = tmp32
+	tmp33, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.WhiteY92 = tmp33
 	return err
 }
 func (this *Edid_ChromacityInfo) GreenXInt() (v int, err error) {
@@ -402,11 +412,11 @@ func (this *Edid_ChromacityInfo) RedY() (v float64, err error) {
 	if (this._f_redY) {
 		return this.redY, nil
 	}
-	tmp33, err := this.RedYInt()
+	tmp34, err := this.RedYInt()
 	if err != nil {
 		return 0, err
 	}
-	this.redY = float64((tmp33 / 1024.0))
+	this.redY = float64((tmp34 / 1024.0))
 	this._f_redY = true
 	return this.redY, nil
 }
@@ -426,11 +436,11 @@ func (this *Edid_ChromacityInfo) WhiteY() (v float64, err error) {
 	if (this._f_whiteY) {
 		return this.whiteY, nil
 	}
-	tmp34, err := this.WhiteYInt()
+	tmp35, err := this.WhiteYInt()
 	if err != nil {
 		return 0, err
 	}
-	this.whiteY = float64((tmp34 / 1024.0))
+	this.whiteY = float64((tmp35 / 1024.0))
 	this._f_whiteY = true
 	return this.whiteY, nil
 }
@@ -442,11 +452,11 @@ func (this *Edid_ChromacityInfo) RedX() (v float64, err error) {
 	if (this._f_redX) {
 		return this.redX, nil
 	}
-	tmp35, err := this.RedXInt()
+	tmp36, err := this.RedXInt()
 	if err != nil {
 		return 0, err
 	}
-	this.redX = float64((tmp35 / 1024.0))
+	this.redX = float64((tmp36 / 1024.0))
 	this._f_redX = true
 	return this.redX, nil
 }
@@ -458,11 +468,11 @@ func (this *Edid_ChromacityInfo) WhiteX() (v float64, err error) {
 	if (this._f_whiteX) {
 		return this.whiteX, nil
 	}
-	tmp36, err := this.WhiteXInt()
+	tmp37, err := this.WhiteXInt()
 	if err != nil {
 		return 0, err
 	}
-	this.whiteX = float64((tmp36 / 1024.0))
+	this.whiteX = float64((tmp37 / 1024.0))
 	this._f_whiteX = true
 	return this.whiteX, nil
 }
@@ -474,11 +484,11 @@ func (this *Edid_ChromacityInfo) BlueX() (v float64, err error) {
 	if (this._f_blueX) {
 		return this.blueX, nil
 	}
-	tmp37, err := this.BlueXInt()
+	tmp38, err := this.BlueXInt()
 	if err != nil {
 		return 0, err
 	}
-	this.blueX = float64((tmp37 / 1024.0))
+	this.blueX = float64((tmp38 / 1024.0))
 	this._f_blueX = true
 	return this.blueX, nil
 }
@@ -506,11 +516,11 @@ func (this *Edid_ChromacityInfo) GreenX() (v float64, err error) {
 	if (this._f_greenX) {
 		return this.greenX, nil
 	}
-	tmp38, err := this.GreenXInt()
+	tmp39, err := this.GreenXInt()
 	if err != nil {
 		return 0, err
 	}
-	this.greenX = float64((tmp38 / 1024.0))
+	this.greenX = float64((tmp39 / 1024.0))
 	this._f_greenX = true
 	return this.greenX, nil
 }
@@ -546,11 +556,11 @@ func (this *Edid_ChromacityInfo) BlueY() (v float64, err error) {
 	if (this._f_blueY) {
 		return this.blueY, nil
 	}
-	tmp39, err := this.BlueYInt()
+	tmp40, err := this.BlueYInt()
 	if err != nil {
 		return 0, err
 	}
-	this.blueY = float64((tmp39 / 1024.0))
+	this.blueY = float64((tmp40 / 1024.0))
 	this._f_blueY = true
 	return this.blueY, nil
 }
@@ -562,11 +572,11 @@ func (this *Edid_ChromacityInfo) GreenY() (v float64, err error) {
 	if (this._f_greenY) {
 		return this.greenY, nil
 	}
-	tmp40, err := this.GreenYInt()
+	tmp41, err := this.GreenYInt()
 	if err != nil {
 		return 0, err
 	}
-	this.greenY = float64((tmp40 / 1024.0))
+	this.greenY = float64((tmp41 / 1024.0))
 	this._f_greenY = true
 	return this.greenY, nil
 }
@@ -675,96 +685,96 @@ func (this *Edid_EstTimingsInfo) Read(io *kaitai.Stream, parent *Edid, root *Edi
 	this._parent = parent
 	this._root = root
 
-	tmp41, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.Can72040070 = tmp41 != 0
 	tmp42, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can72040088 = tmp42 != 0
+	this.Can72040070 = tmp42 != 0
 	tmp43, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can64048060 = tmp43 != 0
+	this.Can72040088 = tmp43 != 0
 	tmp44, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can64048067 = tmp44 != 0
+	this.Can64048060 = tmp44 != 0
 	tmp45, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can64048072 = tmp45 != 0
+	this.Can64048067 = tmp45 != 0
 	tmp46, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can64048075 = tmp46 != 0
+	this.Can64048072 = tmp46 != 0
 	tmp47, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can80060056 = tmp47 != 0
+	this.Can64048075 = tmp47 != 0
 	tmp48, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can80060060 = tmp48 != 0
+	this.Can80060056 = tmp48 != 0
 	tmp49, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can80060072 = tmp49 != 0
+	this.Can80060060 = tmp49 != 0
 	tmp50, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can80060075 = tmp50 != 0
+	this.Can80060072 = tmp50 != 0
 	tmp51, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can83262475 = tmp51 != 0
+	this.Can80060075 = tmp51 != 0
 	tmp52, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can102476887I = tmp52 != 0
+	this.Can83262475 = tmp52 != 0
 	tmp53, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can102476860 = tmp53 != 0
+	this.Can102476887I = tmp53 != 0
 	tmp54, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can102476870 = tmp54 != 0
+	this.Can102476860 = tmp54 != 0
 	tmp55, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can102476875 = tmp55 != 0
+	this.Can102476870 = tmp55 != 0
 	tmp56, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can1280102475 = tmp56 != 0
+	this.Can102476875 = tmp56 != 0
 	tmp57, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Can115287075 = tmp57 != 0
-	tmp58, err := this._io.ReadBitsIntBe(7)
+	this.Can1280102475 = tmp57 != 0
+	tmp58, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Reserved = tmp58
+	this.Can115287075 = tmp58 != 0
+	tmp59, err := this._io.ReadBitsIntBe(7)
+	if err != nil {
+		return err
+	}
+	this.Reserved = tmp59
 	return err
 }
 
@@ -850,6 +860,10 @@ type Edid_StdTiming struct {
 	_io *kaitai.Stream
 	_root *Edid
 	_parent *Edid
+	_f_bytesLookahead bool
+	bytesLookahead []byte
+	_f_isUsed bool
+	isUsed bool
 	_f_horizActivePixels bool
 	horizActivePixels int
 	_f_refreshRate bool
@@ -865,22 +879,60 @@ func (this *Edid_StdTiming) Read(io *kaitai.Stream, parent *Edid, root *Edid) (e
 	this._parent = parent
 	this._root = root
 
-	tmp59, err := this._io.ReadU1()
+	tmp60, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.HorizActivePixelsMod = tmp59
-	tmp60, err := this._io.ReadBitsIntBe(2)
+	this.HorizActivePixelsMod = tmp60
+	tmp61, err := this._io.ReadBitsIntBe(2)
 	if err != nil {
 		return err
 	}
-	this.AspectRatio = Edid_StdTiming_AspectRatios(tmp60)
-	tmp61, err := this._io.ReadBitsIntBe(5)
+	this.AspectRatio = Edid_StdTiming_AspectRatios(tmp61)
+	tmp62, err := this._io.ReadBitsIntBe(6)
 	if err != nil {
 		return err
 	}
-	this.RefreshRateMod = tmp61
+	this.RefreshRateMod = tmp62
 	return err
+}
+func (this *Edid_StdTiming) BytesLookahead() (v []byte, err error) {
+	if (this._f_bytesLookahead) {
+		return this.bytesLookahead, nil
+	}
+	_pos, err := this._io.Pos()
+	if err != nil {
+		return nil, err
+	}
+	_, err = this._io.Seek(int64(0), io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	tmp63, err := this._io.ReadBytes(int(2))
+	if err != nil {
+		return nil, err
+	}
+	tmp63 = tmp63
+	this.bytesLookahead = tmp63
+	_, err = this._io.Seek(_pos, io.SeekStart)
+	if err != nil {
+		return nil, err
+	}
+	this._f_bytesLookahead = true
+	this._f_bytesLookahead = true
+	return this.bytesLookahead, nil
+}
+func (this *Edid_StdTiming) IsUsed() (v bool, err error) {
+	if (this._f_isUsed) {
+		return this.isUsed, nil
+	}
+	tmp64, err := this.BytesLookahead()
+	if err != nil {
+		return false, err
+	}
+	this.isUsed = bool((bytes.Compare(tmp64, []uint8{1, 1}) != 0))
+	this._f_isUsed = true
+	return this.isUsed, nil
 }
 
 /**
@@ -890,7 +942,13 @@ func (this *Edid_StdTiming) HorizActivePixels() (v int, err error) {
 	if (this._f_horizActivePixels) {
 		return this.horizActivePixels, nil
 	}
-	this.horizActivePixels = int(((this.HorizActivePixelsMod + 31) * 8))
+	tmp65, err := this.IsUsed()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp65) {
+		this.horizActivePixels = int(((this.HorizActivePixelsMod + 31) * 8))
+	}
 	this._f_horizActivePixels = true
 	return this.horizActivePixels, nil
 }
@@ -902,7 +960,13 @@ func (this *Edid_StdTiming) RefreshRate() (v int, err error) {
 	if (this._f_refreshRate) {
 		return this.refreshRate, nil
 	}
-	this.refreshRate = int((this.RefreshRateMod + 60))
+	tmp66, err := this.IsUsed()
+	if err != nil {
+		return 0, err
+	}
+	if (tmp66) {
+		this.refreshRate = int((this.RefreshRateMod + 60))
+	}
 	this._f_refreshRate = true
 	return this.refreshRate, nil
 }

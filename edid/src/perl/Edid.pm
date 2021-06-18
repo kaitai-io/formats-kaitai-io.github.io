@@ -35,7 +35,7 @@ sub _read {
     my ($self) = @_;
 
     $self->{magic} = $self->{_io}->read_bytes(8);
-    $self->{mfg_bytes} = $self->{_io}->read_u2le();
+    $self->{mfg_bytes} = $self->{_io}->read_u2be();
     $self->{product_code} = $self->{_io}->read_u2le();
     $self->{serial} = $self->{_io}->read_u4le();
     $self->{mfg_week} = $self->{_io}->read_u1();
@@ -49,10 +49,13 @@ sub _read {
     $self->{features_flags} = $self->{_io}->read_u1();
     $self->{chromacity} = Edid::ChromacityInfo->new($self->{_io}, $self, $self->{_root});
     $self->{est_timings} = Edid::EstTimingsInfo->new($self->{_io}, $self, $self->{_root});
+    $self->{_raw_std_timings} = ();
     $self->{std_timings} = ();
     my $n_std_timings = 8;
     for (my $i = 0; $i < $n_std_timings; $i++) {
-        $self->{std_timings}[$i] = Edid::StdTiming->new($self->{_io}, $self, $self->{_root});
+        $self->{_raw_std_timings}[$i] = $self->{_io}->read_bytes(2);
+        my $io__raw_std_timings = IO::KaitaiStruct::Stream->new($self->{_raw_std_timings}[$i]);
+        $self->{std_timings}[$i] = Edid::StdTiming->new($io__raw_std_timings, $self, $self->{_root});
     }
 }
 
@@ -171,6 +174,11 @@ sub est_timings {
 sub std_timings {
     my ($self) = @_;
     return $self->{std_timings};
+}
+
+sub _raw_std_timings {
+    my ($self) = @_;
+    return $self->{_raw_std_timings};
 }
 
 ########################################################################
@@ -591,20 +599,41 @@ sub _read {
 
     $self->{horiz_active_pixels_mod} = $self->{_io}->read_u1();
     $self->{aspect_ratio} = $self->{_io}->read_bits_int_be(2);
-    $self->{refresh_rate_mod} = $self->{_io}->read_bits_int_be(5);
+    $self->{refresh_rate_mod} = $self->{_io}->read_bits_int_be(6);
+}
+
+sub bytes_lookahead {
+    my ($self) = @_;
+    return $self->{bytes_lookahead} if ($self->{bytes_lookahead});
+    my $_pos = $self->{_io}->pos();
+    $self->{_io}->seek(0);
+    $self->{bytes_lookahead} = $self->{_io}->read_bytes(2);
+    $self->{_io}->seek($_pos);
+    return $self->{bytes_lookahead};
+}
+
+sub is_used {
+    my ($self) = @_;
+    return $self->{is_used} if ($self->{is_used});
+    $self->{is_used} = $self->bytes_lookahead() ne pack('C*', (1, 1));
+    return $self->{is_used};
 }
 
 sub horiz_active_pixels {
     my ($self) = @_;
     return $self->{horiz_active_pixels} if ($self->{horiz_active_pixels});
-    $self->{horiz_active_pixels} = (($self->horiz_active_pixels_mod() + 31) * 8);
+    if ($self->is_used()) {
+        $self->{horiz_active_pixels} = (($self->horiz_active_pixels_mod() + 31) * 8);
+    }
     return $self->{horiz_active_pixels};
 }
 
 sub refresh_rate {
     my ($self) = @_;
     return $self->{refresh_rate} if ($self->{refresh_rate});
-    $self->{refresh_rate} = ($self->refresh_rate_mod() + 60);
+    if ($self->is_used()) {
+        $self->{refresh_rate} = ($self->refresh_rate_mod() + 60);
+    }
     return $self->{refresh_rate};
 }
 

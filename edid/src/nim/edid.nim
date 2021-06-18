@@ -20,6 +20,7 @@ type
     `estTimings`*: Edid_EstTimingsInfo
     `stdTimings`*: seq[Edid_StdTiming]
     `parent`*: KaitaiStruct
+    `rawStdTimings`*: seq[seq[byte]]
     `mfgYearInst`*: int
     `mfgIdCh1Inst`*: int
     `mfgIdCh3Inst`*: int
@@ -84,6 +85,8 @@ type
     `aspectRatio`*: Edid_StdTiming_AspectRatios
     `refreshRateMod`*: uint64
     `parent`*: Edid
+    `bytesLookaheadInst`*: seq[byte]
+    `isUsedInst`*: bool
     `horizActivePixelsInst`*: int
     `refreshRateInst`*: int
   Edid_StdTiming_AspectRatios* = enum
@@ -118,6 +121,8 @@ proc blueXInt*(this: Edid_ChromacityInfo): int
 proc blueY*(this: Edid_ChromacityInfo): float64
 proc greenY*(this: Edid_ChromacityInfo): float64
 proc blueYInt*(this: Edid_ChromacityInfo): int
+proc bytesLookahead*(this: Edid_StdTiming): seq[byte]
+proc isUsed*(this: Edid_StdTiming): bool
 proc horizActivePixels*(this: Edid_StdTiming): int
 proc refreshRate*(this: Edid_StdTiming): int
 
@@ -131,7 +136,7 @@ proc read*(_: typedesc[Edid], io: KaitaiStream, root: KaitaiStruct, parent: Kait
 
   let magicExpr = this.io.readBytes(int(8))
   this.magic = magicExpr
-  let mfgBytesExpr = this.io.readU2le()
+  let mfgBytesExpr = this.io.readU2be()
   this.mfgBytes = mfgBytesExpr
 
   ##[
@@ -216,7 +221,10 @@ used to specify up to 8 additional timings not included in
 
   ]##
   for i in 0 ..< int(8):
-    let it = Edid_StdTiming.read(this.io, this.root, this)
+    let buf = this.io.readBytes(int(2))
+    this.rawStdTimings.add(buf)
+    let rawStdTimingsIo = newKaitaiStream(buf)
+    let it = Edid_StdTiming.read(rawStdTimingsIo, this.root, this)
     this.stdTimings.add(it)
 
 proc mfgYear(this: Edid): int = 
@@ -686,8 +694,27 @@ of vertical pixels.
 - 60`. This yields an effective range of 60..123 Hz.
 
   ]##
-  let refreshRateModExpr = this.io.readBitsIntBe(5)
+  let refreshRateModExpr = this.io.readBitsIntBe(6)
   this.refreshRateMod = refreshRateModExpr
+
+proc bytesLookahead(this: Edid_StdTiming): seq[byte] = 
+  if this.bytesLookaheadInst.len != 0:
+    return this.bytesLookaheadInst
+  let pos = this.io.pos()
+  this.io.seek(int(0))
+  let bytesLookaheadInstExpr = this.io.readBytes(int(2))
+  this.bytesLookaheadInst = bytesLookaheadInstExpr
+  this.io.seek(pos)
+  if this.bytesLookaheadInst.len != 0:
+    return this.bytesLookaheadInst
+
+proc isUsed(this: Edid_StdTiming): bool = 
+  if this.isUsedInst != nil:
+    return this.isUsedInst
+  let isUsedInstExpr = bool(this.bytesLookahead != @[1'u8, 1'u8])
+  this.isUsedInst = isUsedInstExpr
+  if this.isUsedInst != nil:
+    return this.isUsedInst
 
 proc horizActivePixels(this: Edid_StdTiming): int = 
 
@@ -696,8 +723,9 @@ proc horizActivePixels(this: Edid_StdTiming): int =
   ]##
   if this.horizActivePixelsInst != nil:
     return this.horizActivePixelsInst
-  let horizActivePixelsInstExpr = int(((this.horizActivePixelsMod + 31) * 8))
-  this.horizActivePixelsInst = horizActivePixelsInstExpr
+  if this.isUsed:
+    let horizActivePixelsInstExpr = int(((this.horizActivePixelsMod + 31) * 8))
+    this.horizActivePixelsInst = horizActivePixelsInstExpr
   if this.horizActivePixelsInst != nil:
     return this.horizActivePixelsInst
 
@@ -708,8 +736,9 @@ proc refreshRate(this: Edid_StdTiming): int =
   ]##
   if this.refreshRateInst != nil:
     return this.refreshRateInst
-  let refreshRateInstExpr = int((this.refreshRateMod + 60))
-  this.refreshRateInst = refreshRateInstExpr
+  if this.isUsed:
+    let refreshRateInstExpr = int((this.refreshRateMod + 60))
+    this.refreshRateInst = refreshRateInstExpr
   if this.refreshRateInst != nil:
     return this.refreshRateInst
 

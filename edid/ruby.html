@@ -318,7 +318,7 @@ section#format-index .row {
   <span class="k">def</span> <span class="n">_read</span>
     <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
     <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
-    <span class="vi">@mfg_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
+    <span class="vi">@mfg_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@product_code</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span>
     <span class="vi">@serial</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
     <span class="vi">@mfg_week</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
@@ -332,9 +332,12 @@ section#format-index .row {
     <span class="vi">@features_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
     <span class="vi">@chromacity</span> <span class="o">=</span> <span class="no">ChromacityInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="vi">@est_timings</span> <span class="o">=</span> <span class="no">EstTimingsInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@_raw_std_timings</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
     <span class="vi">@std_timings</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
     <span class="p">(</span><span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@std_timings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">StdTiming</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@_raw_std_timings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="n">_io__raw_std_timings</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_std_timings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+      <span class="vi">@std_timings</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">StdTiming</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_std_timings</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
     <span class="p">}</span>
     <span class="nb">self</span>
   <span class="k">end</span>
@@ -652,15 +655,30 @@ section#format-index .row {
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@horiz_active_pixels_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="vi">@aspect_ratio</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">ASPECT_RATIOS</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-      <span class="vi">@refresh_rate_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+      <span class="vi">@refresh_rate_mod</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
       <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">bytes_lookahead</span>
+      <span class="k">return</span> <span class="vi">@bytes_lookahead</span> <span class="k">unless</span> <span class="vi">@bytes_lookahead</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+      <span class="vi">@bytes_lookahead</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="vi">@_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@bytes_lookahead</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_used</span>
+      <span class="k">return</span> <span class="vi">@is_used</span> <span class="k">unless</span> <span class="vi">@is_used</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_used</span> <span class="o">=</span> <span class="n">bytes_lookahead</span> <span class="o">!=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="vi">@is_used</span>
     <span class="k">end</span>
 
     <span class="c1">##</span>
     <span class="c1"># Range of horizontal active pixels.</span>
     <span class="k">def</span> <span class="nf">horiz_active_pixels</span>
       <span class="k">return</span> <span class="vi">@horiz_active_pixels</span> <span class="k">unless</span> <span class="vi">@horiz_active_pixels</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@horiz_active_pixels</span> <span class="o">=</span> <span class="p">((</span><span class="n">horiz_active_pixels_mod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">is_used</span>
+        <span class="vi">@horiz_active_pixels</span> <span class="o">=</span> <span class="p">((</span><span class="n">horiz_active_pixels_mod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+      <span class="k">end</span>
       <span class="vi">@horiz_active_pixels</span>
     <span class="k">end</span>
 
@@ -668,7 +686,9 @@ section#format-index .row {
     <span class="c1"># Vertical refresh rate, Hz.</span>
     <span class="k">def</span> <span class="nf">refresh_rate</span>
       <span class="k">return</span> <span class="vi">@refresh_rate</span> <span class="k">unless</span> <span class="vi">@refresh_rate</span><span class="o">.</span><span class="n">nil?</span>
-      <span class="vi">@refresh_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">refresh_rate_mod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">is_used</span>
+        <span class="vi">@refresh_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">refresh_rate_mod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+      <span class="k">end</span>
       <span class="vi">@refresh_rate</span>
     <span class="k">end</span>
 
@@ -773,6 +793,7 @@ section#format-index .row {
   <span class="c1"># used to specify up to 8 additional timings not included in</span>
   <span class="c1"># &quot;established timings&quot;.</span>
   <span class="kp">attr_reader</span> <span class="ss">:std_timings</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_std_timings</span>
 <span class="k">end</span>
 </pre></div>
 

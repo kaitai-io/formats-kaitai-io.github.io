@@ -4,6 +4,7 @@
 
 local class = require("class")
 require("kaitaistruct")
+local stringstream = require("string_stream")
 local enum = require("enum")
 
 Edid = class.class(KaitaiStruct)
@@ -20,7 +21,7 @@ function Edid:_read()
   if not(self.magic == "\000\255\255\255\255\255\255\000") then
     error("not equal, expected " ..  "\000\255\255\255\255\255\255\000" .. ", but got " .. self.magic)
   end
-  self.mfg_bytes = self._io:read_u2le()
+  self.mfg_bytes = self._io:read_u2be()
   self.product_code = self._io:read_u2le()
   self.serial = self._io:read_u4le()
   self.mfg_week = self._io:read_u1()
@@ -34,9 +35,12 @@ function Edid:_read()
   self.features_flags = self._io:read_u1()
   self.chromacity = Edid.ChromacityInfo(self._io, self, self._root)
   self.est_timings = Edid.EstTimingsInfo(self._io, self, self._root)
+  self._raw_std_timings = {}
   self.std_timings = {}
   for i = 0, 8 - 1 do
-    self.std_timings[i + 1] = Edid.StdTiming(self._io, self, self._root)
+    self._raw_std_timings[i + 1] = self._io:read_bytes(2)
+    local _io = KaitaiStream(stringstream(self._raw_std_timings[i + 1]))
+    self.std_timings[i + 1] = Edid.StdTiming(_io, self, self._root)
   end
 end
 
@@ -449,7 +453,30 @@ end
 function Edid.StdTiming:_read()
   self.horiz_active_pixels_mod = self._io:read_u1()
   self.aspect_ratio = Edid.StdTiming.AspectRatios(self._io:read_bits_int_be(2))
-  self.refresh_rate_mod = self._io:read_bits_int_be(5)
+  self.refresh_rate_mod = self._io:read_bits_int_be(6)
+end
+
+Edid.StdTiming.property.bytes_lookahead = {}
+function Edid.StdTiming.property.bytes_lookahead:get()
+  if self._m_bytes_lookahead ~= nil then
+    return self._m_bytes_lookahead
+  end
+
+  local _pos = self._io:pos()
+  self._io:seek(0)
+  self._m_bytes_lookahead = self._io:read_bytes(2)
+  self._io:seek(_pos)
+  return self._m_bytes_lookahead
+end
+
+Edid.StdTiming.property.is_used = {}
+function Edid.StdTiming.property.is_used:get()
+  if self._m_is_used ~= nil then
+    return self._m_is_used
+  end
+
+  self._m_is_used = self.bytes_lookahead ~= "\001\001"
+  return self._m_is_used
 end
 
 -- 
@@ -460,7 +487,9 @@ function Edid.StdTiming.property.horiz_active_pixels:get()
     return self._m_horiz_active_pixels
   end
 
-  self._m_horiz_active_pixels = ((self.horiz_active_pixels_mod + 31) * 8)
+  if self.is_used then
+    self._m_horiz_active_pixels = ((self.horiz_active_pixels_mod + 31) * 8)
+  end
   return self._m_horiz_active_pixels
 end
 
@@ -472,7 +501,9 @@ function Edid.StdTiming.property.refresh_rate:get()
     return self._m_refresh_rate
   end
 
-  self._m_refresh_rate = (self.refresh_rate_mod + 60)
+  if self.is_used then
+    self._m_refresh_rate = (self.refresh_rate_mod + 60)
+  end
   return self._m_refresh_rate
 end
 

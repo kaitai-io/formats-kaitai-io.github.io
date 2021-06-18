@@ -33,7 +33,7 @@ public class Edid extends KaitaiStruct {
         if (!(Arrays.equals(magic(), new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }))) {
             throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, -1, -1, -1, -1, -1, -1, 0 }, magic(), _io(), "/seq/0");
         }
-        this.mfgBytes = this._io.readU2le();
+        this.mfgBytes = this._io.readU2be();
         this.productCode = this._io.readU2le();
         this.serial = this._io.readU4le();
         this.mfgWeek = this._io.readU1();
@@ -47,9 +47,12 @@ public class Edid extends KaitaiStruct {
         this.featuresFlags = this._io.readU1();
         this.chromacity = new ChromacityInfo(this._io, this, _root);
         this.estTimings = new EstTimingsInfo(this._io, this, _root);
+        this._raw_stdTimings = new ArrayList<byte[]>(((Number) (8)).intValue());
         stdTimings = new ArrayList<StdTiming>(((Number) (8)).intValue());
         for (int i = 0; i < 8; i++) {
-            this.stdTimings.add(new StdTiming(this._io, this, _root));
+            this._raw_stdTimings.add(this._io.readBytes(2));
+            KaitaiStream _io__raw_stdTimings = new ByteBufferKaitaiStream(_raw_stdTimings.get(_raw_stdTimings.size() - 1));
+            this.stdTimings.add(new StdTiming(_io__raw_stdTimings, this, _root));
         }
     }
 
@@ -544,7 +547,25 @@ public class Edid extends KaitaiStruct {
         private void _read() {
             this.horizActivePixelsMod = this._io.readU1();
             this.aspectRatio = AspectRatios.byId(this._io.readBitsIntBe(2));
-            this.refreshRateMod = this._io.readBitsIntBe(5);
+            this.refreshRateMod = this._io.readBitsIntBe(6);
+        }
+        private byte[] bytesLookahead;
+        public byte[] bytesLookahead() {
+            if (this.bytesLookahead != null)
+                return this.bytesLookahead;
+            long _pos = this._io.pos();
+            this._io.seek(0);
+            this.bytesLookahead = this._io.readBytes(2);
+            this._io.seek(_pos);
+            return this.bytesLookahead;
+        }
+        private Boolean isUsed;
+        public Boolean isUsed() {
+            if (this.isUsed != null)
+                return this.isUsed;
+            boolean _tmp = (boolean) (!Arrays.equals(bytesLookahead(), new byte[] { 1, 1 }));
+            this.isUsed = _tmp;
+            return this.isUsed;
         }
         private Integer horizActivePixels;
 
@@ -554,8 +575,10 @@ public class Edid extends KaitaiStruct {
         public Integer horizActivePixels() {
             if (this.horizActivePixels != null)
                 return this.horizActivePixels;
-            int _tmp = (int) (((horizActivePixelsMod() + 31) * 8));
-            this.horizActivePixels = _tmp;
+            if (isUsed()) {
+                int _tmp = (int) (((horizActivePixelsMod() + 31) * 8));
+                this.horizActivePixels = _tmp;
+            }
             return this.horizActivePixels;
         }
         private Integer refreshRate;
@@ -566,8 +589,10 @@ public class Edid extends KaitaiStruct {
         public Integer refreshRate() {
             if (this.refreshRate != null)
                 return this.refreshRate;
-            int _tmp = (int) ((refreshRateMod() + 60));
-            this.refreshRate = _tmp;
+            if (isUsed()) {
+                int _tmp = (int) ((refreshRateMod() + 60));
+                this.refreshRate = _tmp;
+            }
             return this.refreshRate;
         }
         private int horizActivePixelsMod;
@@ -657,6 +682,7 @@ public class Edid extends KaitaiStruct {
     private ArrayList<StdTiming> stdTimings;
     private Edid _root;
     private KaitaiStruct _parent;
+    private ArrayList<byte[]> _raw_stdTimings;
     public byte[] magic() { return magic; }
     public int mfgBytes() { return mfgBytes; }
 
@@ -729,4 +755,5 @@ public class Edid extends KaitaiStruct {
     public ArrayList<StdTiming> stdTimings() { return stdTimings; }
     public Edid _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }
+    public ArrayList<byte[]> _raw_stdTimings() { return _raw_stdTimings; }
 }

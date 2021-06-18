@@ -264,6 +264,7 @@ section#format-index .row {
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
 	<span class="s">&quot;bytes&quot;</span>
+	<span class="s">&quot;io&quot;</span>
 <span class="p">)</span>
 
 <span class="kd">type</span> <span class="nx">Edid</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -286,6 +287,7 @@ section#format-index .row {
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Edid</span>
 	<span class="nx">_parent</span> <span class="kd">interface</span><span class="p">{}</span>
+	<span class="nx">_raw_StdTimings</span> <span class="p">[][]</span><span class="kt">byte</span>
 	<span class="nx">_f_mfgYear</span> <span class="kt">bool</span>
 	<span class="nx">mfgYear</span> <span class="kt">int</span>
 	<span class="nx">_f_mfgIdCh1</span> <span class="kt">bool</span>
@@ -316,7 +318,7 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">}))</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/seq/0&quot;</span><span class="p">)</span>
 	<span class="p">}</span>
-	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp2</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2be</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
@@ -388,14 +390,22 @@ section#format-index .row {
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">EstTimings</span> <span class="p">=</span> <span class="nx">tmp15</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_StdTimings</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([][]</span><span class="kt">byte</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">StdTimings</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">Edid_StdTiming</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">StdTimings</span> <span class="p">{</span>
-		<span class="nx">tmp16</span> <span class="o">:=</span> <span class="nx">NewEdid_StdTiming</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp16</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp16</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">StdTimings</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp16</span>
+		<span class="nx">tmp16</span> <span class="p">=</span> <span class="nx">tmp16</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_raw_StdTimings</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp16</span>
+		<span class="nx">_io__raw_StdTimings</span> <span class="o">:=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewStream</span><span class="p">(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">NewReader</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_raw_StdTimings</span><span class="p">[</span><span class="nx">i</span><span class="p">]))</span>
+		<span class="nx">tmp17</span> <span class="o">:=</span> <span class="nx">NewEdid_StdTiming</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp17</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">_io__raw_StdTimings</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">StdTimings</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp17</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -564,87 +574,87 @@ section#format-index .row {
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">RedX10</span> <span class="p">=</span> <span class="nx">tmp17</span>
 	<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">RedY10</span> <span class="p">=</span> <span class="nx">tmp18</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">RedX10</span> <span class="p">=</span> <span class="nx">tmp18</span>
 	<span class="nx">tmp19</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenX10</span> <span class="p">=</span> <span class="nx">tmp19</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">RedY10</span> <span class="p">=</span> <span class="nx">tmp19</span>
 	<span class="nx">tmp20</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenY10</span> <span class="p">=</span> <span class="nx">tmp20</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenX10</span> <span class="p">=</span> <span class="nx">tmp20</span>
 	<span class="nx">tmp21</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueX10</span> <span class="p">=</span> <span class="nx">tmp21</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenY10</span> <span class="p">=</span> <span class="nx">tmp21</span>
 	<span class="nx">tmp22</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueY10</span> <span class="p">=</span> <span class="nx">tmp22</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueX10</span> <span class="p">=</span> <span class="nx">tmp22</span>
 	<span class="nx">tmp23</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteX10</span> <span class="p">=</span> <span class="nx">tmp23</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueY10</span> <span class="p">=</span> <span class="nx">tmp23</span>
 	<span class="nx">tmp24</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteY10</span> <span class="p">=</span> <span class="nx">tmp24</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">AlignToByte</span><span class="p">()</span>
-	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteX10</span> <span class="p">=</span> <span class="nx">tmp24</span>
+	<span class="nx">tmp25</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">RedX92</span> <span class="p">=</span> <span class="nx">tmp25</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteY10</span> <span class="p">=</span> <span class="nx">tmp25</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">AlignToByte</span><span class="p">()</span>
 	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">RedY92</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">RedX92</span> <span class="p">=</span> <span class="nx">tmp26</span>
 	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenX92</span> <span class="p">=</span> <span class="nx">tmp27</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">RedY92</span> <span class="p">=</span> <span class="nx">tmp27</span>
 	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenY92</span> <span class="p">=</span> <span class="nx">tmp28</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenX92</span> <span class="p">=</span> <span class="nx">tmp28</span>
 	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueX92</span> <span class="p">=</span> <span class="nx">tmp29</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">GreenY92</span> <span class="p">=</span> <span class="nx">tmp29</span>
 	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueY92</span> <span class="p">=</span> <span class="nx">tmp30</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueX92</span> <span class="p">=</span> <span class="nx">tmp30</span>
 	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteX92</span> <span class="p">=</span> <span class="nx">tmp31</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BlueY92</span> <span class="p">=</span> <span class="nx">tmp31</span>
 	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteY92</span> <span class="p">=</span> <span class="nx">tmp32</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteX92</span> <span class="p">=</span> <span class="nx">tmp32</span>
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">WhiteY92</span> <span class="p">=</span> <span class="nx">tmp33</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Edid_ChromacityInfo</span><span class="p">)</span> <span class="nx">GreenXInt</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">int</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -663,11 +673,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_redY</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">redY</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RedYInt</span><span class="p">()</span>
+	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RedYInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">redY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp33</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">redY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp34</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_redY</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">redY</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -687,11 +697,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_whiteY</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">whiteY</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">WhiteYInt</span><span class="p">()</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">WhiteYInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">whiteY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp34</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">whiteY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp35</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_whiteY</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">whiteY</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -703,11 +713,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_redX</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">redX</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RedXInt</span><span class="p">()</span>
+	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">RedXInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">redX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp35</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">redX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp36</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_redX</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">redX</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -719,11 +729,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_whiteX</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">whiteX</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">WhiteXInt</span><span class="p">()</span>
+	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">WhiteXInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">whiteX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp36</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">whiteX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp37</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_whiteX</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">whiteX</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -735,11 +745,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_blueX</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">blueX</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BlueXInt</span><span class="p">()</span>
+	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BlueXInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">blueX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp37</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">blueX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp38</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_blueX</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">blueX</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -767,11 +777,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_greenX</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">greenX</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">GreenXInt</span><span class="p">()</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">GreenXInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">greenX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp38</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">greenX</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp39</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_greenX</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">greenX</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -807,11 +817,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_blueY</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">blueY</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BlueYInt</span><span class="p">()</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BlueYInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">blueY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp39</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">blueY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp40</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_blueY</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">blueY</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -823,11 +833,11 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_greenY</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">greenY</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">GreenYInt</span><span class="p">()</span>
+	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">GreenYInt</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">greenY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp40</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">greenY</span> <span class="p">=</span> <span class="nb">float64</span><span class="p">((</span><span class="nx">tmp41</span> <span class="o">/</span> <span class="mf">1024.0</span><span class="p">))</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_greenY</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">greenY</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -936,96 +946,96 @@ section#format-index .row {
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can72040070</span> <span class="p">=</span> <span class="nx">tmp41</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can72040088</span> <span class="p">=</span> <span class="nx">tmp42</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can72040070</span> <span class="p">=</span> <span class="nx">tmp42</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048060</span> <span class="p">=</span> <span class="nx">tmp43</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can72040088</span> <span class="p">=</span> <span class="nx">tmp43</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp44</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048067</span> <span class="p">=</span> <span class="nx">tmp44</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048060</span> <span class="p">=</span> <span class="nx">tmp44</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp45</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048072</span> <span class="p">=</span> <span class="nx">tmp45</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048067</span> <span class="p">=</span> <span class="nx">tmp45</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048075</span> <span class="p">=</span> <span class="nx">tmp46</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048072</span> <span class="p">=</span> <span class="nx">tmp46</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp47</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060056</span> <span class="p">=</span> <span class="nx">tmp47</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can64048075</span> <span class="p">=</span> <span class="nx">tmp47</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp48</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060060</span> <span class="p">=</span> <span class="nx">tmp48</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060056</span> <span class="p">=</span> <span class="nx">tmp48</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060072</span> <span class="p">=</span> <span class="nx">tmp49</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060060</span> <span class="p">=</span> <span class="nx">tmp49</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060075</span> <span class="p">=</span> <span class="nx">tmp50</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060072</span> <span class="p">=</span> <span class="nx">tmp50</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can83262475</span> <span class="p">=</span> <span class="nx">tmp51</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can80060075</span> <span class="p">=</span> <span class="nx">tmp51</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476887I</span> <span class="p">=</span> <span class="nx">tmp52</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can83262475</span> <span class="p">=</span> <span class="nx">tmp52</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476860</span> <span class="p">=</span> <span class="nx">tmp53</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476887I</span> <span class="p">=</span> <span class="nx">tmp53</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476870</span> <span class="p">=</span> <span class="nx">tmp54</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476860</span> <span class="p">=</span> <span class="nx">tmp54</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476875</span> <span class="p">=</span> <span class="nx">tmp55</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476870</span> <span class="p">=</span> <span class="nx">tmp55</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can1280102475</span> <span class="p">=</span> <span class="nx">tmp56</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can102476875</span> <span class="p">=</span> <span class="nx">tmp56</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Can115287075</span> <span class="p">=</span> <span class="nx">tmp57</span> <span class="o">!=</span> <span class="mi">0</span>
-	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can1280102475</span> <span class="p">=</span> <span class="nx">tmp57</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp58</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Can115287075</span> <span class="p">=</span> <span class="nx">tmp58</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Reserved</span> <span class="p">=</span> <span class="nx">tmp59</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 
@@ -1111,6 +1121,10 @@ section#format-index .row {
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Edid</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Edid</span>
+	<span class="nx">_f_bytesLookahead</span> <span class="kt">bool</span>
+	<span class="nx">bytesLookahead</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">_f_isUsed</span> <span class="kt">bool</span>
+	<span class="nx">isUsed</span> <span class="kt">bool</span>
 	<span class="nx">_f_horizActivePixels</span> <span class="kt">bool</span>
 	<span class="nx">horizActivePixels</span> <span class="kt">int</span>
 	<span class="nx">_f_refreshRate</span> <span class="kt">bool</span>
@@ -1126,22 +1140,60 @@ section#format-index .row {
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">HorizActivePixelsMod</span> <span class="p">=</span> <span class="nx">tmp59</span>
-	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">HorizActivePixelsMod</span> <span class="p">=</span> <span class="nx">tmp60</span>
+	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">AspectRatio</span> <span class="p">=</span> <span class="nx">Edid_StdTiming_AspectRatios</span><span class="p">(</span><span class="nx">tmp60</span><span class="p">)</span>
-	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">AspectRatio</span> <span class="p">=</span> <span class="nx">Edid_StdTiming_AspectRatios</span><span class="p">(</span><span class="nx">tmp61</span><span class="p">)</span>
+	<span class="nx">tmp62</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">RefreshRateMod</span> <span class="p">=</span> <span class="nx">tmp61</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">RefreshRateMod</span> <span class="p">=</span> <span class="nx">tmp62</span>
 	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Edid_StdTiming</span><span class="p">)</span> <span class="nx">BytesLookahead</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_bytesLookahead</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">bytesLookahead</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp63</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp63</span> <span class="p">=</span> <span class="nx">tmp63</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">bytesLookahead</span> <span class="p">=</span> <span class="nx">tmp63</span>
+	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_bytesLookahead</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_bytesLookahead</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">bytesLookahead</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Edid_StdTiming</span><span class="p">)</span> <span class="nx">IsUsed</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isUsed</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isUsed</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">tmp64</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">BytesLookahead</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">isUsed</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">((</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Compare</span><span class="p">(</span><span class="nx">tmp64</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">})</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_isUsed</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isUsed</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
 
 <span class="cm">/**</span>
@@ -1151,7 +1203,13 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_horizActivePixels</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">horizActivePixels</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">horizActivePixels</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">HorizActivePixelsMod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
+	<span class="nx">tmp65</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IsUsed</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp65</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">horizActivePixels</span> <span class="p">=</span> <span class="nb">int</span><span class="p">(((</span><span class="nx">this</span><span class="p">.</span><span class="nx">HorizActivePixelsMod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">))</span>
+	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_horizActivePixels</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">horizActivePixels</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
@@ -1163,7 +1221,13 @@ section#format-index .row {
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_refreshRate</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">refreshRate</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">refreshRate</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">RefreshRateMod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">))</span>
+	<span class="nx">tmp66</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IsUsed</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp66</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">refreshRate</span> <span class="p">=</span> <span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">RefreshRateMod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">))</span>
+	<span class="p">}</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_refreshRate</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">refreshRate</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>

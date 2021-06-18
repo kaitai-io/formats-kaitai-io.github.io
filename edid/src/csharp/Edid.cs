@@ -29,7 +29,7 @@ namespace Kaitai
             {
                 throw new ValidationNotEqualError(new byte[] { 0, 255, 255, 255, 255, 255, 255, 0 }, Magic, M_Io, "/seq/0");
             }
-            _mfgBytes = m_io.ReadU2le();
+            _mfgBytes = m_io.ReadU2be();
             _productCode = m_io.ReadU2le();
             _serial = m_io.ReadU4le();
             _mfgWeek = m_io.ReadU1();
@@ -43,10 +43,13 @@ namespace Kaitai
             _featuresFlags = m_io.ReadU1();
             _chromacity = new ChromacityInfo(m_io, this, m_root);
             _estTimings = new EstTimingsInfo(m_io, this, m_root);
+            __raw_stdTimings = new List<byte[]>((int) (8));
             _stdTimings = new List<StdTiming>((int) (8));
             for (var i = 0; i < 8; i++)
             {
-                _stdTimings.Add(new StdTiming(m_io, this, m_root));
+                __raw_stdTimings.Add(m_io.ReadBytes(2));
+                var io___raw_stdTimings = new KaitaiStream(__raw_stdTimings[__raw_stdTimings.Count - 1]);
+                _stdTimings.Add(new StdTiming(io___raw_stdTimings, this, m_root));
             }
         }
 
@@ -607,6 +610,8 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_bytesLookahead = false;
+                f_isUsed = false;
                 f_horizActivePixels = false;
                 f_refreshRate = false;
                 _read();
@@ -615,38 +620,71 @@ namespace Kaitai
             {
                 _horizActivePixelsMod = m_io.ReadU1();
                 _aspectRatio = ((AspectRatios) m_io.ReadBitsIntBe(2));
-                _refreshRateMod = m_io.ReadBitsIntBe(5);
+                _refreshRateMod = m_io.ReadBitsIntBe(6);
+            }
+            private bool f_bytesLookahead;
+            private byte[] _bytesLookahead;
+            public byte[] BytesLookahead
+            {
+                get
+                {
+                    if (f_bytesLookahead)
+                        return _bytesLookahead;
+                    long _pos = m_io.Pos;
+                    m_io.Seek(0);
+                    _bytesLookahead = m_io.ReadBytes(2);
+                    m_io.Seek(_pos);
+                    f_bytesLookahead = true;
+                    return _bytesLookahead;
+                }
+            }
+            private bool f_isUsed;
+            private bool _isUsed;
+            public bool IsUsed
+            {
+                get
+                {
+                    if (f_isUsed)
+                        return _isUsed;
+                    _isUsed = (bool) ((KaitaiStream.ByteArrayCompare(BytesLookahead, new byte[] { 1, 1 }) != 0));
+                    f_isUsed = true;
+                    return _isUsed;
+                }
             }
             private bool f_horizActivePixels;
-            private int _horizActivePixels;
+            private int? _horizActivePixels;
 
             /// <summary>
             /// Range of horizontal active pixels.
             /// </summary>
-            public int HorizActivePixels
+            public int? HorizActivePixels
             {
                 get
                 {
                     if (f_horizActivePixels)
                         return _horizActivePixels;
-                    _horizActivePixels = (int) (((HorizActivePixelsMod + 31) * 8));
+                    if (IsUsed) {
+                        _horizActivePixels = (int) (((HorizActivePixelsMod + 31) * 8));
+                    }
                     f_horizActivePixels = true;
                     return _horizActivePixels;
                 }
             }
             private bool f_refreshRate;
-            private int _refreshRate;
+            private int? _refreshRate;
 
             /// <summary>
             /// Vertical refresh rate, Hz.
             /// </summary>
-            public int RefreshRate
+            public int? RefreshRate
             {
                 get
                 {
                     if (f_refreshRate)
                         return _refreshRate;
-                    _refreshRate = (int) ((RefreshRateMod + 60));
+                    if (IsUsed) {
+                        _refreshRate = (int) ((RefreshRateMod + 60));
+                    }
                     f_refreshRate = true;
                     return _refreshRate;
                 }
@@ -763,6 +801,7 @@ namespace Kaitai
         private List<StdTiming> _stdTimings;
         private Edid m_root;
         private KaitaiStruct m_parent;
+        private List<byte[]> __raw_stdTimings;
         public byte[] Magic { get { return _magic; } }
         public ushort MfgBytes { get { return _mfgBytes; } }
 
@@ -839,5 +878,6 @@ namespace Kaitai
         public List<StdTiming> StdTimings { get { return _stdTimings; } }
         public Edid M_Root { get { return m_root; } }
         public KaitaiStruct M_Parent { get { return m_parent; } }
+        public List<byte[]> M_RawStdTimings { get { return __raw_stdTimings; } }
     }
 }

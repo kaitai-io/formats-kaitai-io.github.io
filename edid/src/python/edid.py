@@ -20,7 +20,7 @@ class Edid(KaitaiStruct):
         self.magic = self._io.read_bytes(8)
         if not self.magic == b"\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00":
             raise kaitaistruct.ValidationNotEqualError(b"\x00\xFF\xFF\xFF\xFF\xFF\xFF\x00", self.magic, self._io, u"/seq/0")
-        self.mfg_bytes = self._io.read_u2le()
+        self.mfg_bytes = self._io.read_u2be()
         self.product_code = self._io.read_u2le()
         self.serial = self._io.read_u4le()
         self.mfg_week = self._io.read_u1()
@@ -34,9 +34,12 @@ class Edid(KaitaiStruct):
         self.features_flags = self._io.read_u1()
         self.chromacity = Edid.ChromacityInfo(self._io, self, self._root)
         self.est_timings = Edid.EstTimingsInfo(self._io, self, self._root)
+        self._raw_std_timings = [None] * (8)
         self.std_timings = [None] * (8)
         for i in range(8):
-            self.std_timings[i] = Edid.StdTiming(self._io, self, self._root)
+            self._raw_std_timings[i] = self._io.read_bytes(2)
+            _io__raw_std_timings = KaitaiStream(BytesIO(self._raw_std_timings[i]))
+            self.std_timings[i] = Edid.StdTiming(_io__raw_std_timings, self, self._root)
 
 
     class ChromacityInfo(KaitaiStruct):
@@ -250,7 +253,26 @@ class Edid(KaitaiStruct):
         def _read(self):
             self.horiz_active_pixels_mod = self._io.read_u1()
             self.aspect_ratio = KaitaiStream.resolve_enum(Edid.StdTiming.AspectRatios, self._io.read_bits_int_be(2))
-            self.refresh_rate_mod = self._io.read_bits_int_be(5)
+            self.refresh_rate_mod = self._io.read_bits_int_be(6)
+
+        @property
+        def bytes_lookahead(self):
+            if hasattr(self, '_m_bytes_lookahead'):
+                return self._m_bytes_lookahead if hasattr(self, '_m_bytes_lookahead') else None
+
+            _pos = self._io.pos()
+            self._io.seek(0)
+            self._m_bytes_lookahead = self._io.read_bytes(2)
+            self._io.seek(_pos)
+            return self._m_bytes_lookahead if hasattr(self, '_m_bytes_lookahead') else None
+
+        @property
+        def is_used(self):
+            if hasattr(self, '_m_is_used'):
+                return self._m_is_used if hasattr(self, '_m_is_used') else None
+
+            self._m_is_used = self.bytes_lookahead != b"\x01\x01"
+            return self._m_is_used if hasattr(self, '_m_is_used') else None
 
         @property
         def horiz_active_pixels(self):
@@ -258,7 +280,9 @@ class Edid(KaitaiStruct):
             if hasattr(self, '_m_horiz_active_pixels'):
                 return self._m_horiz_active_pixels if hasattr(self, '_m_horiz_active_pixels') else None
 
-            self._m_horiz_active_pixels = ((self.horiz_active_pixels_mod + 31) * 8)
+            if self.is_used:
+                self._m_horiz_active_pixels = ((self.horiz_active_pixels_mod + 31) * 8)
+
             return self._m_horiz_active_pixels if hasattr(self, '_m_horiz_active_pixels') else None
 
         @property
@@ -267,7 +291,9 @@ class Edid(KaitaiStruct):
             if hasattr(self, '_m_refresh_rate'):
                 return self._m_refresh_rate if hasattr(self, '_m_refresh_rate') else None
 
-            self._m_refresh_rate = (self.refresh_rate_mod + 60)
+            if self.is_used:
+                self._m_refresh_rate = (self.refresh_rate_mod + 60)
+
             return self._m_refresh_rate if hasattr(self, '_m_refresh_rate') else None
 
 

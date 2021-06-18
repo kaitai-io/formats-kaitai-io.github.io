@@ -8,7 +8,7 @@ digraph {
 		edid__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
-			<TR><TD PORT="mfg_bytes_pos">8</TD><TD PORT="mfg_bytes_size">2</TD><TD>u2le</TD><TD PORT="mfg_bytes_type">mfg_bytes</TD></TR>
+			<TR><TD PORT="mfg_bytes_pos">8</TD><TD PORT="mfg_bytes_size">2</TD><TD>u2be</TD><TD PORT="mfg_bytes_type">mfg_bytes</TD></TR>
 			<TR><TD PORT="product_code_pos">10</TD><TD PORT="product_code_size">2</TD><TD>u2le</TD><TD PORT="product_code_type">product_code</TD></TR>
 			<TR><TD PORT="serial_pos">12</TD><TD PORT="serial_size">4</TD><TD>u4le</TD><TD PORT="serial_type">serial</TD></TR>
 			<TR><TD PORT="mfg_week_pos">16</TD><TD PORT="mfg_week_size">1</TD><TD>u1</TD><TD PORT="mfg_week_type">mfg_week</TD></TR>
@@ -22,7 +22,7 @@ digraph {
 			<TR><TD PORT="features_flags_pos">24</TD><TD PORT="features_flags_size">1</TD><TD>u1</TD><TD PORT="features_flags_type">features_flags</TD></TR>
 			<TR><TD PORT="chromacity_pos">25</TD><TD PORT="chromacity_size">10</TD><TD>ChromacityInfo</TD><TD PORT="chromacity_type">chromacity</TD></TR>
 			<TR><TD PORT="est_timings_pos">35</TD><TD PORT="est_timings_size">3</TD><TD>EstTimingsInfo</TD><TD PORT="est_timings_type">est_timings</TD></TR>
-			<TR><TD PORT="std_timings_pos">38</TD><TD PORT="std_timings_size">15b</TD><TD>StdTiming</TD><TD PORT="std_timings_type">std_timings</TD></TR>
+			<TR><TD PORT="std_timings_pos">38</TD><TD PORT="std_timings_size">2</TD><TD>StdTiming</TD><TD PORT="std_timings_type">std_timings</TD></TR>
 			<TR><TD COLSPAN="4" PORT="std_timings__repeat">repeat 8 times</TD></TR>
 		</TABLE>>];
 		edid__inst__mfg_year [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
@@ -167,7 +167,15 @@ digraph {
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="horiz_active_pixels_mod_pos">0</TD><TD PORT="horiz_active_pixels_mod_size">1</TD><TD>u1</TD><TD PORT="horiz_active_pixels_mod_type">horiz_active_pixels_mod</TD></TR>
 				<TR><TD PORT="aspect_ratio_pos">1</TD><TD PORT="aspect_ratio_size">2b</TD><TD>b2→AspectRatios</TD><TD PORT="aspect_ratio_type">aspect_ratio</TD></TR>
-				<TR><TD PORT="refresh_rate_mod_pos">1:2</TD><TD PORT="refresh_rate_mod_size">5b</TD><TD>b5</TD><TD PORT="refresh_rate_mod_type">refresh_rate_mod</TD></TR>
+				<TR><TD PORT="refresh_rate_mod_pos">1:2</TD><TD PORT="refresh_rate_mod_size">6b</TD><TD>b6</TD><TD PORT="refresh_rate_mod_type">refresh_rate_mod</TD></TR>
+			</TABLE>>];
+			std_timing__inst__bytes_lookahead [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="bytes_lookahead_pos">0</TD><TD PORT="bytes_lookahead_size">2</TD><TD></TD><TD PORT="bytes_lookahead_type">bytes_lookahead</TD></TR>
+			</TABLE>>];
+			std_timing__inst__is_used [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_used</TD><TD>bytes_lookahead != [1, 1].pack('C*')</TD></TR>
 			</TABLE>>];
 			std_timing__inst__horiz_active_pixels [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
@@ -211,6 +219,7 @@ digraph {
 	chromacity_info__inst__green_y_int:green_y_int_type -> chromacity_info__inst__green_y [color="#404040"];
 	chromacity_info__seq:blue_y_9_2_type -> chromacity_info__inst__blue_y_int [color="#404040"];
 	chromacity_info__seq:blue_y_1_0_type -> chromacity_info__inst__blue_y_int [color="#404040"];
+	std_timing__inst__bytes_lookahead:bytes_lookahead_type -> std_timing__inst__is_used [color="#404040"];
 	std_timing__seq:horiz_active_pixels_mod_type -> std_timing__inst__horiz_active_pixels [color="#404040"];
 	std_timing__seq:refresh_rate_mod_type -> std_timing__inst__refresh_rate [color="#404040"];
 }

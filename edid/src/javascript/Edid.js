@@ -22,7 +22,7 @@ var Edid = (function() {
     if (!((KaitaiStream.byteArrayCompare(this.magic, [0, 255, 255, 255, 255, 255, 255, 0]) == 0))) {
       throw new KaitaiStream.ValidationNotEqualError([0, 255, 255, 255, 255, 255, 255, 0], this.magic, this._io, "/seq/0");
     }
-    this.mfgBytes = this._io.readU2le();
+    this.mfgBytes = this._io.readU2be();
     this.productCode = this._io.readU2le();
     this.serial = this._io.readU4le();
     this.mfgWeek = this._io.readU1();
@@ -36,9 +36,12 @@ var Edid = (function() {
     this.featuresFlags = this._io.readU1();
     this.chromacity = new ChromacityInfo(this._io, this, this._root);
     this.estTimings = new EstTimingsInfo(this._io, this, this._root);
+    this._raw_stdTimings = new Array(8);
     this.stdTimings = new Array(8);
     for (var i = 0; i < 8; i++) {
-      this.stdTimings[i] = new StdTiming(this._io, this, this._root);
+      this._raw_stdTimings[i] = this._io.readBytes(2);
+      var _io__raw_stdTimings = new KaitaiStream(this._raw_stdTimings[i]);
+      this.stdTimings[i] = new StdTiming(_io__raw_stdTimings, this, this._root);
     }
   }
 
@@ -426,8 +429,27 @@ var Edid = (function() {
     StdTiming.prototype._read = function() {
       this.horizActivePixelsMod = this._io.readU1();
       this.aspectRatio = this._io.readBitsIntBe(2);
-      this.refreshRateMod = this._io.readBitsIntBe(5);
+      this.refreshRateMod = this._io.readBitsIntBe(6);
     }
+    Object.defineProperty(StdTiming.prototype, 'bytesLookahead', {
+      get: function() {
+        if (this._m_bytesLookahead !== undefined)
+          return this._m_bytesLookahead;
+        var _pos = this._io.pos;
+        this._io.seek(0);
+        this._m_bytesLookahead = this._io.readBytes(2);
+        this._io.seek(_pos);
+        return this._m_bytesLookahead;
+      }
+    });
+    Object.defineProperty(StdTiming.prototype, 'isUsed', {
+      get: function() {
+        if (this._m_isUsed !== undefined)
+          return this._m_isUsed;
+        this._m_isUsed = (KaitaiStream.byteArrayCompare(this.bytesLookahead, [1, 1]) != 0);
+        return this._m_isUsed;
+      }
+    });
 
     /**
      * Range of horizontal active pixels.
@@ -436,7 +458,9 @@ var Edid = (function() {
       get: function() {
         if (this._m_horizActivePixels !== undefined)
           return this._m_horizActivePixels;
-        this._m_horizActivePixels = ((this.horizActivePixelsMod + 31) * 8);
+        if (this.isUsed) {
+          this._m_horizActivePixels = ((this.horizActivePixelsMod + 31) * 8);
+        }
         return this._m_horizActivePixels;
       }
     });
@@ -448,7 +472,9 @@ var Edid = (function() {
       get: function() {
         if (this._m_refreshRate !== undefined)
           return this._m_refreshRate;
-        this._m_refreshRate = (this.refreshRateMod + 60);
+        if (this.isUsed) {
+          this._m_refreshRate = (this.refreshRateMod + 60);
+        }
         return this._m_refreshRate;
       }
     });

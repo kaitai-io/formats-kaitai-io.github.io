@@ -265,6 +265,7 @@ section#format-index .row {
 
 <span class="kd">local</span> <span class="n">class</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">)</span>
 <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;kaitaistruct&quot;</span><span class="p">)</span>
+<span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">enum</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;enum&quot;</span><span class="p">)</span>
 
 <span class="n">Edid</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
@@ -281,7 +282,7 @@ section#format-index .row {
   <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">magic</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\000\255\255\255\255\255\255\000</span><span class="s2">&quot;</span><span class="p">)</span> <span class="kr">then</span>
     <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;not equal, expected &quot;</span> <span class="o">..</span>  <span class="s2">&quot;</span><span class="se">\000\255\255\255\255\255\255\000</span><span class="s2">&quot;</span> <span class="o">..</span> <span class="s2">&quot;, but got &quot;</span> <span class="o">..</span> <span class="n">self</span><span class="p">.</span><span class="n">magic</span><span class="p">)</span>
   <span class="kr">end</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">mfg_bytes</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">mfg_bytes</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">product_code</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">serial</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">mfg_week</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
@@ -295,9 +296,12 @@ section#format-index .row {
   <span class="n">self</span><span class="p">.</span><span class="n">features_flags</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">chromacity</span> <span class="o">=</span> <span class="n">Edid</span><span class="p">.</span><span class="n">ChromacityInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="n">self</span><span class="p">.</span><span class="n">est_timings</span> <span class="o">=</span> <span class="n">Edid</span><span class="p">.</span><span class="n">EstTimingsInfo</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_raw_std_timings</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="n">self</span><span class="p">.</span><span class="n">std_timings</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">std_timings</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Edid</span><span class="p">.</span><span class="n">StdTiming</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_std_timings</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_std_timings</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">std_timings</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Edid</span><span class="p">.</span><span class="n">StdTiming</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">end</span>
 <span class="kr">end</span>
 
@@ -710,7 +714,30 @@ section#format-index .row {
 <span class="kr">function</span> <span class="nc">Edid</span><span class="p">.</span><span class="nc">StdTiming</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">horiz_active_pixels_mod</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u1</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">aspect_ratio</span> <span class="o">=</span> <span class="n">Edid</span><span class="p">.</span><span class="n">StdTiming</span><span class="p">.</span><span class="n">AspectRatios</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">refresh_rate_mod</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">refresh_rate_mod</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="kr">end</span>
+
+<span class="n">Edid</span><span class="p">.</span><span class="n">StdTiming</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">bytes_lookahead</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Edid</span><span class="p">.</span><span class="nc">StdTiming</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">bytes_lookahead</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_bytes_lookahead</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_bytes_lookahead</span>
+  <span class="kr">end</span>
+
+  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_bytes_lookahead</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_bytes_lookahead</span>
+<span class="kr">end</span>
+
+<span class="n">Edid</span><span class="p">.</span><span class="n">StdTiming</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_used</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Edid</span><span class="p">.</span><span class="nc">StdTiming</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_used</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">bytes_lookahead</span> <span class="o">~=</span> <span class="s2">&quot;</span><span class="se">\001\001</span><span class="s2">&quot;</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span>
 <span class="kr">end</span>
 
 <span class="c1">-- </span>
@@ -721,7 +748,9 @@ section#format-index .row {
     <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_horiz_active_pixels</span>
   <span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_horiz_active_pixels</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">horiz_active_pixels_mod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_used</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_horiz_active_pixels</span> <span class="o">=</span> <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">horiz_active_pixels_mod</span> <span class="o">+</span> <span class="mi">31</span><span class="p">)</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>
+  <span class="kr">end</span>
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_horiz_active_pixels</span>
 <span class="kr">end</span>
 
@@ -733,7 +762,9 @@ section#format-index .row {
     <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_refresh_rate</span>
   <span class="kr">end</span>
 
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_refresh_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">refresh_rate_mod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_used</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_refresh_rate</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">refresh_rate_mod</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+  <span class="kr">end</span>
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_refresh_rate</span>
 <span class="kr">end</span>
 
