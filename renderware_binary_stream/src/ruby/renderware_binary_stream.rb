@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://www.gtamodding.com/wiki/RenderWare_binary_stream_file Source
+# @see https://gtamods.com/wiki/RenderWare_binary_stream_file Source
 class RenderwareBinaryStream < Kaitai::Struct::Struct
 
   SECTIONS = {
@@ -222,7 +222,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/RpClump Source
+  # @see https://gtamods.com/wiki/RpClump Source
   class StructClump < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -245,7 +245,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/RpGeometry Source
+  # @see https://gtamods.com/wiki/RpGeometry Source
   class StructGeometry < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -328,7 +328,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure Source
+  # @see https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure Source
   class StructGeometryList < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -409,7 +409,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/RpGeometry Source
+  # @see https://gtamods.com/wiki/RpGeometry Source
   class SurfaceProperties < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -428,7 +428,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
   class StructFrameList < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -448,7 +448,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
   class Matrix < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -466,7 +466,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
   class Vector3d < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -566,7 +566,7 @@ class RenderwareBinaryStream < Kaitai::Struct::Struct
   end
 
   ##
-  # @see https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+  # @see https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
   class Frame < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

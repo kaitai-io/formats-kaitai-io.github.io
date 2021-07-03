@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa https://www.gtamodding.com/wiki/RenderWare_binary_stream_file Source
+ * \sa https://gtamods.com/wiki/RenderWare_binary_stream_file Source
  */
 
 class renderware_binary_stream_t : public kaitai::kstruct {
@@ -215,7 +215,7 @@ public:
     ~renderware_binary_stream_t();
 
     /**
-     * \sa https://www.gtamodding.com/wiki/RpClump Source
+     * \sa https://gtamods.com/wiki/RpClump Source
      */
 
     class struct_clump_t : public kaitai::kstruct {
@@ -259,7 +259,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/RpGeometry Source
+     * \sa https://gtamods.com/wiki/RpGeometry Source
      */
 
     class struct_geometry_t : public kaitai::kstruct {
@@ -379,7 +379,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure Source
      */
 
     class struct_geometry_list_t : public kaitai::kstruct {
@@ -511,7 +511,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/RpGeometry Source
+     * \sa https://gtamods.com/wiki/RpGeometry Source
      */
 
     class surface_properties_t : public kaitai::kstruct {
@@ -543,7 +543,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
      */
 
     class struct_frame_list_t : public kaitai::kstruct {
@@ -573,7 +573,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
      */
 
     class matrix_t : public kaitai::kstruct {
@@ -601,7 +601,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
      */
 
     class vector_3d_t : public kaitai::kstruct {
@@ -721,7 +721,7 @@ public:
     };
 
     /**
-     * \sa https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure Source
+     * \sa https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure Source
      */
 
     class frame_t : public kaitai::kstruct {

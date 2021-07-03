@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://www.gtamodding.com/wiki/RenderWare_binary_stream_file">Source</a>
+    /// Reference: <a href="https://gtamods.com/wiki/RenderWare_binary_stream_file">Source</a>
     /// </remarks>
     public partial class RenderwareBinaryStream : KaitaiStruct
     {
@@ -243,7 +243,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/RpClump">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/RpClump">Source</a>
         /// </remarks>
         public partial class StructClump : KaitaiStruct
         {
@@ -281,7 +281,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
         /// </remarks>
         public partial class StructGeometry : KaitaiStruct
         {
@@ -437,7 +437,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
         /// </remarks>
         public partial class StructGeometryList : KaitaiStruct
         {
@@ -579,7 +579,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
         /// </remarks>
         public partial class SurfaceProperties : KaitaiStruct
         {
@@ -613,7 +613,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
         /// </remarks>
         public partial class StructFrameList : KaitaiStruct
         {
@@ -648,7 +648,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
         /// </remarks>
         public partial class Matrix : KaitaiStruct
         {
@@ -680,7 +680,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
         /// </remarks>
         public partial class Vector3d : KaitaiStruct
         {
@@ -854,7 +854,7 @@ namespace Kaitai
         }
 
         /// <remarks>
-        /// Reference: <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+        /// Reference: <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
         /// </remarks>
         public partial class Frame : KaitaiStruct
         {

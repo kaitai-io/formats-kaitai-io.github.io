@@ -11,7 +11,7 @@ import java.util.Arrays;
 
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/RenderWare_binary_stream_file">Source</a>
+ * @see <a href="https://gtamods.com/wiki/RenderWare_binary_stream_file">Source</a>
  */
 public class RenderwareBinaryStream extends KaitaiStruct {
     public static RenderwareBinaryStream fromFile(String fileName) throws IOException {
@@ -268,7 +268,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/RpClump">Source</a>
+     * @see <a href="https://gtamods.com/wiki/RpClump">Source</a>
      */
     public static class StructClump extends KaitaiStruct {
         public static StructClump fromFile(String fileName) throws IOException {
@@ -311,7 +311,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+     * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
      */
     public static class StructGeometry extends KaitaiStruct {
         public static StructGeometry fromFile(String fileName) throws IOException {
@@ -449,7 +449,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+     * @see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
      */
     public static class StructGeometryList extends KaitaiStruct {
         public static StructGeometryList fromFile(String fileName) throws IOException {
@@ -609,7 +609,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+     * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
      */
     public static class SurfaceProperties extends KaitaiStruct {
         public static SurfaceProperties fromFile(String fileName) throws IOException {
@@ -648,7 +648,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+     * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
      */
     public static class StructFrameList extends KaitaiStruct {
         public static StructFrameList fromFile(String fileName) throws IOException {
@@ -687,7 +687,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+     * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
      */
     public static class Matrix extends KaitaiStruct {
         public static Matrix fromFile(String fileName) throws IOException {
@@ -723,7 +723,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+     * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
      */
     public static class Vector3d extends KaitaiStruct {
         public static Vector3d fromFile(String fileName) throws IOException {
@@ -912,7 +912,7 @@ public class RenderwareBinaryStream extends KaitaiStruct {
     }
 
     /**
-     * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+     * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
      */
     public static class Frame extends KaitaiStruct {
         public static Frame fromFile(String fileName) throws IOException {

@@ -7,7 +7,7 @@ import (
 
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/RenderWare_binary_stream_file">Source</a>
+ * @see <a href="https://gtamods.com/wiki/RenderWare_binary_stream_file">Source</a>
  */
 
 type RenderwareBinaryStream_Sections int
@@ -328,7 +328,7 @@ func (this *RenderwareBinaryStream) Version() (v int, err error) {
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/RpClump">Source</a>
+ * @see <a href="https://gtamods.com/wiki/RpClump">Source</a>
  */
 type RenderwareBinaryStream_StructClump struct {
 	NumAtomics uint32
@@ -379,7 +379,7 @@ func (this *RenderwareBinaryStream_StructClump) Read(io *kaitai.Stream, parent *
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+ * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
  */
 type RenderwareBinaryStream_StructGeometry struct {
 	Format uint32
@@ -563,7 +563,7 @@ func (this *RenderwareBinaryStream_GeometryNonNative) Read(io *kaitai.Stream, pa
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+ * @see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
  */
 type RenderwareBinaryStream_StructGeometryList struct {
 	NumGeometries uint32
@@ -732,7 +732,7 @@ func (this *RenderwareBinaryStream_MorphTarget) Read(io *kaitai.Stream, parent *
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+ * @see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
  */
 type RenderwareBinaryStream_SurfaceProperties struct {
 	Ambient float32
@@ -771,7 +771,7 @@ func (this *RenderwareBinaryStream_SurfaceProperties) Read(io *kaitai.Stream, pa
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
  */
 type RenderwareBinaryStream_StructFrameList struct {
 	NumFrames uint32
@@ -808,7 +808,7 @@ func (this *RenderwareBinaryStream_StructFrameList) Read(io *kaitai.Stream, pare
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
  */
 type RenderwareBinaryStream_Matrix struct {
 	Entries []*RenderwareBinaryStream_Vector3d
@@ -839,7 +839,7 @@ func (this *RenderwareBinaryStream_Matrix) Read(io *kaitai.Stream, parent *Rende
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
  */
 type RenderwareBinaryStream_Vector3d struct {
 	X float32
@@ -1080,7 +1080,7 @@ func (this *RenderwareBinaryStream_Triangle) Read(io *kaitai.Stream, parent *Ren
 }
 
 /**
- * @see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+ * @see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
  */
 type RenderwareBinaryStream_Frame struct {
 	RotationMatrix *RenderwareBinaryStream_Matrix

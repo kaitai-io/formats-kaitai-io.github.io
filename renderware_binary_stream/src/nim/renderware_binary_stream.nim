@@ -296,7 +296,7 @@ proc version*(this: RenderwareBinaryStream_ListWithHeader): int
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/RenderWare_binary_stream_file">Source</a>
+@see <a href="https://gtamods.com/wiki/RenderWare_binary_stream_file">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RenderwareBinaryStream =
   template this: untyped = result
@@ -367,7 +367,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream], filename: string): Renderwar
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/RpClump">Source</a>
+@see <a href="https://gtamods.com/wiki/RpClump">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_StructClump], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructClump =
   template this: untyped = result
@@ -391,7 +391,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_StructClump], filename: string
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+@see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_StructGeometry], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometry =
   template this: untyped = result
@@ -479,7 +479,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_GeometryNonNative], filename: 
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
+@see <a href="https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_StructGeometryList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructGeometryList =
   template this: untyped = result
@@ -563,7 +563,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_MorphTarget], filename: string
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/RpGeometry">Source</a>
+@see <a href="https://gtamods.com/wiki/RpGeometry">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructGeometry): RenderwareBinaryStream_SurfaceProperties =
   template this: untyped = result
@@ -585,7 +585,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_SurfaceProperties], filename: 
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_StructFrameList], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_ListWithHeader): RenderwareBinaryStream_StructFrameList =
   template this: untyped = result
@@ -606,7 +606,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_StructFrameList], filename: st
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_Matrix], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_Frame): RenderwareBinaryStream_Matrix =
   template this: untyped = result
@@ -625,7 +625,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_Matrix], filename: string): Re
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_Vector3d], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): RenderwareBinaryStream_Vector3d =
   template this: untyped = result
@@ -744,7 +744,7 @@ proc fromFile*(_: typedesc[RenderwareBinaryStream_Triangle], filename: string): 
 
 
 ##[
-@see <a href="https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
+@see <a href="https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure">Source</a>
 ]##
 proc read*(_: typedesc[RenderwareBinaryStream_Frame], io: KaitaiStream, root: KaitaiStruct, parent: RenderwareBinaryStream_StructFrameList): RenderwareBinaryStream_Frame =
   template this: untyped = result

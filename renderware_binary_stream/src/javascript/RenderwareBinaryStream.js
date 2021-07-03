@@ -10,7 +10,7 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * @see {@link https://www.gtamodding.com/wiki/RenderWare_binary_stream_file|Source}
+ * @see {@link https://gtamods.com/wiki/RenderWare_binary_stream_file|Source}
  */
 
 var RenderwareBinaryStream = (function() {
@@ -401,7 +401,7 @@ var RenderwareBinaryStream = (function() {
   }
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/RpClump|Source}
+   * @see {@link https://gtamods.com/wiki/RpClump|Source}
    */
 
   var StructClump = RenderwareBinaryStream.StructClump = (function() {
@@ -426,7 +426,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/RpGeometry|Source}
+   * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
    */
 
   var StructGeometry = RenderwareBinaryStream.StructGeometry = (function() {
@@ -520,7 +520,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure|Source}
+   * @see {@link https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure|Source}
    */
 
   var StructGeometryList = RenderwareBinaryStream.StructGeometryList = (function() {
@@ -604,7 +604,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/RpGeometry|Source}
+   * @see {@link https://gtamods.com/wiki/RpGeometry|Source}
    */
 
   var SurfaceProperties = RenderwareBinaryStream.SurfaceProperties = (function() {
@@ -625,7 +625,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
    */
 
   var StructFrameList = RenderwareBinaryStream.StructFrameList = (function() {
@@ -648,7 +648,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
    */
 
   var Matrix = RenderwareBinaryStream.Matrix = (function() {
@@ -670,7 +670,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
    */
 
   var Vector3d = RenderwareBinaryStream.Vector3d = (function() {
@@ -782,7 +782,7 @@ var RenderwareBinaryStream = (function() {
   })();
 
   /**
-   * @see {@link https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure|Source}
+   * @see {@link https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure|Source}
    */
 
   var Frame = RenderwareBinaryStream.Frame = (function() {

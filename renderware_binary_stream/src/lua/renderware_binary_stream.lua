@@ -9,7 +9,7 @@ local stringstream = require("string_stream")
 local utils = require("utils")
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/RenderWare_binary_stream_file)
+-- See also: Source (https://gtamods.com/wiki/RenderWare_binary_stream_file)
 RenderwareBinaryStream = class.class(KaitaiStruct)
 
 RenderwareBinaryStream.Sections = enum.Enum {
@@ -235,7 +235,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/RpClump)
+-- See also: Source (https://gtamods.com/wiki/RpClump)
 RenderwareBinaryStream.StructClump = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.StructClump:_init(io, parent, root)
@@ -257,7 +257,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/RpGeometry)
+-- See also: Source (https://gtamods.com/wiki/RpGeometry)
 RenderwareBinaryStream.StructGeometry = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.StructGeometry:_init(io, parent, root)
@@ -355,7 +355,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/Geometry_List_(RW_Section)#Structure)
+-- See also: Source (https://gtamods.com/wiki/Geometry_List_(RW_Section)#Structure)
 RenderwareBinaryStream.StructGeometryList = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.StructGeometryList:_init(io, parent, root)
@@ -433,7 +433,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/RpGeometry)
+-- See also: Source (https://gtamods.com/wiki/RpGeometry)
 RenderwareBinaryStream.SurfaceProperties = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.SurfaceProperties:_init(io, parent, root)
@@ -451,7 +451,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure)
+-- See also: Source (https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure)
 RenderwareBinaryStream.StructFrameList = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.StructFrameList:_init(io, parent, root)
@@ -471,7 +471,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure)
+-- See also: Source (https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure)
 RenderwareBinaryStream.Matrix = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.Matrix:_init(io, parent, root)
@@ -490,7 +490,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure)
+-- See also: Source (https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure)
 RenderwareBinaryStream.Vector3d = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.Vector3d:_init(io, parent, root)
@@ -591,7 +591,7 @@ end
 
 
 -- 
--- See also: Source (https://www.gtamodding.com/wiki/Frame_List_(RW_Section)#Structure)
+-- See also: Source (https://gtamods.com/wiki/Frame_List_(RW_Section)#Structure)
 RenderwareBinaryStream.Frame = class.class(KaitaiStruct)
 
 function RenderwareBinaryStream.Frame:_init(io, parent, root)
