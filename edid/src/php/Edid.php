@@ -66,6 +66,13 @@ namespace {
             }
             return $this->_m_gamma;
         }
+        protected $_m_mfgStr;
+        public function mfgStr() {
+            if ($this->_m_mfgStr !== null)
+                return $this->_m_mfgStr;
+            $this->_m_mfgStr = \Kaitai\Struct\Stream::bytesToStr(pack('C*', ($this->mfgIdCh1() + 64), ($this->mfgIdCh2() + 64), ($this->mfgIdCh3() + 64)), "ASCII");
+            return $this->_m_mfgStr;
+        }
         protected $_m_mfgIdCh2;
         public function mfgIdCh2() {
             if ($this->_m_mfgIdCh2 !== null)
@@ -445,128 +452,128 @@ namespace Edid {
         }
 
         private function _read() {
-            $this->_m_can72040070 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can72040088 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can64048060 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can64048067 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can64048072 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can64048075 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can80060056 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can80060060 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can80060072 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can80060075 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can83262475 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can102476887I = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can102476860 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can102476870 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can102476875 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can1280102475 = $this->_io->readBitsIntBe(1) != 0;
-            $this->_m_can115287075 = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can720x400px70hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can720x400px88hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can640x480px60hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can640x480px67hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can640x480px72hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can640x480px75hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can800x600px56hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can800x600px60hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can800x600px72hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can800x600px75hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can832x624px75hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can1024x768px87hzI = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can1024x768px60hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can1024x768px70hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can1024x768px75hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can1280x1024px75hz = $this->_io->readBitsIntBe(1) != 0;
+            $this->_m_can1152x870px75hz = $this->_io->readBitsIntBe(1) != 0;
             $this->_m_reserved = $this->_io->readBitsIntBe(7);
         }
-        protected $_m_can72040070;
-        protected $_m_can72040088;
-        protected $_m_can64048060;
-        protected $_m_can64048067;
-        protected $_m_can64048072;
-        protected $_m_can64048075;
-        protected $_m_can80060056;
-        protected $_m_can80060060;
-        protected $_m_can80060072;
-        protected $_m_can80060075;
-        protected $_m_can83262475;
-        protected $_m_can102476887I;
-        protected $_m_can102476860;
-        protected $_m_can102476870;
-        protected $_m_can102476875;
-        protected $_m_can1280102475;
-        protected $_m_can115287075;
+        protected $_m_can720x400px70hz;
+        protected $_m_can720x400px88hz;
+        protected $_m_can640x480px60hz;
+        protected $_m_can640x480px67hz;
+        protected $_m_can640x480px72hz;
+        protected $_m_can640x480px75hz;
+        protected $_m_can800x600px56hz;
+        protected $_m_can800x600px60hz;
+        protected $_m_can800x600px72hz;
+        protected $_m_can800x600px75hz;
+        protected $_m_can832x624px75hz;
+        protected $_m_can1024x768px87hzI;
+        protected $_m_can1024x768px60hz;
+        protected $_m_can1024x768px70hz;
+        protected $_m_can1024x768px75hz;
+        protected $_m_can1280x1024px75hz;
+        protected $_m_can1152x870px75hz;
         protected $_m_reserved;
 
         /**
          * Supports 720 x 400 @ 70Hz
          */
-        public function can72040070() { return $this->_m_can72040070; }
+        public function can720x400px70hz() { return $this->_m_can720x400px70hz; }
 
         /**
          * Supports 720 x 400 @ 88Hz
          */
-        public function can72040088() { return $this->_m_can72040088; }
+        public function can720x400px88hz() { return $this->_m_can720x400px88hz; }
 
         /**
          * Supports 640 x 480 @ 60Hz
          */
-        public function can64048060() { return $this->_m_can64048060; }
+        public function can640x480px60hz() { return $this->_m_can640x480px60hz; }
 
         /**
          * Supports 640 x 480 @ 67Hz
          */
-        public function can64048067() { return $this->_m_can64048067; }
+        public function can640x480px67hz() { return $this->_m_can640x480px67hz; }
 
         /**
          * Supports 640 x 480 @ 72Hz
          */
-        public function can64048072() { return $this->_m_can64048072; }
+        public function can640x480px72hz() { return $this->_m_can640x480px72hz; }
 
         /**
          * Supports 640 x 480 @ 75Hz
          */
-        public function can64048075() { return $this->_m_can64048075; }
+        public function can640x480px75hz() { return $this->_m_can640x480px75hz; }
 
         /**
          * Supports 800 x 600 @ 56Hz
          */
-        public function can80060056() { return $this->_m_can80060056; }
+        public function can800x600px56hz() { return $this->_m_can800x600px56hz; }
 
         /**
          * Supports 800 x 600 @ 60Hz
          */
-        public function can80060060() { return $this->_m_can80060060; }
+        public function can800x600px60hz() { return $this->_m_can800x600px60hz; }
 
         /**
          * Supports 800 x 600 @ 72Hz
          */
-        public function can80060072() { return $this->_m_can80060072; }
+        public function can800x600px72hz() { return $this->_m_can800x600px72hz; }
 
         /**
          * Supports 800 x 600 @ 75Hz
          */
-        public function can80060075() { return $this->_m_can80060075; }
+        public function can800x600px75hz() { return $this->_m_can800x600px75hz; }
 
         /**
          * Supports 832 x 624 @ 75Hz
          */
-        public function can83262475() { return $this->_m_can83262475; }
+        public function can832x624px75hz() { return $this->_m_can832x624px75hz; }
 
         /**
          * Supports 1024 x 768 @ 87Hz(I)
          */
-        public function can102476887I() { return $this->_m_can102476887I; }
+        public function can1024x768px87hzI() { return $this->_m_can1024x768px87hzI; }
 
         /**
          * Supports 1024 x 768 @ 60Hz
          */
-        public function can102476860() { return $this->_m_can102476860; }
+        public function can1024x768px60hz() { return $this->_m_can1024x768px60hz; }
 
         /**
          * Supports 1024 x 768 @ 70Hz
          */
-        public function can102476870() { return $this->_m_can102476870; }
+        public function can1024x768px70hz() { return $this->_m_can1024x768px70hz; }
 
         /**
          * Supports 1024 x 768 @ 75Hz
          */
-        public function can102476875() { return $this->_m_can102476875; }
+        public function can1024x768px75hz() { return $this->_m_can1024x768px75hz; }
 
         /**
          * Supports 1280 x 1024 @ 75Hz
          */
-        public function can1280102475() { return $this->_m_can1280102475; }
+        public function can1280x1024px75hz() { return $this->_m_can1280x1024px75hz; }
 
         /**
          * Supports 1152 x 870 @ 75Hz
          */
-        public function can115287075() { return $this->_m_can115287075; }
+        public function can1152x870px75hz() { return $this->_m_can1152x870px75hz; }
         public function reserved() { return $this->_m_reserved; }
     }
 }

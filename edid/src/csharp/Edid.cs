@@ -19,6 +19,7 @@ namespace Kaitai
             f_mfgIdCh1 = false;
             f_mfgIdCh3 = false;
             f_gamma = false;
+            f_mfgStr = false;
             f_mfgIdCh2 = false;
             _read();
         }
@@ -463,42 +464,42 @@ namespace Kaitai
             }
             private void _read()
             {
-                _can72040070 = m_io.ReadBitsIntBe(1) != 0;
-                _can72040088 = m_io.ReadBitsIntBe(1) != 0;
-                _can64048060 = m_io.ReadBitsIntBe(1) != 0;
-                _can64048067 = m_io.ReadBitsIntBe(1) != 0;
-                _can64048072 = m_io.ReadBitsIntBe(1) != 0;
-                _can64048075 = m_io.ReadBitsIntBe(1) != 0;
-                _can80060056 = m_io.ReadBitsIntBe(1) != 0;
-                _can80060060 = m_io.ReadBitsIntBe(1) != 0;
-                _can80060072 = m_io.ReadBitsIntBe(1) != 0;
-                _can80060075 = m_io.ReadBitsIntBe(1) != 0;
-                _can83262475 = m_io.ReadBitsIntBe(1) != 0;
-                _can102476887I = m_io.ReadBitsIntBe(1) != 0;
-                _can102476860 = m_io.ReadBitsIntBe(1) != 0;
-                _can102476870 = m_io.ReadBitsIntBe(1) != 0;
-                _can102476875 = m_io.ReadBitsIntBe(1) != 0;
-                _can1280102475 = m_io.ReadBitsIntBe(1) != 0;
-                _can115287075 = m_io.ReadBitsIntBe(1) != 0;
+                _can720x400px70hz = m_io.ReadBitsIntBe(1) != 0;
+                _can720x400px88hz = m_io.ReadBitsIntBe(1) != 0;
+                _can640x480px60hz = m_io.ReadBitsIntBe(1) != 0;
+                _can640x480px67hz = m_io.ReadBitsIntBe(1) != 0;
+                _can640x480px72hz = m_io.ReadBitsIntBe(1) != 0;
+                _can640x480px75hz = m_io.ReadBitsIntBe(1) != 0;
+                _can800x600px56hz = m_io.ReadBitsIntBe(1) != 0;
+                _can800x600px60hz = m_io.ReadBitsIntBe(1) != 0;
+                _can800x600px72hz = m_io.ReadBitsIntBe(1) != 0;
+                _can800x600px75hz = m_io.ReadBitsIntBe(1) != 0;
+                _can832x624px75hz = m_io.ReadBitsIntBe(1) != 0;
+                _can1024x768px87hzI = m_io.ReadBitsIntBe(1) != 0;
+                _can1024x768px60hz = m_io.ReadBitsIntBe(1) != 0;
+                _can1024x768px70hz = m_io.ReadBitsIntBe(1) != 0;
+                _can1024x768px75hz = m_io.ReadBitsIntBe(1) != 0;
+                _can1280x1024px75hz = m_io.ReadBitsIntBe(1) != 0;
+                _can1152x870px75hz = m_io.ReadBitsIntBe(1) != 0;
                 _reserved = m_io.ReadBitsIntBe(7);
             }
-            private bool _can72040070;
-            private bool _can72040088;
-            private bool _can64048060;
-            private bool _can64048067;
-            private bool _can64048072;
-            private bool _can64048075;
-            private bool _can80060056;
-            private bool _can80060060;
-            private bool _can80060072;
-            private bool _can80060075;
-            private bool _can83262475;
-            private bool _can102476887I;
-            private bool _can102476860;
-            private bool _can102476870;
-            private bool _can102476875;
-            private bool _can1280102475;
-            private bool _can115287075;
+            private bool _can720x400px70hz;
+            private bool _can720x400px88hz;
+            private bool _can640x480px60hz;
+            private bool _can640x480px67hz;
+            private bool _can640x480px72hz;
+            private bool _can640x480px75hz;
+            private bool _can800x600px56hz;
+            private bool _can800x600px60hz;
+            private bool _can800x600px72hz;
+            private bool _can800x600px75hz;
+            private bool _can832x624px75hz;
+            private bool _can1024x768px87hzI;
+            private bool _can1024x768px60hz;
+            private bool _can1024x768px70hz;
+            private bool _can1024x768px75hz;
+            private bool _can1280x1024px75hz;
+            private bool _can1152x870px75hz;
             private ulong _reserved;
             private Edid m_root;
             private Edid m_parent;
@@ -506,87 +507,87 @@ namespace Kaitai
             /// <summary>
             /// Supports 720 x 400 @ 70Hz
             /// </summary>
-            public bool Can72040070 { get { return _can72040070; } }
+            public bool Can720x400px70hz { get { return _can720x400px70hz; } }
 
             /// <summary>
             /// Supports 720 x 400 @ 88Hz
             /// </summary>
-            public bool Can72040088 { get { return _can72040088; } }
+            public bool Can720x400px88hz { get { return _can720x400px88hz; } }
 
             /// <summary>
             /// Supports 640 x 480 @ 60Hz
             /// </summary>
-            public bool Can64048060 { get { return _can64048060; } }
+            public bool Can640x480px60hz { get { return _can640x480px60hz; } }
 
             /// <summary>
             /// Supports 640 x 480 @ 67Hz
             /// </summary>
-            public bool Can64048067 { get { return _can64048067; } }
+            public bool Can640x480px67hz { get { return _can640x480px67hz; } }
 
             /// <summary>
             /// Supports 640 x 480 @ 72Hz
             /// </summary>
-            public bool Can64048072 { get { return _can64048072; } }
+            public bool Can640x480px72hz { get { return _can640x480px72hz; } }
 
             /// <summary>
             /// Supports 640 x 480 @ 75Hz
             /// </summary>
-            public bool Can64048075 { get { return _can64048075; } }
+            public bool Can640x480px75hz { get { return _can640x480px75hz; } }
 
             /// <summary>
             /// Supports 800 x 600 @ 56Hz
             /// </summary>
-            public bool Can80060056 { get { return _can80060056; } }
+            public bool Can800x600px56hz { get { return _can800x600px56hz; } }
 
             /// <summary>
             /// Supports 800 x 600 @ 60Hz
             /// </summary>
-            public bool Can80060060 { get { return _can80060060; } }
+            public bool Can800x600px60hz { get { return _can800x600px60hz; } }
 
             /// <summary>
             /// Supports 800 x 600 @ 72Hz
             /// </summary>
-            public bool Can80060072 { get { return _can80060072; } }
+            public bool Can800x600px72hz { get { return _can800x600px72hz; } }
 
             /// <summary>
             /// Supports 800 x 600 @ 75Hz
             /// </summary>
-            public bool Can80060075 { get { return _can80060075; } }
+            public bool Can800x600px75hz { get { return _can800x600px75hz; } }
 
             /// <summary>
             /// Supports 832 x 624 @ 75Hz
             /// </summary>
-            public bool Can83262475 { get { return _can83262475; } }
+            public bool Can832x624px75hz { get { return _can832x624px75hz; } }
 
             /// <summary>
             /// Supports 1024 x 768 @ 87Hz(I)
             /// </summary>
-            public bool Can102476887I { get { return _can102476887I; } }
+            public bool Can1024x768px87hzI { get { return _can1024x768px87hzI; } }
 
             /// <summary>
             /// Supports 1024 x 768 @ 60Hz
             /// </summary>
-            public bool Can102476860 { get { return _can102476860; } }
+            public bool Can1024x768px60hz { get { return _can1024x768px60hz; } }
 
             /// <summary>
             /// Supports 1024 x 768 @ 70Hz
             /// </summary>
-            public bool Can102476870 { get { return _can102476870; } }
+            public bool Can1024x768px70hz { get { return _can1024x768px70hz; } }
 
             /// <summary>
             /// Supports 1024 x 768 @ 75Hz
             /// </summary>
-            public bool Can102476875 { get { return _can102476875; } }
+            public bool Can1024x768px75hz { get { return _can1024x768px75hz; } }
 
             /// <summary>
             /// Supports 1280 x 1024 @ 75Hz
             /// </summary>
-            public bool Can1280102475 { get { return _can1280102475; } }
+            public bool Can1280x1024px75hz { get { return _can1280x1024px75hz; } }
 
             /// <summary>
             /// Supports 1152 x 870 @ 75Hz
             /// </summary>
-            public bool Can115287075 { get { return _can115287075; } }
+            public bool Can1152x870px75hz { get { return _can1152x870px75hz; } }
             public ulong Reserved { get { return _reserved; } }
             public Edid M_Root { get { return m_root; } }
             public Edid M_Parent { get { return m_parent; } }
@@ -768,6 +769,19 @@ namespace Kaitai
                 }
                 f_gamma = true;
                 return _gamma;
+            }
+        }
+        private bool f_mfgStr;
+        private string _mfgStr;
+        public string MfgStr
+        {
+            get
+            {
+                if (f_mfgStr)
+                    return _mfgStr;
+                _mfgStr = (string) (System.Text.Encoding.GetEncoding("ASCII").GetString(new byte[] { (MfgIdCh1 + 64), (MfgIdCh2 + 64), (MfgIdCh3 + 64) }));
+                f_mfgStr = true;
+                return _mfgStr;
             }
         }
         private bool f_mfgIdCh2;

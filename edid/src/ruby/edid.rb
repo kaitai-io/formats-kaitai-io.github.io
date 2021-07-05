@@ -245,94 +245,94 @@ class Edid < Kaitai::Struct::Struct
     end
 
     def _read
-      @can_720_400_70 = @_io.read_bits_int_be(1) != 0
-      @can_720_400_88 = @_io.read_bits_int_be(1) != 0
-      @can_640_480_60 = @_io.read_bits_int_be(1) != 0
-      @can_640_480_67 = @_io.read_bits_int_be(1) != 0
-      @can_640_480_72 = @_io.read_bits_int_be(1) != 0
-      @can_640_480_75 = @_io.read_bits_int_be(1) != 0
-      @can_800_600_56 = @_io.read_bits_int_be(1) != 0
-      @can_800_600_60 = @_io.read_bits_int_be(1) != 0
-      @can_800_600_72 = @_io.read_bits_int_be(1) != 0
-      @can_800_600_75 = @_io.read_bits_int_be(1) != 0
-      @can_832_624_75 = @_io.read_bits_int_be(1) != 0
-      @can_1024_768_87_i = @_io.read_bits_int_be(1) != 0
-      @can_1024_768_60 = @_io.read_bits_int_be(1) != 0
-      @can_1024_768_70 = @_io.read_bits_int_be(1) != 0
-      @can_1024_768_75 = @_io.read_bits_int_be(1) != 0
-      @can_1280_1024_75 = @_io.read_bits_int_be(1) != 0
-      @can_1152_870_75 = @_io.read_bits_int_be(1) != 0
+      @can_720x400px_70hz = @_io.read_bits_int_be(1) != 0
+      @can_720x400px_88hz = @_io.read_bits_int_be(1) != 0
+      @can_640x480px_60hz = @_io.read_bits_int_be(1) != 0
+      @can_640x480px_67hz = @_io.read_bits_int_be(1) != 0
+      @can_640x480px_72hz = @_io.read_bits_int_be(1) != 0
+      @can_640x480px_75hz = @_io.read_bits_int_be(1) != 0
+      @can_800x600px_56hz = @_io.read_bits_int_be(1) != 0
+      @can_800x600px_60hz = @_io.read_bits_int_be(1) != 0
+      @can_800x600px_72hz = @_io.read_bits_int_be(1) != 0
+      @can_800x600px_75hz = @_io.read_bits_int_be(1) != 0
+      @can_832x624px_75hz = @_io.read_bits_int_be(1) != 0
+      @can_1024x768px_87hz_i = @_io.read_bits_int_be(1) != 0
+      @can_1024x768px_60hz = @_io.read_bits_int_be(1) != 0
+      @can_1024x768px_70hz = @_io.read_bits_int_be(1) != 0
+      @can_1024x768px_75hz = @_io.read_bits_int_be(1) != 0
+      @can_1280x1024px_75hz = @_io.read_bits_int_be(1) != 0
+      @can_1152x870px_75hz = @_io.read_bits_int_be(1) != 0
       @reserved = @_io.read_bits_int_be(7)
       self
     end
 
     ##
     # Supports 720 x 400 @ 70Hz
-    attr_reader :can_720_400_70
+    attr_reader :can_720x400px_70hz
 
     ##
     # Supports 720 x 400 @ 88Hz
-    attr_reader :can_720_400_88
+    attr_reader :can_720x400px_88hz
 
     ##
     # Supports 640 x 480 @ 60Hz
-    attr_reader :can_640_480_60
+    attr_reader :can_640x480px_60hz
 
     ##
     # Supports 640 x 480 @ 67Hz
-    attr_reader :can_640_480_67
+    attr_reader :can_640x480px_67hz
 
     ##
     # Supports 640 x 480 @ 72Hz
-    attr_reader :can_640_480_72
+    attr_reader :can_640x480px_72hz
 
     ##
     # Supports 640 x 480 @ 75Hz
-    attr_reader :can_640_480_75
+    attr_reader :can_640x480px_75hz
 
     ##
     # Supports 800 x 600 @ 56Hz
-    attr_reader :can_800_600_56
+    attr_reader :can_800x600px_56hz
 
     ##
     # Supports 800 x 600 @ 60Hz
-    attr_reader :can_800_600_60
+    attr_reader :can_800x600px_60hz
 
     ##
     # Supports 800 x 600 @ 72Hz
-    attr_reader :can_800_600_72
+    attr_reader :can_800x600px_72hz
 
     ##
     # Supports 800 x 600 @ 75Hz
-    attr_reader :can_800_600_75
+    attr_reader :can_800x600px_75hz
 
     ##
     # Supports 832 x 624 @ 75Hz
-    attr_reader :can_832_624_75
+    attr_reader :can_832x624px_75hz
 
     ##
     # Supports 1024 x 768 @ 87Hz(I)
-    attr_reader :can_1024_768_87_i
+    attr_reader :can_1024x768px_87hz_i
 
     ##
     # Supports 1024 x 768 @ 60Hz
-    attr_reader :can_1024_768_60
+    attr_reader :can_1024x768px_60hz
 
     ##
     # Supports 1024 x 768 @ 70Hz
-    attr_reader :can_1024_768_70
+    attr_reader :can_1024x768px_70hz
 
     ##
     # Supports 1024 x 768 @ 75Hz
-    attr_reader :can_1024_768_75
+    attr_reader :can_1024x768px_75hz
 
     ##
     # Supports 1280 x 1024 @ 75Hz
-    attr_reader :can_1280_1024_75
+    attr_reader :can_1280x1024px_75hz
 
     ##
     # Supports 1152 x 870 @ 75Hz
-    attr_reader :can_1152_870_75
+    attr_reader :can_1152x870px_75hz
     attr_reader :reserved
   end
   class StdTiming < Kaitai::Struct::Struct
@@ -426,6 +426,11 @@ class Edid < Kaitai::Struct::Struct
       @gamma = ((gamma_mod + 100) / 100.0)
     end
     @gamma
+  end
+  def mfg_str
+    return @mfg_str unless @mfg_str.nil?
+    @mfg_str = ([(mfg_id_ch1 + 64), (mfg_id_ch2 + 64), (mfg_id_ch3 + 64)].pack('C*')).force_encoding("ASCII")
+    @mfg_str
   end
   def mfg_id_ch2
     return @mfg_id_ch2 unless @mfg_id_ch2.nil?

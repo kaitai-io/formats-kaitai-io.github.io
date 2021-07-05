@@ -25,6 +25,7 @@ type
     `mfgIdCh1Inst`*: int
     `mfgIdCh3Inst`*: int
     `gammaInst`*: float64
+    `mfgStrInst`*: string
     `mfgIdCh2Inst`*: int
   Edid_ChromacityInfo* = ref object of KaitaiStruct
     `redX10`*: uint64
@@ -61,23 +62,23 @@ type
     `greenYInst`*: float64
     `blueYIntInst`*: int
   Edid_EstTimingsInfo* = ref object of KaitaiStruct
-    `can72040070`*: bool
-    `can72040088`*: bool
-    `can64048060`*: bool
-    `can64048067`*: bool
-    `can64048072`*: bool
-    `can64048075`*: bool
-    `can80060056`*: bool
-    `can80060060`*: bool
-    `can80060072`*: bool
-    `can80060075`*: bool
-    `can83262475`*: bool
-    `can102476887I`*: bool
-    `can102476860`*: bool
-    `can102476870`*: bool
-    `can102476875`*: bool
-    `can1280102475`*: bool
-    `can115287075`*: bool
+    `can720x400px70hz`*: bool
+    `can720x400px88hz`*: bool
+    `can640x480px60hz`*: bool
+    `can640x480px67hz`*: bool
+    `can640x480px72hz`*: bool
+    `can640x480px75hz`*: bool
+    `can800x600px56hz`*: bool
+    `can800x600px60hz`*: bool
+    `can800x600px72hz`*: bool
+    `can800x600px75hz`*: bool
+    `can832x624px75hz`*: bool
+    `can1024x768px87hzI`*: bool
+    `can1024x768px60hz`*: bool
+    `can1024x768px70hz`*: bool
+    `can1024x768px75hz`*: bool
+    `can1280x1024px75hz`*: bool
+    `can1152x870px75hz`*: bool
     `reserved`*: uint64
     `parent`*: Edid
   Edid_StdTiming* = ref object of KaitaiStruct
@@ -104,6 +105,7 @@ proc mfgYear*(this: Edid): int
 proc mfgIdCh1*(this: Edid): int
 proc mfgIdCh3*(this: Edid): int
 proc gamma*(this: Edid): float64
+proc mfgStr*(this: Edid): string
 proc mfgIdCh2*(this: Edid): int
 proc greenXInt*(this: Edid_ChromacityInfo): int
 proc redY*(this: Edid_ChromacityInfo): float64
@@ -259,6 +261,14 @@ proc gamma(this: Edid): float64 =
     this.gammaInst = gammaInstExpr
   if this.gammaInst != nil:
     return this.gammaInst
+
+proc mfgStr(this: Edid): string = 
+  if this.mfgStrInst.len != 0:
+    return this.mfgStrInst
+  let mfgStrInstExpr = string(encode(@[(this.mfgIdCh1 + 64), (this.mfgIdCh2 + 64), (this.mfgIdCh3 + 64)], "ASCII"))
+  this.mfgStrInst = mfgStrInstExpr
+  if this.mfgStrInst.len != 0:
+    return this.mfgStrInst
 
 proc mfgIdCh2(this: Edid): int = 
   if this.mfgIdCh2Inst != nil:
@@ -559,104 +569,104 @@ proc read*(_: typedesc[Edid_EstTimingsInfo], io: KaitaiStream, root: KaitaiStruc
   ##[
   Supports 720 x 400 @ 70Hz
   ]##
-  let can72040070Expr = this.io.readBitsIntBe(1) != 0
-  this.can72040070 = can72040070Expr
+  let can720x400px70hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can720x400px70hz = can720x400px70hzExpr
 
   ##[
   Supports 720 x 400 @ 88Hz
   ]##
-  let can72040088Expr = this.io.readBitsIntBe(1) != 0
-  this.can72040088 = can72040088Expr
+  let can720x400px88hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can720x400px88hz = can720x400px88hzExpr
 
   ##[
   Supports 640 x 480 @ 60Hz
   ]##
-  let can64048060Expr = this.io.readBitsIntBe(1) != 0
-  this.can64048060 = can64048060Expr
+  let can640x480px60hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can640x480px60hz = can640x480px60hzExpr
 
   ##[
   Supports 640 x 480 @ 67Hz
   ]##
-  let can64048067Expr = this.io.readBitsIntBe(1) != 0
-  this.can64048067 = can64048067Expr
+  let can640x480px67hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can640x480px67hz = can640x480px67hzExpr
 
   ##[
   Supports 640 x 480 @ 72Hz
   ]##
-  let can64048072Expr = this.io.readBitsIntBe(1) != 0
-  this.can64048072 = can64048072Expr
+  let can640x480px72hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can640x480px72hz = can640x480px72hzExpr
 
   ##[
   Supports 640 x 480 @ 75Hz
   ]##
-  let can64048075Expr = this.io.readBitsIntBe(1) != 0
-  this.can64048075 = can64048075Expr
+  let can640x480px75hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can640x480px75hz = can640x480px75hzExpr
 
   ##[
   Supports 800 x 600 @ 56Hz
   ]##
-  let can80060056Expr = this.io.readBitsIntBe(1) != 0
-  this.can80060056 = can80060056Expr
+  let can800x600px56hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can800x600px56hz = can800x600px56hzExpr
 
   ##[
   Supports 800 x 600 @ 60Hz
   ]##
-  let can80060060Expr = this.io.readBitsIntBe(1) != 0
-  this.can80060060 = can80060060Expr
+  let can800x600px60hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can800x600px60hz = can800x600px60hzExpr
 
   ##[
   Supports 800 x 600 @ 72Hz
   ]##
-  let can80060072Expr = this.io.readBitsIntBe(1) != 0
-  this.can80060072 = can80060072Expr
+  let can800x600px72hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can800x600px72hz = can800x600px72hzExpr
 
   ##[
   Supports 800 x 600 @ 75Hz
   ]##
-  let can80060075Expr = this.io.readBitsIntBe(1) != 0
-  this.can80060075 = can80060075Expr
+  let can800x600px75hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can800x600px75hz = can800x600px75hzExpr
 
   ##[
   Supports 832 x 624 @ 75Hz
   ]##
-  let can83262475Expr = this.io.readBitsIntBe(1) != 0
-  this.can83262475 = can83262475Expr
+  let can832x624px75hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can832x624px75hz = can832x624px75hzExpr
 
   ##[
   Supports 1024 x 768 @ 87Hz(I)
   ]##
-  let can102476887IExpr = this.io.readBitsIntBe(1) != 0
-  this.can102476887I = can102476887IExpr
+  let can1024x768px87hzIExpr = this.io.readBitsIntBe(1) != 0
+  this.can1024x768px87hzI = can1024x768px87hzIExpr
 
   ##[
   Supports 1024 x 768 @ 60Hz
   ]##
-  let can102476860Expr = this.io.readBitsIntBe(1) != 0
-  this.can102476860 = can102476860Expr
+  let can1024x768px60hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can1024x768px60hz = can1024x768px60hzExpr
 
   ##[
   Supports 1024 x 768 @ 70Hz
   ]##
-  let can102476870Expr = this.io.readBitsIntBe(1) != 0
-  this.can102476870 = can102476870Expr
+  let can1024x768px70hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can1024x768px70hz = can1024x768px70hzExpr
 
   ##[
   Supports 1024 x 768 @ 75Hz
   ]##
-  let can102476875Expr = this.io.readBitsIntBe(1) != 0
-  this.can102476875 = can102476875Expr
+  let can1024x768px75hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can1024x768px75hz = can1024x768px75hzExpr
 
   ##[
   Supports 1280 x 1024 @ 75Hz
   ]##
-  let can1280102475Expr = this.io.readBitsIntBe(1) != 0
-  this.can1280102475 = can1280102475Expr
+  let can1280x1024px75hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can1280x1024px75hz = can1280x1024px75hzExpr
 
   ##[
   Supports 1152 x 870 @ 75Hz
   ]##
-  let can115287075Expr = this.io.readBitsIntBe(1) != 0
-  this.can115287075 = can115287075Expr
+  let can1152x870px75hzExpr = this.io.readBitsIntBe(1) != 0
+  this.can1152x870px75hz = can1152x870px75hzExpr
   let reservedExpr = this.io.readBitsIntBe(7)
   this.reserved = reservedExpr
 

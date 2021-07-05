@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
+use Encode;
 
 ########################################################################
 package Edid;
@@ -87,6 +88,13 @@ sub gamma {
         $self->{gamma} = (($self->gamma_mod() + 100) / 100.0);
     }
     return $self->{gamma};
+}
+
+sub mfg_str {
+    my ($self) = @_;
+    return $self->{mfg_str} if ($self->{mfg_str});
+    $self->{mfg_str} = Encode::decode("ASCII", pack('C*', (($self->mfg_id_ch1() + 64), ($self->mfg_id_ch2() + 64), ($self->mfg_id_ch3() + 64))));
+    return $self->{mfg_str};
 }
 
 sub mfg_id_ch2 {
@@ -452,109 +460,109 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{can_720_400_70} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_720_400_88} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_640_480_60} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_640_480_67} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_640_480_72} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_640_480_75} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_800_600_56} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_800_600_60} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_800_600_72} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_800_600_75} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_832_624_75} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_1024_768_87_i} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_1024_768_60} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_1024_768_70} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_1024_768_75} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_1280_1024_75} = $self->{_io}->read_bits_int_be(1);
-    $self->{can_1152_870_75} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_720x400px_70hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_720x400px_88hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640x480px_60hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640x480px_67hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640x480px_72hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_640x480px_75hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800x600px_56hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800x600px_60hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800x600px_72hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_800x600px_75hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_832x624px_75hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024x768px_87hz_i} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024x768px_60hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024x768px_70hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1024x768px_75hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1280x1024px_75hz} = $self->{_io}->read_bits_int_be(1);
+    $self->{can_1152x870px_75hz} = $self->{_io}->read_bits_int_be(1);
     $self->{reserved} = $self->{_io}->read_bits_int_be(7);
 }
 
-sub can_720_400_70 {
+sub can_720x400px_70hz {
     my ($self) = @_;
-    return $self->{can_720_400_70};
+    return $self->{can_720x400px_70hz};
 }
 
-sub can_720_400_88 {
+sub can_720x400px_88hz {
     my ($self) = @_;
-    return $self->{can_720_400_88};
+    return $self->{can_720x400px_88hz};
 }
 
-sub can_640_480_60 {
+sub can_640x480px_60hz {
     my ($self) = @_;
-    return $self->{can_640_480_60};
+    return $self->{can_640x480px_60hz};
 }
 
-sub can_640_480_67 {
+sub can_640x480px_67hz {
     my ($self) = @_;
-    return $self->{can_640_480_67};
+    return $self->{can_640x480px_67hz};
 }
 
-sub can_640_480_72 {
+sub can_640x480px_72hz {
     my ($self) = @_;
-    return $self->{can_640_480_72};
+    return $self->{can_640x480px_72hz};
 }
 
-sub can_640_480_75 {
+sub can_640x480px_75hz {
     my ($self) = @_;
-    return $self->{can_640_480_75};
+    return $self->{can_640x480px_75hz};
 }
 
-sub can_800_600_56 {
+sub can_800x600px_56hz {
     my ($self) = @_;
-    return $self->{can_800_600_56};
+    return $self->{can_800x600px_56hz};
 }
 
-sub can_800_600_60 {
+sub can_800x600px_60hz {
     my ($self) = @_;
-    return $self->{can_800_600_60};
+    return $self->{can_800x600px_60hz};
 }
 
-sub can_800_600_72 {
+sub can_800x600px_72hz {
     my ($self) = @_;
-    return $self->{can_800_600_72};
+    return $self->{can_800x600px_72hz};
 }
 
-sub can_800_600_75 {
+sub can_800x600px_75hz {
     my ($self) = @_;
-    return $self->{can_800_600_75};
+    return $self->{can_800x600px_75hz};
 }
 
-sub can_832_624_75 {
+sub can_832x624px_75hz {
     my ($self) = @_;
-    return $self->{can_832_624_75};
+    return $self->{can_832x624px_75hz};
 }
 
-sub can_1024_768_87_i {
+sub can_1024x768px_87hz_i {
     my ($self) = @_;
-    return $self->{can_1024_768_87_i};
+    return $self->{can_1024x768px_87hz_i};
 }
 
-sub can_1024_768_60 {
+sub can_1024x768px_60hz {
     my ($self) = @_;
-    return $self->{can_1024_768_60};
+    return $self->{can_1024x768px_60hz};
 }
 
-sub can_1024_768_70 {
+sub can_1024x768px_70hz {
     my ($self) = @_;
-    return $self->{can_1024_768_70};
+    return $self->{can_1024x768px_70hz};
 }
 
-sub can_1024_768_75 {
+sub can_1024x768px_75hz {
     my ($self) = @_;
-    return $self->{can_1024_768_75};
+    return $self->{can_1024x768px_75hz};
 }
 
-sub can_1280_1024_75 {
+sub can_1280x1024px_75hz {
     my ($self) = @_;
-    return $self->{can_1280_1024_75};
+    return $self->{can_1280x1024px_75hz};
 }
 
-sub can_1152_870_75 {
+sub can_1152x870px_75hz {
     my ($self) = @_;
-    return $self->{can_1152_870_75};
+    return $self->{can_1152x870px_75hz};
 }
 
 sub reserved {

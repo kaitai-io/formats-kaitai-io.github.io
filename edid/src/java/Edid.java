@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.nio.charset.Charset;
 
 public class Edid extends KaitaiStruct {
     public static Edid fromFile(String fileName) throws IOException {
@@ -380,42 +381,42 @@ public class Edid extends KaitaiStruct {
             _read();
         }
         private void _read() {
-            this.can72040070 = this._io.readBitsIntBe(1) != 0;
-            this.can72040088 = this._io.readBitsIntBe(1) != 0;
-            this.can64048060 = this._io.readBitsIntBe(1) != 0;
-            this.can64048067 = this._io.readBitsIntBe(1) != 0;
-            this.can64048072 = this._io.readBitsIntBe(1) != 0;
-            this.can64048075 = this._io.readBitsIntBe(1) != 0;
-            this.can80060056 = this._io.readBitsIntBe(1) != 0;
-            this.can80060060 = this._io.readBitsIntBe(1) != 0;
-            this.can80060072 = this._io.readBitsIntBe(1) != 0;
-            this.can80060075 = this._io.readBitsIntBe(1) != 0;
-            this.can83262475 = this._io.readBitsIntBe(1) != 0;
-            this.can102476887I = this._io.readBitsIntBe(1) != 0;
-            this.can102476860 = this._io.readBitsIntBe(1) != 0;
-            this.can102476870 = this._io.readBitsIntBe(1) != 0;
-            this.can102476875 = this._io.readBitsIntBe(1) != 0;
-            this.can1280102475 = this._io.readBitsIntBe(1) != 0;
-            this.can115287075 = this._io.readBitsIntBe(1) != 0;
+            this.can720x400px70hz = this._io.readBitsIntBe(1) != 0;
+            this.can720x400px88hz = this._io.readBitsIntBe(1) != 0;
+            this.can640x480px60hz = this._io.readBitsIntBe(1) != 0;
+            this.can640x480px67hz = this._io.readBitsIntBe(1) != 0;
+            this.can640x480px72hz = this._io.readBitsIntBe(1) != 0;
+            this.can640x480px75hz = this._io.readBitsIntBe(1) != 0;
+            this.can800x600px56hz = this._io.readBitsIntBe(1) != 0;
+            this.can800x600px60hz = this._io.readBitsIntBe(1) != 0;
+            this.can800x600px72hz = this._io.readBitsIntBe(1) != 0;
+            this.can800x600px75hz = this._io.readBitsIntBe(1) != 0;
+            this.can832x624px75hz = this._io.readBitsIntBe(1) != 0;
+            this.can1024x768px87hzI = this._io.readBitsIntBe(1) != 0;
+            this.can1024x768px60hz = this._io.readBitsIntBe(1) != 0;
+            this.can1024x768px70hz = this._io.readBitsIntBe(1) != 0;
+            this.can1024x768px75hz = this._io.readBitsIntBe(1) != 0;
+            this.can1280x1024px75hz = this._io.readBitsIntBe(1) != 0;
+            this.can1152x870px75hz = this._io.readBitsIntBe(1) != 0;
             this.reserved = this._io.readBitsIntBe(7);
         }
-        private boolean can72040070;
-        private boolean can72040088;
-        private boolean can64048060;
-        private boolean can64048067;
-        private boolean can64048072;
-        private boolean can64048075;
-        private boolean can80060056;
-        private boolean can80060060;
-        private boolean can80060072;
-        private boolean can80060075;
-        private boolean can83262475;
-        private boolean can102476887I;
-        private boolean can102476860;
-        private boolean can102476870;
-        private boolean can102476875;
-        private boolean can1280102475;
-        private boolean can115287075;
+        private boolean can720x400px70hz;
+        private boolean can720x400px88hz;
+        private boolean can640x480px60hz;
+        private boolean can640x480px67hz;
+        private boolean can640x480px72hz;
+        private boolean can640x480px75hz;
+        private boolean can800x600px56hz;
+        private boolean can800x600px60hz;
+        private boolean can800x600px72hz;
+        private boolean can800x600px75hz;
+        private boolean can832x624px75hz;
+        private boolean can1024x768px87hzI;
+        private boolean can1024x768px60hz;
+        private boolean can1024x768px70hz;
+        private boolean can1024x768px75hz;
+        private boolean can1280x1024px75hz;
+        private boolean can1152x870px75hz;
         private long reserved;
         private Edid _root;
         private Edid _parent;
@@ -423,87 +424,87 @@ public class Edid extends KaitaiStruct {
         /**
          * Supports 720 x 400 @ 70Hz
          */
-        public boolean can72040070() { return can72040070; }
+        public boolean can720x400px70hz() { return can720x400px70hz; }
 
         /**
          * Supports 720 x 400 @ 88Hz
          */
-        public boolean can72040088() { return can72040088; }
+        public boolean can720x400px88hz() { return can720x400px88hz; }
 
         /**
          * Supports 640 x 480 @ 60Hz
          */
-        public boolean can64048060() { return can64048060; }
+        public boolean can640x480px60hz() { return can640x480px60hz; }
 
         /**
          * Supports 640 x 480 @ 67Hz
          */
-        public boolean can64048067() { return can64048067; }
+        public boolean can640x480px67hz() { return can640x480px67hz; }
 
         /**
          * Supports 640 x 480 @ 72Hz
          */
-        public boolean can64048072() { return can64048072; }
+        public boolean can640x480px72hz() { return can640x480px72hz; }
 
         /**
          * Supports 640 x 480 @ 75Hz
          */
-        public boolean can64048075() { return can64048075; }
+        public boolean can640x480px75hz() { return can640x480px75hz; }
 
         /**
          * Supports 800 x 600 @ 56Hz
          */
-        public boolean can80060056() { return can80060056; }
+        public boolean can800x600px56hz() { return can800x600px56hz; }
 
         /**
          * Supports 800 x 600 @ 60Hz
          */
-        public boolean can80060060() { return can80060060; }
+        public boolean can800x600px60hz() { return can800x600px60hz; }
 
         /**
          * Supports 800 x 600 @ 72Hz
          */
-        public boolean can80060072() { return can80060072; }
+        public boolean can800x600px72hz() { return can800x600px72hz; }
 
         /**
          * Supports 800 x 600 @ 75Hz
          */
-        public boolean can80060075() { return can80060075; }
+        public boolean can800x600px75hz() { return can800x600px75hz; }
 
         /**
          * Supports 832 x 624 @ 75Hz
          */
-        public boolean can83262475() { return can83262475; }
+        public boolean can832x624px75hz() { return can832x624px75hz; }
 
         /**
          * Supports 1024 x 768 @ 87Hz(I)
          */
-        public boolean can102476887I() { return can102476887I; }
+        public boolean can1024x768px87hzI() { return can1024x768px87hzI; }
 
         /**
          * Supports 1024 x 768 @ 60Hz
          */
-        public boolean can102476860() { return can102476860; }
+        public boolean can1024x768px60hz() { return can1024x768px60hz; }
 
         /**
          * Supports 1024 x 768 @ 70Hz
          */
-        public boolean can102476870() { return can102476870; }
+        public boolean can1024x768px70hz() { return can1024x768px70hz; }
 
         /**
          * Supports 1024 x 768 @ 75Hz
          */
-        public boolean can102476875() { return can102476875; }
+        public boolean can1024x768px75hz() { return can1024x768px75hz; }
 
         /**
          * Supports 1280 x 1024 @ 75Hz
          */
-        public boolean can1280102475() { return can1280102475; }
+        public boolean can1280x1024px75hz() { return can1280x1024px75hz; }
 
         /**
          * Supports 1152 x 870 @ 75Hz
          */
-        public boolean can115287075() { return can115287075; }
+        public boolean can1152x870px75hz() { return can1152x870px75hz; }
         public long reserved() { return reserved; }
         public Edid _root() { return _root; }
         public Edid _parent() { return _parent; }
@@ -655,6 +656,13 @@ public class Edid extends KaitaiStruct {
             this.gamma = _tmp;
         }
         return this.gamma;
+    }
+    private String mfgStr;
+    public String mfgStr() {
+        if (this.mfgStr != null)
+            return this.mfgStr;
+        this.mfgStr = new String(new byte[] { (mfgIdCh1() + 64), (mfgIdCh2() + 64), (mfgIdCh3() + 64) }, Charset.forName("ASCII"));
+        return this.mfgStr;
     }
     private Integer mfgIdCh2;
     public Integer mfgIdCh2() {

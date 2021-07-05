@@ -4,6 +4,7 @@ from pkg_resources import parse_version
 import kaitaistruct
 from kaitaistruct import KaitaiStruct, KaitaiStream, BytesIO
 from enum import Enum
+import struct
 
 
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
@@ -217,23 +218,23 @@ class Edid(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.can_720_400_70 = self._io.read_bits_int_be(1) != 0
-            self.can_720_400_88 = self._io.read_bits_int_be(1) != 0
-            self.can_640_480_60 = self._io.read_bits_int_be(1) != 0
-            self.can_640_480_67 = self._io.read_bits_int_be(1) != 0
-            self.can_640_480_72 = self._io.read_bits_int_be(1) != 0
-            self.can_640_480_75 = self._io.read_bits_int_be(1) != 0
-            self.can_800_600_56 = self._io.read_bits_int_be(1) != 0
-            self.can_800_600_60 = self._io.read_bits_int_be(1) != 0
-            self.can_800_600_72 = self._io.read_bits_int_be(1) != 0
-            self.can_800_600_75 = self._io.read_bits_int_be(1) != 0
-            self.can_832_624_75 = self._io.read_bits_int_be(1) != 0
-            self.can_1024_768_87_i = self._io.read_bits_int_be(1) != 0
-            self.can_1024_768_60 = self._io.read_bits_int_be(1) != 0
-            self.can_1024_768_70 = self._io.read_bits_int_be(1) != 0
-            self.can_1024_768_75 = self._io.read_bits_int_be(1) != 0
-            self.can_1280_1024_75 = self._io.read_bits_int_be(1) != 0
-            self.can_1152_870_75 = self._io.read_bits_int_be(1) != 0
+            self.can_720x400px_70hz = self._io.read_bits_int_be(1) != 0
+            self.can_720x400px_88hz = self._io.read_bits_int_be(1) != 0
+            self.can_640x480px_60hz = self._io.read_bits_int_be(1) != 0
+            self.can_640x480px_67hz = self._io.read_bits_int_be(1) != 0
+            self.can_640x480px_72hz = self._io.read_bits_int_be(1) != 0
+            self.can_640x480px_75hz = self._io.read_bits_int_be(1) != 0
+            self.can_800x600px_56hz = self._io.read_bits_int_be(1) != 0
+            self.can_800x600px_60hz = self._io.read_bits_int_be(1) != 0
+            self.can_800x600px_72hz = self._io.read_bits_int_be(1) != 0
+            self.can_800x600px_75hz = self._io.read_bits_int_be(1) != 0
+            self.can_832x624px_75hz = self._io.read_bits_int_be(1) != 0
+            self.can_1024x768px_87hz_i = self._io.read_bits_int_be(1) != 0
+            self.can_1024x768px_60hz = self._io.read_bits_int_be(1) != 0
+            self.can_1024x768px_70hz = self._io.read_bits_int_be(1) != 0
+            self.can_1024x768px_75hz = self._io.read_bits_int_be(1) != 0
+            self.can_1280x1024px_75hz = self._io.read_bits_int_be(1) != 0
+            self.can_1152x870px_75hz = self._io.read_bits_int_be(1) != 0
             self.reserved = self._io.read_bits_int_be(7)
 
 
@@ -330,6 +331,14 @@ class Edid(KaitaiStruct):
             self._m_gamma = ((self.gamma_mod + 100) / 100.0)
 
         return self._m_gamma if hasattr(self, '_m_gamma') else None
+
+    @property
+    def mfg_str(self):
+        if hasattr(self, '_m_mfg_str'):
+            return self._m_mfg_str if hasattr(self, '_m_mfg_str') else None
+
+        self._m_mfg_str = (struct.pack('3b', (self.mfg_id_ch1 + 64), (self.mfg_id_ch2 + 64), (self.mfg_id_ch3 + 64))).decode(u"ASCII")
+        return self._m_mfg_str if hasattr(self, '_m_mfg_str') else None
 
     @property
     def mfg_id_ch2(self):

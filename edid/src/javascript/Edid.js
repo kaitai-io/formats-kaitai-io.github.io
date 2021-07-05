@@ -315,23 +315,23 @@ var Edid = (function() {
       this._read();
     }
     EstTimingsInfo.prototype._read = function() {
-      this.can72040070 = this._io.readBitsIntBe(1) != 0;
-      this.can72040088 = this._io.readBitsIntBe(1) != 0;
-      this.can64048060 = this._io.readBitsIntBe(1) != 0;
-      this.can64048067 = this._io.readBitsIntBe(1) != 0;
-      this.can64048072 = this._io.readBitsIntBe(1) != 0;
-      this.can64048075 = this._io.readBitsIntBe(1) != 0;
-      this.can80060056 = this._io.readBitsIntBe(1) != 0;
-      this.can80060060 = this._io.readBitsIntBe(1) != 0;
-      this.can80060072 = this._io.readBitsIntBe(1) != 0;
-      this.can80060075 = this._io.readBitsIntBe(1) != 0;
-      this.can83262475 = this._io.readBitsIntBe(1) != 0;
-      this.can102476887I = this._io.readBitsIntBe(1) != 0;
-      this.can102476860 = this._io.readBitsIntBe(1) != 0;
-      this.can102476870 = this._io.readBitsIntBe(1) != 0;
-      this.can102476875 = this._io.readBitsIntBe(1) != 0;
-      this.can1280102475 = this._io.readBitsIntBe(1) != 0;
-      this.can115287075 = this._io.readBitsIntBe(1) != 0;
+      this.can720x400px70hz = this._io.readBitsIntBe(1) != 0;
+      this.can720x400px88hz = this._io.readBitsIntBe(1) != 0;
+      this.can640x480px60hz = this._io.readBitsIntBe(1) != 0;
+      this.can640x480px67hz = this._io.readBitsIntBe(1) != 0;
+      this.can640x480px72hz = this._io.readBitsIntBe(1) != 0;
+      this.can640x480px75hz = this._io.readBitsIntBe(1) != 0;
+      this.can800x600px56hz = this._io.readBitsIntBe(1) != 0;
+      this.can800x600px60hz = this._io.readBitsIntBe(1) != 0;
+      this.can800x600px72hz = this._io.readBitsIntBe(1) != 0;
+      this.can800x600px75hz = this._io.readBitsIntBe(1) != 0;
+      this.can832x624px75hz = this._io.readBitsIntBe(1) != 0;
+      this.can1024x768px87hzI = this._io.readBitsIntBe(1) != 0;
+      this.can1024x768px60hz = this._io.readBitsIntBe(1) != 0;
+      this.can1024x768px70hz = this._io.readBitsIntBe(1) != 0;
+      this.can1024x768px75hz = this._io.readBitsIntBe(1) != 0;
+      this.can1280x1024px75hz = this._io.readBitsIntBe(1) != 0;
+      this.can1152x870px75hz = this._io.readBitsIntBe(1) != 0;
       this.reserved = this._io.readBitsIntBe(7);
     }
 
@@ -529,6 +529,14 @@ var Edid = (function() {
         this._m_gamma = ((this.gammaMod + 100) / 100.0);
       }
       return this._m_gamma;
+    }
+  });
+  Object.defineProperty(Edid.prototype, 'mfgStr', {
+    get: function() {
+      if (this._m_mfgStr !== undefined)
+        return this._m_mfgStr;
+      this._m_mfgStr = KaitaiStream.bytesToStr(new Uint8Array([(this.mfgIdCh1 + 64), (this.mfgIdCh2 + 64), (this.mfgIdCh3 + 64)]), "ASCII");
+      return this._m_mfgStr;
     }
   });
   Object.defineProperty(Edid.prototype, 'mfgIdCh2', {
