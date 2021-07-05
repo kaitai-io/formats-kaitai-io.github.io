@@ -1,0 +1,115 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__gimp_brush {
+		label="GimpBrush";
+		graph[style=dotted];
+
+		gimp_brush__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="len_header_pos">0</TD><TD PORT="len_header_size">4</TD><TD>u4be</TD><TD PORT="len_header_type">len_header</TD></TR>
+			<TR><TD PORT="header_pos">4</TD><TD PORT="header_size">(len_header - 4)</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+		</TABLE>>];
+		gimp_brush__inst__len_body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>len_body</TD><TD>((header.width * header.height) * I__COLOR_DEPTH[header.bytes_per_pixel])</TD></TR>
+		</TABLE>>];
+		gimp_brush__inst__body [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="body_pos">len_header</TD><TD PORT="body_size">len_body</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="GimpBrush::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="version_pos">0</TD><TD PORT="version_size">4</TD><TD>u4be</TD><TD PORT="version_type">version</TD></TR>
+				<TR><TD PORT="width_pos">4</TD><TD PORT="width_size">4</TD><TD>u4be</TD><TD PORT="width_type">width</TD></TR>
+				<TR><TD PORT="height_pos">8</TD><TD PORT="height_size">4</TD><TD>u4be</TD><TD PORT="height_type">height</TD></TR>
+				<TR><TD PORT="bytes_per_pixel_pos">12</TD><TD PORT="bytes_per_pixel_size">4</TD><TD>u4be→ColorDepth</TD><TD PORT="bytes_per_pixel_type">bytes_per_pixel</TD></TR>
+				<TR><TD PORT="magic_pos">16</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+				<TR><TD PORT="spacing_pos">20</TD><TD PORT="spacing_size">4</TD><TD>u4be</TD><TD PORT="spacing_type">spacing</TD></TR>
+				<TR><TD PORT="brush_name_pos">24</TD><TD PORT="brush_name_size">⇲</TD><TD>str(UTF-8)</TD><TD PORT="brush_name_type">brush_name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__bitmap {
+			label="GimpBrush::Bitmap";
+			graph[style=dotted];
+
+			bitmap__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="rows_pos">0</TD><TD PORT="rows_size">...</TD><TD>Row</TD><TD PORT="rows_type">rows</TD></TR>
+				<TR><TD COLSPAN="4" PORT="rows__repeat">repeat _root.header.height times</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__row {
+			label="GimpBrush::Row";
+			graph[style=dotted];
+
+			row__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="pixels_pos">0</TD><TD PORT="pixels_size">...</TD><TD>switch (_root.header.bytes_per_pixel)</TD><TD PORT="pixels_type">pixels</TD></TR>
+				<TR><TD COLSPAN="4" PORT="pixels__repeat">repeat _root.header.width times</TD></TR>
+			</TABLE>>];
+row__seq_pixels_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:color_depth_grayscale</TD><TD PORT="case0">PixelGray</TD></TR>
+	<TR><TD>:color_depth_rgba</TD><TD PORT="case1">PixelRgba</TD></TR>
+</TABLE>>];
+			subgraph cluster__pixel_gray {
+				label="GimpBrush::Row::PixelGray";
+				graph[style=dotted];
+
+				pixel_gray__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="gray_pos">0</TD><TD PORT="gray_size">1</TD><TD>u1</TD><TD PORT="gray_type">gray</TD></TR>
+				</TABLE>>];
+				pixel_gray__inst__red [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>red</TD><TD>0</TD></TR>
+				</TABLE>>];
+				pixel_gray__inst__green [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>green</TD><TD>0</TD></TR>
+				</TABLE>>];
+				pixel_gray__inst__blue [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>blue</TD><TD>0</TD></TR>
+				</TABLE>>];
+				pixel_gray__inst__alpha [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>alpha</TD><TD>gray</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__pixel_rgba {
+				label="GimpBrush::Row::PixelRgba";
+				graph[style=dotted];
+
+				pixel_rgba__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="red_pos">0</TD><TD PORT="red_size">1</TD><TD>u1</TD><TD PORT="red_type">red</TD></TR>
+					<TR><TD PORT="green_pos">1</TD><TD PORT="green_size">1</TD><TD>u1</TD><TD PORT="green_type">green</TD></TR>
+					<TR><TD PORT="blue_pos">2</TD><TD PORT="blue_size">1</TD><TD>u1</TD><TD PORT="blue_type">blue</TD></TR>
+					<TR><TD PORT="alpha_pos">3</TD><TD PORT="alpha_size">1</TD><TD>u1</TD><TD PORT="alpha_type">alpha</TD></TR>
+				</TABLE>>];
+			}
+		}
+	}
+	gimp_brush__seq:len_header_type -> gimp_brush__seq:header_size [color="#404040"];
+	gimp_brush__seq:len_header_type -> gimp_brush__seq:header_size [color="#404040"];
+	gimp_brush__seq:header_type -> header__seq [style=bold];
+	header__seq:width_type -> gimp_brush__inst__len_body [color="#404040"];
+	header__seq:height_type -> gimp_brush__inst__len_body [color="#404040"];
+	header__seq:bytes_per_pixel_type -> gimp_brush__inst__len_body [color="#404040"];
+	gimp_brush__seq:len_header_type -> gimp_brush__inst__body:body_pos [color="#404040"];
+	gimp_brush__inst__len_body:len_body_type -> gimp_brush__inst__body:body_size [color="#404040"];
+	bitmap__seq:rows_type -> row__seq [style=bold];
+	header__seq:height_type -> bitmap__seq:rows__repeat [color="#404040"];
+	row__seq:pixels_type -> row__seq_pixels_switch [style=bold];
+	row__seq_pixels_switch:case0 -> pixel_gray__seq [style=bold];
+	row__seq_pixels_switch:case1 -> pixel_rgba__seq [style=bold];
+	header__seq:bytes_per_pixel_type -> row__seq:pixels_type [color="#404040"];
+	header__seq:width_type -> row__seq:pixels__repeat [color="#404040"];
+	pixel_gray__seq:gray_type -> pixel_gray__inst__alpha [color="#404040"];
+}
