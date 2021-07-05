@@ -1,0 +1,42 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__android_asus_bootldr {
+		label="AndroidAsusBootldr";
+		graph[style=dotted];
+
+		android_asus_bootldr__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="revision_pos">8</TD><TD PORT="revision_size">2</TD><TD>u2le</TD><TD PORT="revision_type">revision</TD></TR>
+			<TR><TD PORT="reserved1_pos">10</TD><TD PORT="reserved1_size">2</TD><TD>u2le</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+			<TR><TD PORT="reserved2_pos">12</TD><TD PORT="reserved2_size">4</TD><TD>u4le</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+			<TR><TD PORT="images_pos">16</TD><TD PORT="images_size">...</TD><TD>Image</TD><TD PORT="images_type">images</TD></TR>
+			<TR><TD COLSPAN="4" PORT="images__repeat">repeat 3 times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__image {
+			label="AndroidAsusBootldr::Image";
+			graph[style=dotted];
+
+			image__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="chunk_id_pos">0</TD><TD PORT="chunk_id_size">8</TD><TD>str(ASCII)</TD><TD PORT="chunk_id_type">chunk_id</TD></TR>
+				<TR><TD PORT="len_body_pos">8</TD><TD PORT="len_body_size">4</TD><TD>u4le</TD><TD PORT="len_body_type">len_body</TD></TR>
+				<TR><TD PORT="flags_pos">12</TD><TD PORT="flags_size">1</TD><TD>u1</TD><TD PORT="flags_type">flags</TD></TR>
+				<TR><TD PORT="reserved1_pos">13</TD><TD PORT="reserved1_size">1</TD><TD>u1</TD><TD PORT="reserved1_type">reserved1</TD></TR>
+				<TR><TD PORT="reserved2_pos">14</TD><TD PORT="reserved2_size">1</TD><TD>u1</TD><TD PORT="reserved2_type">reserved2</TD></TR>
+				<TR><TD PORT="reserved3_pos">15</TD><TD PORT="reserved3_size">1</TD><TD>u1</TD><TD PORT="reserved3_type">reserved3</TD></TR>
+				<TR><TD PORT="body_pos">16</TD><TD PORT="body_size">len_body</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			image__inst__file_name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>file_name</TD><TD>(chunk_id == &quot;IFWI!!!!&quot; ? &quot;ifwi.bin&quot; : (chunk_id == &quot;DROIDBT!&quot; ? &quot;droidboot.img&quot; : (chunk_id == &quot;SPLASHS!&quot; ? &quot;splashscreen.img&quot; : &quot;&quot;)))</TD></TR>
+			</TABLE>>];
+		}
+	}
+	android_asus_bootldr__seq:images_type -> image__seq [style=bold];
+	image__seq:len_body_type -> image__seq:body_size [color="#404040"];
+	image__seq:chunk_id_type -> image__inst__file_name [color="#404040"];
+	image__seq:chunk_id_type -> image__inst__file_name [color="#404040"];
+	image__seq:chunk_id_type -> image__inst__file_name [color="#404040"];
+}
