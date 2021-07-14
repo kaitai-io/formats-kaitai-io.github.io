@@ -1,0 +1,39 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__au {
+		label="Au";
+		graph[style=dotted];
+
+		au__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="ofs_data_pos">4</TD><TD PORT="ofs_data_size">4</TD><TD>u4be</TD><TD PORT="ofs_data_type">ofs_data</TD></TR>
+			<TR><TD PORT="header_pos">8</TD><TD PORT="header_size">((ofs_data - 4) - 4)</TD><TD>Header</TD><TD PORT="header_type">header</TD></TR>
+		</TABLE>>];
+		au__inst__len_data [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>len_data</TD><TD>(header.data_size == 4294967295 ? (_io.size - ofs_data) : header.data_size)</TD></TR>
+		</TABLE>>];
+		subgraph cluster__header {
+			label="Au::Header";
+			graph[style=dotted];
+
+			header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="data_size_pos">0</TD><TD PORT="data_size_size">4</TD><TD>u4be</TD><TD PORT="data_size_type">data_size</TD></TR>
+				<TR><TD PORT="encoding_pos">4</TD><TD PORT="encoding_size">4</TD><TD>u4be→Encodings</TD><TD PORT="encoding_type">encoding</TD></TR>
+				<TR><TD PORT="sample_rate_pos">8</TD><TD PORT="sample_rate_size">4</TD><TD>u4be</TD><TD PORT="sample_rate_type">sample_rate</TD></TR>
+				<TR><TD PORT="num_channels_pos">12</TD><TD PORT="num_channels_size">4</TD><TD>u4be</TD><TD PORT="num_channels_type">num_channels</TD></TR>
+				<TR><TD PORT="comment_pos">16</TD><TD PORT="comment_size">⇲</TD><TD>str(ASCII)</TD><TD PORT="comment_type">comment</TD></TR>
+			</TABLE>>];
+		}
+	}
+	au__seq:ofs_data_type -> au__seq:header_size [color="#404040"];
+	au__seq:magic_type -> au__seq:header_size [color="#404040"];
+	au__seq:ofs_data_type -> au__seq:header_size [color="#404040"];
+	au__seq:header_type -> header__seq [style=bold];
+	header__seq:data_size_type -> au__inst__len_data [color="#404040"];
+	au__seq:ofs_data_type -> au__inst__len_data [color="#404040"];
+	header__seq:data_size_type -> au__inst__len_data [color="#404040"];
+}
