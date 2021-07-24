@@ -1077,6 +1077,69 @@ sub size {
 }
 
 ########################################################################
+package Elf::EndianElf::NoteSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::NoteSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::NoteSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+########################################################################
 package Elf::EndianElf::ProgramHeader;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1576,7 +1639,22 @@ sub body {
     $io->seek($self->ofs_body());
     if ($self->{_is_le}) {
         my $_on = $self->type();
-        if ($_on == $Elf::SH_TYPE_STRTAB) {
+        if ($_on == $Elf::SH_TYPE_REL) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_NOTE) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_SYMTAB) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_STRTAB) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
@@ -1591,17 +1669,32 @@ sub body {
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
-        elsif ($_on == $Elf::SH_TYPE_DYNSTR) {
+        elsif ($_on == $Elf::SH_TYPE_RELA) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
         else {
             $self->{body} = $io->read_bytes($self->len_body());
         }
     } else {
         my $_on = $self->type();
-        if ($_on == $Elf::SH_TYPE_STRTAB) {
+        if ($_on == $Elf::SH_TYPE_REL) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_NOTE) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_SYMTAB) {
+            $self->{_raw_body} = $io->read_bytes($self->len_body());
+            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+            $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+        }
+        elsif ($_on == $Elf::SH_TYPE_STRTAB) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
@@ -1616,10 +1709,10 @@ sub body {
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
             $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
-        elsif ($_on == $Elf::SH_TYPE_DYNSTR) {
+        elsif ($_on == $Elf::SH_TYPE_RELA) {
             $self->{_raw_body} = $io->read_bytes($self->len_body());
             my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
         }
         else {
             $self->{body} = $io->read_bytes($self->len_body());
@@ -1708,6 +1801,74 @@ sub entry_size {
 sub _raw_body {
     my ($self) = @_;
     return $self->{_raw_body};
+}
+
+########################################################################
+package Elf::EndianElf::RelocationSection;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::RelocationSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{entries} = ();
+    while (!$self->{_io}->is_eof()) {
+        push @{$self->{entries}}, Elf::EndianElf::RelocationSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
+    }
+}
+
+sub entries {
+    my ($self) = @_;
+    return $self->{entries};
+}
+
+sub has_addend {
+    my ($self) = @_;
+    return $self->{has_addend};
 }
 
 ########################################################################
@@ -1849,6 +2010,117 @@ sub entries {
 }
 
 ########################################################################
+package Elf::EndianElf::RelocationSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{offset} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{offset} = $self->{_io}->read_u8le();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{info} = $self->{_io}->read_u4le();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{info} = $self->{_io}->read_u8le();
+    }
+    if ($self->_parent()->has_addend()) {
+        my $_on = $self->_root()->bits();
+        if ($_on == $Elf::BITS_B32) {
+            $self->{addend} = $self->{_io}->read_s4le();
+        }
+        elsif ($_on == $Elf::BITS_B64) {
+            $self->{addend} = $self->{_io}->read_s8le();
+        }
+    }
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{offset} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{offset} = $self->{_io}->read_u8be();
+    }
+    my $_on = $self->_root()->bits();
+    if ($_on == $Elf::BITS_B32) {
+        $self->{info} = $self->{_io}->read_u4be();
+    }
+    elsif ($_on == $Elf::BITS_B64) {
+        $self->{info} = $self->{_io}->read_u8be();
+    }
+    if ($self->_parent()->has_addend()) {
+        my $_on = $self->_root()->bits();
+        if ($_on == $Elf::BITS_B32) {
+            $self->{addend} = $self->{_io}->read_s4be();
+        }
+        elsif ($_on == $Elf::BITS_B64) {
+            $self->{addend} = $self->{_io}->read_s8be();
+        }
+    }
+}
+
+sub offset {
+    my ($self) = @_;
+    return $self->{offset};
+}
+
+sub info {
+    my ($self) = @_;
+    return $self->{info};
+}
+
+sub addend {
+    my ($self) = @_;
+    return $self->{addend};
+}
+
+########################################################################
 package Elf::EndianElf::DynsymSectionEntry32;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1938,6 +2210,105 @@ sub other {
 sub shndx {
     my ($self) = @_;
     return $self->{shndx};
+}
+
+########################################################################
+package Elf::EndianElf::NoteSectionEntry;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root, $_is_le) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+    $self->{_is_le} = $_is_le;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    if (!(defined $self->{_is_le})) {
+        die "Unable to decide on endianness";
+    } elsif ($self->{_is_le}) {
+        $self->_read_le();
+    } else {
+        $self->_read_be();
+    }
+}
+
+sub _read_le {
+    my ($self) = @_;
+
+    $self->{len_name} = $self->{_io}->read_u4le();
+    $self->{len_descriptor} = $self->{_io}->read_u4le();
+    $self->{type} = $self->{_io}->read_u4le();
+    $self->{name} = IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes($self->len_name()), 0, 0);
+    $self->{name_padding} = $self->{_io}->read_bytes((-($self->len_name()) % 4));
+    $self->{descriptor} = $self->{_io}->read_bytes($self->len_descriptor());
+    $self->{descriptor_padding} = $self->{_io}->read_bytes((-($self->len_descriptor()) % 4));
+}
+
+sub _read_be {
+    my ($self) = @_;
+
+    $self->{len_name} = $self->{_io}->read_u4be();
+    $self->{len_descriptor} = $self->{_io}->read_u4be();
+    $self->{type} = $self->{_io}->read_u4be();
+    $self->{name} = IO::KaitaiStruct::Stream::bytes_terminate($self->{_io}->read_bytes($self->len_name()), 0, 0);
+    $self->{name_padding} = $self->{_io}->read_bytes((-($self->len_name()) % 4));
+    $self->{descriptor} = $self->{_io}->read_bytes($self->len_descriptor());
+    $self->{descriptor_padding} = $self->{_io}->read_bytes((-($self->len_descriptor()) % 4));
+}
+
+sub len_name {
+    my ($self) = @_;
+    return $self->{len_name};
+}
+
+sub len_descriptor {
+    my ($self) = @_;
+    return $self->{len_descriptor};
+}
+
+sub type {
+    my ($self) = @_;
+    return $self->{type};
+}
+
+sub name {
+    my ($self) = @_;
+    return $self->{name};
+}
+
+sub name_padding {
+    my ($self) = @_;
+    return $self->{name_padding};
+}
+
+sub descriptor {
+    my ($self) = @_;
+    return $self->{descriptor};
+}
+
+sub descriptor_padding {
+    my ($self) = @_;
+    return $self->{descriptor_padding};
 }
 
 ########################################################################

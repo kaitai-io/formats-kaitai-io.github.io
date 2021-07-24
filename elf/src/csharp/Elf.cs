@@ -1281,6 +1281,61 @@ namespace Kaitai
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf.DynsymSection M_Parent { get { return m_parent; } }
             }
+            public partial class NoteSection : KaitaiStruct
+            {
+                public static NoteSection FromFile(string fileName)
+                {
+                    return new NoteSection(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public NoteSection(KaitaiStream p__io, Elf.EndianElf.SectionHeader p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new UndecidedEndiannessError();
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _entries = new List<NoteSectionEntry>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(new NoteSectionEntry(m_io, this, m_root, m_isLe));
+                            i++;
+                        }
+                    }
+                }
+                private void _readBE()
+                {
+                    _entries = new List<NoteSectionEntry>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(new NoteSectionEntry(m_io, this, m_root, m_isLe));
+                            i++;
+                        }
+                    }
+                }
+                private List<NoteSectionEntry> _entries;
+                private Elf m_root;
+                private Elf.EndianElf.SectionHeader m_parent;
+                public List<NoteSectionEntry> Entries { get { return _entries; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
+            }
             public partial class ProgramHeader : KaitaiStruct
             {
                 public static ProgramHeader FromFile(string fileName)
@@ -1827,6 +1882,24 @@ namespace Kaitai
                         io.Seek(OfsBody);
                         if (m_isLe == true) {
                             switch (Type) {
+                            case Elf.ShType.Rel: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new RelocationSection(false, io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Note: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new NoteSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Symtab: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
                             case Elf.ShType.Strtab: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
@@ -1845,10 +1918,10 @@ namespace Kaitai
                                 _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
-                            case Elf.ShType.Dynstr: {
+                            case Elf.ShType.Rela: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                _body = new RelocationSection(true, io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             default: {
@@ -1858,6 +1931,24 @@ namespace Kaitai
                             }
                         } else {
                             switch (Type) {
+                            case Elf.ShType.Rel: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new RelocationSection(false, io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Note: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new NoteSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
+                            case Elf.ShType.Symtab: {
+                                __raw_body = io.ReadBytes(LenBody);
+                                var io___raw_body = new KaitaiStream(__raw_body);
+                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                break;
+                            }
                             case Elf.ShType.Strtab: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
@@ -1876,10 +1967,10 @@ namespace Kaitai
                                 _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
-                            case Elf.ShType.Dynstr: {
+                            case Elf.ShType.Rela: {
                                 __raw_body = io.ReadBytes(LenBody);
                                 var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                _body = new RelocationSection(true, io___raw_body, this, m_root, m_isLe);
                                 break;
                             }
                             default: {
@@ -1957,6 +2048,66 @@ namespace Kaitai
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf M_Parent { get { return m_parent; } }
                 public byte[] M_RawBody { get { return __raw_body; } }
+            }
+
+            /// <remarks>
+            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html">Source</a>
+            /// </remarks>
+            /// <remarks>
+            /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
+            /// </remarks>
+            public partial class RelocationSection : KaitaiStruct
+            {
+                private bool? m_isLe;
+                public RelocationSection(bool p_hasAddend, KaitaiStream p__io, Elf.EndianElf.SectionHeader p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _hasAddend = p_hasAddend;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new UndecidedEndiannessError();
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _entries = new List<RelocationSectionEntry>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(new RelocationSectionEntry(m_io, this, m_root, m_isLe));
+                            i++;
+                        }
+                    }
+                }
+                private void _readBE()
+                {
+                    _entries = new List<RelocationSectionEntry>();
+                    {
+                        var i = 0;
+                        while (!m_io.IsEof) {
+                            _entries.Add(new RelocationSectionEntry(m_io, this, m_root, m_isLe));
+                            i++;
+                        }
+                    }
+                }
+                private List<RelocationSectionEntry> _entries;
+                private bool _hasAddend;
+                private Elf m_root;
+                private Elf.EndianElf.SectionHeader m_parent;
+                public List<RelocationSectionEntry> Entries { get { return _entries; } }
+                public bool HasAddend { get { return _hasAddend; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
             }
             public partial class DynamicSection : KaitaiStruct
             {
@@ -2086,6 +2237,113 @@ namespace Kaitai
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
             }
+            public partial class RelocationSectionEntry : KaitaiStruct
+            {
+                public static RelocationSectionEntry FromFile(string fileName)
+                {
+                    return new RelocationSectionEntry(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public RelocationSectionEntry(KaitaiStream p__io, Elf.EndianElf.RelocationSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new UndecidedEndiannessError();
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _offset = m_io.ReadU4le();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _offset = m_io.ReadU8le();
+                        break;
+                    }
+                    }
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _info = m_io.ReadU4le();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _info = m_io.ReadU8le();
+                        break;
+                    }
+                    }
+                    if (M_Parent.HasAddend) {
+                        switch (M_Root.Bits) {
+                        case Elf.Bits.B32: {
+                            _addend = m_io.ReadS4le();
+                            break;
+                        }
+                        case Elf.Bits.B64: {
+                            _addend = m_io.ReadS8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                private void _readBE()
+                {
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _offset = m_io.ReadU4be();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _offset = m_io.ReadU8be();
+                        break;
+                    }
+                    }
+                    switch (M_Root.Bits) {
+                    case Elf.Bits.B32: {
+                        _info = m_io.ReadU4be();
+                        break;
+                    }
+                    case Elf.Bits.B64: {
+                        _info = m_io.ReadU8be();
+                        break;
+                    }
+                    }
+                    if (M_Parent.HasAddend) {
+                        switch (M_Root.Bits) {
+                        case Elf.Bits.B32: {
+                            _addend = m_io.ReadS4be();
+                            break;
+                        }
+                        case Elf.Bits.B64: {
+                            _addend = m_io.ReadS8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                private ulong _offset;
+                private ulong _info;
+                private long _addend;
+                private Elf m_root;
+                private Elf.EndianElf.RelocationSection m_parent;
+                public ulong Offset { get { return _offset; } }
+                public ulong Info { get { return _info; } }
+                public long Addend { get { return _addend; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.RelocationSection M_Parent { get { return m_parent; } }
+            }
             public partial class DynsymSectionEntry32 : KaitaiStruct
             {
                 public static DynsymSectionEntry32 FromFile(string fileName)
@@ -2146,6 +2404,87 @@ namespace Kaitai
                 public ushort Shndx { get { return _shndx; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf.DynsymSection M_Parent { get { return m_parent; } }
+            }
+
+            /// <remarks>
+            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html">Source</a>
+            /// </remarks>
+            /// <remarks>
+            /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
+            /// </remarks>
+            public partial class NoteSectionEntry : KaitaiStruct
+            {
+                public static NoteSectionEntry FromFile(string fileName)
+                {
+                    return new NoteSectionEntry(new KaitaiStream(fileName));
+                }
+
+                private bool? m_isLe;
+                public NoteSectionEntry(KaitaiStream p__io, Elf.EndianElf.NoteSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    m_isLe = isLe;
+                    _read();
+                }
+                private void _read()
+                {
+
+                    if (m_isLe == null) {
+                        throw new UndecidedEndiannessError();
+                    } else if (m_isLe == true) {
+                        _readLE();
+                    } else {
+                        _readBE();
+                    }
+                }
+                private void _readLE()
+                {
+                    _lenName = m_io.ReadU4le();
+                    _lenDescriptor = m_io.ReadU4le();
+                    _type = m_io.ReadU4le();
+                    _name = KaitaiStream.BytesTerminate(m_io.ReadBytes(LenName), 0, false);
+                    _namePadding = m_io.ReadBytes(KaitaiStream.Mod(-(LenName), 4));
+                    _descriptor = m_io.ReadBytes(LenDescriptor);
+                    _descriptorPadding = m_io.ReadBytes(KaitaiStream.Mod(-(LenDescriptor), 4));
+                }
+                private void _readBE()
+                {
+                    _lenName = m_io.ReadU4be();
+                    _lenDescriptor = m_io.ReadU4be();
+                    _type = m_io.ReadU4be();
+                    _name = KaitaiStream.BytesTerminate(m_io.ReadBytes(LenName), 0, false);
+                    _namePadding = m_io.ReadBytes(KaitaiStream.Mod(-(LenName), 4));
+                    _descriptor = m_io.ReadBytes(LenDescriptor);
+                    _descriptorPadding = m_io.ReadBytes(KaitaiStream.Mod(-(LenDescriptor), 4));
+                }
+                private uint _lenName;
+                private uint _lenDescriptor;
+                private uint _type;
+                private byte[] _name;
+                private byte[] _namePadding;
+                private byte[] _descriptor;
+                private byte[] _descriptorPadding;
+                private Elf m_root;
+                private Elf.EndianElf.NoteSection m_parent;
+                public uint LenName { get { return _lenName; } }
+                public uint LenDescriptor { get { return _lenDescriptor; } }
+                public uint Type { get { return _type; } }
+
+                /// <summary>
+                /// Although the ELF specification seems to hint that the `note_name` field
+                /// is ASCII this isn't the case for Linux binaries that have a
+                /// `.gnu.build.attributes` section.
+                /// </summary>
+                /// <remarks>
+                /// Reference: <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
+                /// </remarks>
+                public byte[] Name { get { return _name; } }
+                public byte[] NamePadding { get { return _namePadding; } }
+                public byte[] Descriptor { get { return _descriptor; } }
+                public byte[] DescriptorPadding { get { return _descriptorPadding; } }
+                public Elf M_Root { get { return m_root; } }
+                public Elf.EndianElf.NoteSection M_Parent { get { return m_parent; } }
             }
             public partial class StringsStruct : KaitaiStruct
             {

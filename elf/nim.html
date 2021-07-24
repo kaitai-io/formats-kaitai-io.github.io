@@ -128,7 +128,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -567,6 +567,10 @@ section#format-index .row {
     <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_DynsymSection</span>
     <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">Elf_EndianElf_NoteSection</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_SectionHeader</span>
+    <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
   <span class="n">Elf_EndianElf_ProgramHeader</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_PhType</span>
     <span class="p">`</span><span class="n">flags64</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -606,6 +610,11 @@ section#format-index .row {
     <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
     <span class="p">`</span><span class="n">flagsObjInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_SectionHeaderFlags</span>
     <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">Elf_EndianElf_RelocationSection</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">hasAddend</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_SectionHeader</span>
+    <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
   <span class="n">Elf_EndianElf_DynamicSection</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Elf_EndianElf_DynamicSectionEntry</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
@@ -613,6 +622,12 @@ section#format-index .row {
   <span class="n">Elf_EndianElf_DynsymSection</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">KaitaiStruct</span><span class="o">]</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_SectionHeader</span>
+    <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">offset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">info</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">addend</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int64</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_RelocationSection</span>
     <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
   <span class="n">Elf_EndianElf_DynsymSectionEntry32</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">nameOffset</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
@@ -622,6 +637,16 @@ section#format-index .row {
     <span class="p">`</span><span class="n">other</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">shndx</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_DynsymSection</span>
+    <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenDescriptor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">namePadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">descriptor</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">descriptorPadding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Elf_EndianElf_NoteSection</span>
     <span class="n">isLe</span><span class="p">:</span> <span class="kt">bool</span>
   <span class="n">Elf_EndianElf_StringsStruct</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">string</span><span class="o">]</span>
@@ -634,12 +659,16 @@ section#format-index .row {
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_DtFlag1Values], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynamicSectionEntry, value: any): Elf_DtFlag1Values</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf], io: KaitaiStream, root: KaitaiStruct, parent: Elf): Elf_EndianElf</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_DynsymSectionEntry64], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynsymSection): Elf_EndianElf_DynsymSectionEntry64</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_NoteSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_NoteSection</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_ProgramHeader], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf): Elf_EndianElf_ProgramHeader</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_DynamicSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynamicSection): Elf_EndianElf_DynamicSectionEntry</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_SectionHeader], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf): Elf_EndianElf_SectionHeader</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_RelocationSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader, hasAddend: any): Elf_EndianElf_RelocationSection</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf_EndianElf_DynamicSection</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_DynsymSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_DynsymSection</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_RelocationSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_RelocationSection): Elf_EndianElf_RelocationSectionEntry</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_DynsymSectionEntry32], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynsymSection): Elf_EndianElf_DynsymSectionEntry32</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_NoteSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_NoteSection): Elf_EndianElf_NoteSectionEntry</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_StringsStruct], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf_EndianElf_StringsStruct</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_PhdrTypeFlags</span><span class="p">):</span> <span class="kt">bool</span>
@@ -1548,6 +1577,42 @@ section#format-index .row {
   <span class="n">Elf_EndianElf_DynsymSectionEntry64</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
+<span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_NoteSection</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+
+<span class="k">proc </span><span class="nf">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_NoteSection</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_NoteSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_NoteSection =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Elf_EndianElf_NoteSection</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isLe</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">isLe</span>
+
+
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLe</span><span class="p">:</span>
+    <span class="n">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_NoteSection], filename: string): Elf_EndianElf_NoteSection =</span>
+  <span class="n">Elf_EndianElf_NoteSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
 <span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_ProgramHeader</span><span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">Elf_PhType</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
   <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
@@ -1949,7 +2014,25 @@ section#format-index .row {
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLe</span><span class="p">:</span>
     <span class="k">block</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
-      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">strtab</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">rel</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+        <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">note</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+        <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_NoteSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">symtab</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+        <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_DynsymSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">strtab</span><span class="p">:</span>
         <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
         <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
         <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
@@ -1967,11 +2050,11 @@ section#format-index .row {
         <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
         <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_DynsymSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
         <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
-      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">dynstr</span><span class="p">:</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">rela</span><span class="p">:</span>
         <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
         <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
         <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
-        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_StringsStruct</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
         <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
@@ -1979,7 +2062,25 @@ section#format-index .row {
   <span class="k">else</span><span class="p">:</span>
     <span class="k">block</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
-      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">strtab</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">rel</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+        <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">note</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+        <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_NoteSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">symtab</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
+        <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_DynsymSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">strtab</span><span class="p">:</span>
         <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
         <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
         <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
@@ -1997,11 +2098,11 @@ section#format-index .row {
         <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
         <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_DynsymSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
         <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
-      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">dynstr</span><span class="p">:</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">rela</span><span class="p">:</span>
         <span class="k">let</span> <span class="n">rawBodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
         <span class="n">this</span><span class="p">.</span><span class="n">rawBodyInst</span> <span class="o">=</span> <span class="n">rawBodyInstExpr</span>
         <span class="k">let</span> <span class="n">rawBodyInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawBodyInstExpr</span><span class="p">)</span>
-        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_StringsStruct</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+        <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawBodyInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
         <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
       <span class="k">else</span><span class="p">:</span>
         <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
@@ -2040,6 +2141,49 @@ section#format-index .row {
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_SectionHeader], filename: string): Elf_EndianElf_SectionHeader =</span>
   <span class="n">Elf_EndianElf_SectionHeader</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+
+<span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+
+<span class="k">proc </span><span class="nf">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_RelocationSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader, hasAddend: any): Elf_EndianElf_RelocationSection =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Elf_EndianElf_RelocationSection</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="k">let</span> <span class="n">hasAddendExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">hasAddend</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">hasAddend</span> <span class="o">=</span> <span class="n">hasAddendExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isLe</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">isLe</span>
+
+
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLe</span><span class="p">:</span>
+    <span class="n">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_RelocationSection], filename: string): Elf_EndianElf_RelocationSection =</span>
+  <span class="n">Elf_EndianElf_RelocationSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_DynamicSection</span><span class="p">)</span> <span class="o">=</span>
@@ -2126,6 +2270,80 @@ section#format-index .row {
   <span class="n">Elf_EndianElf_DynsymSection</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
+<span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">offsetExpr</span> <span class="o">=</span> <span class="n">uint64</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offsetExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">offsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offsetExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">infoExpr</span> <span class="o">=</span> <span class="n">uint64</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">infoExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">infoExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8le</span><span class="p">()</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">infoExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">hasAddend</span><span class="p">:</span>
+    <span class="k">block</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">addendExpr</span> <span class="o">=</span> <span class="kt">int64</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4le</span><span class="p">())</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">addendExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">addendExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS8le</span><span class="p">()</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">addendExpr</span>
+
+
+<span class="k">proc </span><span class="nf">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">offsetExpr</span> <span class="o">=</span> <span class="n">uint64</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offsetExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">offsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8be</span><span class="p">()</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offsetExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">infoExpr</span> <span class="o">=</span> <span class="n">uint64</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">infoExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">infoExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8be</span><span class="p">()</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">infoExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">hasAddend</span><span class="p">:</span>
+    <span class="k">block</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">bits</span>
+      <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b32</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">addendExpr</span> <span class="o">=</span> <span class="kt">int64</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4be</span><span class="p">())</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">addendExpr</span>
+      <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">elf</span><span class="p">.</span><span class="n">b64</span><span class="p">:</span>
+        <span class="k">let</span> <span class="n">addendExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS8be</span><span class="p">()</span>
+        <span class="n">this</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">addendExpr</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_RelocationSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_RelocationSection): Elf_EndianElf_RelocationSectionEntry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isLe</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">isLe</span>
+
+
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLe</span><span class="p">:</span>
+    <span class="n">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_RelocationSectionEntry], filename: string): Elf_EndianElf_RelocationSectionEntry =</span>
+  <span class="n">Elf_EndianElf_RelocationSectionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
 <span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_DynsymSectionEntry32</span><span class="p">)</span> <span class="o">=</span>
   <span class="k">let</span> <span class="n">nameOffsetExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">nameOffset</span> <span class="o">=</span> <span class="n">nameOffsetExpr</span>
@@ -2172,6 +2390,79 @@ section#format-index .row {
 
 <span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_DynsymSectionEntry32], filename: string): Elf_EndianElf_DynsymSectionEntry32 =</span>
   <span class="n">Elf_EndianElf_DynsymSectionEntry32</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+
+<span class="sd">##[</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+
+<span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">lenNameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenName</span> <span class="o">=</span> <span class="n">lenNameExpr</span>
+  <span class="k">let</span> <span class="n">lenDescriptorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDescriptor</span> <span class="o">=</span> <span class="n">lenDescriptorExpr</span>
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Although</span> <span class="n">the</span> <span class="n">ELF</span> <span class="n">specification</span> <span class="n">seems</span> <span class="n">to</span> <span class="n">hint</span> <span class="n">that</span> <span class="n">the</span> <span class="p">`</span><span class="n">note_name</span><span class="p">`</span> <span class="n">field</span>
+<span class="ow">is</span> <span class="n">ASCII</span> <span class="n">this</span> <span class="n">isn</span><span class="sc">&#39;t the case for Linux binaries that have a</span>
+<span class="p">`.</span><span class="n">gnu</span><span class="p">.</span><span class="n">build</span><span class="p">.</span><span class="n">attributes</span><span class="p">`</span> <span class="n">section</span><span class="p">.</span>
+
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">nameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenName</span><span class="p">)).</span><span class="n">bytesTerminate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
+  <span class="k">let</span> <span class="n">namePaddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenName</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">namePadding</span> <span class="o">=</span> <span class="n">namePaddingExpr</span>
+  <span class="k">let</span> <span class="n">descriptorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenDescriptor</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">descriptorExpr</span>
+  <span class="k">let</span> <span class="n">descriptorPaddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenDescriptor</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">descriptorPadding</span> <span class="o">=</span> <span class="n">descriptorPaddingExpr</span>
+
+
+<span class="k">proc </span><span class="nf">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="p">)</span> <span class="o">=</span>
+  <span class="k">let</span> <span class="n">lenNameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenName</span> <span class="o">=</span> <span class="n">lenNameExpr</span>
+  <span class="k">let</span> <span class="n">lenDescriptorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDescriptor</span> <span class="o">=</span> <span class="n">lenDescriptorExpr</span>
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Although</span> <span class="n">the</span> <span class="n">ELF</span> <span class="n">specification</span> <span class="n">seems</span> <span class="n">to</span> <span class="n">hint</span> <span class="n">that</span> <span class="n">the</span> <span class="p">`</span><span class="n">note_name</span><span class="p">`</span> <span class="n">field</span>
+<span class="ow">is</span> <span class="n">ASCII</span> <span class="n">this</span> <span class="n">isn</span><span class="sc">&#39;t the case for Linux binaries that have a</span>
+<span class="p">`.</span><span class="n">gnu</span><span class="p">.</span><span class="n">build</span><span class="p">.</span><span class="n">attributes</span><span class="p">`</span> <span class="n">section</span><span class="p">.</span>
+
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">nameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenName</span><span class="p">)).</span><span class="n">bytesTerminate</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
+  <span class="k">let</span> <span class="n">namePaddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenName</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">namePadding</span> <span class="o">=</span> <span class="n">namePaddingExpr</span>
+  <span class="k">let</span> <span class="n">descriptorExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenDescriptor</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">descriptorExpr</span>
+  <span class="k">let</span> <span class="n">descriptorPaddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenDescriptor</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">descriptorPadding</span> <span class="o">=</span> <span class="n">descriptorPaddingExpr</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_NoteSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_NoteSection): Elf_EndianElf_NoteSectionEntry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Elf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isLe</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">isLe</span>
+
+
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isLe</span><span class="p">:</span>
+    <span class="n">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="n">readBe</span><span class="p">(</span><span class="n">this</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Elf_EndianElf_NoteSectionEntry], filename: string): Elf_EndianElf_NoteSectionEntry =</span>
+  <span class="n">Elf_EndianElf_NoteSectionEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 
 <span class="k">proc </span><span class="nf">readLe</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Elf_EndianElf_StringsStruct</span><span class="p">)</span> <span class="o">=</span>

@@ -128,7 +128,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -1444,6 +1444,45 @@ section#format-index .row {
       <span class="k">return</span> <span class="nx">DynsymSectionEntry64</span><span class="p">;</span>
     <span class="p">})();</span>
 
+    <span class="kd">var</span> <span class="nx">NoteSection</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">NoteSection</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">NoteSection</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">=</span> <span class="nx">_is_le</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">NoteSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readLE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readBE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">NoteSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">NoteSectionEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
+          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">NoteSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">NoteSectionEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
+          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">NoteSection</span><span class="p">;</span>
+    <span class="p">})();</span>
+
     <span class="kd">var</span> <span class="nx">ProgramHeader</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">ProgramHeader</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="kd">function</span> <span class="nx">ProgramHeader</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
@@ -1846,6 +1885,21 @@ section#format-index .row {
           <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsBody</span><span class="p">);</span>
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">REL</span><span class="o">:</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
+              <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RelocationSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+              <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">NOTE</span><span class="o">:</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
+              <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoteSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+              <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">SYMTAB</span><span class="o">:</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
+              <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DynsymSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+              <span class="k">break</span><span class="p">;</span>
             <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">STRTAB</span><span class="o">:</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
               <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
@@ -1861,10 +1915,10 @@ section#format-index .row {
               <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DynsymSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">DYNSTR</span><span class="o">:</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">RELA</span><span class="o">:</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
               <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
-              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringsStruct</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RelocationSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
               <span class="k">break</span><span class="p">;</span>
             <span class="k">default</span><span class="o">:</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
@@ -1872,6 +1926,21 @@ section#format-index .row {
             <span class="p">}</span>
           <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
             <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">REL</span><span class="o">:</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
+              <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RelocationSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+              <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">NOTE</span><span class="o">:</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
+              <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoteSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+              <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">SYMTAB</span><span class="o">:</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
+              <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DynsymSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+              <span class="k">break</span><span class="p">;</span>
             <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">STRTAB</span><span class="o">:</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
               <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
@@ -1887,10 +1956,10 @@ section#format-index .row {
               <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DynsymSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
               <span class="k">break</span><span class="p">;</span>
-            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">DYNSTR</span><span class="o">:</span>
+            <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">RELA</span><span class="o">:</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
               <span class="kd">var</span> <span class="nx">_io__raw__m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_body</span><span class="p">);</span>
-              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringsStruct</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">RelocationSection</span><span class="p">(</span><span class="nx">_io__raw__m_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
               <span class="k">break</span><span class="p">;</span>
             <span class="k">default</span><span class="o">:</span>
               <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenBody</span><span class="p">);</span>
@@ -1931,6 +2000,51 @@ section#format-index .row {
       <span class="p">});</span>
 
       <span class="k">return</span> <span class="nx">SectionHeader</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html|Source}</span>
+<span class="cm">     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html|Source}</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">RelocationSection</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">RelocationSection</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">RelocationSection</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">,</span> <span class="nx">hasAddend</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">=</span> <span class="nx">_is_le</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">hasAddend</span> <span class="o">=</span> <span class="nx">hasAddend</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">RelocationSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readLE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readBE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">RelocationSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">RelocationSectionEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
+          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">RelocationSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">RelocationSectionEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
+          <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">RelocationSection</span><span class="p">;</span>
     <span class="p">})();</span>
 
     <span class="kd">var</span> <span class="nx">DynamicSection</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">DynamicSection</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -2025,6 +2139,85 @@ section#format-index .row {
       <span class="k">return</span> <span class="nx">DynsymSection</span><span class="p">;</span>
     <span class="p">})();</span>
 
+    <span class="kd">var</span> <span class="nx">RelocationSectionEntry</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">RelocationSectionEntry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">RelocationSectionEntry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">=</span> <span class="nx">_is_le</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">RelocationSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readLE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readBE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">RelocationSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">hasAddend</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">addend</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4le</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">addend</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS8le</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">RelocationSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">offset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+          <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">hasAddend</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">addend</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS4be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">addend</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readS8be</span><span class="p">();</span>
+            <span class="k">break</span><span class="p">;</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">RelocationSectionEntry</span><span class="p">;</span>
+    <span class="p">})();</span>
+
     <span class="kd">var</span> <span class="nx">DynsymSectionEntry32</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">DynsymSectionEntry32</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="kd">function</span> <span class="nx">DynsymSectionEntry32</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
@@ -2062,6 +2255,59 @@ section#format-index .row {
       <span class="p">}</span>
 
       <span class="k">return</span> <span class="nx">DynsymSectionEntry32</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html|Source}</span>
+<span class="cm">     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section|Source}</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">NoteSectionEntry</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">NoteSectionEntry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">NoteSectionEntry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">=</span> <span class="nx">_is_le</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">NoteSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readLE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_readBE</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">();</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+      <span class="nx">NoteSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">lenName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">lenDescriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenName</span><span class="p">),</span> <span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">namePadding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenName</span><span class="p">),</span> <span class="mf">4</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">descriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenDescriptor</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">descriptorPadding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenDescriptor</span><span class="p">),</span> <span class="mf">4</span><span class="p">));</span>
+      <span class="p">}</span>
+      <span class="nx">NoteSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">lenName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">lenDescriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesTerminate</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenName</span><span class="p">),</span> <span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">namePadding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenName</span><span class="p">),</span> <span class="mf">4</span><span class="p">));</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">descriptor</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenDescriptor</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">descriptorPadding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">mod</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">lenDescriptor</span><span class="p">),</span> <span class="mf">4</span><span class="p">));</span>
+      <span class="p">}</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * Although the ELF specification seems to hint that the `note_name` field</span>
+<span class="cm">       * is ASCII this isn&#39;t the case for Linux binaries that have a</span>
+<span class="cm">       * `.gnu.build.attributes` section.</span>
+<span class="cm">       * @see {@link https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes|Source}</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">NoteSectionEntry</span><span class="p">;</span>
     <span class="p">})();</span>
 
     <span class="kd">var</span> <span class="nx">StringsStruct</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">StringsStruct</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>

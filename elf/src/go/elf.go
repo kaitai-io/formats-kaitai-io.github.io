@@ -1520,6 +1520,73 @@ func (this *Elf_EndianElf_DynsymSectionEntry64) _read_be() (err error) {
 	this.Size = uint64(tmp67)
 	return err
 }
+type Elf_EndianElf_NoteSection struct {
+	Entries []*Elf_EndianElf_NoteSectionEntry
+	_io *kaitai.Stream
+	_root *Elf
+	_parent *Elf_EndianElf_SectionHeader
+	_is_le int
+}
+func NewElf_EndianElf_NoteSection() *Elf_EndianElf_NoteSection {
+	return &Elf_EndianElf_NoteSection{
+	}
+}
+
+func (this *Elf_EndianElf_NoteSection) Read(io *kaitai.Stream, parent *Elf_EndianElf_SectionHeader, root *Elf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_NoteSection) _read_le() (err error) {
+	for i := 1;; i++ {
+		tmp68, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp68 {
+			break
+		}
+		tmp69 := NewElf_EndianElf_NoteSectionEntry()
+		err = tmp69.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp69)
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_NoteSection) _read_be() (err error) {
+	for i := 1;; i++ {
+		tmp70, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp70 {
+			break
+		}
+		tmp71 := NewElf_EndianElf_NoteSectionEntry()
+		err = tmp71.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp71)
+	}
+	return err
+}
 type Elf_EndianElf_ProgramHeader struct {
 	Type Elf_PhType
 	Flags64 uint32
@@ -1564,45 +1631,17 @@ func (this *Elf_EndianElf_ProgramHeader) Read(io *kaitai.Stream, parent *Elf_End
 }
 
 func (this *Elf_EndianElf_ProgramHeader) _read_le() (err error) {
-	tmp68, err := this._io.ReadU4le()
+	tmp72, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = Elf_PhType(tmp68)
+	this.Type = Elf_PhType(tmp72)
 	if (this._root.Bits == Elf_Bits__B64) {
-		tmp69, err := this._io.ReadU4le()
+		tmp73, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Flags64 = uint32(tmp69)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp70, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Offset = uint64(tmp70)
-	case Elf_Bits__B64:
-		tmp71, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Offset = uint64(tmp71)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp72, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Vaddr = uint64(tmp72)
-	case Elf_Bits__B64:
-		tmp73, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Vaddr = uint64(tmp73)
+		this.Flags64 = uint32(tmp73)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -1610,13 +1649,13 @@ func (this *Elf_EndianElf_ProgramHeader) _read_le() (err error) {
 		if err != nil {
 			return err
 		}
-		this.Paddr = uint64(tmp74)
+		this.Offset = uint64(tmp74)
 	case Elf_Bits__B64:
 		tmp75, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Paddr = uint64(tmp75)
+		this.Offset = uint64(tmp75)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -1624,13 +1663,13 @@ func (this *Elf_EndianElf_ProgramHeader) _read_le() (err error) {
 		if err != nil {
 			return err
 		}
-		this.Filesz = uint64(tmp76)
+		this.Vaddr = uint64(tmp76)
 	case Elf_Bits__B64:
 		tmp77, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Filesz = uint64(tmp77)
+		this.Vaddr = uint64(tmp77)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -1638,78 +1677,78 @@ func (this *Elf_EndianElf_ProgramHeader) _read_le() (err error) {
 		if err != nil {
 			return err
 		}
-		this.Memsz = uint64(tmp78)
+		this.Paddr = uint64(tmp78)
 	case Elf_Bits__B64:
 		tmp79, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Memsz = uint64(tmp79)
+		this.Paddr = uint64(tmp79)
 	}
-	if (this._root.Bits == Elf_Bits__B32) {
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
 		tmp80, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Flags32 = uint32(tmp80)
+		this.Filesz = uint64(tmp80)
+	case Elf_Bits__B64:
+		tmp81, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Filesz = uint64(tmp81)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
-		tmp81, err := this._io.ReadU4le()
+		tmp82, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp81)
+		this.Memsz = uint64(tmp82)
 	case Elf_Bits__B64:
-		tmp82, err := this._io.ReadU8le()
+		tmp83, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp82)
+		this.Memsz = uint64(tmp83)
+	}
+	if (this._root.Bits == Elf_Bits__B32) {
+		tmp84, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Flags32 = uint32(tmp84)
+	}
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp85, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp85)
+	case Elf_Bits__B64:
+		tmp86, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp86)
 	}
 	return err
 }
 
 func (this *Elf_EndianElf_ProgramHeader) _read_be() (err error) {
-	tmp83, err := this._io.ReadU4be()
+	tmp87, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Type = Elf_PhType(tmp83)
+	this.Type = Elf_PhType(tmp87)
 	if (this._root.Bits == Elf_Bits__B64) {
-		tmp84, err := this._io.ReadU4be()
+		tmp88, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.Flags64 = uint32(tmp84)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp85, err := this._io.ReadU4be()
-		if err != nil {
-			return err
-		}
-		this.Offset = uint64(tmp85)
-	case Elf_Bits__B64:
-		tmp86, err := this._io.ReadU8be()
-		if err != nil {
-			return err
-		}
-		this.Offset = uint64(tmp86)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp87, err := this._io.ReadU4be()
-		if err != nil {
-			return err
-		}
-		this.Vaddr = uint64(tmp87)
-	case Elf_Bits__B64:
-		tmp88, err := this._io.ReadU8be()
-		if err != nil {
-			return err
-		}
-		this.Vaddr = uint64(tmp88)
+		this.Flags64 = uint32(tmp88)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -1717,13 +1756,13 @@ func (this *Elf_EndianElf_ProgramHeader) _read_be() (err error) {
 		if err != nil {
 			return err
 		}
-		this.Paddr = uint64(tmp89)
+		this.Offset = uint64(tmp89)
 	case Elf_Bits__B64:
 		tmp90, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.Paddr = uint64(tmp90)
+		this.Offset = uint64(tmp90)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -1731,13 +1770,13 @@ func (this *Elf_EndianElf_ProgramHeader) _read_be() (err error) {
 		if err != nil {
 			return err
 		}
-		this.Filesz = uint64(tmp91)
+		this.Vaddr = uint64(tmp91)
 	case Elf_Bits__B64:
 		tmp92, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.Filesz = uint64(tmp92)
+		this.Vaddr = uint64(tmp92)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -1745,34 +1784,62 @@ func (this *Elf_EndianElf_ProgramHeader) _read_be() (err error) {
 		if err != nil {
 			return err
 		}
-		this.Memsz = uint64(tmp93)
+		this.Paddr = uint64(tmp93)
 	case Elf_Bits__B64:
 		tmp94, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.Memsz = uint64(tmp94)
+		this.Paddr = uint64(tmp94)
 	}
-	if (this._root.Bits == Elf_Bits__B32) {
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
 		tmp95, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.Flags32 = uint32(tmp95)
+		this.Filesz = uint64(tmp95)
+	case Elf_Bits__B64:
+		tmp96, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Filesz = uint64(tmp96)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
-		tmp96, err := this._io.ReadU4be()
+		tmp97, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp96)
+		this.Memsz = uint64(tmp97)
 	case Elf_Bits__B64:
-		tmp97, err := this._io.ReadU8be()
+		tmp98, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp97)
+		this.Memsz = uint64(tmp98)
+	}
+	if (this._root.Bits == Elf_Bits__B32) {
+		tmp99, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Flags32 = uint32(tmp99)
+	}
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp100, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp100)
+	case Elf_Bits__B64:
+		tmp101, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp101)
 	}
 	return err
 }
@@ -1792,33 +1859,33 @@ func (this *Elf_EndianElf_ProgramHeader) Dynamic() (v *Elf_EndianElf_DynamicSect
 		}
 		switch this._is_le {
 		case 0:
-			tmp98, err := thisIo.ReadBytes(int(this.Filesz))
+			tmp102, err := thisIo.ReadBytes(int(this.Filesz))
 			if err != nil {
 				return nil, err
 			}
-			tmp98 = tmp98
-			this._raw_dynamic = tmp98
+			tmp102 = tmp102
+			this._raw_dynamic = tmp102
 			_io__raw_dynamic := kaitai.NewStream(bytes.NewReader(this._raw_dynamic))
-			tmp99 := NewElf_EndianElf_DynamicSection()
-			err = tmp99.Read(_io__raw_dynamic, this, this._root)
+			tmp103 := NewElf_EndianElf_DynamicSection()
+			err = tmp103.Read(_io__raw_dynamic, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.dynamic = tmp99
+			this.dynamic = tmp103
 		case 1:
-			tmp100, err := thisIo.ReadBytes(int(this.Filesz))
+			tmp104, err := thisIo.ReadBytes(int(this.Filesz))
 			if err != nil {
 				return nil, err
 			}
-			tmp100 = tmp100
-			this._raw_dynamic = tmp100
+			tmp104 = tmp104
+			this._raw_dynamic = tmp104
 			_io__raw_dynamic := kaitai.NewStream(bytes.NewReader(this._raw_dynamic))
-			tmp101 := NewElf_EndianElf_DynamicSection()
-			err = tmp101.Read(_io__raw_dynamic, this, this._root)
+			tmp105 := NewElf_EndianElf_DynamicSection()
+			err = tmp105.Read(_io__raw_dynamic, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.dynamic = tmp101
+			this.dynamic = tmp105
 		default:
 			err = kaitai.UndecidedEndiannessError{}
 		}
@@ -1839,36 +1906,36 @@ func (this *Elf_EndianElf_ProgramHeader) FlagsObj() (v *Elf_PhdrTypeFlags, err e
 	case 0:
 		switch (this._root.Bits) {
 		case Elf_Bits__B32:
-			tmp102 := NewElf_PhdrTypeFlags(this.Flags32)
-			err = tmp102.Read(this._io, this, this._root)
+			tmp106 := NewElf_PhdrTypeFlags(this.Flags32)
+			err = tmp106.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.flagsObj = tmp102
+			this.flagsObj = tmp106
 		case Elf_Bits__B64:
-			tmp103 := NewElf_PhdrTypeFlags(this.Flags64)
-			err = tmp103.Read(this._io, this, this._root)
+			tmp107 := NewElf_PhdrTypeFlags(this.Flags64)
+			err = tmp107.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.flagsObj = tmp103
+			this.flagsObj = tmp107
 		}
 	case 1:
 		switch (this._root.Bits) {
 		case Elf_Bits__B32:
-			tmp104 := NewElf_PhdrTypeFlags(this.Flags32)
-			err = tmp104.Read(this._io, this, this._root)
+			tmp108 := NewElf_PhdrTypeFlags(this.Flags32)
+			err = tmp108.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.flagsObj = tmp104
+			this.flagsObj = tmp108
 		case Elf_Bits__B64:
-			tmp105 := NewElf_PhdrTypeFlags(this.Flags64)
-			err = tmp105.Read(this._io, this, this._root)
+			tmp109 := NewElf_PhdrTypeFlags(this.Flags64)
+			err = tmp109.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.flagsObj = tmp105
+			this.flagsObj = tmp109
 		}
 	default:
 		err = kaitai.UndecidedEndiannessError{}
@@ -1915,45 +1982,13 @@ func (this *Elf_EndianElf_DynamicSectionEntry) Read(io *kaitai.Stream, parent *E
 func (this *Elf_EndianElf_DynamicSectionEntry) _read_le() (err error) {
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
-		tmp106, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Tag = uint64(tmp106)
-	case Elf_Bits__B64:
-		tmp107, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Tag = uint64(tmp107)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp108, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.ValueOrPtr = uint64(tmp108)
-	case Elf_Bits__B64:
-		tmp109, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.ValueOrPtr = uint64(tmp109)
-	}
-	return err
-}
-
-func (this *Elf_EndianElf_DynamicSectionEntry) _read_be() (err error) {
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp110, err := this._io.ReadU4be()
+		tmp110, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
 		this.Tag = uint64(tmp110)
 	case Elf_Bits__B64:
-		tmp111, err := this._io.ReadU8be()
+		tmp111, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
@@ -1961,17 +1996,49 @@ func (this *Elf_EndianElf_DynamicSectionEntry) _read_be() (err error) {
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
-		tmp112, err := this._io.ReadU4be()
+		tmp112, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
 		this.ValueOrPtr = uint64(tmp112)
 	case Elf_Bits__B64:
-		tmp113, err := this._io.ReadU8be()
+		tmp113, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
 		this.ValueOrPtr = uint64(tmp113)
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_DynamicSectionEntry) _read_be() (err error) {
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp114, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Tag = uint64(tmp114)
+	case Elf_Bits__B64:
+		tmp115, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Tag = uint64(tmp115)
+	}
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp116, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.ValueOrPtr = uint64(tmp116)
+	case Elf_Bits__B64:
+		tmp117, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.ValueOrPtr = uint64(tmp117)
 	}
 	return err
 }
@@ -1987,26 +2054,26 @@ func (this *Elf_EndianElf_DynamicSectionEntry) Flag1Values() (v *Elf_DtFlag1Valu
 	if (this._f_flag1Values) {
 		return this.flag1Values, nil
 	}
-	tmp114, err := this.TagEnum()
+	tmp118, err := this.TagEnum()
 	if err != nil {
 		return nil, err
 	}
-	if (tmp114 == Elf_DynamicArrayTags__Flags1) {
+	if (tmp118 == Elf_DynamicArrayTags__Flags1) {
 		switch this._is_le {
 		case 0:
-			tmp115 := NewElf_DtFlag1Values(this.ValueOrPtr)
-			err = tmp115.Read(this._io, this, this._root)
+			tmp119 := NewElf_DtFlag1Values(this.ValueOrPtr)
+			err = tmp119.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.flag1Values = tmp115
+			this.flag1Values = tmp119
 		case 1:
-			tmp116 := NewElf_DtFlag1Values(this.ValueOrPtr)
-			err = tmp116.Read(this._io, this, this._root)
+			tmp120 := NewElf_DtFlag1Values(this.ValueOrPtr)
+			err = tmp120.Read(this._io, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.flag1Values = tmp116
+			this.flag1Values = tmp120
 		default:
 			err = kaitai.UndecidedEndiannessError{}
 		}
@@ -2062,57 +2129,29 @@ func (this *Elf_EndianElf_SectionHeader) Read(io *kaitai.Stream, parent *Elf_End
 }
 
 func (this *Elf_EndianElf_SectionHeader) _read_le() (err error) {
-	tmp117, err := this._io.ReadU4le()
+	tmp121, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.OfsName = uint32(tmp117)
-	tmp118, err := this._io.ReadU4le()
+	this.OfsName = uint32(tmp121)
+	tmp122, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = Elf_ShType(tmp118)
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp119, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Flags = uint64(tmp119)
-	case Elf_Bits__B64:
-		tmp120, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Flags = uint64(tmp120)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp121, err := this._io.ReadU4le()
-		if err != nil {
-			return err
-		}
-		this.Addr = uint64(tmp121)
-	case Elf_Bits__B64:
-		tmp122, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Addr = uint64(tmp122)
-	}
+	this.Type = Elf_ShType(tmp122)
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
 		tmp123, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.OfsBody = uint64(tmp123)
+		this.Flags = uint64(tmp123)
 	case Elf_Bits__B64:
 		tmp124, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.OfsBody = uint64(tmp124)
+		this.Flags = uint64(tmp124)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -2120,108 +2159,108 @@ func (this *Elf_EndianElf_SectionHeader) _read_le() (err error) {
 		if err != nil {
 			return err
 		}
-		this.LenBody = uint64(tmp125)
+		this.Addr = uint64(tmp125)
 	case Elf_Bits__B64:
 		tmp126, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.LenBody = uint64(tmp126)
+		this.Addr = uint64(tmp126)
 	}
-	tmp127, err := this._io.ReadU4le()
-	if err != nil {
-		return err
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp127, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.OfsBody = uint64(tmp127)
+	case Elf_Bits__B64:
+		tmp128, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.OfsBody = uint64(tmp128)
 	}
-	this.LinkedSectionIdx = uint32(tmp127)
-	tmp128, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp128 = tmp128
-	this.Info = tmp128
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
 		tmp129, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp129)
+		this.LenBody = uint64(tmp129)
 	case Elf_Bits__B64:
 		tmp130, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp130)
+		this.LenBody = uint64(tmp130)
+	}
+	tmp131, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LinkedSectionIdx = uint32(tmp131)
+	tmp132, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp132 = tmp132
+	this.Info = tmp132
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp133, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp133)
+	case Elf_Bits__B64:
+		tmp134, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp134)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
-		tmp131, err := this._io.ReadU4le()
+		tmp135, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.EntrySize = uint64(tmp131)
+		this.EntrySize = uint64(tmp135)
 	case Elf_Bits__B64:
-		tmp132, err := this._io.ReadU8le()
+		tmp136, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.EntrySize = uint64(tmp132)
+		this.EntrySize = uint64(tmp136)
 	}
 	return err
 }
 
 func (this *Elf_EndianElf_SectionHeader) _read_be() (err error) {
-	tmp133, err := this._io.ReadU4be()
+	tmp137, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.OfsName = uint32(tmp133)
-	tmp134, err := this._io.ReadU4be()
+	this.OfsName = uint32(tmp137)
+	tmp138, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Type = Elf_ShType(tmp134)
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp135, err := this._io.ReadU4be()
-		if err != nil {
-			return err
-		}
-		this.Flags = uint64(tmp135)
-	case Elf_Bits__B64:
-		tmp136, err := this._io.ReadU8be()
-		if err != nil {
-			return err
-		}
-		this.Flags = uint64(tmp136)
-	}
-	switch (this._root.Bits) {
-	case Elf_Bits__B32:
-		tmp137, err := this._io.ReadU4be()
-		if err != nil {
-			return err
-		}
-		this.Addr = uint64(tmp137)
-	case Elf_Bits__B64:
-		tmp138, err := this._io.ReadU8be()
-		if err != nil {
-			return err
-		}
-		this.Addr = uint64(tmp138)
-	}
+	this.Type = Elf_ShType(tmp138)
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
 		tmp139, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.OfsBody = uint64(tmp139)
+		this.Flags = uint64(tmp139)
 	case Elf_Bits__B64:
 		tmp140, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.OfsBody = uint64(tmp140)
+		this.Flags = uint64(tmp140)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
@@ -2229,52 +2268,80 @@ func (this *Elf_EndianElf_SectionHeader) _read_be() (err error) {
 		if err != nil {
 			return err
 		}
-		this.LenBody = uint64(tmp141)
+		this.Addr = uint64(tmp141)
 	case Elf_Bits__B64:
 		tmp142, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.LenBody = uint64(tmp142)
+		this.Addr = uint64(tmp142)
 	}
-	tmp143, err := this._io.ReadU4be()
-	if err != nil {
-		return err
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp143, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.OfsBody = uint64(tmp143)
+	case Elf_Bits__B64:
+		tmp144, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.OfsBody = uint64(tmp144)
 	}
-	this.LinkedSectionIdx = uint32(tmp143)
-	tmp144, err := this._io.ReadBytes(int(4))
-	if err != nil {
-		return err
-	}
-	tmp144 = tmp144
-	this.Info = tmp144
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
 		tmp145, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp145)
+		this.LenBody = uint64(tmp145)
 	case Elf_Bits__B64:
 		tmp146, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.Align = uint64(tmp146)
+		this.LenBody = uint64(tmp146)
+	}
+	tmp147, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LinkedSectionIdx = uint32(tmp147)
+	tmp148, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp148 = tmp148
+	this.Info = tmp148
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp149, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp149)
+	case Elf_Bits__B64:
+		tmp150, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Align = uint64(tmp150)
 	}
 	switch (this._root.Bits) {
 	case Elf_Bits__B32:
-		tmp147, err := this._io.ReadU4be()
+		tmp151, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.EntrySize = uint64(tmp147)
+		this.EntrySize = uint64(tmp151)
 	case Elf_Bits__B64:
-		tmp148, err := this._io.ReadU8be()
+		tmp152, err := this._io.ReadU8be()
 		if err != nil {
 			return err
 		}
-		this.EntrySize = uint64(tmp148)
+		this.EntrySize = uint64(tmp152)
 	}
 	return err
 }
@@ -2294,35 +2361,7 @@ func (this *Elf_EndianElf_SectionHeader) Body() (v interface{}, err error) {
 	switch this._is_le {
 	case 0:
 		switch (this.Type) {
-		case Elf_ShType__Strtab:
-			tmp149, err := thisIo.ReadBytes(int(this.LenBody))
-			if err != nil {
-				return nil, err
-			}
-			tmp149 = tmp149
-			this._raw_body = tmp149
-			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp150 := NewElf_EndianElf_StringsStruct()
-			err = tmp150.Read(_io__raw_body, this, this._root)
-			if err != nil {
-				return nil, err
-			}
-			this.body = tmp150
-		case Elf_ShType__Dynamic:
-			tmp151, err := thisIo.ReadBytes(int(this.LenBody))
-			if err != nil {
-				return nil, err
-			}
-			tmp151 = tmp151
-			this._raw_body = tmp151
-			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp152 := NewElf_EndianElf_DynamicSection()
-			err = tmp152.Read(_io__raw_body, this, this._root)
-			if err != nil {
-				return nil, err
-			}
-			this.body = tmp152
-		case Elf_ShType__Dynsym:
+		case Elf_ShType__Rel:
 			tmp153, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
@@ -2330,13 +2369,13 @@ func (this *Elf_EndianElf_SectionHeader) Body() (v interface{}, err error) {
 			tmp153 = tmp153
 			this._raw_body = tmp153
 			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp154 := NewElf_EndianElf_DynsymSection()
+			tmp154 := NewElf_EndianElf_RelocationSection(false)
 			err = tmp154.Read(_io__raw_body, this, this._root)
 			if err != nil {
 				return nil, err
 			}
 			this.body = tmp154
-		case Elf_ShType__Dynstr:
+		case Elf_ShType__Note:
 			tmp155, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
@@ -2344,85 +2383,197 @@ func (this *Elf_EndianElf_SectionHeader) Body() (v interface{}, err error) {
 			tmp155 = tmp155
 			this._raw_body = tmp155
 			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp156 := NewElf_EndianElf_StringsStruct()
+			tmp156 := NewElf_EndianElf_NoteSection()
 			err = tmp156.Read(_io__raw_body, this, this._root)
 			if err != nil {
 				return nil, err
 			}
 			this.body = tmp156
-		default:
+		case Elf_ShType__Symtab:
 			tmp157, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
 			}
 			tmp157 = tmp157
 			this._raw_body = tmp157
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp158 := NewElf_EndianElf_DynsymSection()
+			err = tmp158.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp158
+		case Elf_ShType__Strtab:
+			tmp159, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp159 = tmp159
+			this._raw_body = tmp159
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp160 := NewElf_EndianElf_StringsStruct()
+			err = tmp160.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp160
+		case Elf_ShType__Dynamic:
+			tmp161, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp161 = tmp161
+			this._raw_body = tmp161
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp162 := NewElf_EndianElf_DynamicSection()
+			err = tmp162.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp162
+		case Elf_ShType__Dynsym:
+			tmp163, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp163 = tmp163
+			this._raw_body = tmp163
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp164 := NewElf_EndianElf_DynsymSection()
+			err = tmp164.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp164
+		case Elf_ShType__Rela:
+			tmp165, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp165 = tmp165
+			this._raw_body = tmp165
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp166 := NewElf_EndianElf_RelocationSection(true)
+			err = tmp166.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp166
+		default:
+			tmp167, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp167 = tmp167
+			this._raw_body = tmp167
 		}
 	case 1:
 		switch (this.Type) {
+		case Elf_ShType__Rel:
+			tmp168, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp168 = tmp168
+			this._raw_body = tmp168
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp169 := NewElf_EndianElf_RelocationSection(false)
+			err = tmp169.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp169
+		case Elf_ShType__Note:
+			tmp170, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp170 = tmp170
+			this._raw_body = tmp170
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp171 := NewElf_EndianElf_NoteSection()
+			err = tmp171.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp171
+		case Elf_ShType__Symtab:
+			tmp172, err := thisIo.ReadBytes(int(this.LenBody))
+			if err != nil {
+				return nil, err
+			}
+			tmp172 = tmp172
+			this._raw_body = tmp172
+			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
+			tmp173 := NewElf_EndianElf_DynsymSection()
+			err = tmp173.Read(_io__raw_body, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.body = tmp173
 		case Elf_ShType__Strtab:
-			tmp158, err := thisIo.ReadBytes(int(this.LenBody))
+			tmp174, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
 			}
-			tmp158 = tmp158
-			this._raw_body = tmp158
+			tmp174 = tmp174
+			this._raw_body = tmp174
 			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp159 := NewElf_EndianElf_StringsStruct()
-			err = tmp159.Read(_io__raw_body, this, this._root)
+			tmp175 := NewElf_EndianElf_StringsStruct()
+			err = tmp175.Read(_io__raw_body, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.body = tmp159
+			this.body = tmp175
 		case Elf_ShType__Dynamic:
-			tmp160, err := thisIo.ReadBytes(int(this.LenBody))
+			tmp176, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
 			}
-			tmp160 = tmp160
-			this._raw_body = tmp160
+			tmp176 = tmp176
+			this._raw_body = tmp176
 			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp161 := NewElf_EndianElf_DynamicSection()
-			err = tmp161.Read(_io__raw_body, this, this._root)
+			tmp177 := NewElf_EndianElf_DynamicSection()
+			err = tmp177.Read(_io__raw_body, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.body = tmp161
+			this.body = tmp177
 		case Elf_ShType__Dynsym:
-			tmp162, err := thisIo.ReadBytes(int(this.LenBody))
+			tmp178, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
 			}
-			tmp162 = tmp162
-			this._raw_body = tmp162
+			tmp178 = tmp178
+			this._raw_body = tmp178
 			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp163 := NewElf_EndianElf_DynsymSection()
-			err = tmp163.Read(_io__raw_body, this, this._root)
+			tmp179 := NewElf_EndianElf_DynsymSection()
+			err = tmp179.Read(_io__raw_body, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.body = tmp163
-		case Elf_ShType__Dynstr:
-			tmp164, err := thisIo.ReadBytes(int(this.LenBody))
+			this.body = tmp179
+		case Elf_ShType__Rela:
+			tmp180, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
 			}
-			tmp164 = tmp164
-			this._raw_body = tmp164
+			tmp180 = tmp180
+			this._raw_body = tmp180
 			_io__raw_body := kaitai.NewStream(bytes.NewReader(this._raw_body))
-			tmp165 := NewElf_EndianElf_StringsStruct()
-			err = tmp165.Read(_io__raw_body, this, this._root)
+			tmp181 := NewElf_EndianElf_RelocationSection(true)
+			err = tmp181.Read(_io__raw_body, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.body = tmp165
+			this.body = tmp181
 		default:
-			tmp166, err := thisIo.ReadBytes(int(this.LenBody))
+			tmp182, err := thisIo.ReadBytes(int(this.LenBody))
 			if err != nil {
 				return nil, err
 			}
-			tmp166 = tmp166
-			this._raw_body = tmp166
+			tmp182 = tmp182
+			this._raw_body = tmp182
 		}
 	default:
 		err = kaitai.UndecidedEndiannessError{}
@@ -2439,11 +2590,11 @@ func (this *Elf_EndianElf_SectionHeader) Name() (v string, err error) {
 	if (this._f_name) {
 		return this.name, nil
 	}
-	tmp167, err := this._root.Header.Strings()
+	tmp183, err := this._root.Header.Strings()
 	if err != nil {
 		return "", err
 	}
-	thisIo := tmp167._io
+	thisIo := tmp183._io
 	_pos, err := thisIo.Pos()
 	if err != nil {
 		return "", err
@@ -2454,17 +2605,17 @@ func (this *Elf_EndianElf_SectionHeader) Name() (v string, err error) {
 	}
 	switch this._is_le {
 	case 0:
-		tmp168, err := thisIo.ReadBytesTerm(0, false, true, true)
+		tmp184, err := thisIo.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return "", err
 		}
-		this.name = string(tmp168)
+		this.name = string(tmp184)
 	case 1:
-		tmp169, err := thisIo.ReadBytesTerm(0, false, true, true)
+		tmp185, err := thisIo.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return "", err
 		}
-		this.name = string(tmp169)
+		this.name = string(tmp185)
 	default:
 		err = kaitai.UndecidedEndiannessError{}
 	}
@@ -2482,25 +2633,99 @@ func (this *Elf_EndianElf_SectionHeader) FlagsObj() (v *Elf_SectionHeaderFlags, 
 	}
 	switch this._is_le {
 	case 0:
-		tmp170 := NewElf_SectionHeaderFlags(this.Flags)
-		err = tmp170.Read(this._io, this, this._root)
+		tmp186 := NewElf_SectionHeaderFlags(this.Flags)
+		err = tmp186.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.flagsObj = tmp170
+		this.flagsObj = tmp186
 	case 1:
-		tmp171 := NewElf_SectionHeaderFlags(this.Flags)
-		err = tmp171.Read(this._io, this, this._root)
+		tmp187 := NewElf_SectionHeaderFlags(this.Flags)
+		err = tmp187.Read(this._io, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.flagsObj = tmp171
+		this.flagsObj = tmp187
 	default:
 		err = kaitai.UndecidedEndiannessError{}
 	}
 	this._f_flagsObj = true
 	this._f_flagsObj = true
 	return this.flagsObj, nil
+}
+
+/**
+ * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html">Source</a>
+ * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
+ */
+type Elf_EndianElf_RelocationSection struct {
+	Entries []*Elf_EndianElf_RelocationSectionEntry
+	HasAddend bool
+	_io *kaitai.Stream
+	_root *Elf
+	_parent *Elf_EndianElf_SectionHeader
+	_is_le int
+}
+func NewElf_EndianElf_RelocationSection(hasAddend bool) *Elf_EndianElf_RelocationSection {
+	return &Elf_EndianElf_RelocationSection{
+		HasAddend: hasAddend,
+	}
+}
+
+func (this *Elf_EndianElf_RelocationSection) Read(io *kaitai.Stream, parent *Elf_EndianElf_SectionHeader, root *Elf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_RelocationSection) _read_le() (err error) {
+	for i := 1;; i++ {
+		tmp188, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp188 {
+			break
+		}
+		tmp189 := NewElf_EndianElf_RelocationSectionEntry()
+		err = tmp189.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp189)
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_RelocationSection) _read_be() (err error) {
+	for i := 1;; i++ {
+		tmp190, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp190 {
+			break
+		}
+		tmp191 := NewElf_EndianElf_RelocationSectionEntry()
+		err = tmp191.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Entries = append(this.Entries, tmp191)
+	}
+	return err
 }
 type Elf_EndianElf_DynamicSection struct {
 	Entries []*Elf_EndianElf_DynamicSectionEntry
@@ -2534,38 +2759,38 @@ func (this *Elf_EndianElf_DynamicSection) Read(io *kaitai.Stream, parent interfa
 
 func (this *Elf_EndianElf_DynamicSection) _read_le() (err error) {
 	for i := 1;; i++ {
-		tmp172, err := this._io.EOF()
+		tmp192, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp172 {
+		if tmp192 {
 			break
 		}
-		tmp173 := NewElf_EndianElf_DynamicSectionEntry()
-		err = tmp173.Read(this._io, this, this._root)
+		tmp193 := NewElf_EndianElf_DynamicSectionEntry()
+		err = tmp193.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp173)
+		this.Entries = append(this.Entries, tmp193)
 	}
 	return err
 }
 
 func (this *Elf_EndianElf_DynamicSection) _read_be() (err error) {
 	for i := 1;; i++ {
-		tmp174, err := this._io.EOF()
+		tmp194, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp174 {
+		if tmp194 {
 			break
 		}
-		tmp175 := NewElf_EndianElf_DynamicSectionEntry()
-		err = tmp175.Read(this._io, this, this._root)
+		tmp195 := NewElf_EndianElf_DynamicSectionEntry()
+		err = tmp195.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, tmp175)
+		this.Entries = append(this.Entries, tmp195)
 	}
 	return err
 }
@@ -2601,28 +2826,28 @@ func (this *Elf_EndianElf_DynsymSection) Read(io *kaitai.Stream, parent *Elf_End
 
 func (this *Elf_EndianElf_DynsymSection) _read_le() (err error) {
 	for i := 1;; i++ {
-		tmp176, err := this._io.EOF()
+		tmp196, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp176 {
+		if tmp196 {
 			break
 		}
 		switch (this._root.Bits) {
 		case Elf_Bits__B32:
-			tmp177 := NewElf_EndianElf_DynsymSectionEntry32()
-			err = tmp177.Read(this._io, this, this._root)
+			tmp197 := NewElf_EndianElf_DynsymSectionEntry32()
+			err = tmp197.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Entries = append(this.Entries, tmp177)
+			this.Entries = append(this.Entries, tmp197)
 		case Elf_Bits__B64:
-			tmp178 := NewElf_EndianElf_DynsymSectionEntry64()
-			err = tmp178.Read(this._io, this, this._root)
+			tmp198 := NewElf_EndianElf_DynsymSectionEntry64()
+			err = tmp198.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Entries = append(this.Entries, tmp178)
+			this.Entries = append(this.Entries, tmp198)
 		}
 	}
 	return err
@@ -2630,28 +2855,155 @@ func (this *Elf_EndianElf_DynsymSection) _read_le() (err error) {
 
 func (this *Elf_EndianElf_DynsymSection) _read_be() (err error) {
 	for i := 1;; i++ {
-		tmp179, err := this._io.EOF()
+		tmp199, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp179 {
+		if tmp199 {
 			break
 		}
 		switch (this._root.Bits) {
 		case Elf_Bits__B32:
-			tmp180 := NewElf_EndianElf_DynsymSectionEntry32()
-			err = tmp180.Read(this._io, this, this._root)
+			tmp200 := NewElf_EndianElf_DynsymSectionEntry32()
+			err = tmp200.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Entries = append(this.Entries, tmp180)
+			this.Entries = append(this.Entries, tmp200)
 		case Elf_Bits__B64:
-			tmp181 := NewElf_EndianElf_DynsymSectionEntry64()
-			err = tmp181.Read(this._io, this, this._root)
+			tmp201 := NewElf_EndianElf_DynsymSectionEntry64()
+			err = tmp201.Read(this._io, this, this._root)
 			if err != nil {
 				return err
 			}
-			this.Entries = append(this.Entries, tmp181)
+			this.Entries = append(this.Entries, tmp201)
+		}
+	}
+	return err
+}
+type Elf_EndianElf_RelocationSectionEntry struct {
+	Offset uint64
+	Info uint64
+	Addend int64
+	_io *kaitai.Stream
+	_root *Elf
+	_parent *Elf_EndianElf_RelocationSection
+	_is_le int
+}
+func NewElf_EndianElf_RelocationSectionEntry() *Elf_EndianElf_RelocationSectionEntry {
+	return &Elf_EndianElf_RelocationSectionEntry{
+	}
+}
+
+func (this *Elf_EndianElf_RelocationSectionEntry) Read(io *kaitai.Stream, parent *Elf_EndianElf_RelocationSection, root *Elf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_RelocationSectionEntry) _read_le() (err error) {
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp202, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Offset = uint64(tmp202)
+	case Elf_Bits__B64:
+		tmp203, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Offset = uint64(tmp203)
+	}
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp204, err := this._io.ReadU4le()
+		if err != nil {
+			return err
+		}
+		this.Info = uint64(tmp204)
+	case Elf_Bits__B64:
+		tmp205, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Info = uint64(tmp205)
+	}
+	if (this._parent.HasAddend) {
+		switch (this._root.Bits) {
+		case Elf_Bits__B32:
+			tmp206, err := this._io.ReadS4le()
+			if err != nil {
+				return err
+			}
+			this.Addend = int64(tmp206)
+		case Elf_Bits__B64:
+			tmp207, err := this._io.ReadS8le()
+			if err != nil {
+				return err
+			}
+			this.Addend = int64(tmp207)
+		}
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_RelocationSectionEntry) _read_be() (err error) {
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp208, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Offset = uint64(tmp208)
+	case Elf_Bits__B64:
+		tmp209, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Offset = uint64(tmp209)
+	}
+	switch (this._root.Bits) {
+	case Elf_Bits__B32:
+		tmp210, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.Info = uint64(tmp210)
+	case Elf_Bits__B64:
+		tmp211, err := this._io.ReadU8be()
+		if err != nil {
+			return err
+		}
+		this.Info = uint64(tmp211)
+	}
+	if (this._parent.HasAddend) {
+		switch (this._root.Bits) {
+		case Elf_Bits__B32:
+			tmp212, err := this._io.ReadS4be()
+			if err != nil {
+				return err
+			}
+			this.Addend = int64(tmp212)
+		case Elf_Bits__B64:
+			tmp213, err := this._io.ReadS8be()
+			if err != nil {
+				return err
+			}
+			this.Addend = int64(tmp213)
 		}
 	}
 	return err
@@ -2692,72 +3044,221 @@ func (this *Elf_EndianElf_DynsymSectionEntry32) Read(io *kaitai.Stream, parent *
 }
 
 func (this *Elf_EndianElf_DynsymSectionEntry32) _read_le() (err error) {
-	tmp182, err := this._io.ReadU4le()
+	tmp214, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NameOffset = uint32(tmp182)
-	tmp183, err := this._io.ReadU4le()
+	this.NameOffset = uint32(tmp214)
+	tmp215, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Value = uint32(tmp183)
-	tmp184, err := this._io.ReadU4le()
+	this.Value = uint32(tmp215)
+	tmp216, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Size = uint32(tmp184)
-	tmp185, err := this._io.ReadU1()
+	this.Size = uint32(tmp216)
+	tmp217, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Info = tmp185
-	tmp186, err := this._io.ReadU1()
+	this.Info = tmp217
+	tmp218, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Other = tmp186
-	tmp187, err := this._io.ReadU2le()
+	this.Other = tmp218
+	tmp219, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Shndx = uint16(tmp187)
+	this.Shndx = uint16(tmp219)
 	return err
 }
 
 func (this *Elf_EndianElf_DynsymSectionEntry32) _read_be() (err error) {
-	tmp188, err := this._io.ReadU4be()
+	tmp220, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NameOffset = uint32(tmp188)
-	tmp189, err := this._io.ReadU4be()
+	this.NameOffset = uint32(tmp220)
+	tmp221, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Value = uint32(tmp189)
-	tmp190, err := this._io.ReadU4be()
+	this.Value = uint32(tmp221)
+	tmp222, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Size = uint32(tmp190)
-	tmp191, err := this._io.ReadU1()
+	this.Size = uint32(tmp222)
+	tmp223, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Info = tmp191
-	tmp192, err := this._io.ReadU1()
+	this.Info = tmp223
+	tmp224, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Other = tmp192
-	tmp193, err := this._io.ReadU2be()
+	this.Other = tmp224
+	tmp225, err := this._io.ReadU2be()
 	if err != nil {
 		return err
 	}
-	this.Shndx = uint16(tmp193)
+	this.Shndx = uint16(tmp225)
 	return err
 }
+
+/**
+ * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html">Source</a>
+ * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
+ */
+type Elf_EndianElf_NoteSectionEntry struct {
+	LenName uint32
+	LenDescriptor uint32
+	Type uint32
+	Name []byte
+	NamePadding []byte
+	Descriptor []byte
+	DescriptorPadding []byte
+	_io *kaitai.Stream
+	_root *Elf
+	_parent *Elf_EndianElf_NoteSection
+	_is_le int
+}
+func NewElf_EndianElf_NoteSectionEntry() *Elf_EndianElf_NoteSectionEntry {
+	return &Elf_EndianElf_NoteSectionEntry{
+	}
+}
+
+func (this *Elf_EndianElf_NoteSectionEntry) Read(io *kaitai.Stream, parent *Elf_EndianElf_NoteSection, root *Elf) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+	this._is_le = this._parent._is_le
+
+
+	switch this._is_le {
+	case 0:
+		err = this._read_be()
+	case 1:
+		err = this._read_le()
+	default:
+		err = kaitai.UndecidedEndiannessError{}
+	}
+	return err
+}
+
+func (this *Elf_EndianElf_NoteSectionEntry) _read_le() (err error) {
+	tmp226, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenName = uint32(tmp226)
+	tmp227, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LenDescriptor = uint32(tmp227)
+	tmp228, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Type = uint32(tmp228)
+	tmp229, err := this._io.ReadBytes(int(this.LenName))
+	if err != nil {
+		return err
+	}
+	tmp229 = kaitai.BytesTerminate(tmp229, 0, false)
+	this.Name = tmp229
+	tmp230 := -(this.LenName) % 4
+	if tmp230 < 0 {
+		tmp230 += 4
+	}
+	tmp231, err := this._io.ReadBytes(int(tmp230))
+	if err != nil {
+		return err
+	}
+	tmp231 = tmp231
+	this.NamePadding = tmp231
+	tmp232, err := this._io.ReadBytes(int(this.LenDescriptor))
+	if err != nil {
+		return err
+	}
+	tmp232 = tmp232
+	this.Descriptor = tmp232
+	tmp233 := -(this.LenDescriptor) % 4
+	if tmp233 < 0 {
+		tmp233 += 4
+	}
+	tmp234, err := this._io.ReadBytes(int(tmp233))
+	if err != nil {
+		return err
+	}
+	tmp234 = tmp234
+	this.DescriptorPadding = tmp234
+	return err
+}
+
+func (this *Elf_EndianElf_NoteSectionEntry) _read_be() (err error) {
+	tmp235, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenName = uint32(tmp235)
+	tmp236, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.LenDescriptor = uint32(tmp236)
+	tmp237, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Type = uint32(tmp237)
+	tmp238, err := this._io.ReadBytes(int(this.LenName))
+	if err != nil {
+		return err
+	}
+	tmp238 = kaitai.BytesTerminate(tmp238, 0, false)
+	this.Name = tmp238
+	tmp239 := -(this.LenName) % 4
+	if tmp239 < 0 {
+		tmp239 += 4
+	}
+	tmp240, err := this._io.ReadBytes(int(tmp239))
+	if err != nil {
+		return err
+	}
+	tmp240 = tmp240
+	this.NamePadding = tmp240
+	tmp241, err := this._io.ReadBytes(int(this.LenDescriptor))
+	if err != nil {
+		return err
+	}
+	tmp241 = tmp241
+	this.Descriptor = tmp241
+	tmp242 := -(this.LenDescriptor) % 4
+	if tmp242 < 0 {
+		tmp242 += 4
+	}
+	tmp243, err := this._io.ReadBytes(int(tmp242))
+	if err != nil {
+		return err
+	}
+	tmp243 = tmp243
+	this.DescriptorPadding = tmp243
+	return err
+}
+
+/**
+ * Although the ELF specification seems to hint that the `note_name` field
+ * is ASCII this isn't the case for Linux binaries that have a
+ * `.gnu.build.attributes` section.
+ * @see <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
+ */
 type Elf_EndianElf_StringsStruct struct {
 	Entries []string
 	_io *kaitai.Stream
@@ -2790,36 +3291,36 @@ func (this *Elf_EndianElf_StringsStruct) Read(io *kaitai.Stream, parent interfac
 
 func (this *Elf_EndianElf_StringsStruct) _read_le() (err error) {
 	for i := 1;; i++ {
-		tmp194, err := this._io.EOF()
+		tmp244, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp194 {
+		if tmp244 {
 			break
 		}
-		tmp195, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp245, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, string(tmp195))
+		this.Entries = append(this.Entries, string(tmp245))
 	}
 	return err
 }
 
 func (this *Elf_EndianElf_StringsStruct) _read_be() (err error) {
 	for i := 1;; i++ {
-		tmp196, err := this._io.EOF()
+		tmp246, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp196 {
+		if tmp246 {
 			break
 		}
-		tmp197, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp247, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Entries = append(this.Entries, string(tmp197))
+		this.Entries = append(this.Entries, string(tmp247))
 	}
 	return err
 }

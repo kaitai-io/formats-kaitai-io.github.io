@@ -292,6 +292,10 @@ type
     `size`*: uint64
     `parent`*: Elf_EndianElf_DynsymSection
     isLe: bool
+  Elf_EndianElf_NoteSection* = ref object of KaitaiStruct
+    `entries`*: seq[Elf_EndianElf_NoteSectionEntry]
+    `parent`*: Elf_EndianElf_SectionHeader
+    isLe: bool
   Elf_EndianElf_ProgramHeader* = ref object of KaitaiStruct
     `type`*: Elf_PhType
     `flags64`*: uint32
@@ -331,6 +335,11 @@ type
     `nameInst`*: string
     `flagsObjInst`*: Elf_SectionHeaderFlags
     isLe: bool
+  Elf_EndianElf_RelocationSection* = ref object of KaitaiStruct
+    `entries`*: seq[Elf_EndianElf_RelocationSectionEntry]
+    `hasAddend`*: bool
+    `parent`*: Elf_EndianElf_SectionHeader
+    isLe: bool
   Elf_EndianElf_DynamicSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_DynamicSectionEntry]
     `parent`*: KaitaiStruct
@@ -338,6 +347,12 @@ type
   Elf_EndianElf_DynsymSection* = ref object of KaitaiStruct
     `entries`*: seq[KaitaiStruct]
     `parent`*: Elf_EndianElf_SectionHeader
+    isLe: bool
+  Elf_EndianElf_RelocationSectionEntry* = ref object of KaitaiStruct
+    `offset`*: uint64
+    `info`*: uint64
+    `addend`*: int64
+    `parent`*: Elf_EndianElf_RelocationSection
     isLe: bool
   Elf_EndianElf_DynsymSectionEntry32* = ref object of KaitaiStruct
     `nameOffset`*: uint32
@@ -347,6 +362,16 @@ type
     `other`*: uint8
     `shndx`*: uint16
     `parent`*: Elf_EndianElf_DynsymSection
+    isLe: bool
+  Elf_EndianElf_NoteSectionEntry* = ref object of KaitaiStruct
+    `lenName`*: uint32
+    `lenDescriptor`*: uint32
+    `type`*: uint32
+    `name`*: seq[byte]
+    `namePadding`*: seq[byte]
+    `descriptor`*: seq[byte]
+    `descriptorPadding`*: seq[byte]
+    `parent`*: Elf_EndianElf_NoteSection
     isLe: bool
   Elf_EndianElf_StringsStruct* = ref object of KaitaiStruct
     `entries`*: seq[string]
@@ -359,12 +384,16 @@ proc read*(_: typedesc[Elf_SectionHeaderFlags], io: KaitaiStream, root: KaitaiSt
 proc read*(_: typedesc[Elf_DtFlag1Values], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynamicSectionEntry, value: any): Elf_DtFlag1Values
 proc read*(_: typedesc[Elf_EndianElf], io: KaitaiStream, root: KaitaiStruct, parent: Elf): Elf_EndianElf
 proc read*(_: typedesc[Elf_EndianElf_DynsymSectionEntry64], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynsymSection): Elf_EndianElf_DynsymSectionEntry64
+proc read*(_: typedesc[Elf_EndianElf_NoteSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_NoteSection
 proc read*(_: typedesc[Elf_EndianElf_ProgramHeader], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf): Elf_EndianElf_ProgramHeader
 proc read*(_: typedesc[Elf_EndianElf_DynamicSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynamicSection): Elf_EndianElf_DynamicSectionEntry
 proc read*(_: typedesc[Elf_EndianElf_SectionHeader], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf): Elf_EndianElf_SectionHeader
+proc read*(_: typedesc[Elf_EndianElf_RelocationSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader, hasAddend: any): Elf_EndianElf_RelocationSection
 proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf_EndianElf_DynamicSection
 proc read*(_: typedesc[Elf_EndianElf_DynsymSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_DynsymSection
+proc read*(_: typedesc[Elf_EndianElf_RelocationSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_RelocationSection): Elf_EndianElf_RelocationSectionEntry
 proc read*(_: typedesc[Elf_EndianElf_DynsymSectionEntry32], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynsymSection): Elf_EndianElf_DynsymSectionEntry32
+proc read*(_: typedesc[Elf_EndianElf_NoteSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_NoteSection): Elf_EndianElf_NoteSectionEntry
 proc read*(_: typedesc[Elf_EndianElf_StringsStruct], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf_EndianElf_StringsStruct
 
 proc read*(this: Elf_PhdrTypeFlags): bool
@@ -1273,6 +1302,42 @@ proc fromFile*(_: typedesc[Elf_EndianElf_DynsymSectionEntry64], filename: string
   Elf_EndianElf_DynsymSectionEntry64.read(newKaitaiFileStream(filename), nil, nil)
 
 
+proc readLe(this: Elf_EndianElf_NoteSection) =
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Elf_EndianElf_NoteSectionEntry.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+
+proc readBe(this: Elf_EndianElf_NoteSection) =
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Elf_EndianElf_NoteSectionEntry.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+proc read*(_: typedesc[Elf_EndianElf_NoteSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_NoteSection =
+  template this: untyped = result
+  this = new(Elf_EndianElf_NoteSection)
+  let root = if root == nil: cast[Elf](this) else: cast[Elf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  this.isLe = this.parent.isLe
+
+
+  if this.isLe:
+    readLe(this)
+  else:
+    readBe(this)
+
+proc fromFile*(_: typedesc[Elf_EndianElf_NoteSection], filename: string): Elf_EndianElf_NoteSection =
+  Elf_EndianElf_NoteSection.read(newKaitaiFileStream(filename), nil, nil)
+
+
 proc readLe(this: Elf_EndianElf_ProgramHeader) =
   let typeExpr = Elf_PhType(this.io.readU4le())
   this.type = typeExpr
@@ -1674,7 +1739,25 @@ proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct =
   if this.isLe:
     block:
       let on = this.type
-      if on == elf.strtab:
+      if on == elf.rel:
+        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+        this.rawBodyInst = rawBodyInstExpr
+        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, false)
+        this.bodyInst = bodyInstExpr
+      elif on == elf.note:
+        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+        this.rawBodyInst = rawBodyInstExpr
+        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+        let bodyInstExpr = Elf_EndianElf_NoteSection.read(rawBodyInstIo, this.root, this)
+        this.bodyInst = bodyInstExpr
+      elif on == elf.symtab:
+        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+        this.rawBodyInst = rawBodyInstExpr
+        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+        let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
+        this.bodyInst = bodyInstExpr
+      elif on == elf.strtab:
         let rawBodyInstExpr = io.readBytes(int(this.lenBody))
         this.rawBodyInst = rawBodyInstExpr
         let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
@@ -1692,11 +1775,11 @@ proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct =
         let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
         let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
         this.bodyInst = bodyInstExpr
-      elif on == elf.dynstr:
+      elif on == elf.rela:
         let rawBodyInstExpr = io.readBytes(int(this.lenBody))
         this.rawBodyInst = rawBodyInstExpr
         let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_StringsStruct.read(rawBodyInstIo, this.root, this)
+        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, true)
         this.bodyInst = bodyInstExpr
       else:
         let bodyInstExpr = io.readBytes(int(this.lenBody))
@@ -1704,7 +1787,25 @@ proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct =
   else:
     block:
       let on = this.type
-      if on == elf.strtab:
+      if on == elf.rel:
+        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+        this.rawBodyInst = rawBodyInstExpr
+        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, false)
+        this.bodyInst = bodyInstExpr
+      elif on == elf.note:
+        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+        this.rawBodyInst = rawBodyInstExpr
+        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+        let bodyInstExpr = Elf_EndianElf_NoteSection.read(rawBodyInstIo, this.root, this)
+        this.bodyInst = bodyInstExpr
+      elif on == elf.symtab:
+        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+        this.rawBodyInst = rawBodyInstExpr
+        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+        let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
+        this.bodyInst = bodyInstExpr
+      elif on == elf.strtab:
         let rawBodyInstExpr = io.readBytes(int(this.lenBody))
         this.rawBodyInst = rawBodyInstExpr
         let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
@@ -1722,11 +1823,11 @@ proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct =
         let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
         let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
         this.bodyInst = bodyInstExpr
-      elif on == elf.dynstr:
+      elif on == elf.rela:
         let rawBodyInstExpr = io.readBytes(int(this.lenBody))
         this.rawBodyInst = rawBodyInstExpr
         let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_StringsStruct.read(rawBodyInstIo, this.root, this)
+        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, true)
         this.bodyInst = bodyInstExpr
       else:
         let bodyInstExpr = io.readBytes(int(this.lenBody))
@@ -1765,6 +1866,49 @@ proc flagsObj(this: Elf_EndianElf_SectionHeader): Elf_SectionHeaderFlags =
 
 proc fromFile*(_: typedesc[Elf_EndianElf_SectionHeader], filename: string): Elf_EndianElf_SectionHeader =
   Elf_EndianElf_SectionHeader.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html">Source</a>
+@see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
+]##
+
+proc readLe(this: Elf_EndianElf_RelocationSection) =
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Elf_EndianElf_RelocationSectionEntry.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+
+proc readBe(this: Elf_EndianElf_RelocationSection) =
+  block:
+    var i: int
+    while not this.io.isEof:
+      let it = Elf_EndianElf_RelocationSectionEntry.read(this.io, this.root, this)
+      this.entries.add(it)
+      inc i
+
+proc read*(_: typedesc[Elf_EndianElf_RelocationSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader, hasAddend: any): Elf_EndianElf_RelocationSection =
+  template this: untyped = result
+  this = new(Elf_EndianElf_RelocationSection)
+  let root = if root == nil: cast[Elf](this) else: cast[Elf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  let hasAddendExpr = bool(hasAddend)
+  this.hasAddend = hasAddendExpr
+  this.isLe = this.parent.isLe
+
+
+  if this.isLe:
+    readLe(this)
+  else:
+    readBe(this)
+
+proc fromFile*(_: typedesc[Elf_EndianElf_RelocationSection], filename: string): Elf_EndianElf_RelocationSection =
+  Elf_EndianElf_RelocationSection.read(newKaitaiFileStream(filename), nil, nil)
 
 
 proc readLe(this: Elf_EndianElf_DynamicSection) =
@@ -1851,6 +1995,80 @@ proc fromFile*(_: typedesc[Elf_EndianElf_DynsymSection], filename: string): Elf_
   Elf_EndianElf_DynsymSection.read(newKaitaiFileStream(filename), nil, nil)
 
 
+proc readLe(this: Elf_EndianElf_RelocationSectionEntry) =
+  block:
+    let on = Elf(this.root).bits
+    if on == elf.b32:
+      let offsetExpr = uint64(this.io.readU4le())
+      this.offset = offsetExpr
+    elif on == elf.b64:
+      let offsetExpr = this.io.readU8le()
+      this.offset = offsetExpr
+  block:
+    let on = Elf(this.root).bits
+    if on == elf.b32:
+      let infoExpr = uint64(this.io.readU4le())
+      this.info = infoExpr
+    elif on == elf.b64:
+      let infoExpr = this.io.readU8le()
+      this.info = infoExpr
+  if this.parent.hasAddend:
+    block:
+      let on = Elf(this.root).bits
+      if on == elf.b32:
+        let addendExpr = int64(this.io.readS4le())
+        this.addend = addendExpr
+      elif on == elf.b64:
+        let addendExpr = this.io.readS8le()
+        this.addend = addendExpr
+
+
+proc readBe(this: Elf_EndianElf_RelocationSectionEntry) =
+  block:
+    let on = Elf(this.root).bits
+    if on == elf.b32:
+      let offsetExpr = uint64(this.io.readU4be())
+      this.offset = offsetExpr
+    elif on == elf.b64:
+      let offsetExpr = this.io.readU8be()
+      this.offset = offsetExpr
+  block:
+    let on = Elf(this.root).bits
+    if on == elf.b32:
+      let infoExpr = uint64(this.io.readU4be())
+      this.info = infoExpr
+    elif on == elf.b64:
+      let infoExpr = this.io.readU8be()
+      this.info = infoExpr
+  if this.parent.hasAddend:
+    block:
+      let on = Elf(this.root).bits
+      if on == elf.b32:
+        let addendExpr = int64(this.io.readS4be())
+        this.addend = addendExpr
+      elif on == elf.b64:
+        let addendExpr = this.io.readS8be()
+        this.addend = addendExpr
+
+proc read*(_: typedesc[Elf_EndianElf_RelocationSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_RelocationSection): Elf_EndianElf_RelocationSectionEntry =
+  template this: untyped = result
+  this = new(Elf_EndianElf_RelocationSectionEntry)
+  let root = if root == nil: cast[Elf](this) else: cast[Elf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  this.isLe = this.parent.isLe
+
+
+  if this.isLe:
+    readLe(this)
+  else:
+    readBe(this)
+
+proc fromFile*(_: typedesc[Elf_EndianElf_RelocationSectionEntry], filename: string): Elf_EndianElf_RelocationSectionEntry =
+  Elf_EndianElf_RelocationSectionEntry.read(newKaitaiFileStream(filename), nil, nil)
+
+
 proc readLe(this: Elf_EndianElf_DynsymSectionEntry32) =
   let nameOffsetExpr = this.io.readU4le()
   this.nameOffset = nameOffsetExpr
@@ -1897,6 +2115,79 @@ proc read*(_: typedesc[Elf_EndianElf_DynsymSectionEntry32], io: KaitaiStream, ro
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynsymSectionEntry32], filename: string): Elf_EndianElf_DynsymSectionEntry32 =
   Elf_EndianElf_DynsymSectionEntry32.read(newKaitaiFileStream(filename), nil, nil)
+
+
+##[
+@see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html">Source</a>
+@see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
+]##
+
+proc readLe(this: Elf_EndianElf_NoteSectionEntry) =
+  let lenNameExpr = this.io.readU4le()
+  this.lenName = lenNameExpr
+  let lenDescriptorExpr = this.io.readU4le()
+  this.lenDescriptor = lenDescriptorExpr
+  let typeExpr = this.io.readU4le()
+  this.type = typeExpr
+
+  ##[
+  Although the ELF specification seems to hint that the `note_name` field
+is ASCII this isn't the case for Linux binaries that have a
+`.gnu.build.attributes` section.
+
+  @see <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
+  ]##
+  let nameExpr = this.io.readBytes(int(this.lenName)).bytesTerminate(0, false)
+  this.name = nameExpr
+  let namePaddingExpr = this.io.readBytes(int((-(this.lenName) %%% 4)))
+  this.namePadding = namePaddingExpr
+  let descriptorExpr = this.io.readBytes(int(this.lenDescriptor))
+  this.descriptor = descriptorExpr
+  let descriptorPaddingExpr = this.io.readBytes(int((-(this.lenDescriptor) %%% 4)))
+  this.descriptorPadding = descriptorPaddingExpr
+
+
+proc readBe(this: Elf_EndianElf_NoteSectionEntry) =
+  let lenNameExpr = this.io.readU4be()
+  this.lenName = lenNameExpr
+  let lenDescriptorExpr = this.io.readU4be()
+  this.lenDescriptor = lenDescriptorExpr
+  let typeExpr = this.io.readU4be()
+  this.type = typeExpr
+
+  ##[
+  Although the ELF specification seems to hint that the `note_name` field
+is ASCII this isn't the case for Linux binaries that have a
+`.gnu.build.attributes` section.
+
+  @see <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
+  ]##
+  let nameExpr = this.io.readBytes(int(this.lenName)).bytesTerminate(0, false)
+  this.name = nameExpr
+  let namePaddingExpr = this.io.readBytes(int((-(this.lenName) %%% 4)))
+  this.namePadding = namePaddingExpr
+  let descriptorExpr = this.io.readBytes(int(this.lenDescriptor))
+  this.descriptor = descriptorExpr
+  let descriptorPaddingExpr = this.io.readBytes(int((-(this.lenDescriptor) %%% 4)))
+  this.descriptorPadding = descriptorPaddingExpr
+
+proc read*(_: typedesc[Elf_EndianElf_NoteSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_NoteSection): Elf_EndianElf_NoteSectionEntry =
+  template this: untyped = result
+  this = new(Elf_EndianElf_NoteSectionEntry)
+  let root = if root == nil: cast[Elf](this) else: cast[Elf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+  this.isLe = this.parent.isLe
+
+
+  if this.isLe:
+    readLe(this)
+  else:
+    readBe(this)
+
+proc fromFile*(_: typedesc[Elf_EndianElf_NoteSectionEntry], filename: string): Elf_EndianElf_NoteSectionEntry =
+  Elf_EndianElf_NoteSectionEntry.read(newKaitaiFileStream(filename), nil, nil)
 
 
 proc readLe(this: Elf_EndianElf_StringsStruct) =

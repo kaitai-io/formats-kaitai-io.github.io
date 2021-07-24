@@ -748,6 +748,46 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :value
       attr_reader :size
     end
+    class NoteSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/note_section")
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << NoteSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << NoteSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+      attr_reader :entries
+    end
     class ProgramHeader < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
@@ -1091,6 +1131,18 @@ class Elf < Kaitai::Struct::Struct
         io.seek(ofs_body)
         if @_is_le
           case type
+          when :sh_type_rel
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
+          when :sh_type_note
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
+          when :sh_type_symtab
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
           when :sh_type_strtab
             @_raw_body = io.read_bytes(len_body)
             _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
@@ -1103,15 +1155,27 @@ class Elf < Kaitai::Struct::Struct
             @_raw_body = io.read_bytes(len_body)
             _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
             @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_dynstr
+          when :sh_type_rela
             @_raw_body = io.read_bytes(len_body)
             _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
+            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
           else
             @body = io.read_bytes(len_body)
           end
         else
           case type
+          when :sh_type_rel
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
+          when :sh_type_note
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
+          when :sh_type_symtab
+            @_raw_body = io.read_bytes(len_body)
+            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
           when :sh_type_strtab
             @_raw_body = io.read_bytes(len_body)
             _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
@@ -1124,10 +1188,10 @@ class Elf < Kaitai::Struct::Struct
             @_raw_body = io.read_bytes(len_body)
             _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
             @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_dynstr
+          when :sh_type_rela
             @_raw_body = io.read_bytes(len_body)
             _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
+            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
           else
             @body = io.read_bytes(len_body)
           end
@@ -1168,6 +1232,52 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :align
       attr_reader :entry_size
       attr_reader :_raw_body
+    end
+
+    ##
+    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
+    class RelocationSection < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil, has_addend)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        @has_addend = has_addend
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/relocation_section")
+        end
+        self
+      end
+
+      def _read_le
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << RelocationSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+
+      def _read_be
+        @entries = []
+        i = 0
+        while not @_io.eof?
+          @entries << RelocationSectionEntry.new(@_io, self, @_root, @_is_le)
+          i += 1
+        end
+        self
+      end
+      attr_reader :entries
+      attr_reader :has_addend
     end
     class DynamicSection < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
@@ -1259,6 +1369,76 @@ class Elf < Kaitai::Struct::Struct
       end
       attr_reader :entries
     end
+    class RelocationSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/relocation_section_entry")
+        end
+        self
+      end
+
+      def _read_le
+        case _root.bits
+        when :bits_b32
+          @offset = @_io.read_u4le
+        when :bits_b64
+          @offset = @_io.read_u8le
+        end
+        case _root.bits
+        when :bits_b32
+          @info = @_io.read_u4le
+        when :bits_b64
+          @info = @_io.read_u8le
+        end
+        if _parent.has_addend
+          case _root.bits
+          when :bits_b32
+            @addend = @_io.read_s4le
+          when :bits_b64
+            @addend = @_io.read_s8le
+          end
+        end
+        self
+      end
+
+      def _read_be
+        case _root.bits
+        when :bits_b32
+          @offset = @_io.read_u4be
+        when :bits_b64
+          @offset = @_io.read_u8be
+        end
+        case _root.bits
+        when :bits_b32
+          @info = @_io.read_u4be
+        when :bits_b64
+          @info = @_io.read_u8be
+        end
+        if _parent.has_addend
+          case _root.bits
+          when :bits_b32
+            @addend = @_io.read_s4be
+          when :bits_b64
+            @addend = @_io.read_s8be
+          end
+        end
+        self
+      end
+      attr_reader :offset
+      attr_reader :info
+      attr_reader :addend
+    end
     class DynsymSectionEntry32 < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
@@ -1303,6 +1483,64 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :info
       attr_reader :other
       attr_reader :shndx
+    end
+
+    ##
+    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
+    class NoteSectionEntry < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
+        super(_io, _parent, _root)
+        @_is_le = _is_le
+        _read
+      end
+
+      def _read
+
+        if @_is_le == true
+          _read_le
+        elsif @_is_le == false
+          _read_be
+        else
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/note_section_entry")
+        end
+        self
+      end
+
+      def _read_le
+        @len_name = @_io.read_u4le
+        @len_descriptor = @_io.read_u4le
+        @type = @_io.read_u4le
+        @name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_name), 0, false)
+        @name_padding = @_io.read_bytes((-(len_name) % 4))
+        @descriptor = @_io.read_bytes(len_descriptor)
+        @descriptor_padding = @_io.read_bytes((-(len_descriptor) % 4))
+        self
+      end
+
+      def _read_be
+        @len_name = @_io.read_u4be
+        @len_descriptor = @_io.read_u4be
+        @type = @_io.read_u4be
+        @name = Kaitai::Struct::Stream::bytes_terminate(@_io.read_bytes(len_name), 0, false)
+        @name_padding = @_io.read_bytes((-(len_name) % 4))
+        @descriptor = @_io.read_bytes(len_descriptor)
+        @descriptor_padding = @_io.read_bytes((-(len_descriptor) % 4))
+        self
+      end
+      attr_reader :len_name
+      attr_reader :len_descriptor
+      attr_reader :type
+
+      ##
+      # Although the ELF specification seems to hint that the `note_name` field
+      # is ASCII this isn't the case for Linux binaries that have a
+      # `.gnu.build.attributes` section.
+      # @see https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes Source
+      attr_reader :name
+      attr_reader :name_padding
+      attr_reader :descriptor
+      attr_reader :descriptor_padding
     end
     class StringsStruct < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)

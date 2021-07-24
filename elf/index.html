@@ -128,7 +128,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -285,7 +285,7 @@ section#format-index .row {
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">executable</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">linux</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
-  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.8</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
 <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
@@ -669,7 +669,10 @@ section#format-index .row {
                 <span class="s">&#39;sh_type::dynamic&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section</span>
                 <span class="s">&#39;sh_type::strtab&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">strings_struct</span>
                 <span class="s">&#39;sh_type::dynsym&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynsym_section</span>
-                <span class="s">&#39;sh_type::dynstr&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">strings_struct</span>
+                <span class="s">&#39;sh_type::symtab&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">dynsym_section</span>
+                <span class="s">&#39;sh_type::note&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">note_section</span>
+                <span class="s">&#39;sh_type::rel&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">relocation_section(false)</span>
+                <span class="s">&#39;sh_type::rela&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">relocation_section(true)</span>
           <span class="nt">name</span><span class="p">:</span>
             <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.header.strings._io</span>
             <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
@@ -751,6 +754,73 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="nt">note_section</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">note_section_entry</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+      <span class="nt">note_section_entry</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html</span>
+          <span class="c1"># The following source claims that note&#39;s `name` and `descriptor` should be padded</span>
+          <span class="c1"># to 8 bytes in 64-bit ELFs, not always to 4 - although this seems to be an idea of</span>
+          <span class="c1"># the original spec, it did not catch on in the real world and most implementations</span>
+          <span class="c1"># always use 4-byte alignment - see</span>
+          <span class="c1"># &lt;https://fa.linux.kernel.narkive.com/2Za5xb58/patch-01-02-elf-always-define-elf-addr-t-in-linux-elf-h#post13&gt;</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_name</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_descriptor</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_name</span>
+            <span class="nt">terminator</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+            <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">Although the ELF specification seems to hint that the `note_name` field</span>
+              <span class="no">is ASCII this isn&#39;t the case for Linux binaries that have a</span>
+              <span class="no">`.gnu.build.attributes` section.</span>
+            <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name_padding</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-len_name % 4</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">descriptor</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_descriptor</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">descriptor_padding</span>
+            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">-len_descriptor % 4</span>
+      <span class="nt">relocation_section</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html</span>
+        <span class="nt">params</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_addend</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relocation_section_entry</span>
+            <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+      <span class="nt">relocation_section_entry</span><span class="p">:</span>
+        <span class="nt">seq</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">info</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+          <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">addend</span>
+            <span class="nt">type</span><span class="p">:</span>
+              <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
+              <span class="nt">cases</span><span class="p">:</span>
+                <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+                <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">s8</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.has_addend</span>
     <span class="nt">instances</span><span class="p">:</span>
       <span class="nt">program_headers</span><span class="p">:</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">program_header_offset</span>

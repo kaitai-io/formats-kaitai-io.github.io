@@ -1040,6 +1040,46 @@ function Elf.EndianElf.DynsymSectionEntry64:_read_be()
 end
 
 
+Elf.EndianElf.NoteSection = class.class(KaitaiStruct)
+
+function Elf.EndianElf.NoteSection:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self._is_le = is_le
+  self:_read()
+end
+
+function Elf.EndianElf.NoteSection:_read()
+
+  if self._is_le then
+    self:_read_le()
+  elseif not self._is_le then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Elf.EndianElf.NoteSection:_read_le()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Elf.EndianElf.NoteSectionEntry(self._io, self, self._root, self._is_le)
+    i = i + 1
+  end
+end
+
+function Elf.EndianElf.NoteSection:_read_be()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Elf.EndianElf.NoteSectionEntry(self._io, self, self._root, self._is_le)
+    i = i + 1
+  end
+end
+
+
 Elf.EndianElf.ProgramHeader = class.class(KaitaiStruct)
 
 function Elf.EndianElf.ProgramHeader:_init(io, parent, root, is_le)
@@ -1398,7 +1438,19 @@ function Elf.EndianElf.SectionHeader.property.body:get()
   _io:seek(self.ofs_body)
   if self._is_le then
     local _on = self.type
-    if _on == Elf.ShType.strtab then
+    if _on == Elf.ShType.rel then
+      self._raw__m_body = _io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw__m_body))
+      self._m_body = Elf.EndianElf.RelocationSection(false, _io, self, self._root, self._is_le)
+    elseif _on == Elf.ShType.note then
+      self._raw__m_body = _io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw__m_body))
+      self._m_body = Elf.EndianElf.NoteSection(_io, self, self._root, self._is_le)
+    elseif _on == Elf.ShType.symtab then
+      self._raw__m_body = _io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw__m_body))
+      self._m_body = Elf.EndianElf.DynsymSection(_io, self, self._root, self._is_le)
+    elseif _on == Elf.ShType.strtab then
       self._raw__m_body = _io:read_bytes(self.len_body)
       local _io = KaitaiStream(stringstream(self._raw__m_body))
       self._m_body = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
@@ -1410,16 +1462,28 @@ function Elf.EndianElf.SectionHeader.property.body:get()
       self._raw__m_body = _io:read_bytes(self.len_body)
       local _io = KaitaiStream(stringstream(self._raw__m_body))
       self._m_body = Elf.EndianElf.DynsymSection(_io, self, self._root, self._is_le)
-    elseif _on == Elf.ShType.dynstr then
+    elseif _on == Elf.ShType.rela then
       self._raw__m_body = _io:read_bytes(self.len_body)
       local _io = KaitaiStream(stringstream(self._raw__m_body))
-      self._m_body = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
+      self._m_body = Elf.EndianElf.RelocationSection(true, _io, self, self._root, self._is_le)
     else
       self._m_body = _io:read_bytes(self.len_body)
     end
   else
     local _on = self.type
-    if _on == Elf.ShType.strtab then
+    if _on == Elf.ShType.rel then
+      self._raw__m_body = _io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw__m_body))
+      self._m_body = Elf.EndianElf.RelocationSection(false, _io, self, self._root, self._is_le)
+    elseif _on == Elf.ShType.note then
+      self._raw__m_body = _io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw__m_body))
+      self._m_body = Elf.EndianElf.NoteSection(_io, self, self._root, self._is_le)
+    elseif _on == Elf.ShType.symtab then
+      self._raw__m_body = _io:read_bytes(self.len_body)
+      local _io = KaitaiStream(stringstream(self._raw__m_body))
+      self._m_body = Elf.EndianElf.DynsymSection(_io, self, self._root, self._is_le)
+    elseif _on == Elf.ShType.strtab then
       self._raw__m_body = _io:read_bytes(self.len_body)
       local _io = KaitaiStream(stringstream(self._raw__m_body))
       self._m_body = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
@@ -1431,10 +1495,10 @@ function Elf.EndianElf.SectionHeader.property.body:get()
       self._raw__m_body = _io:read_bytes(self.len_body)
       local _io = KaitaiStream(stringstream(self._raw__m_body))
       self._m_body = Elf.EndianElf.DynsymSection(_io, self, self._root, self._is_le)
-    elseif _on == Elf.ShType.dynstr then
+    elseif _on == Elf.ShType.rela then
       self._raw__m_body = _io:read_bytes(self.len_body)
       local _io = KaitaiStream(stringstream(self._raw__m_body))
-      self._m_body = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
+      self._m_body = Elf.EndianElf.RelocationSection(true, _io, self, self._root, self._is_le)
     else
       self._m_body = _io:read_bytes(self.len_body)
     end
@@ -1473,6 +1537,50 @@ function Elf.EndianElf.SectionHeader.property.flags_obj:get()
     self._m_flags_obj = Elf.SectionHeaderFlags(self.flags, self._io, self, self._root)
   end
   return self._m_flags_obj
+end
+
+
+-- 
+-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html)
+-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html)
+Elf.EndianElf.RelocationSection = class.class(KaitaiStruct)
+
+function Elf.EndianElf.RelocationSection:_init(has_addend, io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self._is_le = is_le
+  self.has_addend = has_addend
+  self:_read()
+end
+
+function Elf.EndianElf.RelocationSection:_read()
+
+  if self._is_le then
+    self:_read_le()
+  elseif not self._is_le then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Elf.EndianElf.RelocationSection:_read_le()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Elf.EndianElf.RelocationSectionEntry(self._io, self, self._root, self._is_le)
+    i = i + 1
+  end
+end
+
+function Elf.EndianElf.RelocationSection:_read_be()
+  self.entries = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.entries[i + 1] = Elf.EndianElf.RelocationSectionEntry(self._io, self, self._root, self._is_le)
+    i = i + 1
+  end
 end
 
 
@@ -1566,6 +1674,74 @@ function Elf.EndianElf.DynsymSection:_read_be()
 end
 
 
+Elf.EndianElf.RelocationSectionEntry = class.class(KaitaiStruct)
+
+function Elf.EndianElf.RelocationSectionEntry:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self._is_le = is_le
+  self:_read()
+end
+
+function Elf.EndianElf.RelocationSectionEntry:_read()
+
+  if self._is_le then
+    self:_read_le()
+  elseif not self._is_le then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Elf.EndianElf.RelocationSectionEntry:_read_le()
+  local _on = self._root.bits
+  if _on == Elf.Bits.b32 then
+    self.offset = self._io:read_u4le()
+  elseif _on == Elf.Bits.b64 then
+    self.offset = self._io:read_u8le()
+  end
+  local _on = self._root.bits
+  if _on == Elf.Bits.b32 then
+    self.info = self._io:read_u4le()
+  elseif _on == Elf.Bits.b64 then
+    self.info = self._io:read_u8le()
+  end
+  if self._parent.has_addend then
+    local _on = self._root.bits
+    if _on == Elf.Bits.b32 then
+      self.addend = self._io:read_s4le()
+    elseif _on == Elf.Bits.b64 then
+      self.addend = self._io:read_s8le()
+    end
+  end
+end
+
+function Elf.EndianElf.RelocationSectionEntry:_read_be()
+  local _on = self._root.bits
+  if _on == Elf.Bits.b32 then
+    self.offset = self._io:read_u4be()
+  elseif _on == Elf.Bits.b64 then
+    self.offset = self._io:read_u8be()
+  end
+  local _on = self._root.bits
+  if _on == Elf.Bits.b32 then
+    self.info = self._io:read_u4be()
+  elseif _on == Elf.Bits.b64 then
+    self.info = self._io:read_u8be()
+  end
+  if self._parent.has_addend then
+    local _on = self._root.bits
+    if _on == Elf.Bits.b32 then
+      self.addend = self._io:read_s4be()
+    elseif _on == Elf.Bits.b64 then
+      self.addend = self._io:read_s8be()
+    end
+  end
+end
+
+
 Elf.EndianElf.DynsymSectionEntry32 = class.class(KaitaiStruct)
 
 function Elf.EndianElf.DynsymSectionEntry32:_init(io, parent, root, is_le)
@@ -1605,6 +1781,56 @@ function Elf.EndianElf.DynsymSectionEntry32:_read_be()
   self.shndx = self._io:read_u2be()
 end
 
+
+-- 
+-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html)
+-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section)
+Elf.EndianElf.NoteSectionEntry = class.class(KaitaiStruct)
+
+function Elf.EndianElf.NoteSectionEntry:_init(io, parent, root, is_le)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self._is_le = is_le
+  self:_read()
+end
+
+function Elf.EndianElf.NoteSectionEntry:_read()
+
+  if self._is_le then
+    self:_read_le()
+  elseif not self._is_le then
+    self:_read_be()
+  else
+    error("unable to decide endianness")
+  end
+end
+
+function Elf.EndianElf.NoteSectionEntry:_read_le()
+  self.len_name = self._io:read_u4le()
+  self.len_descriptor = self._io:read_u4le()
+  self.type = self._io:read_u4le()
+  self.name = KaitaiStream.bytes_terminate(self._io:read_bytes(self.len_name), 0, false)
+  self.name_padding = self._io:read_bytes((-(self.len_name) % 4))
+  self.descriptor = self._io:read_bytes(self.len_descriptor)
+  self.descriptor_padding = self._io:read_bytes((-(self.len_descriptor) % 4))
+end
+
+function Elf.EndianElf.NoteSectionEntry:_read_be()
+  self.len_name = self._io:read_u4be()
+  self.len_descriptor = self._io:read_u4be()
+  self.type = self._io:read_u4be()
+  self.name = KaitaiStream.bytes_terminate(self._io:read_bytes(self.len_name), 0, false)
+  self.name_padding = self._io:read_bytes((-(self.len_name) % 4))
+  self.descriptor = self._io:read_bytes(self.len_descriptor)
+  self.descriptor_padding = self._io:read_bytes((-(self.len_descriptor) % 4))
+end
+
+-- 
+-- Although the ELF specification seems to hint that the `note_name` field
+-- is ASCII this isn't the case for Linux binaries that have a
+-- `.gnu.build.attributes` section.
+-- See also: Source (https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes)
 
 Elf.EndianElf.StringsStruct = class.class(KaitaiStruct)
 

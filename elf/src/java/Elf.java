@@ -7,8 +7,8 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.nio.charset.Charset;
 
 
 /**
@@ -1136,6 +1136,53 @@ public class Elf extends KaitaiStruct {
             public Elf _root() { return _root; }
             public Elf.EndianElf.DynsymSection _parent() { return _parent; }
         }
+        public static class NoteSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public NoteSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<NoteSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new NoteSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<NoteSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new NoteSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private ArrayList<NoteSectionEntry> entries;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public ArrayList<NoteSectionEntry> entries() { return entries; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+        }
         public static class ProgramHeader extends KaitaiStruct {
             private Boolean _is_le;
 
@@ -1776,6 +1823,24 @@ public class Elf extends KaitaiStruct {
                         ShType on = type();
                         if (on != null) {
                             switch (type()) {
+                            case REL: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
+                                break;
+                            }
+                            case NOTE: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case SYMTAB: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
                             case STRTAB: {
                                 this._raw_body = io.readBytes(lenBody());
                                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -1794,10 +1859,10 @@ public class Elf extends KaitaiStruct {
                                 this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
                                 break;
                             }
-                            case DYNSTR: {
+                            case RELA: {
                                 this._raw_body = io.readBytes(lenBody());
                                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
                                 break;
                             }
                             default: {
@@ -1814,6 +1879,24 @@ public class Elf extends KaitaiStruct {
                         ShType on = type();
                         if (on != null) {
                             switch (type()) {
+                            case REL: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
+                                break;
+                            }
+                            case NOTE: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
+                            case SYMTAB: {
+                                this._raw_body = io.readBytes(lenBody());
+                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                break;
+                            }
                             case STRTAB: {
                                 this._raw_body = io.readBytes(lenBody());
                                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -1832,10 +1915,10 @@ public class Elf extends KaitaiStruct {
                                 this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
                                 break;
                             }
-                            case DYNSTR: {
+                            case RELA: {
                                 this._raw_body = io.readBytes(lenBody());
                                 KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
                                 break;
                             }
                             default: {
@@ -1903,6 +1986,61 @@ public class Elf extends KaitaiStruct {
             public Elf _root() { return _root; }
             public Elf.EndianElf _parent() { return _parent; }
             public byte[] _raw_body() { return _raw_body; }
+        }
+
+        /**
+         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html">Source</a>
+         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
+         */
+        public static class RelocationSection extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public RelocationSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le, boolean hasAddend) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                this.hasAddend = hasAddend;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.entries = new ArrayList<RelocationSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new RelocationSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private void _readBE() {
+                this.entries = new ArrayList<RelocationSectionEntry>();
+                {
+                    int i = 0;
+                    while (!this._io.isEof()) {
+                        this.entries.add(new RelocationSectionEntry(this._io, this, _root, _is_le));
+                        i++;
+                    }
+                }
+            }
+            private ArrayList<RelocationSectionEntry> entries;
+            private boolean hasAddend;
+            private Elf _root;
+            private Elf.EndianElf.SectionHeader _parent;
+            public ArrayList<RelocationSectionEntry> entries() { return entries; }
+            public boolean hasAddend() { return hasAddend; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
         }
         public static class DynamicSection extends KaitaiStruct {
             private Boolean _is_le;
@@ -2026,6 +2164,135 @@ public class Elf extends KaitaiStruct {
             public Elf _root() { return _root; }
             public Elf.EndianElf.SectionHeader _parent() { return _parent; }
         }
+        public static class RelocationSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public RelocationSectionEntry(KaitaiStream _io, Elf.EndianElf.RelocationSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.offset = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.offset = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.info = (long) (this._io.readU4le());
+                            break;
+                        }
+                        case B64: {
+                            this.info = this._io.readU8le();
+                            break;
+                        }
+                        }
+                    }
+                }
+                if (_parent().hasAddend()) {
+                    {
+                        Bits on = _root.bits();
+                        if (on != null) {
+                            switch (_root.bits()) {
+                            case B32: {
+                                this.addend = (long) (this._io.readS4le());
+                                break;
+                            }
+                            case B64: {
+                                this.addend = this._io.readS8le();
+                                break;
+                            }
+                            }
+                        }
+                    }
+                }
+            }
+            private void _readBE() {
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.offset = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.offset = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                {
+                    Bits on = _root.bits();
+                    if (on != null) {
+                        switch (_root.bits()) {
+                        case B32: {
+                            this.info = (long) (this._io.readU4be());
+                            break;
+                        }
+                        case B64: {
+                            this.info = this._io.readU8be();
+                            break;
+                        }
+                        }
+                    }
+                }
+                if (_parent().hasAddend()) {
+                    {
+                        Bits on = _root.bits();
+                        if (on != null) {
+                            switch (_root.bits()) {
+                            case B32: {
+                                this.addend = (long) (this._io.readS4be());
+                                break;
+                            }
+                            case B64: {
+                                this.addend = this._io.readS8be();
+                                break;
+                            }
+                            }
+                        }
+                    }
+                }
+            }
+            private Long offset;
+            private Long info;
+            private Long addend;
+            private Elf _root;
+            private Elf.EndianElf.RelocationSection _parent;
+            public Long offset() { return offset; }
+            public Long info() { return info; }
+            public Long addend() { return addend; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.RelocationSection _parent() { return _parent; }
+        }
         public static class DynsymSectionEntry32 extends KaitaiStruct {
             private Boolean _is_le;
 
@@ -2078,6 +2345,75 @@ public class Elf extends KaitaiStruct {
             public int shndx() { return shndx; }
             public Elf _root() { return _root; }
             public Elf.EndianElf.DynsymSection _parent() { return _parent; }
+        }
+
+        /**
+         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html">Source</a>
+         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
+         */
+        public static class NoteSectionEntry extends KaitaiStruct {
+            private Boolean _is_le;
+
+            public NoteSectionEntry(KaitaiStream _io, Elf.EndianElf.NoteSection _parent, Elf _root, boolean _is_le) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                this._is_le = _is_le;
+                _read();
+            }
+            private void _read() {
+
+                if (_is_le == null) {
+                    throw new KaitaiStream.UndecidedEndiannessError();
+                } else if (_is_le) {
+                    _readLE();
+                } else {
+                    _readBE();
+                }
+            }
+            private void _readLE() {
+                this.lenName = this._io.readU4le();
+                this.lenDescriptor = this._io.readU4le();
+                this.type = this._io.readU4le();
+                this.name = KaitaiStream.bytesTerminate(this._io.readBytes(lenName()), (byte) 0, false);
+                this.namePadding = this._io.readBytes(KaitaiStream.mod(-(lenName()), 4));
+                this.descriptor = this._io.readBytes(lenDescriptor());
+                this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(lenDescriptor()), 4));
+            }
+            private void _readBE() {
+                this.lenName = this._io.readU4be();
+                this.lenDescriptor = this._io.readU4be();
+                this.type = this._io.readU4be();
+                this.name = KaitaiStream.bytesTerminate(this._io.readBytes(lenName()), (byte) 0, false);
+                this.namePadding = this._io.readBytes(KaitaiStream.mod(-(lenName()), 4));
+                this.descriptor = this._io.readBytes(lenDescriptor());
+                this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(lenDescriptor()), 4));
+            }
+            private long lenName;
+            private long lenDescriptor;
+            private long type;
+            private byte[] name;
+            private byte[] namePadding;
+            private byte[] descriptor;
+            private byte[] descriptorPadding;
+            private Elf _root;
+            private Elf.EndianElf.NoteSection _parent;
+            public long lenName() { return lenName; }
+            public long lenDescriptor() { return lenDescriptor; }
+            public long type() { return type; }
+
+            /**
+             * Although the ELF specification seems to hint that the `note_name` field
+             * is ASCII this isn't the case for Linux binaries that have a
+             * `.gnu.build.attributes` section.
+             * @see <a href="https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes">Source</a>
+             */
+            public byte[] name() { return name; }
+            public byte[] namePadding() { return namePadding; }
+            public byte[] descriptor() { return descriptor; }
+            public byte[] descriptorPadding() { return descriptorPadding; }
+            public Elf _root() { return _root; }
+            public Elf.EndianElf.NoteSection _parent() { return _parent; }
         }
         public static class StringsStruct extends KaitaiStruct {
             private Boolean _is_le;

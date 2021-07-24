@@ -128,7 +128,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -1315,6 +1315,46 @@ section#format-index .row {
 <span class="kr">end</span>
 
 
+<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSection</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSection</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSection</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSection</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSectionEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSection</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSectionEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
 <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">ProgramHeader</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
@@ -1673,7 +1713,19 @@ section#format-index .row {
   <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span><span class="p">)</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
     <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
-    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">strtab</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">rel</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">note</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSection</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">symtab</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">strtab</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
       <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
@@ -1685,16 +1737,28 @@ section#format-index .row {
       <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
       <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">dynstr</span> <span class="kr">then</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">rela</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
       <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
     <span class="kr">else</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
     <span class="kr">end</span>
   <span class="kr">else</span>
     <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">type</span>
-    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">strtab</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">rel</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span><span class="p">(</span><span class="kc">false</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">note</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSection</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">symtab</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+      <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">strtab</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
       <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
@@ -1706,10 +1770,10 @@ section#format-index .row {
       <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
       <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
-    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">dynstr</span> <span class="kr">then</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">rela</span> <span class="kr">then</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
       <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw__m_body</span><span class="p">))</span>
-      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span><span class="p">(</span><span class="kc">true</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
     <span class="kr">else</span>
       <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
     <span class="kr">end</span>
@@ -1748,6 +1812,50 @@ section#format-index .row {
     <span class="n">self</span><span class="p">.</span><span class="n">_m_flags_obj</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">flags</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">end</span>
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flags_obj</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html)</span>
+<span class="c1">-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html)</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSection</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">has_addend</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">has_addend</span> <span class="o">=</span> <span class="n">has_addend</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSection</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSection</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSectionEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSection</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="kd">local</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="kr">while</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()</span> <span class="kr">do</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSectionEntry</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span><span class="p">)</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="kr">end</span>
 <span class="kr">end</span>
 
 
@@ -1841,6 +1949,74 @@ section#format-index .row {
 <span class="kr">end</span>
 
 
+<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSectionEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSectionEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSectionEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSectionEntry</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">bits</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b64</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">bits</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b64</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8le</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">has_addend</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">bits</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b32</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4le</span><span class="p">()</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b64</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s8le</span><span class="p">()</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">RelocationSectionEntry</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">bits</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b64</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">bits</span>
+  <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b32</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b64</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">info</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u8be</span><span class="p">()</span>
+  <span class="kr">end</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_parent</span><span class="p">.</span><span class="n">has_addend</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_on</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">bits</span>
+    <span class="kr">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b32</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s4be</span><span class="p">()</span>
+    <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">b64</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">addend</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_s8be</span><span class="p">()</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+
 <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSectionEntry32</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">DynsymSectionEntry32</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
@@ -1880,6 +2056,56 @@ section#format-index .row {
   <span class="n">self</span><span class="p">.</span><span class="n">shndx</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
 
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html)</span>
+<span class="c1">-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section)</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSectionEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSectionEntry</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">,</span> <span class="n">is_le</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">is_le</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSectionEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_le</span><span class="p">()</span>
+  <span class="kr">elseif</span> <span class="ow">not</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">:</span><span class="n">_read_be</span><span class="p">()</span>
+  <span class="kr">else</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;unable to decide endianness&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSectionEntry</span><span class="p">:</span><span class="nf">_read_le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_descriptor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_name</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_padding</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_name</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_descriptor</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">descriptor_padding</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_descriptor</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">NoteSectionEntry</span><span class="p">:</span><span class="nf">_read_be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_name</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">len_descriptor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4be</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="n">bytes_terminate</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_name</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">name_padding</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_name</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">descriptor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_descriptor</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">descriptor_padding</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_descriptor</span><span class="p">)</span> <span class="o">%</span> <span class="mi">4</span><span class="p">))</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Although the ELF specification seems to hint that the `note_name` field</span>
+<span class="c1">-- is ASCII this isn&#39;t the case for Linux binaries that have a</span>
+<span class="c1">-- `.gnu.build.attributes` section.</span>
+<span class="c1">-- See also: Source (https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes)</span>
 
 <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">StringsStruct</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 

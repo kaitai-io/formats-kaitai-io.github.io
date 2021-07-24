@@ -780,12 +780,16 @@ public:
 
     public:
         class dynsym_section_entry64_t;
+        class note_section_t;
         class program_header_t;
         class dynamic_section_entry_t;
         class section_header_t;
+        class relocation_section_t;
         class dynamic_section_t;
         class dynsym_section_t;
+        class relocation_section_entry_t;
         class dynsym_section_entry32_t;
+        class note_section_entry_t;
         class strings_struct_t;
 
         endian_elf_t(kaitai::kstream* p__io, elf_t* p__parent = nullptr, elf_t* p__root = nullptr);
@@ -843,6 +847,37 @@ public:
             uint64_t size() const { return m_size; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t::dynsym_section_t* _parent() const { return m__parent; }
+        };
+
+        class note_section_t : public kaitai::kstruct {
+
+        public:
+
+            note_section_t(kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+            void _read_le();
+            void _read_be();
+            void _clean_up();
+
+        public:
+            ~note_section_t();
+
+        private:
+            std::unique_ptr<std::vector<std::unique_ptr<note_section_entry_t>>> m_entries;
+            elf_t* m__root;
+            elf_t::endian_elf_t::section_header_t* m__parent;
+
+        public:
+            std::vector<std::unique_ptr<note_section_entry_t>>* entries() const { return m_entries.get(); }
+            elf_t* _root() const { return m__root; }
+            elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
         };
 
         class program_header_t : public kaitai::kstruct {
@@ -1157,6 +1192,44 @@ public:
             kaitai::kstream* _io__raw_body() const { return m__io__raw_body.get(); }
         };
 
+        /**
+         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html Source
+         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
+         */
+
+        class relocation_section_t : public kaitai::kstruct {
+
+        public:
+
+            relocation_section_t(bool p_has_addend, kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+            void _read_le();
+            void _read_be();
+            void _clean_up();
+
+        public:
+            ~relocation_section_t();
+
+        private:
+            std::unique_ptr<std::vector<std::unique_ptr<relocation_section_entry_t>>> m_entries;
+            bool m_has_addend;
+            elf_t* m__root;
+            elf_t::endian_elf_t::section_header_t* m__parent;
+
+        public:
+            std::vector<std::unique_ptr<relocation_section_entry_t>>* entries() const { return m_entries.get(); }
+            bool has_addend() const { return m_has_addend; }
+            elf_t* _root() const { return m__root; }
+            elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
+        };
+
         class dynamic_section_t : public kaitai::kstruct {
 
         public:
@@ -1219,6 +1292,59 @@ public:
             elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
         };
 
+        class relocation_section_entry_t : public kaitai::kstruct {
+
+        public:
+
+            relocation_section_entry_t(kaitai::kstream* p__io, elf_t::endian_elf_t::relocation_section_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+            void _read_le();
+            void _read_be();
+            void _clean_up();
+
+        public:
+            ~relocation_section_entry_t();
+
+        private:
+            uint64_t m_offset;
+            bool n_offset;
+
+        public:
+            bool _is_null_offset() { offset(); return n_offset; };
+
+        private:
+            uint64_t m_info;
+            bool n_info;
+
+        public:
+            bool _is_null_info() { info(); return n_info; };
+
+        private:
+            int64_t m_addend;
+            bool n_addend;
+
+        public:
+            bool _is_null_addend() { addend(); return n_addend; };
+
+        private:
+            elf_t* m__root;
+            elf_t::endian_elf_t::relocation_section_t* m__parent;
+
+        public:
+            uint64_t offset() const { return m_offset; }
+            uint64_t info() const { return m_info; }
+            int64_t addend() const { return m_addend; }
+            elf_t* _root() const { return m__root; }
+            elf_t::endian_elf_t::relocation_section_t* _parent() const { return m__parent; }
+        };
+
         class dynsym_section_entry32_t : public kaitai::kstruct {
 
         public:
@@ -1258,6 +1384,61 @@ public:
             uint16_t shndx() const { return m_shndx; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t::dynsym_section_t* _parent() const { return m__parent; }
+        };
+
+        /**
+         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html Source
+         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
+         */
+
+        class note_section_entry_t : public kaitai::kstruct {
+
+        public:
+
+            note_section_entry_t(kaitai::kstream* p__io, elf_t::endian_elf_t::note_section_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
+
+        private:
+            int m__is_le;
+
+        public:
+
+        private:
+            void _read();
+            void _read_le();
+            void _read_be();
+            void _clean_up();
+
+        public:
+            ~note_section_entry_t();
+
+        private:
+            uint32_t m_len_name;
+            uint32_t m_len_descriptor;
+            uint32_t m_type;
+            std::string m_name;
+            std::string m_name_padding;
+            std::string m_descriptor;
+            std::string m_descriptor_padding;
+            elf_t* m__root;
+            elf_t::endian_elf_t::note_section_t* m__parent;
+
+        public:
+            uint32_t len_name() const { return m_len_name; }
+            uint32_t len_descriptor() const { return m_len_descriptor; }
+            uint32_t type() const { return m_type; }
+
+            /**
+             * Although the ELF specification seems to hint that the `note_name` field
+             * is ASCII this isn't the case for Linux binaries that have a
+             * `.gnu.build.attributes` section.
+             * \sa https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes Source
+             */
+            std::string name() const { return m_name; }
+            std::string name_padding() const { return m_name_padding; }
+            std::string descriptor() const { return m_descriptor; }
+            std::string descriptor_padding() const { return m_descriptor_padding; }
+            elf_t* _root() const { return m__root; }
+            elf_t::endian_elf_t::note_section_t* _parent() const { return m__parent; }
         };
 
         class strings_struct_t : public kaitai::kstruct {

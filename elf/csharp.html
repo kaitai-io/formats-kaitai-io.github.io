@@ -128,7 +128,7 @@ section#format-index .row {
                     
                     
                     <div class="panel-body">
-                        Minimal Kaitai Struct required: 0.8
+                        Minimal Kaitai Struct required: 0.9
                     </div>
                     
                     
@@ -1598,6 +1598,61 @@ can also be found there.</p>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NoteSection</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">NoteSection</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">NoteSection</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">private</span> <span class="kt">bool?</span> <span class="n">m_isLe</span><span class="p">;</span>
+                <span class="k">public</span> <span class="nf">NoteSection</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_readLE</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="n">_readBE</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NoteSectionEntry</span><span class="p">&gt;();</span>
+                    <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">NoteSectionEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
+                            <span class="n">i</span><span class="p">++;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NoteSectionEntry</span><span class="p">&gt;();</span>
+                    <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">NoteSectionEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
+                            <span class="n">i</span><span class="p">++;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NoteSectionEntry</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">NoteSectionEntry</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
             <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ProgramHeader</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>
                 <span class="k">public</span> <span class="k">static</span> <span class="n">ProgramHeader</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
@@ -2144,6 +2199,24 @@ can also be found there.</p>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
                         <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
                             <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Rel</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RelocationSection</span><span class="p">(</span><span class="k">false</span><span class="p">,</span> <span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Note</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoteSection</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Symtab</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
                             <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Strtab</span><span class="p">:</span> <span class="p">{</span>
                                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
                                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -2162,10 +2235,10 @@ can also be found there.</p>
                                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                                 <span class="k">break</span><span class="p">;</span>
                             <span class="p">}</span>
-                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Dynstr</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Rela</span><span class="p">:</span> <span class="p">{</span>
                                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
                                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RelocationSection</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                                 <span class="k">break</span><span class="p">;</span>
                             <span class="p">}</span>
                             <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -2175,6 +2248,24 @@ can also be found there.</p>
                             <span class="p">}</span>
                         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
                             <span class="k">switch</span> <span class="p">(</span><span class="n">Type</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Rel</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RelocationSection</span><span class="p">(</span><span class="k">false</span><span class="p">,</span> <span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Note</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoteSection</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Symtab</span><span class="p">:</span> <span class="p">{</span>
+                                <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                                <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="k">break</span><span class="p">;</span>
+                            <span class="p">}</span>
                             <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Strtab</span><span class="p">:</span> <span class="p">{</span>
                                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
                                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -2193,10 +2284,10 @@ can also be found there.</p>
                                 <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DynsymSection</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                                 <span class="k">break</span><span class="p">;</span>
                             <span class="p">}</span>
-                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Dynstr</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Rela</span><span class="p">:</span> <span class="p">{</span>
                                 <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
                                 <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                                <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RelocationSection</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                                 <span class="k">break</span><span class="p">;</span>
                             <span class="p">}</span>
                             <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -2274,6 +2365,66 @@ can also be found there.</p>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawBody</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RelocationSection</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">private</span> <span class="kt">bool?</span> <span class="n">m_isLe</span><span class="p">;</span>
+                <span class="k">public</span> <span class="nf">RelocationSection</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_hasAddend</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
+                    <span class="n">_hasAddend</span> <span class="p">=</span> <span class="n">p_hasAddend</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_readLE</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="n">_readBE</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RelocationSectionEntry</span><span class="p">&gt;();</span>
+                    <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">RelocationSectionEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
+                            <span class="n">i</span><span class="p">++;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RelocationSectionEntry</span><span class="p">&gt;();</span>
+                    <span class="p">{</span>
+                        <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+                        <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">RelocationSectionEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
+                            <span class="n">i</span><span class="p">++;</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RelocationSectionEntry</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">_hasAddend</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">RelocationSectionEntry</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">bool</span> <span class="n">HasAddend</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_hasAddend</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DynamicSection</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>
@@ -2403,6 +2554,113 @@ can also be found there.</p>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">RelocationSectionEntry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">RelocationSectionEntry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">RelocationSectionEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">private</span> <span class="kt">bool?</span> <span class="n">m_isLe</span><span class="p">;</span>
+                <span class="k">public</span> <span class="nf">RelocationSectionEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_readLE</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="n">_readBE</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_offset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_offset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">HasAddend</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_addend</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_addend</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8le</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_offset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_offset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">HasAddend</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_addend</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS4be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="n">_addend</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadS8be</span><span class="p">();</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_offset</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_info</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">long</span> <span class="n">_addend</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Offset</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_offset</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Info</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_info</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">long</span> <span class="n">Addend</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_addend</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
             <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DynsymSectionEntry32</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>
                 <span class="k">public</span> <span class="k">static</span> <span class="n">DynsymSectionEntry32</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
@@ -2463,6 +2721,87 @@ can also be found there.</p>
                 <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Shndx</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_shndx</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NoteSectionEntry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">NoteSectionEntry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">NoteSectionEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">private</span> <span class="kt">bool?</span> <span class="n">m_isLe</span><span class="p">;</span>
+                <span class="k">public</span> <span class="nf">NoteSectionEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSection</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+
+                    <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_readLE</span><span class="p">();</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="n">_readBE</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_lenName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_lenDescriptor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_type</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="n">_name</span> <span class="p">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenName</span><span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+                    <span class="n">_namePadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(-(</span><span class="n">LenName</span><span class="p">),</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="n">_descriptor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenDescriptor</span><span class="p">);</span>
+                    <span class="n">_descriptorPadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(-(</span><span class="n">LenDescriptor</span><span class="p">),</span> <span class="m">4</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_lenName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                    <span class="n">_lenDescriptor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                    <span class="n">_type</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                    <span class="n">_name</span> <span class="p">=</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="n">BytesTerminate</span><span class="p">(</span><span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenName</span><span class="p">),</span> <span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+                    <span class="n">_namePadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(-(</span><span class="n">LenName</span><span class="p">),</span> <span class="m">4</span><span class="p">));</span>
+                    <span class="n">_descriptor</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenDescriptor</span><span class="p">);</span>
+                    <span class="n">_descriptorPadding</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">KaitaiStream</span><span class="p">.</span><span class="n">Mod</span><span class="p">(-(</span><span class="n">LenDescriptor</span><span class="p">),</span> <span class="m">4</span><span class="p">));</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenName</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_lenDescriptor</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_type</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_name</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_namePadding</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_descriptor</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_descriptorPadding</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSection</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">LenDescriptor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_lenDescriptor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// Although the ELF specification seems to hint that the `note_name` field</span>
+                <span class="c1">/// is ASCII this isn&#39;t the case for Linux binaries that have a</span>
+                <span class="c1">/// `.gnu.build.attributes` section.</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="c1">/// &lt;remarks&gt;</span>
+                <span class="c1">/// Reference: &lt;a href=&quot;https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes&quot;&gt;Source&lt;/a&gt;</span>
+                <span class="c1">/// &lt;/remarks&gt;</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_name</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">NamePadding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_namePadding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Descriptor</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_descriptor</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">DescriptorPadding</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_descriptorPadding</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">NoteSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">StringsStruct</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>

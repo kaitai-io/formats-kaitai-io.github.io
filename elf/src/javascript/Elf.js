@@ -1130,6 +1130,45 @@ var Elf = (function() {
       return DynsymSectionEntry64;
     })();
 
+    var NoteSection = EndianElf.NoteSection = (function() {
+      function NoteSection(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      NoteSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      NoteSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new NoteSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+      NoteSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new NoteSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+
+      return NoteSection;
+    })();
+
     var ProgramHeader = EndianElf.ProgramHeader = (function() {
       function ProgramHeader(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -1532,6 +1571,21 @@ var Elf = (function() {
           io.seek(this.ofsBody);
           if (this._is_le) {
             switch (this.type) {
+            case Elf.ShType.REL:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, false);
+              break;
+            case Elf.ShType.NOTE:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.SYMTAB:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
             case Elf.ShType.STRTAB:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
@@ -1547,10 +1601,10 @@ var Elf = (function() {
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
-            case Elf.ShType.DYNSTR:
+            case Elf.ShType.RELA:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, true);
               break;
             default:
               this._m_body = io.readBytes(this.lenBody);
@@ -1558,6 +1612,21 @@ var Elf = (function() {
             }
           } else {
             switch (this.type) {
+            case Elf.ShType.REL:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, false);
+              break;
+            case Elf.ShType.NOTE:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
+            case Elf.ShType.SYMTAB:
+              this._raw__m_body = io.readBytes(this.lenBody);
+              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+              break;
             case Elf.ShType.STRTAB:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
@@ -1573,10 +1642,10 @@ var Elf = (function() {
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
               this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
               break;
-            case Elf.ShType.DYNSTR:
+            case Elf.ShType.RELA:
               this._raw__m_body = io.readBytes(this.lenBody);
               var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, true);
               break;
             default:
               this._m_body = io.readBytes(this.lenBody);
@@ -1617,6 +1686,51 @@ var Elf = (function() {
       });
 
       return SectionHeader;
+    })();
+
+    /**
+     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html|Source}
+     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html|Source}
+     */
+
+    var RelocationSection = EndianElf.RelocationSection = (function() {
+      function RelocationSection(_io, _parent, _root, _is_le, hasAddend) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+        this.hasAddend = hasAddend;
+
+        this._read();
+      }
+      RelocationSection.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      RelocationSection.prototype._readLE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new RelocationSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+      RelocationSection.prototype._readBE = function() {
+        this.entries = [];
+        var i = 0;
+        while (!this._io.isEof()) {
+          this.entries.push(new RelocationSectionEntry(this._io, this, this._root, this._is_le));
+          i++;
+        }
+      }
+
+      return RelocationSection;
     })();
 
     var DynamicSection = EndianElf.DynamicSection = (function() {
@@ -1711,6 +1825,85 @@ var Elf = (function() {
       return DynsymSection;
     })();
 
+    var RelocationSectionEntry = EndianElf.RelocationSectionEntry = (function() {
+      function RelocationSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      RelocationSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      RelocationSectionEntry.prototype._readLE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.offset = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.offset = this._io.readU8le();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.info = this._io.readU4le();
+          break;
+        case Elf.Bits.B64:
+          this.info = this._io.readU8le();
+          break;
+        }
+        if (this._parent.hasAddend) {
+          switch (this._root.bits) {
+          case Elf.Bits.B32:
+            this.addend = this._io.readS4le();
+            break;
+          case Elf.Bits.B64:
+            this.addend = this._io.readS8le();
+            break;
+          }
+        }
+      }
+      RelocationSectionEntry.prototype._readBE = function() {
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.offset = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.offset = this._io.readU8be();
+          break;
+        }
+        switch (this._root.bits) {
+        case Elf.Bits.B32:
+          this.info = this._io.readU4be();
+          break;
+        case Elf.Bits.B64:
+          this.info = this._io.readU8be();
+          break;
+        }
+        if (this._parent.hasAddend) {
+          switch (this._root.bits) {
+          case Elf.Bits.B32:
+            this.addend = this._io.readS4be();
+            break;
+          case Elf.Bits.B64:
+            this.addend = this._io.readS8be();
+            break;
+          }
+        }
+      }
+
+      return RelocationSectionEntry;
+    })();
+
     var DynsymSectionEntry32 = EndianElf.DynsymSectionEntry32 = (function() {
       function DynsymSectionEntry32(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -1748,6 +1941,59 @@ var Elf = (function() {
       }
 
       return DynsymSectionEntry32;
+    })();
+
+    /**
+     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html|Source}
+     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section|Source}
+     */
+
+    var NoteSectionEntry = EndianElf.NoteSectionEntry = (function() {
+      function NoteSectionEntry(_io, _parent, _root, _is_le) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+        this._is_le = _is_le;
+
+        this._read();
+      }
+      NoteSectionEntry.prototype._read = function() {
+
+        if (this._is_le === true) {
+          this._readLE();
+        } else if (this._is_le === false) {
+          this._readBE();
+        } else {
+          throw new KaitaiStream.UndecidedEndiannessError();
+        }
+      }
+      NoteSectionEntry.prototype._readLE = function() {
+        this.lenName = this._io.readU4le();
+        this.lenDescriptor = this._io.readU4le();
+        this.type = this._io.readU4le();
+        this.name = KaitaiStream.bytesTerminate(this._io.readBytes(this.lenName), 0, false);
+        this.namePadding = this._io.readBytes(KaitaiStream.mod(-(this.lenName), 4));
+        this.descriptor = this._io.readBytes(this.lenDescriptor);
+        this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(this.lenDescriptor), 4));
+      }
+      NoteSectionEntry.prototype._readBE = function() {
+        this.lenName = this._io.readU4be();
+        this.lenDescriptor = this._io.readU4be();
+        this.type = this._io.readU4be();
+        this.name = KaitaiStream.bytesTerminate(this._io.readBytes(this.lenName), 0, false);
+        this.namePadding = this._io.readBytes(KaitaiStream.mod(-(this.lenName), 4));
+        this.descriptor = this._io.readBytes(this.lenDescriptor);
+        this.descriptorPadding = this._io.readBytes(KaitaiStream.mod(-(this.lenDescriptor), 4));
+      }
+
+      /**
+       * Although the ELF specification seems to hint that the `note_name` field
+       * is ASCII this isn't the case for Linux binaries that have a
+       * `.gnu.build.attributes` section.
+       * @see {@link https://fedoraproject.org/wiki/Toolchain/Watermark#Proposed_Specification_for_non-loaded_notes|Source}
+       */
+
+      return NoteSectionEntry;
     })();
 
     var StringsStruct = EndianElf.StringsStruct = (function() {
