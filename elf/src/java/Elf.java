@@ -12,6 +12,8 @@ import java.nio.charset.Charset;
 
 
 /**
+ * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
+ * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html">Source</a>
  * @see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
  */
 public class Elf extends KaitaiStruct {

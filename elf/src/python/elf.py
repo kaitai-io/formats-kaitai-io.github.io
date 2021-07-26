@@ -12,6 +12,14 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 class Elf(KaitaiStruct):
     """
     .. seealso::
+       Source - https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html
+    
+    
+    .. seealso::
+       Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html
+    
+    
+    .. seealso::
        Source - https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD
     """
 

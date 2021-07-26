@@ -9,6 +9,8 @@ local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
 -- 
+-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html)
+-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html)
 -- See also: Source (https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD)
 Elf = class.class(KaitaiStruct)
 

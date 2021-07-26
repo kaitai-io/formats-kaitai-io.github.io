@@ -455,6 +455,8 @@ proc flagsObj*(this: Elf_EndianElf_SectionHeader): Elf_SectionHeaderFlags
 
 
 ##[
+@see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
+@see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html">Source</a>
 @see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
 ]##
 proc read*(_: typedesc[Elf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf =

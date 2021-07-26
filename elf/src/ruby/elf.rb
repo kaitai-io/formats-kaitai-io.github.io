@@ -8,6 +8,8 @@ end
 
 
 ##
+# @see https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
+# @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source
 # @see https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
 class Elf < Kaitai::Struct::Struct
 
