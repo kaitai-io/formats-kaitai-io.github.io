@@ -198,11 +198,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="go.html" title="Executable and Linkable Format parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
                 <a href="graphviz.html" title="Executable and Linkable Format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -324,13 +319,13 @@ can also be found there.</p>
 <span class="p">{</span>
 
     <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
     <span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html&quot;&gt;Source&lt;/a&gt;</span>
     <span class="c1">/// &lt;/remarks&gt;</span>
     <span class="c1">/// &lt;remarks&gt;</span>
     <span class="c1">/// Reference: &lt;a href=&quot;https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html&quot;&gt;Source&lt;/a&gt;</span>
-    <span class="c1">/// &lt;/remarks&gt;</span>
-    <span class="c1">/// &lt;remarks&gt;</span>
-    <span class="c1">/// Reference: &lt;a href=&quot;https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD&quot;&gt;Source&lt;/a&gt;</span>
     <span class="c1">/// &lt;/remarks&gt;</span>
     <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Elf</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">{</span>
@@ -339,6 +334,30 @@ can also be found there.</p>
             <span class="k">return</span> <span class="k">new</span> <span class="nf">Elf</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
         <span class="p">}</span>
 
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">SymbolVisibility</span>
+        <span class="p">{</span>
+            <span class="n">Default</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Internal</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Hidden</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Protected</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">Exported</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Singleton</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Eliminate</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">SymbolBinding</span>
+        <span class="p">{</span>
+            <span class="n">Local</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Global</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Weak</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Os10</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">Os11</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">Os12</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">Proc13</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">Proc14</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">Proc15</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
+        <span class="p">}</span>
 
         <span class="k">public</span> <span class="k">enum</span> <span class="n">Endian</span>
         <span class="p">{</span>
@@ -434,6 +453,23 @@ can also be found there.</p>
             <span class="n">Riscv</span> <span class="p">=</span> <span class="m">243</span><span class="p">,</span>
             <span class="n">Bpf</span> <span class="p">=</span> <span class="m">247</span><span class="p">,</span>
             <span class="n">Csky</span> <span class="p">=</span> <span class="m">252</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">SymbolType</span>
+        <span class="p">{</span>
+            <span class="n">NoType</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Object</span> <span class="p">=</span> <span class="m">1</span><span class="p">,</span>
+            <span class="n">Func</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+            <span class="n">Section</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
+            <span class="n">File</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
+            <span class="n">Common</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+            <span class="n">Tls</span> <span class="p">=</span> <span class="m">6</span><span class="p">,</span>
+            <span class="n">Os10</span> <span class="p">=</span> <span class="m">10</span><span class="p">,</span>
+            <span class="n">Os11</span> <span class="p">=</span> <span class="m">11</span><span class="p">,</span>
+            <span class="n">Os12</span> <span class="p">=</span> <span class="m">12</span><span class="p">,</span>
+            <span class="n">Proc13</span> <span class="p">=</span> <span class="m">13</span><span class="p">,</span>
+            <span class="n">Proc14</span> <span class="p">=</span> <span class="m">14</span><span class="p">,</span>
+            <span class="n">Proc15</span> <span class="p">=</span> <span class="m">15</span><span class="p">,</span>
         <span class="p">}</span>
 
         <span class="k">public</span> <span class="k">enum</span> <span class="n">DynamicArrayTags</span>
@@ -545,7 +581,6 @@ can also be found there.</p>
             <span class="n">GnuRelro</span> <span class="p">=</span> <span class="m">1685382482</span><span class="p">,</span>
             <span class="n">GnuProperty</span> <span class="p">=</span> <span class="m">1685382483</span><span class="p">,</span>
             <span class="n">PaxFlags</span> <span class="p">=</span> <span class="m">1694766464</span><span class="p">,</span>
-            <span class="n">Hios</span> <span class="p">=</span> <span class="m">1879048191</span><span class="p">,</span>
             <span class="n">ArmExidx</span> <span class="p">=</span> <span class="m">1879048193</span><span class="p">,</span>
         <span class="p">}</span>
 
@@ -557,10 +592,28 @@ can also be found there.</p>
             <span class="n">Shared</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
             <span class="n">Core</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
         <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">enum</span> <span class="n">SectionHeaderIdxSpecial</span>
+        <span class="p">{</span>
+            <span class="n">Undefined</span> <span class="p">=</span> <span class="m">0</span><span class="p">,</span>
+            <span class="n">Before</span> <span class="p">=</span> <span class="m">65280</span><span class="p">,</span>
+            <span class="n">After</span> <span class="p">=</span> <span class="m">65281</span><span class="p">,</span>
+            <span class="n">Amd64Lcommon</span> <span class="p">=</span> <span class="m">65282</span><span class="p">,</span>
+            <span class="n">SunwIgnore</span> <span class="p">=</span> <span class="m">65343</span><span class="p">,</span>
+            <span class="n">Abs</span> <span class="p">=</span> <span class="m">65521</span><span class="p">,</span>
+            <span class="n">Common</span> <span class="p">=</span> <span class="m">65522</span><span class="p">,</span>
+            <span class="n">Xindex</span> <span class="p">=</span> <span class="m">65535</span><span class="p">,</span>
+        <span class="p">}</span>
         <span class="k">public</span> <span class="nf">Elf</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
         <span class="p">{</span>
             <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
             <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span> <span class="p">??</span> <span class="k">this</span><span class="p">;</span>
+            <span class="n">f_shIdxLoOs</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_shIdxLoReserved</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_shIdxHiProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_shIdxLoProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_shIdxHiOs</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+            <span class="n">f_shIdxHiReserved</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
@@ -1433,7 +1486,7 @@ can also be found there.</p>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
                 <span class="n">f_programHeaders</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_sectionHeaders</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_strings</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_sectionNames</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
@@ -1542,67 +1595,6 @@ can also be found there.</p>
                 <span class="n">_sectionHeaderEntrySize</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="n">_qtySectionHeader</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="n">_sectionNamesIdx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DynsymSectionEntry64</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-            <span class="p">{</span>
-                <span class="k">public</span> <span class="k">static</span> <span class="n">DynsymSectionEntry64</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="k">return</span> <span class="k">new</span> <span class="nf">DynsymSectionEntry64</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-                <span class="p">}</span>
-
-                <span class="k">private</span> <span class="kt">bool?</span> <span class="n">m_isLe</span><span class="p">;</span>
-                <span class="k">public</span> <span class="nf">DynsymSectionEntry64</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                    <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
-                    <span class="n">_read</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-                <span class="p">{</span>
-
-                    <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="k">throw</span> <span class="k">new</span> <span class="nf">UndecidedEndiannessError</span><span class="p">();</span>
-                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">_readLE</span><span class="p">();</span>
-                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                        <span class="n">_readBE</span><span class="p">();</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
-                <span class="p">{</span>
-                    <span class="n">_nameOffset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="n">_other</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="n">_shndx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                    <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
-                <span class="p">{</span>
-                    <span class="n">_nameOffset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                    <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="n">_other</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="n">_shndx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
-                    <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_nameOffset</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_info</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_other</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_shndx</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_value</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_size</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">uint</span> <span class="n">NameOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nameOffset</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">byte</span> <span class="n">Info</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_info</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">byte</span> <span class="n">Other</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_other</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Shndx</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_shndx</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Size</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">NoteSection</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>
@@ -2043,6 +2035,7 @@ can also be found there.</p>
                     <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
                     <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
                     <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_linkedSection</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">f_name</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">f_flagsObj</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">_read</span><span class="p">();</span>
@@ -2307,6 +2300,28 @@ can also be found there.</p>
                         <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_linkedSection</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">SectionHeader</span> <span class="n">_linkedSection</span><span class="p">;</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// may reference a later section header, so don&#39;t try to access too early (use only lazy `instances`)</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="c1">/// &lt;remarks&gt;</span>
+                <span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link&quot;&gt;Source&lt;/a&gt;</span>
+                <span class="c1">/// &lt;/remarks&gt;</span>
+                <span class="k">public</span> <span class="n">SectionHeader</span> <span class="n">LinkedSection</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_linkedSection</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_linkedSection</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">LinkedSectionIdx</span> <span class="p">!=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderIdxSpecial</span><span class="p">.</span><span class="n">Undefined</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">LinkedSectionIdx</span> <span class="p">&lt;</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">QtySectionHeader</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                            <span class="n">_linkedSection</span> <span class="p">=</span> <span class="p">(</span><span class="n">SectionHeader</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">SectionHeaders</span><span class="p">[</span><span class="n">LinkedSectionIdx</span><span class="p">]);</span>
+                        <span class="p">}</span>
+                        <span class="n">f_linkedSection</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_linkedSection</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
                 <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_name</span><span class="p">;</span>
                 <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
                 <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span>
@@ -2315,7 +2330,7 @@ can also be found there.</p>
                     <span class="p">{</span>
                         <span class="k">if</span> <span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
                             <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
-                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">Strings</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">Header</span><span class="p">.</span><span class="n">SectionNames</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
                         <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
                         <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsName</span><span class="p">);</span>
                         <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
@@ -2500,6 +2515,7 @@ can also be found there.</p>
                     <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                     <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
                     <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
+                    <span class="n">f_isStringTableLinked</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">_read</span><span class="p">();</span>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
@@ -2515,48 +2531,43 @@ can also be found there.</p>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
                 <span class="p">{</span>
-                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;();</span>
+                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">DynsymSectionEntry</span><span class="p">&gt;();</span>
                     <span class="p">{</span>
                         <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
                         <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                                <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
-                                <span class="k">break</span><span class="p">;</span>
-                            <span class="p">}</span>
-                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                                <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
-                                <span class="k">break</span><span class="p">;</span>
-                            <span class="p">}</span>
-                            <span class="p">}</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
                             <span class="n">i</span><span class="p">++;</span>
                         <span class="p">}</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
                 <span class="p">{</span>
-                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;();</span>
+                    <span class="n">_entries</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">DynsymSectionEntry</span><span class="p">&gt;();</span>
                     <span class="p">{</span>
                         <span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
                         <span class="k">while</span> <span class="p">(!</span><span class="n">m_io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">switch</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span><span class="p">)</span> <span class="p">{</span>
-                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">:</span> <span class="p">{</span>
-                                <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
-                                <span class="k">break</span><span class="p">;</span>
-                            <span class="p">}</span>
-                            <span class="k">case</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">:</span> <span class="p">{</span>
-                                <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
-                                <span class="k">break</span><span class="p">;</span>
-                            <span class="p">}</span>
-                            <span class="p">}</span>
+                            <span class="n">_entries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">DynsymSectionEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">));</span>
                             <span class="n">i</span><span class="p">++;</span>
                         <span class="p">}</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isStringTableLinked</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isStringTableLinked</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsStringTableLinked</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_isStringTableLinked</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_isStringTableLinked</span><span class="p">;</span>
+                        <span class="n">_isStringTableLinked</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">LinkedSection</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">ShType</span><span class="p">.</span><span class="n">Strtab</span><span class="p">);</span>
+                        <span class="n">f_isStringTableLinked</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_isStringTableLinked</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">DynsymSectionEntry</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
                 <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
                 <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">KaitaiStruct</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">DynsymSectionEntry</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
@@ -2667,19 +2678,34 @@ can also be found there.</p>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">RelocationSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DynsymSectionEntry32</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DynsymSectionEntry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>
-                <span class="k">public</span> <span class="k">static</span> <span class="n">DynsymSectionEntry32</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">DynsymSectionEntry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
                 <span class="p">{</span>
-                    <span class="k">return</span> <span class="k">new</span> <span class="nf">DynsymSectionEntry32</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">DynsymSectionEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
                 <span class="p">}</span>
 
                 <span class="k">private</span> <span class="kt">bool?</span> <span class="n">m_isLe</span><span class="p">;</span>
-                <span class="k">public</span> <span class="nf">DynsymSectionEntry32</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="k">public</span> <span class="nf">DynsymSectionEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="kt">bool?</span> <span class="n">isLe</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
                 <span class="p">{</span>
                     <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                     <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
                     <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
+                    <span class="n">f_isShIdxReserved</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_isShIdxOs</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_isShIdxProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_size</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_visibility</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_value</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_name</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_shIdxSpecial</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">_read</span><span class="p">();</span>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
@@ -2695,36 +2721,188 @@ can also be found there.</p>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_readLE</span><span class="p">()</span>
                 <span class="p">{</span>
-                    <span class="n">_nameOffset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
-                    <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="n">_ofsName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_valueB32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_sizeB32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="n">_bind</span> <span class="p">=</span> <span class="p">((</span><span class="n">Elf</span><span class="p">.</span><span class="n">SymbolBinding</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                    <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">Elf</span><span class="p">.</span><span class="n">SymbolType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                     <span class="n">_other</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="n">_shndx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="n">_shIdx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2le</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_valueB64</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_sizeB64</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8le</span><span class="p">();</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="k">void</span> <span class="nf">_readBE</span><span class="p">()</span>
                 <span class="p">{</span>
-                    <span class="n">_nameOffset</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                    <span class="n">_value</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                    <span class="n">_size</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
-                    <span class="n">_info</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
+                    <span class="n">_ofsName</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_valueB32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_sizeB32</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4be</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="n">_bind</span> <span class="p">=</span> <span class="p">((</span><span class="n">Elf</span><span class="p">.</span><span class="n">SymbolBinding</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                    <span class="n">_type</span> <span class="p">=</span> <span class="p">((</span><span class="n">Elf</span><span class="p">.</span><span class="n">SymbolType</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBitsIntBe</span><span class="p">(</span><span class="m">4</span><span class="p">));</span>
+                    <span class="n">m_io</span><span class="p">.</span><span class="n">AlignToByte</span><span class="p">();</span>
                     <span class="n">_other</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="n">_shndx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                    <span class="n">_shIdx</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_valueB64</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
+                    <span class="p">}</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">_sizeB64</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU8be</span><span class="p">();</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_nameOffset</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_size</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">byte</span> <span class="n">_info</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isShIdxReserved</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isShIdxReserved</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsShIdxReserved</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_isShIdxReserved</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_isShIdxReserved</span><span class="p">;</span>
+                        <span class="n">_isShIdxReserved</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">ShIdx</span> <span class="p">&gt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">ShIdxLoReserved</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">ShIdx</span> <span class="p">&lt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">ShIdxHiReserved</span><span class="p">))</span> <span class="p">);</span>
+                        <span class="n">f_isShIdxReserved</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_isShIdxReserved</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isShIdxOs</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isShIdxOs</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsShIdxOs</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_isShIdxOs</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_isShIdxOs</span><span class="p">;</span>
+                        <span class="n">_isShIdxOs</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">ShIdx</span> <span class="p">&gt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">ShIdxLoOs</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">ShIdx</span> <span class="p">&lt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">ShIdxHiOs</span><span class="p">))</span> <span class="p">);</span>
+                        <span class="n">f_isShIdxOs</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_isShIdxOs</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isShIdxProc</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isShIdxProc</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsShIdxProc</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_isShIdxProc</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_isShIdxProc</span><span class="p">;</span>
+                        <span class="n">_isShIdxProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">ShIdx</span> <span class="p">&gt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">ShIdxLoProc</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">ShIdx</span> <span class="p">&lt;=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">ShIdxHiProc</span><span class="p">))</span> <span class="p">);</span>
+                        <span class="n">f_isShIdxProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_isShIdxProc</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_size</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_size</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Size</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_size</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_size</span><span class="p">;</span>
+                        <span class="n">_size</span> <span class="p">=</span> <span class="p">(</span><span class="kt">ulong</span><span class="p">)</span> <span class="p">((</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span> <span class="p">?</span> <span class="n">SizeB32</span> <span class="p">:</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span> <span class="p">?</span> <span class="n">SizeB64</span> <span class="p">:</span> <span class="m">0</span><span class="p">)));</span>
+                        <span class="n">f_size</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_size</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_visibility</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">SymbolVisibility</span> <span class="n">_visibility</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">SymbolVisibility</span> <span class="n">Visibility</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_visibility</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_visibility</span><span class="p">;</span>
+                        <span class="n">_visibility</span> <span class="p">=</span> <span class="p">(</span><span class="n">SymbolVisibility</span><span class="p">)</span> <span class="p">(((</span><span class="n">Elf</span><span class="p">.</span><span class="n">SymbolVisibility</span><span class="p">)</span> <span class="p">(</span><span class="n">Other</span> <span class="p">&amp;</span> <span class="m">3</span><span class="p">)));</span>
+                        <span class="n">f_visibility</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_visibility</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ulong</span> <span class="n">_value</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">ulong</span> <span class="n">Value</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                        <span class="n">_value</span> <span class="p">=</span> <span class="p">(</span><span class="kt">ulong</span><span class="p">)</span> <span class="p">((</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B32</span> <span class="p">?</span> <span class="n">ValueB32</span> <span class="p">:</span> <span class="p">(</span><span class="n">M_Root</span><span class="p">.</span><span class="n">Bits</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">Bits</span><span class="p">.</span><span class="n">B64</span> <span class="p">?</span> <span class="n">ValueB64</span> <span class="p">:</span> <span class="m">0</span><span class="p">)));</span>
+                        <span class="n">f_value</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_value</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_name</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">string</span> <span class="n">_name</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">OfsName</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">IsStringTableLinked</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+                            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="p">((</span><span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">StringsStruct</span><span class="p">)</span> <span class="p">(</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">M_Parent</span><span class="p">.</span><span class="n">LinkedSection</span><span class="p">.</span><span class="n">Body</span><span class="p">)).</span><span class="n">M_Io</span><span class="p">;</span>
+                            <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsName</span><span class="p">);</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                                <span class="n">_name</span> <span class="p">=</span> <span class="n">System</span><span class="p">.</span><span class="n">Text</span><span class="p">.</span><span class="n">Encoding</span><span class="p">.</span><span class="n">GetEncoding</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">).</span><span class="n">GetString</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">ReadBytesTerm</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">));</span>
+                            <span class="p">}</span>
+                            <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                            <span class="n">f_name</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">return</span> <span class="n">_name</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxSpecial</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">SectionHeaderIdxSpecial</span> <span class="n">_shIdxSpecial</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">SectionHeaderIdxSpecial</span> <span class="n">ShIdxSpecial</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxSpecial</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_shIdxSpecial</span><span class="p">;</span>
+                        <span class="n">_shIdxSpecial</span> <span class="p">=</span> <span class="p">(</span><span class="n">SectionHeaderIdxSpecial</span><span class="p">)</span> <span class="p">(((</span><span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderIdxSpecial</span><span class="p">)</span> <span class="n">ShIdx</span><span class="p">));</span>
+                        <span class="n">f_shIdxSpecial</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_shIdxSpecial</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">uint</span> <span class="n">_ofsName</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_valueB32</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">uint?</span> <span class="n">_sizeB32</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">SymbolBinding</span> <span class="n">_bind</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">SymbolType</span> <span class="n">_type</span><span class="p">;</span>
                 <span class="k">private</span> <span class="kt">byte</span> <span class="n">_other</span><span class="p">;</span>
-                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_shndx</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_shIdx</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_valueB64</span><span class="p">;</span>
+                <span class="k">private</span> <span class="kt">ulong?</span> <span class="n">_sizeB64</span><span class="p">;</span>
                 <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
                 <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">uint</span> <span class="n">NameOffset</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_nameOffset</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">uint</span> <span class="n">Size</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_size</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">byte</span> <span class="n">Info</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_info</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint</span> <span class="n">OfsName</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_ofsName</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint?</span> <span class="n">ValueB32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_valueB32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">uint?</span> <span class="n">SizeB32</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sizeB32</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">SymbolBinding</span> <span class="n">Bind</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_bind</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">SymbolType</span> <span class="n">Type</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_type</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// don&#39;t read this field, access `visibility` instead</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
                 <span class="k">public</span> <span class="kt">byte</span> <span class="n">Other</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_other</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">Shndx</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_shndx</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+                <span class="c1">/// &lt;summary&gt;</span>
+                <span class="c1">/// section header index</span>
+                <span class="c1">/// &lt;/summary&gt;</span>
+                <span class="k">public</span> <span class="kt">ushort</span> <span class="n">ShIdx</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_shIdx</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">ValueB64</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_valueB64</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="kt">ulong?</span> <span class="n">SizeB64</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_sizeB64</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
                 <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynsymSection</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
@@ -2932,28 +3110,28 @@ can also be found there.</p>
                     <span class="k">return</span> <span class="n">_sectionHeaders</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_strings</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">StringsStruct</span> <span class="n">_strings</span><span class="p">;</span>
-            <span class="k">public</span> <span class="n">StringsStruct</span> <span class="n">Strings</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_sectionNames</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">StringsStruct</span> <span class="n">_sectionNames</span><span class="p">;</span>
+            <span class="k">public</span> <span class="n">StringsStruct</span> <span class="n">SectionNames</span>
             <span class="p">{</span>
                 <span class="k">get</span>
                 <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_strings</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_sectionNames</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_sectionNames</span><span class="p">;</span>
                     <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">SectionHeaders</span><span class="p">[</span><span class="n">SectionNamesIdx</span><span class="p">].</span><span class="n">OfsBody</span><span class="p">);</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
-                        <span class="n">__raw_strings</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SectionHeaders</span><span class="p">[</span><span class="n">SectionNamesIdx</span><span class="p">].</span><span class="n">LenBody</span><span class="p">);</span>
-                        <span class="kt">var</span> <span class="n">io___raw_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_strings</span><span class="p">);</span>
-                        <span class="n">_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">io___raw_strings</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                        <span class="n">__raw_sectionNames</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SectionHeaders</span><span class="p">[</span><span class="n">SectionNamesIdx</span><span class="p">].</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_sectionNames</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_sectionNames</span><span class="p">);</span>
+                        <span class="n">_sectionNames</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">io___raw_sectionNames</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                        <span class="n">__raw_strings</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SectionHeaders</span><span class="p">[</span><span class="n">SectionNamesIdx</span><span class="p">].</span><span class="n">LenBody</span><span class="p">);</span>
-                        <span class="kt">var</span> <span class="n">io___raw_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_strings</span><span class="p">);</span>
-                        <span class="n">_strings</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">io___raw_strings</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
+                        <span class="n">__raw_sectionNames</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">SectionHeaders</span><span class="p">[</span><span class="n">SectionNamesIdx</span><span class="p">].</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="kt">var</span> <span class="n">io___raw_sectionNames</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_sectionNames</span><span class="p">);</span>
+                        <span class="n">_sectionNames</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringsStruct</span><span class="p">(</span><span class="n">io___raw_sectionNames</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">,</span> <span class="n">m_isLe</span><span class="p">);</span>
                     <span class="p">}</span>
                     <span class="n">m_io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                    <span class="n">f_strings</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span>
+                    <span class="n">f_sectionNames</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_sectionNames</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="n">ObjType</span> <span class="n">_eType</span><span class="p">;</span>
@@ -2973,7 +3151,7 @@ can also be found there.</p>
             <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_parent</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">__raw_programHeaders</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">__raw_sectionHeaders</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_strings</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">__raw_sectionNames</span><span class="p">;</span>
             <span class="k">public</span> <span class="n">ObjType</span> <span class="n">EType</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_eType</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Machine</span> <span class="n">Machine</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_machine</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="kt">uint</span> <span class="n">EVersion</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_eVersion</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
@@ -2991,7 +3169,85 @@ can also be found there.</p>
             <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">M_RawProgramHeaders</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_programHeaders</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">M_RawSectionHeaders</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_sectionHeaders</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawStrings</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_strings</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawSectionNames</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_sectionNames</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxLoOs</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxLoOs</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ShIdxLoOs</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxLoOs</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_shIdxLoOs</span><span class="p">;</span>
+                <span class="n">_shIdxLoOs</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">65312</span><span class="p">);</span>
+                <span class="n">f_shIdxLoOs</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_shIdxLoOs</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxLoReserved</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxLoReserved</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ShIdxLoReserved</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxLoReserved</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_shIdxLoReserved</span><span class="p">;</span>
+                <span class="n">_shIdxLoReserved</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">65280</span><span class="p">);</span>
+                <span class="n">f_shIdxLoReserved</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_shIdxLoReserved</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxHiProc</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxHiProc</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ShIdxHiProc</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxHiProc</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_shIdxHiProc</span><span class="p">;</span>
+                <span class="n">_shIdxHiProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">65311</span><span class="p">);</span>
+                <span class="n">f_shIdxHiProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_shIdxHiProc</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxLoProc</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxLoProc</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ShIdxLoProc</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxLoProc</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_shIdxLoProc</span><span class="p">;</span>
+                <span class="n">_shIdxLoProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">65280</span><span class="p">);</span>
+                <span class="n">f_shIdxLoProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_shIdxLoProc</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxHiOs</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxHiOs</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ShIdxHiOs</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxHiOs</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_shIdxHiOs</span><span class="p">;</span>
+                <span class="n">_shIdxHiOs</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">65343</span><span class="p">);</span>
+                <span class="n">f_shIdxHiOs</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_shIdxHiOs</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxHiReserved</span><span class="p">;</span>
+        <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxHiReserved</span><span class="p">;</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">ShIdxHiReserved</span>
+        <span class="p">{</span>
+            <span class="k">get</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">f_shIdxHiReserved</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">_shIdxHiReserved</span><span class="p">;</span>
+                <span class="n">_shIdxHiReserved</span> <span class="p">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="m">65535</span><span class="p">);</span>
+                <span class="n">f_shIdxHiReserved</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                <span class="k">return</span> <span class="n">_shIdxHiReserved</span><span class="p">;</span>
+            <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_magic</span><span class="p">;</span>
         <span class="k">private</span> <span class="n">Bits</span> <span class="n">_bits</span><span class="p">;</span>

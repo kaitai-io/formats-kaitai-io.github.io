@@ -198,11 +198,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="go.html" title="Executable and Linkable Format parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
                 <a href="graphviz.html" title="Executable and Linkable Format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -324,12 +319,52 @@ section#format-index .row {
   <span class="p">}</span>
 <span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
 <span class="cm">/**</span>
+<span class="cm"> * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}</span>
 <span class="cm"> * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html|Source}</span>
 <span class="cm"> * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html|Source}</span>
-<span class="cm"> * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}</span>
 <span class="cm"> */</span>
 
 <span class="kd">var</span> <span class="nx">Elf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">Elf</span><span class="p">.</span><span class="nx">SymbolVisibility</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">DEFAULT</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+    <span class="nx">INTERNAL</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+    <span class="nx">HIDDEN</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+    <span class="nx">PROTECTED</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+    <span class="nx">EXPORTED</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+    <span class="nx">SINGLETON</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+    <span class="nx">ELIMINATE</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+
+    <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;DEFAULT&quot;</span><span class="p">,</span>
+    <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;INTERNAL&quot;</span><span class="p">,</span>
+    <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;HIDDEN&quot;</span><span class="p">,</span>
+    <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;PROTECTED&quot;</span><span class="p">,</span>
+    <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;EXPORTED&quot;</span><span class="p">,</span>
+    <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;SINGLETON&quot;</span><span class="p">,</span>
+    <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;ELIMINATE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Elf</span><span class="p">.</span><span class="nx">SymbolBinding</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">LOCAL</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+    <span class="nx">GLOBAL</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+    <span class="nx">WEAK</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+    <span class="nx">OS10</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+    <span class="nx">OS11</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+    <span class="nx">OS12</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+    <span class="nx">PROC13</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+    <span class="nx">PROC14</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+    <span class="nx">PROC15</span><span class="o">:</span> <span class="mf">15</span><span class="p">,</span>
+
+    <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;LOCAL&quot;</span><span class="p">,</span>
+    <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+    <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;WEAK&quot;</span><span class="p">,</span>
+    <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;OS10&quot;</span><span class="p">,</span>
+    <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;OS11&quot;</span><span class="p">,</span>
+    <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;OS12&quot;</span><span class="p">,</span>
+    <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;PROC13&quot;</span><span class="p">,</span>
+    <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;PROC14&quot;</span><span class="p">,</span>
+    <span class="mf">15</span><span class="o">:</span> <span class="s2">&quot;PROC15&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
   <span class="nx">Elf</span><span class="p">.</span><span class="nx">Endian</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
     <span class="nx">LE</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
     <span class="nx">BE</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
@@ -504,6 +539,36 @@ section#format-index .row {
     <span class="mf">243</span><span class="o">:</span> <span class="s2">&quot;RISCV&quot;</span><span class="p">,</span>
     <span class="mf">247</span><span class="o">:</span> <span class="s2">&quot;BPF&quot;</span><span class="p">,</span>
     <span class="mf">252</span><span class="o">:</span> <span class="s2">&quot;CSKY&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Elf</span><span class="p">.</span><span class="nx">SymbolType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">NO_TYPE</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+    <span class="nx">OBJECT</span><span class="o">:</span> <span class="mf">1</span><span class="p">,</span>
+    <span class="nx">FUNC</span><span class="o">:</span> <span class="mf">2</span><span class="p">,</span>
+    <span class="nx">SECTION</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
+    <span class="nx">FILE</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
+    <span class="nx">COMMON</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+    <span class="nx">TLS</span><span class="o">:</span> <span class="mf">6</span><span class="p">,</span>
+    <span class="nx">OS10</span><span class="o">:</span> <span class="mf">10</span><span class="p">,</span>
+    <span class="nx">OS11</span><span class="o">:</span> <span class="mf">11</span><span class="p">,</span>
+    <span class="nx">OS12</span><span class="o">:</span> <span class="mf">12</span><span class="p">,</span>
+    <span class="nx">PROC13</span><span class="o">:</span> <span class="mf">13</span><span class="p">,</span>
+    <span class="nx">PROC14</span><span class="o">:</span> <span class="mf">14</span><span class="p">,</span>
+    <span class="nx">PROC15</span><span class="o">:</span> <span class="mf">15</span><span class="p">,</span>
+
+    <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;NO_TYPE&quot;</span><span class="p">,</span>
+    <span class="mf">1</span><span class="o">:</span> <span class="s2">&quot;OBJECT&quot;</span><span class="p">,</span>
+    <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;FUNC&quot;</span><span class="p">,</span>
+    <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;SECTION&quot;</span><span class="p">,</span>
+    <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;FILE&quot;</span><span class="p">,</span>
+    <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;COMMON&quot;</span><span class="p">,</span>
+    <span class="mf">6</span><span class="o">:</span> <span class="s2">&quot;TLS&quot;</span><span class="p">,</span>
+    <span class="mf">10</span><span class="o">:</span> <span class="s2">&quot;OS10&quot;</span><span class="p">,</span>
+    <span class="mf">11</span><span class="o">:</span> <span class="s2">&quot;OS11&quot;</span><span class="p">,</span>
+    <span class="mf">12</span><span class="o">:</span> <span class="s2">&quot;OS12&quot;</span><span class="p">,</span>
+    <span class="mf">13</span><span class="o">:</span> <span class="s2">&quot;PROC13&quot;</span><span class="p">,</span>
+    <span class="mf">14</span><span class="o">:</span> <span class="s2">&quot;PROC14&quot;</span><span class="p">,</span>
+    <span class="mf">15</span><span class="o">:</span> <span class="s2">&quot;PROC15&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
   <span class="nx">Elf</span><span class="p">.</span><span class="nx">DynamicArrayTags</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
@@ -700,7 +765,6 @@ section#format-index .row {
     <span class="nx">GNU_RELRO</span><span class="o">:</span> <span class="mf">1685382482</span><span class="p">,</span>
     <span class="nx">GNU_PROPERTY</span><span class="o">:</span> <span class="mf">1685382483</span><span class="p">,</span>
     <span class="nx">PAX_FLAGS</span><span class="o">:</span> <span class="mf">1694766464</span><span class="p">,</span>
-    <span class="nx">HIOS</span><span class="o">:</span> <span class="mf">1879048191</span><span class="p">,</span>
     <span class="nx">ARM_EXIDX</span><span class="o">:</span> <span class="mf">1879048193</span><span class="p">,</span>
 
     <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;NULL_TYPE&quot;</span><span class="p">,</span>
@@ -716,7 +780,6 @@ section#format-index .row {
     <span class="mf">1685382482</span><span class="o">:</span> <span class="s2">&quot;GNU_RELRO&quot;</span><span class="p">,</span>
     <span class="mf">1685382483</span><span class="o">:</span> <span class="s2">&quot;GNU_PROPERTY&quot;</span><span class="p">,</span>
     <span class="mf">1694766464</span><span class="o">:</span> <span class="s2">&quot;PAX_FLAGS&quot;</span><span class="p">,</span>
-    <span class="mf">1879048191</span><span class="o">:</span> <span class="s2">&quot;HIOS&quot;</span><span class="p">,</span>
     <span class="mf">1879048193</span><span class="o">:</span> <span class="s2">&quot;ARM_EXIDX&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
@@ -732,6 +795,26 @@ section#format-index .row {
     <span class="mf">2</span><span class="o">:</span> <span class="s2">&quot;EXECUTABLE&quot;</span><span class="p">,</span>
     <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;SHARED&quot;</span><span class="p">,</span>
     <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;CORE&quot;</span><span class="p">,</span>
+  <span class="p">});</span>
+
+  <span class="nx">Elf</span><span class="p">.</span><span class="nx">SectionHeaderIdxSpecial</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
+    <span class="nx">UNDEFINED</span><span class="o">:</span> <span class="mf">0</span><span class="p">,</span>
+    <span class="nx">BEFORE</span><span class="o">:</span> <span class="mf">65280</span><span class="p">,</span>
+    <span class="nx">AFTER</span><span class="o">:</span> <span class="mf">65281</span><span class="p">,</span>
+    <span class="nx">AMD64_LCOMMON</span><span class="o">:</span> <span class="mf">65282</span><span class="p">,</span>
+    <span class="nx">SUNW_IGNORE</span><span class="o">:</span> <span class="mf">65343</span><span class="p">,</span>
+    <span class="nx">ABS</span><span class="o">:</span> <span class="mf">65521</span><span class="p">,</span>
+    <span class="nx">COMMON</span><span class="o">:</span> <span class="mf">65522</span><span class="p">,</span>
+    <span class="nx">XINDEX</span><span class="o">:</span> <span class="mf">65535</span><span class="p">,</span>
+
+    <span class="mf">0</span><span class="o">:</span> <span class="s2">&quot;UNDEFINED&quot;</span><span class="p">,</span>
+    <span class="mf">65280</span><span class="o">:</span> <span class="s2">&quot;BEFORE&quot;</span><span class="p">,</span>
+    <span class="mf">65281</span><span class="o">:</span> <span class="s2">&quot;AFTER&quot;</span><span class="p">,</span>
+    <span class="mf">65282</span><span class="o">:</span> <span class="s2">&quot;AMD64_LCOMMON&quot;</span><span class="p">,</span>
+    <span class="mf">65343</span><span class="o">:</span> <span class="s2">&quot;SUNW_IGNORE&quot;</span><span class="p">,</span>
+    <span class="mf">65521</span><span class="o">:</span> <span class="s2">&quot;ABS&quot;</span><span class="p">,</span>
+    <span class="mf">65522</span><span class="o">:</span> <span class="s2">&quot;COMMON&quot;</span><span class="p">,</span>
+    <span class="mf">65535</span><span class="o">:</span> <span class="s2">&quot;XINDEX&quot;</span><span class="p">,</span>
   <span class="p">});</span>
 
   <span class="kd">function</span> <span class="nx">Elf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -1407,45 +1490,6 @@ section#format-index .row {
       <span class="k">this</span><span class="p">.</span><span class="nx">sectionNamesIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
     <span class="p">}</span>
 
-    <span class="kd">var</span> <span class="nx">DynsymSectionEntry64</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">DynsymSectionEntry64</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">function</span> <span class="nx">DynsymSectionEntry64</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">=</span> <span class="nx">_is_le</span><span class="p">;</span>
-
-        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="nx">DynsymSectionEntry64</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_readLE</span><span class="p">();</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_readBE</span><span class="p">();</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-          <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">();</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-      <span class="nx">DynsymSectionEntry64</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">nameOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">other</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">shndx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="nx">DynsymSectionEntry64</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">nameOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">other</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">shndx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
-      <span class="p">}</span>
-
-      <span class="k">return</span> <span class="nx">DynsymSectionEntry64</span><span class="p">;</span>
-    <span class="p">})();</span>
-
     <span class="kd">var</span> <span class="nx">NoteSection</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">NoteSection</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="kd">function</span> <span class="nx">NoteSection</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
@@ -1972,11 +2016,26 @@ section#format-index .row {
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_body</span><span class="p">;</span>
         <span class="p">}</span>
       <span class="p">});</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * may reference a later section header, so don&#39;t try to access too early (use only lazy `instances`)</span>
+<span class="cm">       * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link|Source}</span>
+<span class="cm">       */</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;linkedSection&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_linkedSection</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkedSection</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">linkedSectionIdx</span> <span class="o">!=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">SectionHeaderIdxSpecial</span><span class="p">.</span><span class="nx">UNDEFINED</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">linkedSectionIdx</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">qtySectionHeader</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkedSection</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">sectionHeaders</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">linkedSectionIdx</span><span class="p">];</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkedSection</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
       <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeader</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span><span class="p">;</span>
-          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">strings</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+          <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">header</span><span class="p">.</span><span class="nx">sectionNames</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
           <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
           <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsName</span><span class="p">);</span>
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
@@ -2111,14 +2170,7 @@ section#format-index .row {
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
         <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
-          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">DynsymSectionEntry32</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
-            <span class="k">break</span><span class="p">;</span>
-          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">DynsymSectionEntry64</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
-            <span class="k">break</span><span class="p">;</span>
-          <span class="p">}</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">DynsymSectionEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
           <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
       <span class="p">}</span>
@@ -2126,17 +2178,18 @@ section#format-index .row {
         <span class="k">this</span><span class="p">.</span><span class="nx">entries</span> <span class="o">=</span> <span class="p">[];</span>
         <span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">())</span> <span class="p">{</span>
-          <span class="k">switch</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="o">:</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">DynsymSectionEntry32</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
-            <span class="k">break</span><span class="p">;</span>
-          <span class="k">case</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="o">:</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">DynsymSectionEntry64</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
-            <span class="k">break</span><span class="p">;</span>
-          <span class="p">}</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">entries</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="k">new</span> <span class="nx">DynsymSectionEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">));</span>
           <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
       <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSection</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isStringTableLinked&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isStringTableLinked</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isStringTableLinked</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_isStringTableLinked</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">linkedSection</span><span class="p">.</span><span class="nx">type</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">ShType</span><span class="p">.</span><span class="nx">STRTAB</span><span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isStringTableLinked</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
 
       <span class="k">return</span> <span class="nx">DynsymSection</span><span class="p">;</span>
     <span class="p">})();</span>
@@ -2220,8 +2273,13 @@ section#format-index .row {
       <span class="k">return</span> <span class="nx">RelocationSectionEntry</span><span class="p">;</span>
     <span class="p">})();</span>
 
-    <span class="kd">var</span> <span class="nx">DynsymSectionEntry32</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">DynsymSectionEntry32</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">function</span> <span class="nx">DynsymSectionEntry32</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html|Source}</span>
+<span class="cm">     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html|Source}</span>
+<span class="cm">     */</span>
+
+    <span class="kd">var</span> <span class="nx">DynsymSectionEntry</span> <span class="o">=</span> <span class="nx">EndianElf</span><span class="p">.</span><span class="nx">DynsymSectionEntry</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">DynsymSectionEntry</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
@@ -2229,7 +2287,7 @@ section#format-index .row {
 
         <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
       <span class="p">}</span>
-      <span class="nx">DynsymSectionEntry32</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span> <span class="o">===</span> <span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">_readLE</span><span class="p">();</span>
@@ -2239,24 +2297,130 @@ section#format-index .row {
           <span class="k">throw</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">UndecidedEndiannessError</span><span class="p">();</span>
         <span class="p">}</span>
       <span class="p">}</span>
-      <span class="nx">DynsymSectionEntry32</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">nameOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readLE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ofsName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">valueB32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">sizeB32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">other</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">shndx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2le</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">valueB64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">sizeB64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8le</span><span class="p">();</span>
+        <span class="p">}</span>
       <span class="p">}</span>
-      <span class="nx">DynsymSectionEntry32</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">nameOffset</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">size</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">info</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
+      <span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_readBE</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ofsName</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">valueB32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">sizeB32</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU4be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">bind</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBitsIntBe</span><span class="p">(</span><span class="mf">4</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">alignToByte</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">other</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">shndx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">valueB64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">sizeB64</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU8be</span><span class="p">();</span>
+        <span class="p">}</span>
       <span class="p">}</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isShIdxReserved&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxReserved</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxReserved</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxReserved</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">shIdxLoReserved</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">&lt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">shIdxHiReserved</span><span class="p">))</span> <span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxReserved</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isShIdxOs&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxOs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxOs</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxOs</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">shIdxLoOs</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">&lt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">shIdxHiOs</span><span class="p">))</span> <span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxOs</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isShIdxProc&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxProc</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxProc</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">shIdxLoProc</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span> <span class="o">&lt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">shIdxHiProc</span><span class="p">))</span> <span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isShIdxProc</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;size&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">sizeB32</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">sizeB64</span> <span class="o">:</span> <span class="mf">0</span><span class="p">));</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_size</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;visibility&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_visibility</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_visibility</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_visibility</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">other</span> <span class="o">&amp;</span> <span class="mf">3</span><span class="p">);</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_visibility</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B32</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">valueB32</span> <span class="o">:</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">bits</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">Bits</span><span class="p">.</span><span class="nx">B64</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">valueB64</span> <span class="o">:</span> <span class="mf">0</span><span class="p">));</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_value</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsName</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">isStringTableLinked</span><span class="p">))</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">io</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">_parent</span><span class="p">.</span><span class="nx">linkedSection</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">_io</span><span class="p">;</span>
+            <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="nx">io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
+            <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">ofsName</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span> <span class="o">=</span> <span class="nx">KaitaiStream</span><span class="p">.</span><span class="nx">bytesToStr</span><span class="p">(</span><span class="nx">io</span><span class="p">.</span><span class="nx">readBytesTerm</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_name</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynsymSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxSpecial&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxSpecial</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxSpecial</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxSpecial</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">shIdx</span><span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxSpecial</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
 
-      <span class="k">return</span> <span class="nx">DynsymSectionEntry32</span><span class="p">;</span>
+      <span class="cm">/**</span>
+<span class="cm">       * don&#39;t read this field, access `visibility` instead</span>
+<span class="cm">       */</span>
+
+      <span class="cm">/**</span>
+<span class="cm">       * section header index</span>
+<span class="cm">       */</span>
+
+      <span class="k">return</span> <span class="nx">DynsymSectionEntry</span><span class="p">;</span>
     <span class="p">})();</span>
 
     <span class="cm">/**</span>
@@ -2404,28 +2568,76 @@ section#format-index .row {
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectionHeaders</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">EndianElf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;strings&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">EndianElf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;sectionNames&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_sectionNames</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectionNames</span><span class="p">;</span>
         <span class="kd">var</span> <span class="nx">_pos</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">pos</span><span class="p">;</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionHeaders</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionNamesIdx</span><span class="p">].</span><span class="nx">ofsBody</span><span class="p">);</span>
         <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_strings</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionHeaders</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionNamesIdx</span><span class="p">].</span><span class="nx">lenBody</span><span class="p">);</span>
-          <span class="kd">var</span> <span class="nx">_io__raw__m_strings</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_strings</span><span class="p">);</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringsStruct</span><span class="p">(</span><span class="nx">_io__raw__m_strings</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_sectionNames</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionHeaders</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionNamesIdx</span><span class="p">].</span><span class="nx">lenBody</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_sectionNames</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringsStruct</span><span class="p">(</span><span class="nx">_io__raw__m_sectionNames</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_strings</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionHeaders</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionNamesIdx</span><span class="p">].</span><span class="nx">lenBody</span><span class="p">);</span>
-          <span class="kd">var</span> <span class="nx">_io__raw__m_strings</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_strings</span><span class="p">);</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringsStruct</span><span class="p">(</span><span class="nx">_io__raw__m_strings</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_sectionNames</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionHeaders</span><span class="p">[</span><span class="k">this</span><span class="p">.</span><span class="nx">sectionNamesIdx</span><span class="p">].</span><span class="nx">lenBody</span><span class="p">);</span>
+          <span class="kd">var</span> <span class="nx">_io__raw__m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw__m_sectionNames</span><span class="p">);</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringsStruct</span><span class="p">(</span><span class="nx">_io__raw__m_sectionNames</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">);</span>
         <span class="p">}</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_sectionNames</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">});</span>
 
     <span class="k">return</span> <span class="nx">EndianElf</span><span class="p">;</span>
   <span class="p">})();</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxLoOs&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoOs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoOs</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoOs</span> <span class="o">=</span> <span class="mf">65312</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoOs</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxLoReserved&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoReserved</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoReserved</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoReserved</span> <span class="o">=</span> <span class="mf">65280</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoReserved</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxHiProc&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiProc</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiProc</span> <span class="o">=</span> <span class="mf">65311</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiProc</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxLoProc&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoProc</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoProc</span> <span class="o">=</span> <span class="mf">65280</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxLoProc</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxHiOs&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiOs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiOs</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiOs</span> <span class="o">=</span> <span class="mf">65343</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiOs</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+  <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxHiReserved&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiReserved</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiReserved</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiReserved</span> <span class="o">=</span> <span class="mf">65535</span><span class="p">;</span>
+      <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_shIdxHiReserved</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
 
   <span class="cm">/**</span>
 <span class="cm">   * File identification, must be 0x7f + &quot;ELF&quot;.</span>

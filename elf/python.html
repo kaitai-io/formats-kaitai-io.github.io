@@ -198,11 +198,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="go.html" title="Executable and Linkable Format parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
                 <a href="graphviz.html" title="Executable and Linkable Format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -331,16 +326,36 @@ section#format-index .row {
 <span class="k">class</span> <span class="nc">Elf</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    .. seealso::</span>
+<span class="sd">       Source - https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD</span>
+<span class="sd">    </span>
+<span class="sd">    </span>
+<span class="sd">    .. seealso::</span>
 <span class="sd">       Source - https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
 <span class="sd">    .. seealso::</span>
 <span class="sd">       Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html</span>
-<span class="sd">    </span>
-<span class="sd">    </span>
-<span class="sd">    .. seealso::</span>
-<span class="sd">       Source - https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">class</span> <span class="nc">SymbolVisibility</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">default</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">internal</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">hidden</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">protected</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">exported</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">singleton</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">eliminate</span> <span class="o">=</span> <span class="mi">6</span>
+
+    <span class="k">class</span> <span class="nc">SymbolBinding</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">global</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">weak</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">os10</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">os11</span> <span class="o">=</span> <span class="mi">11</span>
+        <span class="n">os12</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">proc13</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">proc14</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">proc15</span> <span class="o">=</span> <span class="mi">15</span>
 
     <span class="k">class</span> <span class="nc">Endian</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
         <span class="n">le</span> <span class="o">=</span> <span class="mi">1</span>
@@ -429,6 +444,21 @@ section#format-index .row {
         <span class="n">riscv</span> <span class="o">=</span> <span class="mi">243</span>
         <span class="n">bpf</span> <span class="o">=</span> <span class="mi">247</span>
         <span class="n">csky</span> <span class="o">=</span> <span class="mi">252</span>
+
+    <span class="k">class</span> <span class="nc">SymbolType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">no_type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="nb">object</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">func</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="n">section</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="n">common</span> <span class="o">=</span> <span class="mi">5</span>
+        <span class="n">tls</span> <span class="o">=</span> <span class="mi">6</span>
+        <span class="n">os10</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="n">os11</span> <span class="o">=</span> <span class="mi">11</span>
+        <span class="n">os12</span> <span class="o">=</span> <span class="mi">12</span>
+        <span class="n">proc13</span> <span class="o">=</span> <span class="mi">13</span>
+        <span class="n">proc14</span> <span class="o">=</span> <span class="mi">14</span>
+        <span class="n">proc15</span> <span class="o">=</span> <span class="mi">15</span>
 
     <span class="k">class</span> <span class="nc">DynamicArrayTags</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
         <span class="n">null</span> <span class="o">=</span> <span class="mi">0</span>
@@ -534,7 +564,6 @@ section#format-index .row {
         <span class="n">gnu_relro</span> <span class="o">=</span> <span class="mi">1685382482</span>
         <span class="n">gnu_property</span> <span class="o">=</span> <span class="mi">1685382483</span>
         <span class="n">pax_flags</span> <span class="o">=</span> <span class="mi">1694766464</span>
-        <span class="n">hios</span> <span class="o">=</span> <span class="mi">1879048191</span>
         <span class="n">arm_exidx</span> <span class="o">=</span> <span class="mi">1879048193</span>
 
     <span class="k">class</span> <span class="nc">ObjType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
@@ -543,6 +572,16 @@ section#format-index .row {
         <span class="n">executable</span> <span class="o">=</span> <span class="mi">2</span>
         <span class="n">shared</span> <span class="o">=</span> <span class="mi">3</span>
         <span class="n">core</span> <span class="o">=</span> <span class="mi">4</span>
+
+    <span class="k">class</span> <span class="nc">SectionHeaderIdxSpecial</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+        <span class="n">undefined</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">before</span> <span class="o">=</span> <span class="mi">65280</span>
+        <span class="n">after</span> <span class="o">=</span> <span class="mi">65281</span>
+        <span class="n">amd64_lcommon</span> <span class="o">=</span> <span class="mi">65282</span>
+        <span class="n">sunw_ignore</span> <span class="o">=</span> <span class="mi">65343</span>
+        <span class="nb">abs</span> <span class="o">=</span> <span class="mi">65521</span>
+        <span class="n">common</span> <span class="o">=</span> <span class="mi">65522</span>
+        <span class="n">xindex</span> <span class="o">=</span> <span class="mi">65535</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -1074,39 +1113,6 @@ section#format-index .row {
             <span class="bp">self</span><span class="o">.</span><span class="n">qty_section_header</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">section_names_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
 
-        <span class="k">class</span> <span class="nc">DynsymSectionEntry64</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-            <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_is_le</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">=</span> <span class="n">_is_le</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-            <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_is_le&#39;</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">UndecidedEndiannessError</span><span class="p">(</span><span class="s2">&quot;/types/endian_elf/types/dynsym_section_entry64&quot;</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_read_le</span><span class="p">()</span>
-                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_read_be</span><span class="p">()</span>
-
-            <span class="k">def</span> <span class="nf">_read_le</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">shndx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
-
-            <span class="k">def</span> <span class="nf">_read_be</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">shndx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
-
-
         <span class="k">class</span> <span class="nc">NoteSection</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_is_le</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
@@ -1501,11 +1507,26 @@ section#format-index .row {
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_body</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_body&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
             <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">linked_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="sd">&quot;&quot;&quot;may reference a later section header, so don&#39;t try to access too early (use only lazy `instances`).</span>
+<span class="sd">                </span>
+<span class="sd">                .. seealso::</span>
+<span class="sd">                   Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link</span>
+<span class="sd">                &quot;&quot;&quot;</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_linked_section&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_linked_section</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_linked_section&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">linked_section_idx</span> <span class="o">!=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">SectionHeaderIdxSpecial</span><span class="o">.</span><span class="n">undefined</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">linked_section_idx</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">qty_section_header</span><span class="p">))</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_m_linked_section</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">section_headers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">linked_section_idx</span><span class="p">]</span>
+
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_linked_section</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_linked_section&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
-                <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">strings</span><span class="o">.</span><span class="n">_io</span>
+                <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">header</span><span class="o">.</span><span class="n">section_names</span><span class="o">.</span><span class="n">_io</span>
                 <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
                 <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span><span class="p">)</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">:</span>
@@ -1622,11 +1643,7 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
-                    <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span>
-                    <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">))</span>
-                    <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">DynsymSectionEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">))</span>
                     <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
 
@@ -1634,13 +1651,17 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
                 <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
                 <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">is_eof</span><span class="p">():</span>
-                    <span class="n">_on</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span>
-                    <span class="k">if</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">DynsymSectionEntry32</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">))</span>
-                    <span class="k">elif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span><span class="p">:</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">DynsymSectionEntry64</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">))</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">DynsymSectionEntry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">))</span>
                     <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
 
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">is_string_table_linked</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_string_table_linked&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_string_table_linked</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_string_table_linked&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_string_table_linked</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">linked_section</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">ShType</span><span class="o">.</span><span class="n">strtab</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_string_table_linked</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_string_table_linked&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
 
         <span class="k">class</span> <span class="nc">RelocationSectionEntry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1698,7 +1719,15 @@ section#format-index .row {
 
 
 
-        <span class="k">class</span> <span class="nc">DynsymSectionEntry32</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">class</span> <span class="nc">DynsymSectionEntry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            .. seealso::</span>
+<span class="sd">               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html</span>
+<span class="sd">            </span>
+<span class="sd">            </span>
+<span class="sd">            .. seealso::</span>
+<span class="sd">               Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html</span>
+<span class="sd">            &quot;&quot;&quot;</span>
             <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_is_le</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
@@ -1708,27 +1737,124 @@ section#format-index .row {
 
             <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_is_le&#39;</span><span class="p">):</span>
-                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">UndecidedEndiannessError</span><span class="p">(</span><span class="s2">&quot;/types/endian_elf/types/dynsym_section_entry32&quot;</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="n">kaitaistruct</span><span class="o">.</span><span class="n">UndecidedEndiannessError</span><span class="p">(</span><span class="s2">&quot;/types/endian_elf/types/dynsym_section_entry&quot;</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_read_le</span><span class="p">()</span>
                 <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_read_be</span><span class="p">()</span>
 
             <span class="k">def</span> <span class="nf">_read_le</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value_b32</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size_b32</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4le</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">SymbolBinding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">SymbolType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">align_to_byte</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">shndx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8le</span><span class="p">()</span>
+
 
             <span class="k">def</span> <span class="nf">_read_be</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">name_offset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value_b32</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size_b32</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u4be</span><span class="p">()</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">bind</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">SymbolBinding</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">SymbolType</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">align_to_byte</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">()</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">shndx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u2be</span><span class="p">()</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">value_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">size_b64</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
+
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">is_sh_idx_reserved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_reserved&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_reserved</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_reserved&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_reserved</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sh_idx_lo_reserved</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sh_idx_hi_reserved</span><span class="p">))</span> 
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_reserved</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_reserved&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">is_sh_idx_os</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_os&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_os</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sh_idx_lo_os</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sh_idx_hi_os</span><span class="p">))</span> 
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">is_sh_idx_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_proc&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_proc</span> <span class="o">=</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sh_idx_lo_proc</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">sh_idx_hi_proc</span><span class="p">))</span> 
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_is_sh_idx_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_is_sh_idx_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">size</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_size&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_size</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_size&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_size</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_b32</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size_b64</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_size</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_size&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">visibility</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_visibility&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_visibility</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_visibility&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_visibility</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">SymbolVisibility</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">other</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_visibility</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_visibility&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_b32</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b32</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_b64</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">bits</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">Bits</span><span class="o">.</span><span class="n">b64</span> <span class="k">else</span> <span class="mi">0</span><span class="p">))</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="k">if</span>  <span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_string_table_linked</span><span class="p">))</span> <span class="p">:</span>
+                    <span class="n">io</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">linked_section</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_io</span>
+                    <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
+                    <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ofs_name</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+                    <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_name</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_name&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">sh_idx_special</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_special&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_special</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_special&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_special</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">SectionHeaderIdxSpecial</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sh_idx</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_special</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_special&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
 
         <span class="k">class</span> <span class="nc">NoteSectionEntry</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
@@ -1860,22 +1986,71 @@ section#format-index .row {
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_section_headers</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_section_headers&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
         <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">strings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="k">def</span> <span class="nf">section_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_section_names&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_section_names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_section_names&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
             <span class="n">_pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">pos</span><span class="p">()</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_headers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">section_names_idx</span><span class="p">]</span><span class="o">.</span><span class="n">ofs_body</span><span class="p">)</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_headers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">section_names_idx</span><span class="p">]</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
-                <span class="n">_io__raw__m_strings</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_strings</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw__m_strings</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_section_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_headers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">section_names_idx</span><span class="p">]</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
+                <span class="n">_io__raw__m_section_names</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_section_names</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_section_names</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw__m_section_names</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_strings</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_headers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">section_names_idx</span><span class="p">]</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
-                <span class="n">_io__raw__m_strings</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_strings</span><span class="p">))</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw__m_strings</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_section_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section_headers</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">section_names_idx</span><span class="p">]</span><span class="o">.</span><span class="n">len_body</span><span class="p">)</span>
+                <span class="n">_io__raw__m_section_names</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_raw__m_section_names</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_section_names</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="o">.</span><span class="n">StringsStruct</span><span class="p">(</span><span class="n">_io__raw__m_section_names</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_section_names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_section_names&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sh_idx_lo_os</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_os&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_os</span> <span class="o">=</span> <span class="mi">65312</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sh_idx_lo_reserved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_reserved&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_reserved</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_reserved&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_reserved</span> <span class="o">=</span> <span class="mi">65280</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_reserved</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_reserved&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sh_idx_hi_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_proc&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_proc</span> <span class="o">=</span> <span class="mi">65311</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sh_idx_lo_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_proc&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_proc</span> <span class="o">=</span> <span class="mi">65280</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_lo_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_lo_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sh_idx_hi_os</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_os&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_os</span> <span class="o">=</span> <span class="mi">65343</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">sh_idx_hi_reserved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_reserved&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_reserved</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_reserved&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_reserved</span> <span class="o">=</span> <span class="mi">65535</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_sh_idx_hi_reserved</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_sh_idx_hi_reserved&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 </pre></div>
 
         </div>

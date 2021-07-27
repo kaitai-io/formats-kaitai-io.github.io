@@ -12,16 +12,36 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 class Elf(KaitaiStruct):
     """
     .. seealso::
+       Source - https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD
+    
+    
+    .. seealso::
        Source - https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html
     
     
     .. seealso::
        Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html
-    
-    
-    .. seealso::
-       Source - https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD
     """
+
+    class SymbolVisibility(Enum):
+        default = 0
+        internal = 1
+        hidden = 2
+        protected = 3
+        exported = 4
+        singleton = 5
+        eliminate = 6
+
+    class SymbolBinding(Enum):
+        local = 0
+        global = 1
+        weak = 2
+        os10 = 10
+        os11 = 11
+        os12 = 12
+        proc13 = 13
+        proc14 = 14
+        proc15 = 15
 
     class Endian(Enum):
         le = 1
@@ -110,6 +130,21 @@ class Elf(KaitaiStruct):
         riscv = 243
         bpf = 247
         csky = 252
+
+    class SymbolType(Enum):
+        no_type = 0
+        object = 1
+        func = 2
+        section = 3
+        file = 4
+        common = 5
+        tls = 6
+        os10 = 10
+        os11 = 11
+        os12 = 12
+        proc13 = 13
+        proc14 = 14
+        proc15 = 15
 
     class DynamicArrayTags(Enum):
         null = 0
@@ -215,7 +250,6 @@ class Elf(KaitaiStruct):
         gnu_relro = 1685382482
         gnu_property = 1685382483
         pax_flags = 1694766464
-        hios = 1879048191
         arm_exidx = 1879048193
 
     class ObjType(Enum):
@@ -224,6 +258,16 @@ class Elf(KaitaiStruct):
         executable = 2
         shared = 3
         core = 4
+
+    class SectionHeaderIdxSpecial(Enum):
+        undefined = 0
+        before = 65280
+        after = 65281
+        amd64_lcommon = 65282
+        sunw_ignore = 65343
+        abs = 65521
+        common = 65522
+        xindex = 65535
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
         self._parent = _parent
@@ -755,39 +799,6 @@ class Elf(KaitaiStruct):
             self.qty_section_header = self._io.read_u2be()
             self.section_names_idx = self._io.read_u2be()
 
-        class DynsymSectionEntry64(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None, _is_le=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._is_le = _is_le
-                self._read()
-
-            def _read(self):
-                if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynsym_section_entry64")
-                elif self._is_le == True:
-                    self._read_le()
-                elif self._is_le == False:
-                    self._read_be()
-
-            def _read_le(self):
-                self.name_offset = self._io.read_u4le()
-                self.info = self._io.read_u1()
-                self.other = self._io.read_u1()
-                self.shndx = self._io.read_u2le()
-                self.value = self._io.read_u8le()
-                self.size = self._io.read_u8le()
-
-            def _read_be(self):
-                self.name_offset = self._io.read_u4be()
-                self.info = self._io.read_u1()
-                self.other = self._io.read_u1()
-                self.shndx = self._io.read_u2be()
-                self.value = self._io.read_u8be()
-                self.size = self._io.read_u8be()
-
-
         class NoteSection(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
                 self._io = _io
@@ -1182,11 +1193,26 @@ class Elf(KaitaiStruct):
                 return self._m_body if hasattr(self, '_m_body') else None
 
             @property
+            def linked_section(self):
+                """may reference a later section header, so don't try to access too early (use only lazy `instances`).
+                
+                .. seealso::
+                   Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link
+                """
+                if hasattr(self, '_m_linked_section'):
+                    return self._m_linked_section if hasattr(self, '_m_linked_section') else None
+
+                if  ((self.linked_section_idx != Elf.SectionHeaderIdxSpecial.undefined.value) and (self.linked_section_idx < self._root.header.qty_section_header)) :
+                    self._m_linked_section = self._root.header.section_headers[self.linked_section_idx]
+
+                return self._m_linked_section if hasattr(self, '_m_linked_section') else None
+
+            @property
             def name(self):
                 if hasattr(self, '_m_name'):
                     return self._m_name if hasattr(self, '_m_name') else None
 
-                io = self._root.header.strings._io
+                io = self._root.header.section_names._io
                 _pos = io.pos()
                 io.seek(self.ofs_name)
                 if self._is_le:
@@ -1303,11 +1329,7 @@ class Elf(KaitaiStruct):
                 self.entries = []
                 i = 0
                 while not self._io.is_eof():
-                    _on = self._root.bits
-                    if _on == Elf.Bits.b32:
-                        self.entries.append(Elf.EndianElf.DynsymSectionEntry32(self._io, self, self._root, self._is_le))
-                    elif _on == Elf.Bits.b64:
-                        self.entries.append(Elf.EndianElf.DynsymSectionEntry64(self._io, self, self._root, self._is_le))
+                    self.entries.append(Elf.EndianElf.DynsymSectionEntry(self._io, self, self._root, self._is_le))
                     i += 1
 
 
@@ -1315,13 +1337,17 @@ class Elf(KaitaiStruct):
                 self.entries = []
                 i = 0
                 while not self._io.is_eof():
-                    _on = self._root.bits
-                    if _on == Elf.Bits.b32:
-                        self.entries.append(Elf.EndianElf.DynsymSectionEntry32(self._io, self, self._root, self._is_le))
-                    elif _on == Elf.Bits.b64:
-                        self.entries.append(Elf.EndianElf.DynsymSectionEntry64(self._io, self, self._root, self._is_le))
+                    self.entries.append(Elf.EndianElf.DynsymSectionEntry(self._io, self, self._root, self._is_le))
                     i += 1
 
+
+            @property
+            def is_string_table_linked(self):
+                if hasattr(self, '_m_is_string_table_linked'):
+                    return self._m_is_string_table_linked if hasattr(self, '_m_is_string_table_linked') else None
+
+                self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+                return self._m_is_string_table_linked if hasattr(self, '_m_is_string_table_linked') else None
 
 
         class RelocationSectionEntry(KaitaiStruct):
@@ -1379,7 +1405,15 @@ class Elf(KaitaiStruct):
 
 
 
-        class DynsymSectionEntry32(KaitaiStruct):
+        class DynsymSectionEntry(KaitaiStruct):
+            """
+            .. seealso::
+               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html
+            
+            
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html
+            """
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
                 self._io = _io
                 self._parent = _parent
@@ -1389,27 +1423,124 @@ class Elf(KaitaiStruct):
 
             def _read(self):
                 if not hasattr(self, '_is_le'):
-                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynsym_section_entry32")
+                    raise kaitaistruct.UndecidedEndiannessError("/types/endian_elf/types/dynsym_section_entry")
                 elif self._is_le == True:
                     self._read_le()
                 elif self._is_le == False:
                     self._read_be()
 
             def _read_le(self):
-                self.name_offset = self._io.read_u4le()
-                self.value = self._io.read_u4le()
-                self.size = self._io.read_u4le()
-                self.info = self._io.read_u1()
+                self.ofs_name = self._io.read_u4le()
+                if self._root.bits == Elf.Bits.b32:
+                    self.value_b32 = self._io.read_u4le()
+
+                if self._root.bits == Elf.Bits.b32:
+                    self.size_b32 = self._io.read_u4le()
+
+                self.bind = KaitaiStream.resolve_enum(Elf.SymbolBinding, self._io.read_bits_int_be(4))
+                self.type = KaitaiStream.resolve_enum(Elf.SymbolType, self._io.read_bits_int_be(4))
+                self._io.align_to_byte()
                 self.other = self._io.read_u1()
-                self.shndx = self._io.read_u2le()
+                self.sh_idx = self._io.read_u2le()
+                if self._root.bits == Elf.Bits.b64:
+                    self.value_b64 = self._io.read_u8le()
+
+                if self._root.bits == Elf.Bits.b64:
+                    self.size_b64 = self._io.read_u8le()
+
 
             def _read_be(self):
-                self.name_offset = self._io.read_u4be()
-                self.value = self._io.read_u4be()
-                self.size = self._io.read_u4be()
-                self.info = self._io.read_u1()
+                self.ofs_name = self._io.read_u4be()
+                if self._root.bits == Elf.Bits.b32:
+                    self.value_b32 = self._io.read_u4be()
+
+                if self._root.bits == Elf.Bits.b32:
+                    self.size_b32 = self._io.read_u4be()
+
+                self.bind = KaitaiStream.resolve_enum(Elf.SymbolBinding, self._io.read_bits_int_be(4))
+                self.type = KaitaiStream.resolve_enum(Elf.SymbolType, self._io.read_bits_int_be(4))
+                self._io.align_to_byte()
                 self.other = self._io.read_u1()
-                self.shndx = self._io.read_u2be()
+                self.sh_idx = self._io.read_u2be()
+                if self._root.bits == Elf.Bits.b64:
+                    self.value_b64 = self._io.read_u8be()
+
+                if self._root.bits == Elf.Bits.b64:
+                    self.size_b64 = self._io.read_u8be()
+
+
+            @property
+            def is_sh_idx_reserved(self):
+                if hasattr(self, '_m_is_sh_idx_reserved'):
+                    return self._m_is_sh_idx_reserved if hasattr(self, '_m_is_sh_idx_reserved') else None
+
+                self._m_is_sh_idx_reserved =  ((self.sh_idx >= self._root.sh_idx_lo_reserved) and (self.sh_idx <= self._root.sh_idx_hi_reserved)) 
+                return self._m_is_sh_idx_reserved if hasattr(self, '_m_is_sh_idx_reserved') else None
+
+            @property
+            def is_sh_idx_os(self):
+                if hasattr(self, '_m_is_sh_idx_os'):
+                    return self._m_is_sh_idx_os if hasattr(self, '_m_is_sh_idx_os') else None
+
+                self._m_is_sh_idx_os =  ((self.sh_idx >= self._root.sh_idx_lo_os) and (self.sh_idx <= self._root.sh_idx_hi_os)) 
+                return self._m_is_sh_idx_os if hasattr(self, '_m_is_sh_idx_os') else None
+
+            @property
+            def is_sh_idx_proc(self):
+                if hasattr(self, '_m_is_sh_idx_proc'):
+                    return self._m_is_sh_idx_proc if hasattr(self, '_m_is_sh_idx_proc') else None
+
+                self._m_is_sh_idx_proc =  ((self.sh_idx >= self._root.sh_idx_lo_proc) and (self.sh_idx <= self._root.sh_idx_hi_proc)) 
+                return self._m_is_sh_idx_proc if hasattr(self, '_m_is_sh_idx_proc') else None
+
+            @property
+            def size(self):
+                if hasattr(self, '_m_size'):
+                    return self._m_size if hasattr(self, '_m_size') else None
+
+                self._m_size = (self.size_b32 if self._root.bits == Elf.Bits.b32 else (self.size_b64 if self._root.bits == Elf.Bits.b64 else 0))
+                return self._m_size if hasattr(self, '_m_size') else None
+
+            @property
+            def visibility(self):
+                if hasattr(self, '_m_visibility'):
+                    return self._m_visibility if hasattr(self, '_m_visibility') else None
+
+                self._m_visibility = KaitaiStream.resolve_enum(Elf.SymbolVisibility, (self.other & 3))
+                return self._m_visibility if hasattr(self, '_m_visibility') else None
+
+            @property
+            def value(self):
+                if hasattr(self, '_m_value'):
+                    return self._m_value if hasattr(self, '_m_value') else None
+
+                self._m_value = (self.value_b32 if self._root.bits == Elf.Bits.b32 else (self.value_b64 if self._root.bits == Elf.Bits.b64 else 0))
+                return self._m_value if hasattr(self, '_m_value') else None
+
+            @property
+            def name(self):
+                if hasattr(self, '_m_name'):
+                    return self._m_name if hasattr(self, '_m_name') else None
+
+                if  ((self.ofs_name != 0) and (self._parent.is_string_table_linked)) :
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.ofs_name)
+                    if self._is_le:
+                        self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    else:
+                        self._m_name = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    io.seek(_pos)
+
+                return self._m_name if hasattr(self, '_m_name') else None
+
+            @property
+            def sh_idx_special(self):
+                if hasattr(self, '_m_sh_idx_special'):
+                    return self._m_sh_idx_special if hasattr(self, '_m_sh_idx_special') else None
+
+                self._m_sh_idx_special = KaitaiStream.resolve_enum(Elf.SectionHeaderIdxSpecial, self.sh_idx)
+                return self._m_sh_idx_special if hasattr(self, '_m_sh_idx_special') else None
 
 
         class NoteSectionEntry(KaitaiStruct):
@@ -1541,22 +1672,70 @@ class Elf(KaitaiStruct):
             return self._m_section_headers if hasattr(self, '_m_section_headers') else None
 
         @property
-        def strings(self):
-            if hasattr(self, '_m_strings'):
-                return self._m_strings if hasattr(self, '_m_strings') else None
+        def section_names(self):
+            if hasattr(self, '_m_section_names'):
+                return self._m_section_names if hasattr(self, '_m_section_names') else None
 
             _pos = self._io.pos()
             self._io.seek(self.section_headers[self.section_names_idx].ofs_body)
             if self._is_le:
-                self._raw__m_strings = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
-                _io__raw__m_strings = KaitaiStream(BytesIO(self._raw__m_strings))
-                self._m_strings = Elf.EndianElf.StringsStruct(_io__raw__m_strings, self, self._root, self._is_le)
+                self._raw__m_section_names = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
+                _io__raw__m_section_names = KaitaiStream(BytesIO(self._raw__m_section_names))
+                self._m_section_names = Elf.EndianElf.StringsStruct(_io__raw__m_section_names, self, self._root, self._is_le)
             else:
-                self._raw__m_strings = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
-                _io__raw__m_strings = KaitaiStream(BytesIO(self._raw__m_strings))
-                self._m_strings = Elf.EndianElf.StringsStruct(_io__raw__m_strings, self, self._root, self._is_le)
+                self._raw__m_section_names = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
+                _io__raw__m_section_names = KaitaiStream(BytesIO(self._raw__m_section_names))
+                self._m_section_names = Elf.EndianElf.StringsStruct(_io__raw__m_section_names, self, self._root, self._is_le)
             self._io.seek(_pos)
-            return self._m_strings if hasattr(self, '_m_strings') else None
+            return self._m_section_names if hasattr(self, '_m_section_names') else None
 
+
+    @property
+    def sh_idx_lo_os(self):
+        if hasattr(self, '_m_sh_idx_lo_os'):
+            return self._m_sh_idx_lo_os if hasattr(self, '_m_sh_idx_lo_os') else None
+
+        self._m_sh_idx_lo_os = 65312
+        return self._m_sh_idx_lo_os if hasattr(self, '_m_sh_idx_lo_os') else None
+
+    @property
+    def sh_idx_lo_reserved(self):
+        if hasattr(self, '_m_sh_idx_lo_reserved'):
+            return self._m_sh_idx_lo_reserved if hasattr(self, '_m_sh_idx_lo_reserved') else None
+
+        self._m_sh_idx_lo_reserved = 65280
+        return self._m_sh_idx_lo_reserved if hasattr(self, '_m_sh_idx_lo_reserved') else None
+
+    @property
+    def sh_idx_hi_proc(self):
+        if hasattr(self, '_m_sh_idx_hi_proc'):
+            return self._m_sh_idx_hi_proc if hasattr(self, '_m_sh_idx_hi_proc') else None
+
+        self._m_sh_idx_hi_proc = 65311
+        return self._m_sh_idx_hi_proc if hasattr(self, '_m_sh_idx_hi_proc') else None
+
+    @property
+    def sh_idx_lo_proc(self):
+        if hasattr(self, '_m_sh_idx_lo_proc'):
+            return self._m_sh_idx_lo_proc if hasattr(self, '_m_sh_idx_lo_proc') else None
+
+        self._m_sh_idx_lo_proc = 65280
+        return self._m_sh_idx_lo_proc if hasattr(self, '_m_sh_idx_lo_proc') else None
+
+    @property
+    def sh_idx_hi_os(self):
+        if hasattr(self, '_m_sh_idx_hi_os'):
+            return self._m_sh_idx_hi_os if hasattr(self, '_m_sh_idx_hi_os') else None
+
+        self._m_sh_idx_hi_os = 65343
+        return self._m_sh_idx_hi_os if hasattr(self, '_m_sh_idx_hi_os') else None
+
+    @property
+    def sh_idx_hi_reserved(self):
+        if hasattr(self, '_m_sh_idx_hi_reserved'):
+            return self._m_sh_idx_hi_reserved if hasattr(self, '_m_sh_idx_hi_reserved') else None
+
+        self._m_sh_idx_hi_reserved = 65535
+        return self._m_sh_idx_hi_reserved if hasattr(self, '_m_sh_idx_hi_reserved') else None
 
 

@@ -10,12 +10,52 @@
   }
 }(this, function (KaitaiStream) {
 /**
+ * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}
  * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html|Source}
  * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html|Source}
- * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}
  */
 
 var Elf = (function() {
+  Elf.SymbolVisibility = Object.freeze({
+    DEFAULT: 0,
+    INTERNAL: 1,
+    HIDDEN: 2,
+    PROTECTED: 3,
+    EXPORTED: 4,
+    SINGLETON: 5,
+    ELIMINATE: 6,
+
+    0: "DEFAULT",
+    1: "INTERNAL",
+    2: "HIDDEN",
+    3: "PROTECTED",
+    4: "EXPORTED",
+    5: "SINGLETON",
+    6: "ELIMINATE",
+  });
+
+  Elf.SymbolBinding = Object.freeze({
+    LOCAL: 0,
+    GLOBAL: 1,
+    WEAK: 2,
+    OS10: 10,
+    OS11: 11,
+    OS12: 12,
+    PROC13: 13,
+    PROC14: 14,
+    PROC15: 15,
+
+    0: "LOCAL",
+    1: "GLOBAL",
+    2: "WEAK",
+    10: "OS10",
+    11: "OS11",
+    12: "OS12",
+    13: "PROC13",
+    14: "PROC14",
+    15: "PROC15",
+  });
+
   Elf.Endian = Object.freeze({
     LE: 1,
     BE: 2,
@@ -190,6 +230,36 @@ var Elf = (function() {
     243: "RISCV",
     247: "BPF",
     252: "CSKY",
+  });
+
+  Elf.SymbolType = Object.freeze({
+    NO_TYPE: 0,
+    OBJECT: 1,
+    FUNC: 2,
+    SECTION: 3,
+    FILE: 4,
+    COMMON: 5,
+    TLS: 6,
+    OS10: 10,
+    OS11: 11,
+    OS12: 12,
+    PROC13: 13,
+    PROC14: 14,
+    PROC15: 15,
+
+    0: "NO_TYPE",
+    1: "OBJECT",
+    2: "FUNC",
+    3: "SECTION",
+    4: "FILE",
+    5: "COMMON",
+    6: "TLS",
+    10: "OS10",
+    11: "OS11",
+    12: "OS12",
+    13: "PROC13",
+    14: "PROC14",
+    15: "PROC15",
   });
 
   Elf.DynamicArrayTags = Object.freeze({
@@ -386,7 +456,6 @@ var Elf = (function() {
     GNU_RELRO: 1685382482,
     GNU_PROPERTY: 1685382483,
     PAX_FLAGS: 1694766464,
-    HIOS: 1879048191,
     ARM_EXIDX: 1879048193,
 
     0: "NULL_TYPE",
@@ -402,7 +471,6 @@ var Elf = (function() {
     1685382482: "GNU_RELRO",
     1685382483: "GNU_PROPERTY",
     1694766464: "PAX_FLAGS",
-    1879048191: "HIOS",
     1879048193: "ARM_EXIDX",
   });
 
@@ -418,6 +486,26 @@ var Elf = (function() {
     2: "EXECUTABLE",
     3: "SHARED",
     4: "CORE",
+  });
+
+  Elf.SectionHeaderIdxSpecial = Object.freeze({
+    UNDEFINED: 0,
+    BEFORE: 65280,
+    AFTER: 65281,
+    AMD64_LCOMMON: 65282,
+    SUNW_IGNORE: 65343,
+    ABS: 65521,
+    COMMON: 65522,
+    XINDEX: 65535,
+
+    0: "UNDEFINED",
+    65280: "BEFORE",
+    65281: "AFTER",
+    65282: "AMD64_LCOMMON",
+    65343: "SUNW_IGNORE",
+    65521: "ABS",
+    65522: "COMMON",
+    65535: "XINDEX",
   });
 
   function Elf(_io, _parent, _root) {
@@ -1093,45 +1181,6 @@ var Elf = (function() {
       this.sectionNamesIdx = this._io.readU2be();
     }
 
-    var DynsymSectionEntry64 = EndianElf.DynsymSectionEntry64 = (function() {
-      function DynsymSectionEntry64(_io, _parent, _root, _is_le) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-        this._is_le = _is_le;
-
-        this._read();
-      }
-      DynsymSectionEntry64.prototype._read = function() {
-
-        if (this._is_le === true) {
-          this._readLE();
-        } else if (this._is_le === false) {
-          this._readBE();
-        } else {
-          throw new KaitaiStream.UndecidedEndiannessError();
-        }
-      }
-      DynsymSectionEntry64.prototype._readLE = function() {
-        this.nameOffset = this._io.readU4le();
-        this.info = this._io.readU1();
-        this.other = this._io.readU1();
-        this.shndx = this._io.readU2le();
-        this.value = this._io.readU8le();
-        this.size = this._io.readU8le();
-      }
-      DynsymSectionEntry64.prototype._readBE = function() {
-        this.nameOffset = this._io.readU4be();
-        this.info = this._io.readU1();
-        this.other = this._io.readU1();
-        this.shndx = this._io.readU2be();
-        this.value = this._io.readU8be();
-        this.size = this._io.readU8be();
-      }
-
-      return DynsymSectionEntry64;
-    })();
-
     var NoteSection = EndianElf.NoteSection = (function() {
       function NoteSection(_io, _parent, _root, _is_le) {
         this._io = _io;
@@ -1658,11 +1707,26 @@ var Elf = (function() {
           return this._m_body;
         }
       });
+
+      /**
+       * may reference a later section header, so don't try to access too early (use only lazy `instances`)
+       * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link|Source}
+       */
+      Object.defineProperty(SectionHeader.prototype, 'linkedSection', {
+        get: function() {
+          if (this._m_linkedSection !== undefined)
+            return this._m_linkedSection;
+          if ( ((this.linkedSectionIdx != Elf.SectionHeaderIdxSpecial.UNDEFINED) && (this.linkedSectionIdx < this._root.header.qtySectionHeader)) ) {
+            this._m_linkedSection = this._root.header.sectionHeaders[this.linkedSectionIdx];
+          }
+          return this._m_linkedSection;
+        }
+      });
       Object.defineProperty(SectionHeader.prototype, 'name', {
         get: function() {
           if (this._m_name !== undefined)
             return this._m_name;
-          var io = this._root.header.strings._io;
+          var io = this._root.header.sectionNames._io;
           var _pos = io.pos;
           io.seek(this.ofsName);
           if (this._is_le) {
@@ -1797,14 +1861,7 @@ var Elf = (function() {
         this.entries = [];
         var i = 0;
         while (!this._io.isEof()) {
-          switch (this._root.bits) {
-          case Elf.Bits.B32:
-            this.entries.push(new DynsymSectionEntry32(this._io, this, this._root, this._is_le));
-            break;
-          case Elf.Bits.B64:
-            this.entries.push(new DynsymSectionEntry64(this._io, this, this._root, this._is_le));
-            break;
-          }
+          this.entries.push(new DynsymSectionEntry(this._io, this, this._root, this._is_le));
           i++;
         }
       }
@@ -1812,17 +1869,18 @@ var Elf = (function() {
         this.entries = [];
         var i = 0;
         while (!this._io.isEof()) {
-          switch (this._root.bits) {
-          case Elf.Bits.B32:
-            this.entries.push(new DynsymSectionEntry32(this._io, this, this._root, this._is_le));
-            break;
-          case Elf.Bits.B64:
-            this.entries.push(new DynsymSectionEntry64(this._io, this, this._root, this._is_le));
-            break;
-          }
+          this.entries.push(new DynsymSectionEntry(this._io, this, this._root, this._is_le));
           i++;
         }
       }
+      Object.defineProperty(DynsymSection.prototype, 'isStringTableLinked', {
+        get: function() {
+          if (this._m_isStringTableLinked !== undefined)
+            return this._m_isStringTableLinked;
+          this._m_isStringTableLinked = this._parent.linkedSection.type == Elf.ShType.STRTAB;
+          return this._m_isStringTableLinked;
+        }
+      });
 
       return DynsymSection;
     })();
@@ -1906,8 +1964,13 @@ var Elf = (function() {
       return RelocationSectionEntry;
     })();
 
-    var DynsymSectionEntry32 = EndianElf.DynsymSectionEntry32 = (function() {
-      function DynsymSectionEntry32(_io, _parent, _root, _is_le) {
+    /**
+     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html|Source}
+     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html|Source}
+     */
+
+    var DynsymSectionEntry = EndianElf.DynsymSectionEntry = (function() {
+      function DynsymSectionEntry(_io, _parent, _root, _is_le) {
         this._io = _io;
         this._parent = _parent;
         this._root = _root || this;
@@ -1915,7 +1978,7 @@ var Elf = (function() {
 
         this._read();
       }
-      DynsymSectionEntry32.prototype._read = function() {
+      DynsymSectionEntry.prototype._read = function() {
 
         if (this._is_le === true) {
           this._readLE();
@@ -1925,24 +1988,130 @@ var Elf = (function() {
           throw new KaitaiStream.UndecidedEndiannessError();
         }
       }
-      DynsymSectionEntry32.prototype._readLE = function() {
-        this.nameOffset = this._io.readU4le();
-        this.value = this._io.readU4le();
-        this.size = this._io.readU4le();
-        this.info = this._io.readU1();
+      DynsymSectionEntry.prototype._readLE = function() {
+        this.ofsName = this._io.readU4le();
+        if (this._root.bits == Elf.Bits.B32) {
+          this.valueB32 = this._io.readU4le();
+        }
+        if (this._root.bits == Elf.Bits.B32) {
+          this.sizeB32 = this._io.readU4le();
+        }
+        this.bind = this._io.readBitsIntBe(4);
+        this.type = this._io.readBitsIntBe(4);
+        this._io.alignToByte();
         this.other = this._io.readU1();
-        this.shndx = this._io.readU2le();
+        this.shIdx = this._io.readU2le();
+        if (this._root.bits == Elf.Bits.B64) {
+          this.valueB64 = this._io.readU8le();
+        }
+        if (this._root.bits == Elf.Bits.B64) {
+          this.sizeB64 = this._io.readU8le();
+        }
       }
-      DynsymSectionEntry32.prototype._readBE = function() {
-        this.nameOffset = this._io.readU4be();
-        this.value = this._io.readU4be();
-        this.size = this._io.readU4be();
-        this.info = this._io.readU1();
+      DynsymSectionEntry.prototype._readBE = function() {
+        this.ofsName = this._io.readU4be();
+        if (this._root.bits == Elf.Bits.B32) {
+          this.valueB32 = this._io.readU4be();
+        }
+        if (this._root.bits == Elf.Bits.B32) {
+          this.sizeB32 = this._io.readU4be();
+        }
+        this.bind = this._io.readBitsIntBe(4);
+        this.type = this._io.readBitsIntBe(4);
+        this._io.alignToByte();
         this.other = this._io.readU1();
-        this.shndx = this._io.readU2be();
+        this.shIdx = this._io.readU2be();
+        if (this._root.bits == Elf.Bits.B64) {
+          this.valueB64 = this._io.readU8be();
+        }
+        if (this._root.bits == Elf.Bits.B64) {
+          this.sizeB64 = this._io.readU8be();
+        }
       }
+      Object.defineProperty(DynsymSectionEntry.prototype, 'isShIdxReserved', {
+        get: function() {
+          if (this._m_isShIdxReserved !== undefined)
+            return this._m_isShIdxReserved;
+          this._m_isShIdxReserved =  ((this.shIdx >= this._root.shIdxLoReserved) && (this.shIdx <= this._root.shIdxHiReserved)) ;
+          return this._m_isShIdxReserved;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'isShIdxOs', {
+        get: function() {
+          if (this._m_isShIdxOs !== undefined)
+            return this._m_isShIdxOs;
+          this._m_isShIdxOs =  ((this.shIdx >= this._root.shIdxLoOs) && (this.shIdx <= this._root.shIdxHiOs)) ;
+          return this._m_isShIdxOs;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'isShIdxProc', {
+        get: function() {
+          if (this._m_isShIdxProc !== undefined)
+            return this._m_isShIdxProc;
+          this._m_isShIdxProc =  ((this.shIdx >= this._root.shIdxLoProc) && (this.shIdx <= this._root.shIdxHiProc)) ;
+          return this._m_isShIdxProc;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'size', {
+        get: function() {
+          if (this._m_size !== undefined)
+            return this._m_size;
+          this._m_size = (this._root.bits == Elf.Bits.B32 ? this.sizeB32 : (this._root.bits == Elf.Bits.B64 ? this.sizeB64 : 0));
+          return this._m_size;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'visibility', {
+        get: function() {
+          if (this._m_visibility !== undefined)
+            return this._m_visibility;
+          this._m_visibility = (this.other & 3);
+          return this._m_visibility;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'value', {
+        get: function() {
+          if (this._m_value !== undefined)
+            return this._m_value;
+          this._m_value = (this._root.bits == Elf.Bits.B32 ? this.valueB32 : (this._root.bits == Elf.Bits.B64 ? this.valueB64 : 0));
+          return this._m_value;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'name', {
+        get: function() {
+          if (this._m_name !== undefined)
+            return this._m_name;
+          if ( ((this.ofsName != 0) && (this._parent.isStringTableLinked)) ) {
+            var io = this._parent._parent.linkedSection.body._io;
+            var _pos = io.pos;
+            io.seek(this.ofsName);
+            if (this._is_le) {
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+            } else {
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+            }
+            io.seek(_pos);
+          }
+          return this._m_name;
+        }
+      });
+      Object.defineProperty(DynsymSectionEntry.prototype, 'shIdxSpecial', {
+        get: function() {
+          if (this._m_shIdxSpecial !== undefined)
+            return this._m_shIdxSpecial;
+          this._m_shIdxSpecial = this.shIdx;
+          return this._m_shIdxSpecial;
+        }
+      });
 
-      return DynsymSectionEntry32;
+      /**
+       * don't read this field, access `visibility` instead
+       */
+
+      /**
+       * section header index
+       */
+
+      return DynsymSectionEntry;
     })();
 
     /**
@@ -2090,28 +2259,76 @@ var Elf = (function() {
         return this._m_sectionHeaders;
       }
     });
-    Object.defineProperty(EndianElf.prototype, 'strings', {
+    Object.defineProperty(EndianElf.prototype, 'sectionNames', {
       get: function() {
-        if (this._m_strings !== undefined)
-          return this._m_strings;
+        if (this._m_sectionNames !== undefined)
+          return this._m_sectionNames;
         var _pos = this._io.pos;
         this._io.seek(this.sectionHeaders[this.sectionNamesIdx].ofsBody);
         if (this._is_le) {
-          this._raw__m_strings = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
-          var _io__raw__m_strings = new KaitaiStream(this._raw__m_strings);
-          this._m_strings = new StringsStruct(_io__raw__m_strings, this, this._root, this._is_le);
+          this._raw__m_sectionNames = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
+          var _io__raw__m_sectionNames = new KaitaiStream(this._raw__m_sectionNames);
+          this._m_sectionNames = new StringsStruct(_io__raw__m_sectionNames, this, this._root, this._is_le);
         } else {
-          this._raw__m_strings = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
-          var _io__raw__m_strings = new KaitaiStream(this._raw__m_strings);
-          this._m_strings = new StringsStruct(_io__raw__m_strings, this, this._root, this._is_le);
+          this._raw__m_sectionNames = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
+          var _io__raw__m_sectionNames = new KaitaiStream(this._raw__m_sectionNames);
+          this._m_sectionNames = new StringsStruct(_io__raw__m_sectionNames, this, this._root, this._is_le);
         }
         this._io.seek(_pos);
-        return this._m_strings;
+        return this._m_sectionNames;
       }
     });
 
     return EndianElf;
   })();
+  Object.defineProperty(Elf.prototype, 'shIdxLoOs', {
+    get: function() {
+      if (this._m_shIdxLoOs !== undefined)
+        return this._m_shIdxLoOs;
+      this._m_shIdxLoOs = 65312;
+      return this._m_shIdxLoOs;
+    }
+  });
+  Object.defineProperty(Elf.prototype, 'shIdxLoReserved', {
+    get: function() {
+      if (this._m_shIdxLoReserved !== undefined)
+        return this._m_shIdxLoReserved;
+      this._m_shIdxLoReserved = 65280;
+      return this._m_shIdxLoReserved;
+    }
+  });
+  Object.defineProperty(Elf.prototype, 'shIdxHiProc', {
+    get: function() {
+      if (this._m_shIdxHiProc !== undefined)
+        return this._m_shIdxHiProc;
+      this._m_shIdxHiProc = 65311;
+      return this._m_shIdxHiProc;
+    }
+  });
+  Object.defineProperty(Elf.prototype, 'shIdxLoProc', {
+    get: function() {
+      if (this._m_shIdxLoProc !== undefined)
+        return this._m_shIdxLoProc;
+      this._m_shIdxLoProc = 65280;
+      return this._m_shIdxLoProc;
+    }
+  });
+  Object.defineProperty(Elf.prototype, 'shIdxHiOs', {
+    get: function() {
+      if (this._m_shIdxHiOs !== undefined)
+        return this._m_shIdxHiOs;
+      this._m_shIdxHiOs = 65343;
+      return this._m_shIdxHiOs;
+    }
+  });
+  Object.defineProperty(Elf.prototype, 'shIdxHiReserved', {
+    get: function() {
+      if (this._m_shIdxHiReserved !== undefined)
+        return this._m_shIdxHiReserved;
+      this._m_shIdxHiReserved = 65535;
+      return this._m_shIdxHiReserved;
+    }
+  });
 
   /**
    * File identification, must be 0x7f + "ELF".

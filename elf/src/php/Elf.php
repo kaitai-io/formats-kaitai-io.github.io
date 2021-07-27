@@ -21,6 +21,48 @@ namespace {
             $this->_m_pad = $this->_io->readBytes(7);
             $this->_m_header = new \Elf\EndianElf($this->_io, $this, $this->_root);
         }
+        protected $_m_shIdxLoOs;
+        public function shIdxLoOs() {
+            if ($this->_m_shIdxLoOs !== null)
+                return $this->_m_shIdxLoOs;
+            $this->_m_shIdxLoOs = 65312;
+            return $this->_m_shIdxLoOs;
+        }
+        protected $_m_shIdxLoReserved;
+        public function shIdxLoReserved() {
+            if ($this->_m_shIdxLoReserved !== null)
+                return $this->_m_shIdxLoReserved;
+            $this->_m_shIdxLoReserved = 65280;
+            return $this->_m_shIdxLoReserved;
+        }
+        protected $_m_shIdxHiProc;
+        public function shIdxHiProc() {
+            if ($this->_m_shIdxHiProc !== null)
+                return $this->_m_shIdxHiProc;
+            $this->_m_shIdxHiProc = 65311;
+            return $this->_m_shIdxHiProc;
+        }
+        protected $_m_shIdxLoProc;
+        public function shIdxLoProc() {
+            if ($this->_m_shIdxLoProc !== null)
+                return $this->_m_shIdxLoProc;
+            $this->_m_shIdxLoProc = 65280;
+            return $this->_m_shIdxLoProc;
+        }
+        protected $_m_shIdxHiOs;
+        public function shIdxHiOs() {
+            if ($this->_m_shIdxHiOs !== null)
+                return $this->_m_shIdxHiOs;
+            $this->_m_shIdxHiOs = 65343;
+            return $this->_m_shIdxHiOs;
+        }
+        protected $_m_shIdxHiReserved;
+        public function shIdxHiReserved() {
+            if ($this->_m_shIdxHiReserved !== null)
+                return $this->_m_shIdxHiReserved;
+            $this->_m_shIdxHiReserved = 65535;
+            return $this->_m_shIdxHiReserved;
+        }
         protected $_m_magic;
         protected $_m_bits;
         protected $_m_endian;
@@ -732,23 +774,23 @@ namespace Elf {
             $this->_io->seek($_pos);
             return $this->_m_sectionHeaders;
         }
-        protected $_m_strings;
-        public function strings() {
-            if ($this->_m_strings !== null)
-                return $this->_m_strings;
+        protected $_m_sectionNames;
+        public function sectionNames() {
+            if ($this->_m_sectionNames !== null)
+                return $this->_m_sectionNames;
             $_pos = $this->_io->pos();
             $this->_io->seek($this->sectionHeaders()[$this->sectionNamesIdx()]->ofsBody());
             if ($this->_m__is_le) {
-                $this->_m__raw_strings = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
-                $_io__raw_strings = new \Kaitai\Struct\Stream($this->_m__raw_strings);
-                $this->_m_strings = new \Elf\EndianElf\StringsStruct($_io__raw_strings, $this, $this->_root, $this->_m__is_le);
+                $this->_m__raw_sectionNames = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
+                $_io__raw_sectionNames = new \Kaitai\Struct\Stream($this->_m__raw_sectionNames);
+                $this->_m_sectionNames = new \Elf\EndianElf\StringsStruct($_io__raw_sectionNames, $this, $this->_root, $this->_m__is_le);
             } else {
-                $this->_m__raw_strings = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
-                $_io__raw_strings = new \Kaitai\Struct\Stream($this->_m__raw_strings);
-                $this->_m_strings = new \Elf\EndianElf\StringsStruct($_io__raw_strings, $this, $this->_root, $this->_m__is_le);
+                $this->_m__raw_sectionNames = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
+                $_io__raw_sectionNames = new \Kaitai\Struct\Stream($this->_m__raw_sectionNames);
+                $this->_m_sectionNames = new \Elf\EndianElf\StringsStruct($_io__raw_sectionNames, $this, $this->_root, $this->_m__is_le);
             }
             $this->_io->seek($_pos);
-            return $this->_m_strings;
+            return $this->_m_sectionNames;
         }
         protected $_m_eType;
         protected $_m_machine;
@@ -765,7 +807,7 @@ namespace Elf {
         protected $_m_sectionNamesIdx;
         protected $_m__raw_programHeaders;
         protected $_m__raw_sectionHeaders;
-        protected $_m__raw_strings;
+        protected $_m__raw_sectionNames;
         public function eType() { return $this->_m_eType; }
         public function machine() { return $this->_m_machine; }
         public function eVersion() { return $this->_m_eVersion; }
@@ -781,60 +823,7 @@ namespace Elf {
         public function sectionNamesIdx() { return $this->_m_sectionNamesIdx; }
         public function _raw_programHeaders() { return $this->_m__raw_programHeaders; }
         public function _raw_sectionHeaders() { return $this->_m__raw_sectionHeaders; }
-        public function _raw_strings() { return $this->_m__raw_strings; }
-    }
-}
-
-namespace Elf\EndianElf {
-    class DynsymSectionEntry64 extends \Kaitai\Struct\Struct {
-        protected $_m__is_le;
-
-        public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynsymSection $_parent = null, \Elf $_root = null, $is_le = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m__is_le = $is_le;
-            $this->_read();
-        }
-
-        private function _read() {
-
-            if (is_null($this->_m__is_le)) {
-                throw new \Kaitai\Struct\Error\UndecidedEndiannessError;
-            } else if ($this->_m__is_le) {
-                $this->_readLE();
-            } else {
-                $this->_readBE();
-            }
-        }
-
-        private function _readLE() {
-            $this->_m_nameOffset = $this->_io->readU4le();
-            $this->_m_info = $this->_io->readU1();
-            $this->_m_other = $this->_io->readU1();
-            $this->_m_shndx = $this->_io->readU2le();
-            $this->_m_value = $this->_io->readU8le();
-            $this->_m_size = $this->_io->readU8le();
-        }
-
-        private function _readBE() {
-            $this->_m_nameOffset = $this->_io->readU4be();
-            $this->_m_info = $this->_io->readU1();
-            $this->_m_other = $this->_io->readU1();
-            $this->_m_shndx = $this->_io->readU2be();
-            $this->_m_value = $this->_io->readU8be();
-            $this->_m_size = $this->_io->readU8be();
-        }
-        protected $_m_nameOffset;
-        protected $_m_info;
-        protected $_m_other;
-        protected $_m_shndx;
-        protected $_m_value;
-        protected $_m_size;
-        public function nameOffset() { return $this->_m_nameOffset; }
-        public function info() { return $this->_m_info; }
-        public function other() { return $this->_m_other; }
-        public function shndx() { return $this->_m_shndx; }
-        public function value() { return $this->_m_value; }
-        public function size() { return $this->_m_size; }
+        public function _raw_sectionNames() { return $this->_m__raw_sectionNames; }
     }
 }
 
@@ -1394,11 +1383,24 @@ namespace Elf\EndianElf {
             $io->seek($_pos);
             return $this->_m_body;
         }
+        protected $_m_linkedSection;
+
+        /**
+         * may reference a later section header, so don't try to access too early (use only lazy `instances`)
+         */
+        public function linkedSection() {
+            if ($this->_m_linkedSection !== null)
+                return $this->_m_linkedSection;
+            if ( (($this->linkedSectionIdx() != \Elf\SectionHeaderIdxSpecial::UNDEFINED) && ($this->linkedSectionIdx() < $this->_root()->header()->qtySectionHeader())) ) {
+                $this->_m_linkedSection = $this->_root()->header()->sectionHeaders()[$this->linkedSectionIdx()];
+            }
+            return $this->_m_linkedSection;
+        }
         protected $_m_name;
         public function name() {
             if ($this->_m_name !== null)
                 return $this->_m_name;
-            $io = $this->_root()->header()->strings()->_io();
+            $io = $this->_root()->header()->sectionNames()->_io();
             $_pos = $io->pos();
             $io->seek($this->ofsName());
             if ($this->_m__is_le) {
@@ -1559,14 +1561,7 @@ namespace Elf\EndianElf {
             $this->_m_entries = [];
             $i = 0;
             while (!$this->_io->isEof()) {
-                switch ($this->_root()->bits()) {
-                    case \Elf\Bits::B32:
-                        $this->_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry32($this->_io, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\Bits::B64:
-                        $this->_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry64($this->_io, $this, $this->_root, $this->_m__is_le);
-                        break;
-                }
+                $this->_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry($this->_io, $this, $this->_root, $this->_m__is_le);
                 $i++;
             }
         }
@@ -1575,16 +1570,16 @@ namespace Elf\EndianElf {
             $this->_m_entries = [];
             $i = 0;
             while (!$this->_io->isEof()) {
-                switch ($this->_root()->bits()) {
-                    case \Elf\Bits::B32:
-                        $this->_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry32($this->_io, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\Bits::B64:
-                        $this->_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry64($this->_io, $this, $this->_root, $this->_m__is_le);
-                        break;
-                }
+                $this->_m_entries[] = new \Elf\EndianElf\DynsymSectionEntry($this->_io, $this, $this->_root, $this->_m__is_le);
                 $i++;
             }
+        }
+        protected $_m_isStringTableLinked;
+        public function isStringTableLinked() {
+            if ($this->_m_isStringTableLinked !== null)
+                return $this->_m_isStringTableLinked;
+            $this->_m_isStringTableLinked = $this->_parent()->linkedSection()->type() == \Elf\ShType::STRTAB;
+            return $this->_m_isStringTableLinked;
         }
         protected $_m_entries;
         public function entries() { return $this->_m_entries; }
@@ -1679,7 +1674,7 @@ namespace Elf\EndianElf {
 }
 
 namespace Elf\EndianElf {
-    class DynsymSectionEntry32 extends \Kaitai\Struct\Struct {
+    class DynsymSectionEntry extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
         public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynsymSection $_parent = null, \Elf $_root = null, $is_le = null) {
@@ -1700,34 +1695,138 @@ namespace Elf\EndianElf {
         }
 
         private function _readLE() {
-            $this->_m_nameOffset = $this->_io->readU4le();
-            $this->_m_value = $this->_io->readU4le();
-            $this->_m_size = $this->_io->readU4le();
-            $this->_m_info = $this->_io->readU1();
+            $this->_m_ofsName = $this->_io->readU4le();
+            if ($this->_root()->bits() == \Elf\Bits::B32) {
+                $this->_m_valueB32 = $this->_io->readU4le();
+            }
+            if ($this->_root()->bits() == \Elf\Bits::B32) {
+                $this->_m_sizeB32 = $this->_io->readU4le();
+            }
+            $this->_m_bind = $this->_io->readBitsIntBe(4);
+            $this->_m_type = $this->_io->readBitsIntBe(4);
+            $this->_io->alignToByte();
             $this->_m_other = $this->_io->readU1();
-            $this->_m_shndx = $this->_io->readU2le();
+            $this->_m_shIdx = $this->_io->readU2le();
+            if ($this->_root()->bits() == \Elf\Bits::B64) {
+                $this->_m_valueB64 = $this->_io->readU8le();
+            }
+            if ($this->_root()->bits() == \Elf\Bits::B64) {
+                $this->_m_sizeB64 = $this->_io->readU8le();
+            }
         }
 
         private function _readBE() {
-            $this->_m_nameOffset = $this->_io->readU4be();
-            $this->_m_value = $this->_io->readU4be();
-            $this->_m_size = $this->_io->readU4be();
-            $this->_m_info = $this->_io->readU1();
+            $this->_m_ofsName = $this->_io->readU4be();
+            if ($this->_root()->bits() == \Elf\Bits::B32) {
+                $this->_m_valueB32 = $this->_io->readU4be();
+            }
+            if ($this->_root()->bits() == \Elf\Bits::B32) {
+                $this->_m_sizeB32 = $this->_io->readU4be();
+            }
+            $this->_m_bind = $this->_io->readBitsIntBe(4);
+            $this->_m_type = $this->_io->readBitsIntBe(4);
+            $this->_io->alignToByte();
             $this->_m_other = $this->_io->readU1();
-            $this->_m_shndx = $this->_io->readU2be();
+            $this->_m_shIdx = $this->_io->readU2be();
+            if ($this->_root()->bits() == \Elf\Bits::B64) {
+                $this->_m_valueB64 = $this->_io->readU8be();
+            }
+            if ($this->_root()->bits() == \Elf\Bits::B64) {
+                $this->_m_sizeB64 = $this->_io->readU8be();
+            }
         }
-        protected $_m_nameOffset;
-        protected $_m_value;
+        protected $_m_isShIdxReserved;
+        public function isShIdxReserved() {
+            if ($this->_m_isShIdxReserved !== null)
+                return $this->_m_isShIdxReserved;
+            $this->_m_isShIdxReserved =  (($this->shIdx() >= $this->_root()->shIdxLoReserved()) && ($this->shIdx() <= $this->_root()->shIdxHiReserved())) ;
+            return $this->_m_isShIdxReserved;
+        }
+        protected $_m_isShIdxOs;
+        public function isShIdxOs() {
+            if ($this->_m_isShIdxOs !== null)
+                return $this->_m_isShIdxOs;
+            $this->_m_isShIdxOs =  (($this->shIdx() >= $this->_root()->shIdxLoOs()) && ($this->shIdx() <= $this->_root()->shIdxHiOs())) ;
+            return $this->_m_isShIdxOs;
+        }
+        protected $_m_isShIdxProc;
+        public function isShIdxProc() {
+            if ($this->_m_isShIdxProc !== null)
+                return $this->_m_isShIdxProc;
+            $this->_m_isShIdxProc =  (($this->shIdx() >= $this->_root()->shIdxLoProc()) && ($this->shIdx() <= $this->_root()->shIdxHiProc())) ;
+            return $this->_m_isShIdxProc;
+        }
         protected $_m_size;
-        protected $_m_info;
+        public function size() {
+            if ($this->_m_size !== null)
+                return $this->_m_size;
+            $this->_m_size = ($this->_root()->bits() == \Elf\Bits::B32 ? $this->sizeB32() : ($this->_root()->bits() == \Elf\Bits::B64 ? $this->sizeB64() : 0));
+            return $this->_m_size;
+        }
+        protected $_m_visibility;
+        public function visibility() {
+            if ($this->_m_visibility !== null)
+                return $this->_m_visibility;
+            $this->_m_visibility = ($this->other() & 3);
+            return $this->_m_visibility;
+        }
+        protected $_m_value;
+        public function value() {
+            if ($this->_m_value !== null)
+                return $this->_m_value;
+            $this->_m_value = ($this->_root()->bits() == \Elf\Bits::B32 ? $this->valueB32() : ($this->_root()->bits() == \Elf\Bits::B64 ? $this->valueB64() : 0));
+            return $this->_m_value;
+        }
+        protected $_m_name;
+        public function name() {
+            if ($this->_m_name !== null)
+                return $this->_m_name;
+            if ( (($this->ofsName() != 0) && ($this->_parent()->isStringTableLinked())) ) {
+                $io = $this->_parent()->_parent()->linkedSection()->body()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsName());
+                if ($this->_m__is_le) {
+                    $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "ASCII");
+                } else {
+                    $this->_m_name = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "ASCII");
+                }
+                $io->seek($_pos);
+            }
+            return $this->_m_name;
+        }
+        protected $_m_shIdxSpecial;
+        public function shIdxSpecial() {
+            if ($this->_m_shIdxSpecial !== null)
+                return $this->_m_shIdxSpecial;
+            $this->_m_shIdxSpecial = $this->shIdx();
+            return $this->_m_shIdxSpecial;
+        }
+        protected $_m_ofsName;
+        protected $_m_valueB32;
+        protected $_m_sizeB32;
+        protected $_m_bind;
+        protected $_m_type;
         protected $_m_other;
-        protected $_m_shndx;
-        public function nameOffset() { return $this->_m_nameOffset; }
-        public function value() { return $this->_m_value; }
-        public function size() { return $this->_m_size; }
-        public function info() { return $this->_m_info; }
+        protected $_m_shIdx;
+        protected $_m_valueB64;
+        protected $_m_sizeB64;
+        public function ofsName() { return $this->_m_ofsName; }
+        public function valueB32() { return $this->_m_valueB32; }
+        public function sizeB32() { return $this->_m_sizeB32; }
+        public function bind() { return $this->_m_bind; }
+        public function type() { return $this->_m_type; }
+
+        /**
+         * don't read this field, access `visibility` instead
+         */
         public function other() { return $this->_m_other; }
-        public function shndx() { return $this->_m_shndx; }
+
+        /**
+         * section header index
+         */
+        public function shIdx() { return $this->_m_shIdx; }
+        public function valueB64() { return $this->_m_valueB64; }
+        public function sizeB64() { return $this->_m_sizeB64; }
     }
 }
 
@@ -1838,6 +1937,68 @@ namespace Elf\EndianElf {
 }
 
 namespace Elf {
+    class SymbolVisibility {
+        const DEFAULT = 0;
+        const INTERNAL = 1;
+        const HIDDEN = 2;
+        const PROTECTED = 3;
+        const EXPORTED = 4;
+        const SINGLETON = 5;
+        const ELIMINATE = 6;
+    }
+}
+
+namespace Elf {
+    class SymbolBinding {
+
+        /**
+         * not visible outside the object file containing their definition
+         */
+        const LOCAL = 0;
+
+        /**
+         * visible to all object files being combined
+         */
+        const GLOBAL = 1;
+
+        /**
+         * like `symbol_binding::global`, but their definitions have lower precedence
+         */
+        const WEAK = 2;
+
+        /**
+         * reserved for operating system-specific semantics
+         */
+        const OS10 = 10;
+
+        /**
+         * reserved for operating system-specific semantics
+         */
+        const OS11 = 11;
+
+        /**
+         * reserved for operating system-specific semantics
+         */
+        const OS12 = 12;
+
+        /**
+         * reserved for processor-specific semantics
+         */
+        const PROC13 = 13;
+
+        /**
+         * reserved for processor-specific semantics
+         */
+        const PROC14 = 14;
+
+        /**
+         * reserved for processor-specific semantics
+         */
+        const PROC15 = 15;
+    }
+}
+
+namespace Elf {
     class Endian {
         const LE = 1;
         const BE = 2;
@@ -1934,6 +2095,48 @@ namespace Elf {
         const RISCV = 243;
         const BPF = 247;
         const CSKY = 252;
+    }
+}
+
+namespace Elf {
+    class SymbolType {
+        const NO_TYPE = 0;
+        const OBJECT = 1;
+        const FUNC = 2;
+        const SECTION = 3;
+        const FILE = 4;
+        const COMMON = 5;
+        const TLS = 6;
+
+        /**
+         * reserved for OS-specific semantics
+         */
+        const OS10 = 10;
+
+        /**
+         * reserved for OS-specific semantics
+         */
+        const OS11 = 11;
+
+        /**
+         * reserved for OS-specific semantics
+         */
+        const OS12 = 12;
+
+        /**
+         * reserved for processor-specific semantics
+         */
+        const PROC13 = 13;
+
+        /**
+         * reserved for processor-specific semantics
+         */
+        const PROC14 = 14;
+
+        /**
+         * reserved for processor-specific semantics
+         */
+        const PROC15 = 15;
     }
 }
 
@@ -2048,7 +2251,6 @@ namespace Elf {
         const GNU_RELRO = 1685382482;
         const GNU_PROPERTY = 1685382483;
         const PAX_FLAGS = 1694766464;
-        const HIOS = 1879048191;
         const ARM_EXIDX = 1879048193;
     }
 }
@@ -2060,5 +2262,18 @@ namespace Elf {
         const EXECUTABLE = 2;
         const SHARED = 3;
         const CORE = 4;
+    }
+}
+
+namespace Elf {
+    class SectionHeaderIdxSpecial {
+        const UNDEFINED = 0;
+        const BEFORE = 65280;
+        const AFTER = 65281;
+        const AMD64_LCOMMON = 65282;
+        const SUNW_IGNORE = 65343;
+        const ABS = 65521;
+        const COMMON = 65522;
+        const XINDEX = 65535;
     }
 }

@@ -198,11 +198,6 @@ section#format-index .row {
                 
                 <li>
                 
-                <a href="go.html" title="Executable and Linkable Format parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
                 <a href="graphviz.html" title="Executable and Linkable Format parsing GraphViz library">GraphViz</a></li>
                 
                 
@@ -366,9 +361,9 @@ and build them along with your project.</p>
 <span class="cp">#endif</span>
 
 <span class="cm">/**</span>
+<span class="cm"> * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source</span>
 <span class="cm"> * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source</span>
 <span class="cm"> * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source</span>
-<span class="cm"> * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source</span>
 <span class="cm"> */</span>
 
 <span class="k">class</span> <span class="nc">elf_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -378,6 +373,28 @@ and build them along with your project.</p>
     <span class="k">class</span> <span class="nc">section_header_flags_t</span><span class="p">;</span>
     <span class="k">class</span> <span class="nc">dt_flag_1_values_t</span><span class="p">;</span>
     <span class="k">class</span> <span class="nc">endian_elf_t</span><span class="p">;</span>
+
+    <span class="k">enum</span> <span class="nc">symbol_visibility_t</span> <span class="p">{</span>
+        <span class="n">SYMBOL_VISIBILITY_DEFAULT</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">SYMBOL_VISIBILITY_INTERNAL</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">SYMBOL_VISIBILITY_HIDDEN</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">SYMBOL_VISIBILITY_PROTECTED</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">SYMBOL_VISIBILITY_EXPORTED</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">SYMBOL_VISIBILITY_SINGLETON</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">SYMBOL_VISIBILITY_ELIMINATE</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="nc">symbol_binding_t</span> <span class="p">{</span>
+        <span class="n">SYMBOL_BINDING_LOCAL</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_GLOBAL</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_WEAK</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_OS10</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_OS11</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_OS12</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_PROC13</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_PROC14</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="n">SYMBOL_BINDING_PROC15</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">endian_t</span> <span class="p">{</span>
         <span class="n">ENDIAN_LE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -469,6 +486,22 @@ and build them along with your project.</p>
         <span class="n">MACHINE_RISCV</span> <span class="o">=</span> <span class="mi">243</span><span class="p">,</span>
         <span class="n">MACHINE_BPF</span> <span class="o">=</span> <span class="mi">247</span><span class="p">,</span>
         <span class="n">MACHINE_CSKY</span> <span class="o">=</span> <span class="mi">252</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="nc">symbol_type_t</span> <span class="p">{</span>
+        <span class="n">SYMBOL_TYPE_NO_TYPE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_OBJECT</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_FUNC</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_SECTION</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_FILE</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_COMMON</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_TLS</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_OS10</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_OS11</span> <span class="o">=</span> <span class="mi">11</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_OS12</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_PROC13</span> <span class="o">=</span> <span class="mi">13</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_PROC14</span> <span class="o">=</span> <span class="mi">14</span><span class="p">,</span>
+        <span class="n">SYMBOL_TYPE_PROC15</span> <span class="o">=</span> <span class="mi">15</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">dynamic_array_tags_t</span> <span class="p">{</span>
@@ -577,7 +610,6 @@ and build them along with your project.</p>
         <span class="n">PH_TYPE_GNU_RELRO</span> <span class="o">=</span> <span class="mi">1685382482</span><span class="p">,</span>
         <span class="n">PH_TYPE_GNU_PROPERTY</span> <span class="o">=</span> <span class="mi">1685382483</span><span class="p">,</span>
         <span class="n">PH_TYPE_PAX_FLAGS</span> <span class="o">=</span> <span class="mi">1694766464</span><span class="p">,</span>
-        <span class="n">PH_TYPE_HIOS</span> <span class="o">=</span> <span class="mi">1879048191</span><span class="p">,</span>
         <span class="n">PH_TYPE_ARM_EXIDX</span> <span class="o">=</span> <span class="mi">1879048193</span>
     <span class="p">};</span>
 
@@ -587,6 +619,17 @@ and build them along with your project.</p>
         <span class="n">OBJ_TYPE_EXECUTABLE</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
         <span class="n">OBJ_TYPE_SHARED</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">OBJ_TYPE_CORE</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="p">};</span>
+
+    <span class="k">enum</span> <span class="nc">section_header_idx_special_t</span> <span class="p">{</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_UNDEFINED</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_BEFORE</span> <span class="o">=</span> <span class="mi">65280</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_AFTER</span> <span class="o">=</span> <span class="mi">65281</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_AMD64_LCOMMON</span> <span class="o">=</span> <span class="mi">65282</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_SUNW_IGNORE</span> <span class="o">=</span> <span class="mi">65343</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_ABS</span> <span class="o">=</span> <span class="mi">65521</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_COMMON</span> <span class="o">=</span> <span class="mi">65522</span><span class="p">,</span>
+        <span class="n">SECTION_HEADER_IDX_SPECIAL_XINDEX</span> <span class="o">=</span> <span class="mi">65535</span>
     <span class="p">};</span>
 
     <span class="n">elf_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">);</span>
@@ -1135,7 +1178,6 @@ and build them along with your project.</p>
     <span class="k">class</span> <span class="nc">endian_elf_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
     <span class="k">public</span><span class="o">:</span>
-        <span class="k">class</span> <span class="nc">dynsym_section_entry64_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">note_section_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">program_header_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">dynamic_section_entry_t</span><span class="p">;</span>
@@ -1144,7 +1186,7 @@ and build them along with your project.</p>
         <span class="k">class</span> <span class="nc">dynamic_section_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">dynsym_section_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">relocation_section_entry_t</span><span class="p">;</span>
-        <span class="k">class</span> <span class="nc">dynsym_section_entry32_t</span><span class="p">;</span>
+        <span class="k">class</span> <span class="nc">dynsym_section_entry_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">note_section_entry_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">strings_struct_t</span><span class="p">;</span>
 
@@ -1163,47 +1205,6 @@ and build them along with your project.</p>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="o">~</span><span class="n">endian_elf_t</span><span class="p">();</span>
-
-        <span class="k">class</span> <span class="nc">dynsym_section_entry64_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
-
-        <span class="k">public</span><span class="o">:</span>
-
-            <span class="n">dynsym_section_entry64_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span> <span class="o">=</span> <span class="mi">-1</span><span class="p">);</span>
-
-        <span class="k">private</span><span class="o">:</span>
-            <span class="kt">int</span> <span class="n">m__is_le</span><span class="p">;</span>
-
-        <span class="k">public</span><span class="o">:</span>
-
-        <span class="k">private</span><span class="o">:</span>
-            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
-            <span class="kt">void</span> <span class="nf">_read_le</span><span class="p">();</span>
-            <span class="kt">void</span> <span class="nf">_read_be</span><span class="p">();</span>
-            <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
-
-        <span class="k">public</span><span class="o">:</span>
-            <span class="o">~</span><span class="n">dynsym_section_entry64_t</span><span class="p">();</span>
-
-        <span class="k">private</span><span class="o">:</span>
-            <span class="kt">uint32_t</span> <span class="n">m_name_offset</span><span class="p">;</span>
-            <span class="kt">uint8_t</span> <span class="n">m_info</span><span class="p">;</span>
-            <span class="kt">uint8_t</span> <span class="n">m_other</span><span class="p">;</span>
-            <span class="kt">uint16_t</span> <span class="n">m_shndx</span><span class="p">;</span>
-            <span class="kt">uint64_t</span> <span class="n">m_value</span><span class="p">;</span>
-            <span class="kt">uint64_t</span> <span class="n">m_size</span><span class="p">;</span>
-            <span class="n">elf_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
-            <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
-
-        <span class="k">public</span><span class="o">:</span>
-            <span class="kt">uint32_t</span> <span class="n">name_offset</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name_offset</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint8_t</span> <span class="n">info</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_info</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint8_t</span> <span class="n">other</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_other</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint16_t</span> <span class="n">shndx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_shndx</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint64_t</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint64_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_size</span><span class="p">;</span> <span class="p">}</span>
-            <span class="n">elf_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
-            <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
-        <span class="p">};</span>
 
         <span class="k">class</span> <span class="nc">note_section_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
@@ -1466,6 +1467,24 @@ and build them along with your project.</p>
             <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">body</span><span class="p">();</span>
 
         <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_linked_section</span><span class="p">;</span>
+            <span class="n">section_header_t</span><span class="o">*</span> <span class="n">m_linked_section</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_linked_section</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_linked_section</span><span class="p">()</span> <span class="p">{</span> <span class="n">linked_section</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_linked_section</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * may reference a later section header, so don&#39;t try to access too early (use only lazy `instances`)</span>
+<span class="cm">             * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link Source</span>
+<span class="cm">             */</span>
+            <span class="n">section_header_t</span><span class="o">*</span> <span class="n">linked_section</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
             <span class="kt">bool</span> <span class="n">f_name</span><span class="p">;</span>
             <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_name</span><span class="p">;</span>
 
@@ -1638,12 +1657,19 @@ and build them along with your project.</p>
             <span class="o">~</span><span class="n">dynsym_section_t</span><span class="p">();</span>
 
         <span class="k">private</span><span class="o">:</span>
-            <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m_entries</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">f_is_string_table_linked</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_is_string_table_linked</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">is_string_table_linked</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m_entries</span><span class="p">;</span>
             <span class="n">elf_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
             <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_header_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
         <span class="k">public</span><span class="o">:</span>
-            <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
             <span class="n">elf_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
             <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_header_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
         <span class="p">};</span>
@@ -1701,11 +1727,16 @@ and build them along with your project.</p>
             <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">relocation_section_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
         <span class="p">};</span>
 
-        <span class="k">class</span> <span class="nc">dynsym_section_entry32_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+        <span class="cm">/**</span>
+<span class="cm">         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html Source</span>
+<span class="cm">         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source</span>
+<span class="cm">         */</span>
+
+        <span class="k">class</span> <span class="nc">dynsym_section_entry_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
         <span class="k">public</span><span class="o">:</span>
 
-            <span class="n">dynsym_section_entry32_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span> <span class="o">=</span> <span class="mi">-1</span><span class="p">);</span>
+            <span class="n">dynsym_section_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span> <span class="o">=</span> <span class="mi">-1</span><span class="p">);</span>
 
         <span class="k">private</span><span class="o">:</span>
             <span class="kt">int</span> <span class="n">m__is_le</span><span class="p">;</span>
@@ -1719,25 +1750,125 @@ and build them along with your project.</p>
             <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
 
         <span class="k">public</span><span class="o">:</span>
-            <span class="o">~</span><span class="n">dynsym_section_entry32_t</span><span class="p">();</span>
+            <span class="o">~</span><span class="n">dynsym_section_entry_t</span><span class="p">();</span>
 
         <span class="k">private</span><span class="o">:</span>
-            <span class="kt">uint32_t</span> <span class="n">m_name_offset</span><span class="p">;</span>
-            <span class="kt">uint32_t</span> <span class="n">m_value</span><span class="p">;</span>
-            <span class="kt">uint32_t</span> <span class="n">m_size</span><span class="p">;</span>
-            <span class="kt">uint8_t</span> <span class="n">m_info</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">f_is_sh_idx_reserved</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_is_sh_idx_reserved</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">is_sh_idx_reserved</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_is_sh_idx_os</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_is_sh_idx_os</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">is_sh_idx_os</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_is_sh_idx_proc</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">m_is_sh_idx_proc</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">is_sh_idx_proc</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_size</span><span class="p">;</span>
+            <span class="kt">uint64_t</span> <span class="n">m_size</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">uint64_t</span> <span class="n">size</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_visibility</span><span class="p">;</span>
+            <span class="n">symbol_visibility_t</span> <span class="n">m_visibility</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">symbol_visibility_t</span> <span class="n">visibility</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_value</span><span class="p">;</span>
+            <span class="kt">uint64_t</span> <span class="n">m_value</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">uint64_t</span> <span class="n">value</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_name</span><span class="p">;</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_name</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_name</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_name</span><span class="p">()</span> <span class="p">{</span> <span class="n">name</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_name</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">f_sh_idx_special</span><span class="p">;</span>
+            <span class="n">section_header_idx_special_t</span> <span class="n">m_sh_idx_special</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">section_header_idx_special_t</span> <span class="n">sh_idx_special</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">uint32_t</span> <span class="n">m_ofs_name</span><span class="p">;</span>
+            <span class="kt">uint32_t</span> <span class="n">m_value_b32</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_value_b32</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_value_b32</span><span class="p">()</span> <span class="p">{</span> <span class="n">value_b32</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_value_b32</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">uint32_t</span> <span class="n">m_size_b32</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_size_b32</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_size_b32</span><span class="p">()</span> <span class="p">{</span> <span class="n">size_b32</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_size_b32</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">symbol_binding_t</span> <span class="n">m_bind</span><span class="p">;</span>
+            <span class="n">symbol_type_t</span> <span class="n">m_type</span><span class="p">;</span>
             <span class="kt">uint8_t</span> <span class="n">m_other</span><span class="p">;</span>
-            <span class="kt">uint16_t</span> <span class="n">m_shndx</span><span class="p">;</span>
+            <span class="kt">uint16_t</span> <span class="n">m_sh_idx</span><span class="p">;</span>
+            <span class="kt">uint64_t</span> <span class="n">m_value_b64</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_value_b64</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_value_b64</span><span class="p">()</span> <span class="p">{</span> <span class="n">value_b64</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_value_b64</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">uint64_t</span> <span class="n">m_size_b64</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="n">n_size_b64</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="kt">bool</span> <span class="n">_is_null_size_b64</span><span class="p">()</span> <span class="p">{</span> <span class="n">size_b64</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_size_b64</span><span class="p">;</span> <span class="p">};</span>
+
+        <span class="k">private</span><span class="o">:</span>
             <span class="n">elf_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
             <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
         <span class="k">public</span><span class="o">:</span>
-            <span class="kt">uint32_t</span> <span class="n">name_offset</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_name_offset</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint32_t</span> <span class="n">value</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint32_t</span> <span class="n">size</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_size</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint8_t</span> <span class="n">info</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_info</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint32_t</span> <span class="n">ofs_name</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_ofs_name</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint32_t</span> <span class="n">value_b32</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value_b32</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint32_t</span> <span class="n">size_b32</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_size_b32</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">symbol_binding_t</span> <span class="n">bind</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_bind</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">symbol_type_t</span> <span class="n">type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_type</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * don&#39;t read this field, access `visibility` instead</span>
+<span class="cm">             */</span>
             <span class="kt">uint8_t</span> <span class="n">other</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_other</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kt">uint16_t</span> <span class="n">shndx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_shndx</span><span class="p">;</span> <span class="p">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * section header index</span>
+<span class="cm">             */</span>
+            <span class="kt">uint16_t</span> <span class="n">sh_idx</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_sh_idx</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint64_t</span> <span class="n">value_b64</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_value_b64</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kt">uint64_t</span> <span class="n">size_b64</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_size_b64</span><span class="p">;</span> <span class="p">}</span>
             <span class="n">elf_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
             <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
         <span class="p">};</span>
@@ -1843,11 +1974,11 @@ and build them along with your project.</p>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">section_header_t</span><span class="o">&gt;&gt;*</span> <span class="n">section_headers</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
-        <span class="kt">bool</span> <span class="n">f_strings</span><span class="p">;</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">strings_struct_t</span><span class="o">&gt;</span> <span class="n">m_strings</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">f_section_names</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">strings_struct_t</span><span class="o">&gt;</span> <span class="n">m_section_names</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
-        <span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">strings</span><span class="p">();</span>
+        <span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">section_names</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
         <span class="n">obj_type_t</span> <span class="n">m_e_type</span><span class="p">;</span>
@@ -1887,8 +2018,8 @@ and build them along with your project.</p>
         <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m__io__raw_program_headers</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span> <span class="n">m__raw_section_headers</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;&gt;&gt;</span> <span class="n">m__io__raw_section_headers</span><span class="p">;</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_strings</span><span class="p">;</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span> <span class="n">m__io__raw_strings</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_section_names</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span> <span class="n">m__io__raw_section_names</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="n">obj_type_t</span> <span class="n">e_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_e_type</span><span class="p">;</span> <span class="p">}</span>
@@ -1910,9 +2041,51 @@ and build them along with your project.</p>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;&gt;*</span> <span class="n">_io__raw_program_headers</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_program_headers</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">_raw_section_headers</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_section_headers</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;&gt;*</span> <span class="n">_io__raw_section_headers</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_section_headers</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
-        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_strings</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_strings</span><span class="p">;</span> <span class="p">}</span>
-        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_strings</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_strings</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">_raw_section_names</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__raw_section_names</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">_io__raw_section_names</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__io__raw_section_names</span><span class="p">.</span><span class="n">get</span><span class="p">();</span> <span class="p">}</span>
     <span class="p">};</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sh_idx_lo_os</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sh_idx_lo_os</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sh_idx_lo_os</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sh_idx_lo_reserved</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sh_idx_lo_reserved</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sh_idx_lo_reserved</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sh_idx_hi_proc</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sh_idx_hi_proc</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sh_idx_hi_proc</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sh_idx_lo_proc</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sh_idx_lo_proc</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sh_idx_lo_proc</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sh_idx_hi_os</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sh_idx_hi_os</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sh_idx_hi_os</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="kt">bool</span> <span class="n">f_sh_idx_hi_reserved</span><span class="p">;</span>
+    <span class="kt">int32_t</span> <span class="n">m_sh_idx_hi_reserved</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int32_t</span> <span class="n">sh_idx_hi_reserved</span><span class="p">();</span>
 
 <span class="k">private</span><span class="o">:</span>
     <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_magic</span><span class="p">;</span>
@@ -1991,6 +2164,12 @@ and build them along with your project.</p>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
     <span class="n">m_header</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">f_sh_idx_lo_os</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sh_idx_lo_reserved</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sh_idx_hi_proc</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sh_idx_lo_proc</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sh_idx_hi_os</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sh_idx_hi_reserved</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
@@ -2490,11 +2669,11 @@ and build them along with your project.</p>
     <span class="n">m_section_headers</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
     <span class="n">m__raw_section_headers</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
     <span class="n">m__io__raw_section_headers</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-    <span class="n">m_strings</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
-    <span class="n">m__io__raw_strings</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">m_section_names</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
     <span class="n">f_program_headers</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_section_headers</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-    <span class="n">f_strings</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_section_names</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
@@ -2638,51 +2817,8 @@ and build them along with your project.</p>
     <span class="p">}</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_section_headers</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_strings</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_section_names</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
-    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
-    <span class="n">m__is_le</span> <span class="o">=</span> <span class="n">p_is_le</span><span class="p">;</span>
-    <span class="n">_read</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
-
-    <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">-1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">undecided_endianness_error</span><span class="p">(</span><span class="s">&quot;/types/endian_elf/types/dynsym_section_entry64&quot;</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_read_le</span><span class="p">();</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">_read_be</span><span class="p">();</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="o">::</span><span class="n">_read_le</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_name_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-    <span class="n">m_info</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_other</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_shndx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
-    <span class="n">m_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
-    <span class="n">m_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="o">::</span><span class="n">_read_be</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_name_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="n">m_info</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_other</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_shndx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
-    <span class="n">m_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
-    <span class="n">m_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="o">::~</span><span class="n">dynsym_section_entry64_t</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry64_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">note_section_t</span><span class="o">::</span><span class="n">note_section_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_header_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
@@ -3149,6 +3285,7 @@ and build them along with your project.</p>
     <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
     <span class="n">m_flags_obj</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
     <span class="n">f_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_linked_section</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_name</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_flags_obj</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">_read</span><span class="p">();</span>
@@ -3486,10 +3623,22 @@ and build them along with your project.</p>
     <span class="k">return</span> <span class="n">m_body</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
 <span class="p">}</span>
 
+<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_header_t</span><span class="o">*</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_header_t</span><span class="o">::</span><span class="n">linked_section</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_linked_section</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_linked_section</span><span class="p">;</span>
+    <span class="n">n_linked_section</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">linked_section_idx</span><span class="p">()</span> <span class="o">!=</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">SECTION_HEADER_IDX_SPECIAL_UNDEFINED</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">linked_section_idx</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">qty_section_header</span><span class="p">()))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_linked_section</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_linked_section</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">linked_section_idx</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">f_linked_section</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_linked_section</span><span class="p">;</span>
+<span class="p">}</span>
+
 <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_header_t</span><span class="o">::</span><span class="n">name</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span>
-    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">strings</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">section_names</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
     <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
     <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_name</span><span class="p">());</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
@@ -3616,6 +3765,7 @@ and build them along with your project.</p>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
     <span class="n">m__is_le</span> <span class="o">=</span> <span class="n">p_is_le</span><span class="p">;</span>
     <span class="n">m_entries</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="n">f_is_string_table_linked</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
@@ -3631,40 +3781,22 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">::</span><span class="n">_read_le</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
     <span class="p">{</span>
         <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">dynsym_section_entry32_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">))));</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">dynsym_section_entry64_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">))));</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="p">}</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">dynsym_section_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">))));</span>
             <span class="n">i</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">::</span><span class="n">_read_be</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">&gt;&gt;</span><span class="p">());</span>
+    <span class="n">m_entries</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;&gt;</span><span class="p">());</span>
     <span class="p">{</span>
         <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">is_eof</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">switch</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">())</span> <span class="p">{</span>
-            <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B32</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry32_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">dynsym_section_entry32_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">))));</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">case</span> <span class="n">elf_t</span><span class="o">::</span><span class="nl">BITS_B64</span><span class="p">:</span> <span class="p">{</span>
-                <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry64_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">dynsym_section_entry64_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">))));</span>
-                <span class="k">break</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="p">}</span>
+            <span class="n">m_entries</span><span class="o">-&gt;</span><span class="n">push_back</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">move</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">dynsym_section_entry_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">dynsym_section_entry_t</span><span class="p">(</span><span class="n">m__io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">))));</span>
             <span class="n">i</span><span class="o">++</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
@@ -3675,6 +3807,14 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">::</span><span class="n">is_string_table_linked</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_string_table_linked</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_string_table_linked</span><span class="p">;</span>
+    <span class="n">m_is_string_table_linked</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">linked_section</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">SH_TYPE_STRTAB</span><span class="p">;</span>
+    <span class="n">f_is_string_table_linked</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_string_table_linked</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">relocation_section_entry_t</span><span class="o">::</span><span class="n">relocation_section_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">relocation_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
@@ -3800,17 +3940,25 @@ and build them along with your project.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
     <span class="n">m__is_le</span> <span class="o">=</span> <span class="n">p_is_le</span><span class="p">;</span>
+    <span class="n">f_is_sh_idx_reserved</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_sh_idx_os</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_is_sh_idx_proc</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_size</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_visibility</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_name</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="n">f_sh_idx_special</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">_read</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">-1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">undecided_endianness_error</span><span class="p">(</span><span class="s">&quot;/types/endian_elf/types/dynsym_section_entry32&quot;</span><span class="p">);</span>
+        <span class="k">throw</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">undecided_endianness_error</span><span class="p">(</span><span class="s">&quot;/types/endian_elf/types/dynsym_section_entry&quot;</span><span class="p">);</span>
     <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
         <span class="n">_read_le</span><span class="p">();</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
@@ -3818,29 +3966,155 @@ and build them along with your project.</p>
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="o">::</span><span class="n">_read_le</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_name_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-    <span class="n">m_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-    <span class="n">m_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
-    <span class="n">m_info</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">_read_le</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ofs_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="n">n_value_b32</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_value_b32</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_value_b32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_size_b32</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_size_b32</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_size_b32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">m_bind</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">symbol_binding_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">symbol_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
     <span class="n">m_other</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_shndx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">m_sh_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">();</span>
+    <span class="n">n_value_b64</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B64</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_value_b64</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_value_b64</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_size_b64</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B64</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_size_b64</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_size_b64</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8le</span><span class="p">();</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="o">::</span><span class="n">_read_be</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_name_offset</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="n">m_value</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="n">m_size</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
-    <span class="n">m_info</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
+<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">_read_be</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_ofs_name</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="n">n_value_b32</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_value_b32</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_value_b32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_size_b32</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B32</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_size_b32</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_size_b32</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">m_bind</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">symbol_binding_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+    <span class="n">m_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">symbol_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bits_int_be</span><span class="p">(</span><span class="mi">4</span><span class="p">));</span>
+    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">align_to_byte</span><span class="p">();</span>
     <span class="n">m_other</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u1</span><span class="p">();</span>
-    <span class="n">m_shndx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">m_sh_idx</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2be</span><span class="p">();</span>
+    <span class="n">n_value_b64</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B64</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_value_b64</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_value_b64</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="n">n_size_b64</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B64</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_size_b64</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m_size_b64</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u8be</span><span class="p">();</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="o">::~</span><span class="n">dynsym_section_entry32_t</span><span class="p">()</span> <span class="p">{</span>
+<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::~</span><span class="n">dynsym_section_entry_t</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">_clean_up</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry32_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="kt">void</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_value_b32</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_size_b32</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_value_b64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">n_size_b64</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_name</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_name</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">is_sh_idx_reserved</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_sh_idx_reserved</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_sh_idx_reserved</span><span class="p">;</span>
+    <span class="n">m_is_sh_idx_reserved</span> <span class="o">=</span>  <span class="p">((</span><span class="n">sh_idx</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sh_idx_lo_reserved</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">sh_idx</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sh_idx_hi_reserved</span><span class="p">()))</span> <span class="p">;</span>
+    <span class="n">f_is_sh_idx_reserved</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_sh_idx_reserved</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">is_sh_idx_os</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_sh_idx_os</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_sh_idx_os</span><span class="p">;</span>
+    <span class="n">m_is_sh_idx_os</span> <span class="o">=</span>  <span class="p">((</span><span class="n">sh_idx</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sh_idx_lo_os</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">sh_idx</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sh_idx_hi_os</span><span class="p">()))</span> <span class="p">;</span>
+    <span class="n">f_is_sh_idx_os</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_sh_idx_os</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">is_sh_idx_proc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_sh_idx_proc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_sh_idx_proc</span><span class="p">;</span>
+    <span class="n">m_is_sh_idx_proc</span> <span class="o">=</span>  <span class="p">((</span><span class="n">sh_idx</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sh_idx_lo_proc</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">sh_idx</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">sh_idx_hi_proc</span><span class="p">()))</span> <span class="p">;</span>
+    <span class="n">f_is_sh_idx_proc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_sh_idx_proc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">uint64_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">size</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_size</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_size</span><span class="p">;</span>
+    <span class="n">m_size</span> <span class="o">=</span> <span class="p">((</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B32</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">size_b32</span><span class="p">())</span> <span class="o">:</span> <span class="p">(((</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B64</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">size_b64</span><span class="p">())</span> <span class="o">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">))));</span>
+    <span class="n">f_size</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_size</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">elf_t</span><span class="o">::</span><span class="n">symbol_visibility_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">visibility</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_visibility</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_visibility</span><span class="p">;</span>
+    <span class="n">m_visibility</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">symbol_visibility_t</span><span class="o">&gt;</span><span class="p">((</span><span class="n">other</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">3</span><span class="p">));</span>
+    <span class="n">f_visibility</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_visibility</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">uint64_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">value</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_value</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+    <span class="n">m_value</span> <span class="o">=</span> <span class="p">((</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B32</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">value_b32</span><span class="p">())</span> <span class="o">:</span> <span class="p">(((</span><span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bits</span><span class="p">()</span> <span class="o">==</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">BITS_B64</span><span class="p">)</span> <span class="o">?</span> <span class="p">(</span><span class="n">value_b64</span><span class="p">())</span> <span class="o">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">))));</span>
+    <span class="n">f_value</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_value</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">name</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span>
+    <span class="n">n_name</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">ofs_name</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">is_string_table_linked</span><span class="p">()))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_name</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">strings_struct_t</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_parent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">linked_section</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">body</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_name</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">m_name</span> <span class="o">=</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">::</span><span class="n">bytes_to_str</span><span class="p">(</span><span class="n">io</span><span class="o">-&gt;</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">),</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="n">f_name</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">m_name</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">elf_t</span><span class="o">::</span><span class="n">section_header_idx_special_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">dynsym_section_entry_t</span><span class="o">::</span><span class="n">sh_idx_special</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_special</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_special</span><span class="p">;</span>
+    <span class="n">m_sh_idx_special</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">elf_t</span><span class="o">::</span><span class="n">section_header_idx_special_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">sh_idx</span><span class="p">());</span>
+    <span class="n">f_sh_idx_special</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_special</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">note_section_entry_t</span><span class="o">::</span><span class="n">note_section_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">note_section_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">elf_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">,</span> <span class="kt">int</span> <span class="n">p_is_le</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
@@ -4014,23 +4288,71 @@ and build them along with your project.</p>
     <span class="k">return</span> <span class="n">m_section_headers</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
 <span class="p">}</span>
 
-<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">strings</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_strings</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">m_strings</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_names</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_section_names</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_section_names</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
     <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
     <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">ofs_body</span><span class="p">());</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">m__raw_strings</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
-        <span class="n">m__io__raw_strings</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_strings</span><span class="p">));</span>
-        <span class="n">m_strings</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">strings_struct_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_strings</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">));</span>
+        <span class="n">m__raw_section_names</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
+        <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_section_names</span><span class="p">));</span>
+        <span class="n">m_section_names</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">strings_struct_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">));</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">m__raw_strings</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
-        <span class="n">m__io__raw_strings</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_strings</span><span class="p">));</span>
-        <span class="n">m_strings</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">strings_struct_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_strings</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">));</span>
+        <span class="n">m__raw_section_names</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
+        <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_section_names</span><span class="p">));</span>
+        <span class="n">m_section_names</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">unique_ptr</span><span class="o">&lt;</span><span class="n">strings_struct_t</span><span class="o">&gt;</span><span class="p">(</span><span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">.</span><span class="n">get</span><span class="p">(),</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">));</span>
     <span class="p">}</span>
     <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-    <span class="n">f_strings</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
-    <span class="k">return</span> <span class="n">m_strings</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+    <span class="n">f_section_names</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_section_names</span><span class="p">.</span><span class="n">get</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">sh_idx_lo_os</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_lo_os</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_lo_os</span><span class="p">;</span>
+    <span class="n">m_sh_idx_lo_os</span> <span class="o">=</span> <span class="mi">65312</span><span class="p">;</span>
+    <span class="n">f_sh_idx_lo_os</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_lo_os</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">sh_idx_lo_reserved</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_lo_reserved</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_lo_reserved</span><span class="p">;</span>
+    <span class="n">m_sh_idx_lo_reserved</span> <span class="o">=</span> <span class="mi">65280</span><span class="p">;</span>
+    <span class="n">f_sh_idx_lo_reserved</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_lo_reserved</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">sh_idx_hi_proc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_hi_proc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_hi_proc</span><span class="p">;</span>
+    <span class="n">m_sh_idx_hi_proc</span> <span class="o">=</span> <span class="mi">65311</span><span class="p">;</span>
+    <span class="n">f_sh_idx_hi_proc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_hi_proc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">sh_idx_lo_proc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_lo_proc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_lo_proc</span><span class="p">;</span>
+    <span class="n">m_sh_idx_lo_proc</span> <span class="o">=</span> <span class="mi">65280</span><span class="p">;</span>
+    <span class="n">f_sh_idx_lo_proc</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_lo_proc</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">sh_idx_hi_os</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_hi_os</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_hi_os</span><span class="p">;</span>
+    <span class="n">m_sh_idx_hi_os</span> <span class="o">=</span> <span class="mi">65343</span><span class="p">;</span>
+    <span class="n">f_sh_idx_hi_os</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_hi_os</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int32_t</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">sh_idx_hi_reserved</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_sh_idx_hi_reserved</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_sh_idx_hi_reserved</span><span class="p">;</span>
+    <span class="n">m_sh_idx_hi_reserved</span> <span class="o">=</span> <span class="mi">65535</span><span class="p">;</span>
+    <span class="n">f_sh_idx_hi_reserved</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_sh_idx_hi_reserved</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>
 

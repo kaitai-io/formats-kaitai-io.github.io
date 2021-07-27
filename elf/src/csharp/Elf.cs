@@ -7,13 +7,13 @@ namespace Kaitai
 {
 
     /// <remarks>
+    /// Reference: <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
+    /// </remarks>
+    /// <remarks>
     /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html">Source</a>
-    /// </remarks>
-    /// <remarks>
-    /// Reference: <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
     /// </remarks>
     public partial class Elf : KaitaiStruct
     {
@@ -22,6 +22,30 @@ namespace Kaitai
             return new Elf(new KaitaiStream(fileName));
         }
 
+
+        public enum SymbolVisibility
+        {
+            Default = 0,
+            Internal = 1,
+            Hidden = 2,
+            Protected = 3,
+            Exported = 4,
+            Singleton = 5,
+            Eliminate = 6,
+        }
+
+        public enum SymbolBinding
+        {
+            Local = 0,
+            Global = 1,
+            Weak = 2,
+            Os10 = 10,
+            Os11 = 11,
+            Os12 = 12,
+            Proc13 = 13,
+            Proc14 = 14,
+            Proc15 = 15,
+        }
 
         public enum Endian
         {
@@ -117,6 +141,23 @@ namespace Kaitai
             Riscv = 243,
             Bpf = 247,
             Csky = 252,
+        }
+
+        public enum SymbolType
+        {
+            NoType = 0,
+            Object = 1,
+            Func = 2,
+            Section = 3,
+            File = 4,
+            Common = 5,
+            Tls = 6,
+            Os10 = 10,
+            Os11 = 11,
+            Os12 = 12,
+            Proc13 = 13,
+            Proc14 = 14,
+            Proc15 = 15,
         }
 
         public enum DynamicArrayTags
@@ -228,7 +269,6 @@ namespace Kaitai
             GnuRelro = 1685382482,
             GnuProperty = 1685382483,
             PaxFlags = 1694766464,
-            Hios = 1879048191,
             ArmExidx = 1879048193,
         }
 
@@ -240,10 +280,28 @@ namespace Kaitai
             Shared = 3,
             Core = 4,
         }
+
+        public enum SectionHeaderIdxSpecial
+        {
+            Undefined = 0,
+            Before = 65280,
+            After = 65281,
+            Amd64Lcommon = 65282,
+            SunwIgnore = 65343,
+            Abs = 65521,
+            Common = 65522,
+            Xindex = 65535,
+        }
         public Elf(KaitaiStream p__io, KaitaiStruct p__parent = null, Elf p__root = null) : base(p__io)
         {
             m_parent = p__parent;
             m_root = p__root ?? this;
+            f_shIdxLoOs = false;
+            f_shIdxLoReserved = false;
+            f_shIdxHiProc = false;
+            f_shIdxLoProc = false;
+            f_shIdxHiOs = false;
+            f_shIdxHiReserved = false;
             _read();
         }
         private void _read()
@@ -1116,7 +1174,7 @@ namespace Kaitai
                 m_root = p__root;
                 f_programHeaders = false;
                 f_sectionHeaders = false;
-                f_strings = false;
+                f_sectionNames = false;
                 _read();
             }
             private void _read()
@@ -1225,67 +1283,6 @@ namespace Kaitai
                 _sectionHeaderEntrySize = m_io.ReadU2be();
                 _qtySectionHeader = m_io.ReadU2be();
                 _sectionNamesIdx = m_io.ReadU2be();
-            }
-            public partial class DynsymSectionEntry64 : KaitaiStruct
-            {
-                public static DynsymSectionEntry64 FromFile(string fileName)
-                {
-                    return new DynsymSectionEntry64(new KaitaiStream(fileName));
-                }
-
-                private bool? m_isLe;
-                public DynsymSectionEntry64(KaitaiStream p__io, Elf.EndianElf.DynsymSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    m_isLe = isLe;
-                    _read();
-                }
-                private void _read()
-                {
-
-                    if (m_isLe == null) {
-                        throw new UndecidedEndiannessError();
-                    } else if (m_isLe == true) {
-                        _readLE();
-                    } else {
-                        _readBE();
-                    }
-                }
-                private void _readLE()
-                {
-                    _nameOffset = m_io.ReadU4le();
-                    _info = m_io.ReadU1();
-                    _other = m_io.ReadU1();
-                    _shndx = m_io.ReadU2le();
-                    _value = m_io.ReadU8le();
-                    _size = m_io.ReadU8le();
-                }
-                private void _readBE()
-                {
-                    _nameOffset = m_io.ReadU4be();
-                    _info = m_io.ReadU1();
-                    _other = m_io.ReadU1();
-                    _shndx = m_io.ReadU2be();
-                    _value = m_io.ReadU8be();
-                    _size = m_io.ReadU8be();
-                }
-                private uint _nameOffset;
-                private byte _info;
-                private byte _other;
-                private ushort _shndx;
-                private ulong _value;
-                private ulong _size;
-                private Elf m_root;
-                private Elf.EndianElf.DynsymSection m_parent;
-                public uint NameOffset { get { return _nameOffset; } }
-                public byte Info { get { return _info; } }
-                public byte Other { get { return _other; } }
-                public ushort Shndx { get { return _shndx; } }
-                public ulong Value { get { return _value; } }
-                public ulong Size { get { return _size; } }
-                public Elf M_Root { get { return m_root; } }
-                public Elf.EndianElf.DynsymSection M_Parent { get { return m_parent; } }
             }
             public partial class NoteSection : KaitaiStruct
             {
@@ -1726,6 +1723,7 @@ namespace Kaitai
                     m_root = p__root;
                     m_isLe = isLe;
                     f_body = false;
+                    f_linkedSection = false;
                     f_name = false;
                     f_flagsObj = false;
                     _read();
@@ -1990,6 +1988,28 @@ namespace Kaitai
                         return _body;
                     }
                 }
+                private bool f_linkedSection;
+                private SectionHeader _linkedSection;
+
+                /// <summary>
+                /// may reference a later section header, so don't try to access too early (use only lazy `instances`)
+                /// </summary>
+                /// <remarks>
+                /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link">Source</a>
+                /// </remarks>
+                public SectionHeader LinkedSection
+                {
+                    get
+                    {
+                        if (f_linkedSection)
+                            return _linkedSection;
+                        if ( ((LinkedSectionIdx != Elf.SectionHeaderIdxSpecial.Undefined) && (LinkedSectionIdx < M_Root.Header.QtySectionHeader)) ) {
+                            _linkedSection = (SectionHeader) (M_Root.Header.SectionHeaders[LinkedSectionIdx]);
+                        }
+                        f_linkedSection = true;
+                        return _linkedSection;
+                    }
+                }
                 private bool f_name;
                 private string _name;
                 public string Name
@@ -1998,7 +2018,7 @@ namespace Kaitai
                     {
                         if (f_name)
                             return _name;
-                        KaitaiStream io = M_Root.Header.Strings.M_Io;
+                        KaitaiStream io = M_Root.Header.SectionNames.M_Io;
                         long _pos = io.Pos;
                         io.Seek(OfsName);
                         if (m_isLe == true) {
@@ -2183,6 +2203,7 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
+                    f_isStringTableLinked = false;
                     _read();
                 }
                 private void _read()
@@ -2198,48 +2219,43 @@ namespace Kaitai
                 }
                 private void _readLE()
                 {
-                    _entries = new List<KaitaiStruct>();
+                    _entries = new List<DynsymSectionEntry>();
                     {
                         var i = 0;
                         while (!m_io.IsEof) {
-                            switch (M_Root.Bits) {
-                            case Elf.Bits.B32: {
-                                _entries.Add(new DynsymSectionEntry32(m_io, this, m_root, m_isLe));
-                                break;
-                            }
-                            case Elf.Bits.B64: {
-                                _entries.Add(new DynsymSectionEntry64(m_io, this, m_root, m_isLe));
-                                break;
-                            }
-                            }
+                            _entries.Add(new DynsymSectionEntry(m_io, this, m_root, m_isLe));
                             i++;
                         }
                     }
                 }
                 private void _readBE()
                 {
-                    _entries = new List<KaitaiStruct>();
+                    _entries = new List<DynsymSectionEntry>();
                     {
                         var i = 0;
                         while (!m_io.IsEof) {
-                            switch (M_Root.Bits) {
-                            case Elf.Bits.B32: {
-                                _entries.Add(new DynsymSectionEntry32(m_io, this, m_root, m_isLe));
-                                break;
-                            }
-                            case Elf.Bits.B64: {
-                                _entries.Add(new DynsymSectionEntry64(m_io, this, m_root, m_isLe));
-                                break;
-                            }
-                            }
+                            _entries.Add(new DynsymSectionEntry(m_io, this, m_root, m_isLe));
                             i++;
                         }
                     }
                 }
-                private List<KaitaiStruct> _entries;
+                private bool f_isStringTableLinked;
+                private bool _isStringTableLinked;
+                public bool IsStringTableLinked
+                {
+                    get
+                    {
+                        if (f_isStringTableLinked)
+                            return _isStringTableLinked;
+                        _isStringTableLinked = (bool) (M_Parent.LinkedSection.Type == Elf.ShType.Strtab);
+                        f_isStringTableLinked = true;
+                        return _isStringTableLinked;
+                    }
+                }
+                private List<DynsymSectionEntry> _entries;
                 private Elf m_root;
                 private Elf.EndianElf.SectionHeader m_parent;
-                public List<KaitaiStruct> Entries { get { return _entries; } }
+                public List<DynsymSectionEntry> Entries { get { return _entries; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
             }
@@ -2350,19 +2366,34 @@ namespace Kaitai
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf.RelocationSection M_Parent { get { return m_parent; } }
             }
-            public partial class DynsymSectionEntry32 : KaitaiStruct
+
+            /// <remarks>
+            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html">Source</a>
+            /// </remarks>
+            /// <remarks>
+            /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
+            /// </remarks>
+            public partial class DynsymSectionEntry : KaitaiStruct
             {
-                public static DynsymSectionEntry32 FromFile(string fileName)
+                public static DynsymSectionEntry FromFile(string fileName)
                 {
-                    return new DynsymSectionEntry32(new KaitaiStream(fileName));
+                    return new DynsymSectionEntry(new KaitaiStream(fileName));
                 }
 
                 private bool? m_isLe;
-                public DynsymSectionEntry32(KaitaiStream p__io, Elf.EndianElf.DynsymSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
+                public DynsymSectionEntry(KaitaiStream p__io, Elf.EndianElf.DynsymSection p__parent = null, Elf p__root = null, bool? isLe = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
+                    f_isShIdxReserved = false;
+                    f_isShIdxOs = false;
+                    f_isShIdxProc = false;
+                    f_size = false;
+                    f_visibility = false;
+                    f_value = false;
+                    f_name = false;
+                    f_shIdxSpecial = false;
                     _read();
                 }
                 private void _read()
@@ -2378,36 +2409,188 @@ namespace Kaitai
                 }
                 private void _readLE()
                 {
-                    _nameOffset = m_io.ReadU4le();
-                    _value = m_io.ReadU4le();
-                    _size = m_io.ReadU4le();
-                    _info = m_io.ReadU1();
+                    _ofsName = m_io.ReadU4le();
+                    if (M_Root.Bits == Elf.Bits.B32) {
+                        _valueB32 = m_io.ReadU4le();
+                    }
+                    if (M_Root.Bits == Elf.Bits.B32) {
+                        _sizeB32 = m_io.ReadU4le();
+                    }
+                    _bind = ((Elf.SymbolBinding) m_io.ReadBitsIntBe(4));
+                    _type = ((Elf.SymbolType) m_io.ReadBitsIntBe(4));
+                    m_io.AlignToByte();
                     _other = m_io.ReadU1();
-                    _shndx = m_io.ReadU2le();
+                    _shIdx = m_io.ReadU2le();
+                    if (M_Root.Bits == Elf.Bits.B64) {
+                        _valueB64 = m_io.ReadU8le();
+                    }
+                    if (M_Root.Bits == Elf.Bits.B64) {
+                        _sizeB64 = m_io.ReadU8le();
+                    }
                 }
                 private void _readBE()
                 {
-                    _nameOffset = m_io.ReadU4be();
-                    _value = m_io.ReadU4be();
-                    _size = m_io.ReadU4be();
-                    _info = m_io.ReadU1();
+                    _ofsName = m_io.ReadU4be();
+                    if (M_Root.Bits == Elf.Bits.B32) {
+                        _valueB32 = m_io.ReadU4be();
+                    }
+                    if (M_Root.Bits == Elf.Bits.B32) {
+                        _sizeB32 = m_io.ReadU4be();
+                    }
+                    _bind = ((Elf.SymbolBinding) m_io.ReadBitsIntBe(4));
+                    _type = ((Elf.SymbolType) m_io.ReadBitsIntBe(4));
+                    m_io.AlignToByte();
                     _other = m_io.ReadU1();
-                    _shndx = m_io.ReadU2be();
+                    _shIdx = m_io.ReadU2be();
+                    if (M_Root.Bits == Elf.Bits.B64) {
+                        _valueB64 = m_io.ReadU8be();
+                    }
+                    if (M_Root.Bits == Elf.Bits.B64) {
+                        _sizeB64 = m_io.ReadU8be();
+                    }
                 }
-                private uint _nameOffset;
-                private uint _value;
-                private uint _size;
-                private byte _info;
+                private bool f_isShIdxReserved;
+                private bool _isShIdxReserved;
+                public bool IsShIdxReserved
+                {
+                    get
+                    {
+                        if (f_isShIdxReserved)
+                            return _isShIdxReserved;
+                        _isShIdxReserved = (bool) ( ((ShIdx >= M_Root.ShIdxLoReserved) && (ShIdx <= M_Root.ShIdxHiReserved)) );
+                        f_isShIdxReserved = true;
+                        return _isShIdxReserved;
+                    }
+                }
+                private bool f_isShIdxOs;
+                private bool _isShIdxOs;
+                public bool IsShIdxOs
+                {
+                    get
+                    {
+                        if (f_isShIdxOs)
+                            return _isShIdxOs;
+                        _isShIdxOs = (bool) ( ((ShIdx >= M_Root.ShIdxLoOs) && (ShIdx <= M_Root.ShIdxHiOs)) );
+                        f_isShIdxOs = true;
+                        return _isShIdxOs;
+                    }
+                }
+                private bool f_isShIdxProc;
+                private bool _isShIdxProc;
+                public bool IsShIdxProc
+                {
+                    get
+                    {
+                        if (f_isShIdxProc)
+                            return _isShIdxProc;
+                        _isShIdxProc = (bool) ( ((ShIdx >= M_Root.ShIdxLoProc) && (ShIdx <= M_Root.ShIdxHiProc)) );
+                        f_isShIdxProc = true;
+                        return _isShIdxProc;
+                    }
+                }
+                private bool f_size;
+                private ulong _size;
+                public ulong Size
+                {
+                    get
+                    {
+                        if (f_size)
+                            return _size;
+                        _size = (ulong) ((M_Root.Bits == Elf.Bits.B32 ? SizeB32 : (M_Root.Bits == Elf.Bits.B64 ? SizeB64 : 0)));
+                        f_size = true;
+                        return _size;
+                    }
+                }
+                private bool f_visibility;
+                private SymbolVisibility _visibility;
+                public SymbolVisibility Visibility
+                {
+                    get
+                    {
+                        if (f_visibility)
+                            return _visibility;
+                        _visibility = (SymbolVisibility) (((Elf.SymbolVisibility) (Other & 3)));
+                        f_visibility = true;
+                        return _visibility;
+                    }
+                }
+                private bool f_value;
+                private ulong _value;
+                public ulong Value
+                {
+                    get
+                    {
+                        if (f_value)
+                            return _value;
+                        _value = (ulong) ((M_Root.Bits == Elf.Bits.B32 ? ValueB32 : (M_Root.Bits == Elf.Bits.B64 ? ValueB64 : 0)));
+                        f_value = true;
+                        return _value;
+                    }
+                }
+                private bool f_name;
+                private string _name;
+                public string Name
+                {
+                    get
+                    {
+                        if (f_name)
+                            return _name;
+                        if ( ((OfsName != 0) && (M_Parent.IsStringTableLinked)) ) {
+                            KaitaiStream io = ((Elf.EndianElf.StringsStruct) (M_Parent.M_Parent.LinkedSection.Body)).M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(OfsName);
+                            if (m_isLe == true) {
+                                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(io.ReadBytesTerm(0, false, true, true));
+                            } else {
+                                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(io.ReadBytesTerm(0, false, true, true));
+                            }
+                            io.Seek(_pos);
+                            f_name = true;
+                        }
+                        return _name;
+                    }
+                }
+                private bool f_shIdxSpecial;
+                private SectionHeaderIdxSpecial _shIdxSpecial;
+                public SectionHeaderIdxSpecial ShIdxSpecial
+                {
+                    get
+                    {
+                        if (f_shIdxSpecial)
+                            return _shIdxSpecial;
+                        _shIdxSpecial = (SectionHeaderIdxSpecial) (((Elf.SectionHeaderIdxSpecial) ShIdx));
+                        f_shIdxSpecial = true;
+                        return _shIdxSpecial;
+                    }
+                }
+                private uint _ofsName;
+                private uint? _valueB32;
+                private uint? _sizeB32;
+                private SymbolBinding _bind;
+                private SymbolType _type;
                 private byte _other;
-                private ushort _shndx;
+                private ushort _shIdx;
+                private ulong? _valueB64;
+                private ulong? _sizeB64;
                 private Elf m_root;
                 private Elf.EndianElf.DynsymSection m_parent;
-                public uint NameOffset { get { return _nameOffset; } }
-                public uint Value { get { return _value; } }
-                public uint Size { get { return _size; } }
-                public byte Info { get { return _info; } }
+                public uint OfsName { get { return _ofsName; } }
+                public uint? ValueB32 { get { return _valueB32; } }
+                public uint? SizeB32 { get { return _sizeB32; } }
+                public SymbolBinding Bind { get { return _bind; } }
+                public SymbolType Type { get { return _type; } }
+
+                /// <summary>
+                /// don't read this field, access `visibility` instead
+                /// </summary>
                 public byte Other { get { return _other; } }
-                public ushort Shndx { get { return _shndx; } }
+
+                /// <summary>
+                /// section header index
+                /// </summary>
+                public ushort ShIdx { get { return _shIdx; } }
+                public ulong? ValueB64 { get { return _valueB64; } }
+                public ulong? SizeB64 { get { return _sizeB64; } }
                 public Elf M_Root { get { return m_root; } }
                 public Elf.EndianElf.DynsymSection M_Parent { get { return m_parent; } }
             }
@@ -2615,28 +2798,28 @@ namespace Kaitai
                     return _sectionHeaders;
                 }
             }
-            private bool f_strings;
-            private StringsStruct _strings;
-            public StringsStruct Strings
+            private bool f_sectionNames;
+            private StringsStruct _sectionNames;
+            public StringsStruct SectionNames
             {
                 get
                 {
-                    if (f_strings)
-                        return _strings;
+                    if (f_sectionNames)
+                        return _sectionNames;
                     long _pos = m_io.Pos;
                     m_io.Seek(SectionHeaders[SectionNamesIdx].OfsBody);
                     if (m_isLe == true) {
-                        __raw_strings = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
-                        var io___raw_strings = new KaitaiStream(__raw_strings);
-                        _strings = new StringsStruct(io___raw_strings, this, m_root, m_isLe);
+                        __raw_sectionNames = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
+                        var io___raw_sectionNames = new KaitaiStream(__raw_sectionNames);
+                        _sectionNames = new StringsStruct(io___raw_sectionNames, this, m_root, m_isLe);
                     } else {
-                        __raw_strings = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
-                        var io___raw_strings = new KaitaiStream(__raw_strings);
-                        _strings = new StringsStruct(io___raw_strings, this, m_root, m_isLe);
+                        __raw_sectionNames = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
+                        var io___raw_sectionNames = new KaitaiStream(__raw_sectionNames);
+                        _sectionNames = new StringsStruct(io___raw_sectionNames, this, m_root, m_isLe);
                     }
                     m_io.Seek(_pos);
-                    f_strings = true;
-                    return _strings;
+                    f_sectionNames = true;
+                    return _sectionNames;
                 }
             }
             private ObjType _eType;
@@ -2656,7 +2839,7 @@ namespace Kaitai
             private Elf m_parent;
             private List<byte[]> __raw_programHeaders;
             private List<byte[]> __raw_sectionHeaders;
-            private byte[] __raw_strings;
+            private byte[] __raw_sectionNames;
             public ObjType EType { get { return _eType; } }
             public Machine Machine { get { return _machine; } }
             public uint EVersion { get { return _eVersion; } }
@@ -2674,7 +2857,85 @@ namespace Kaitai
             public Elf M_Parent { get { return m_parent; } }
             public List<byte[]> M_RawProgramHeaders { get { return __raw_programHeaders; } }
             public List<byte[]> M_RawSectionHeaders { get { return __raw_sectionHeaders; } }
-            public byte[] M_RawStrings { get { return __raw_strings; } }
+            public byte[] M_RawSectionNames { get { return __raw_sectionNames; } }
+        }
+        private bool f_shIdxLoOs;
+        private int _shIdxLoOs;
+        public int ShIdxLoOs
+        {
+            get
+            {
+                if (f_shIdxLoOs)
+                    return _shIdxLoOs;
+                _shIdxLoOs = (int) (65312);
+                f_shIdxLoOs = true;
+                return _shIdxLoOs;
+            }
+        }
+        private bool f_shIdxLoReserved;
+        private int _shIdxLoReserved;
+        public int ShIdxLoReserved
+        {
+            get
+            {
+                if (f_shIdxLoReserved)
+                    return _shIdxLoReserved;
+                _shIdxLoReserved = (int) (65280);
+                f_shIdxLoReserved = true;
+                return _shIdxLoReserved;
+            }
+        }
+        private bool f_shIdxHiProc;
+        private int _shIdxHiProc;
+        public int ShIdxHiProc
+        {
+            get
+            {
+                if (f_shIdxHiProc)
+                    return _shIdxHiProc;
+                _shIdxHiProc = (int) (65311);
+                f_shIdxHiProc = true;
+                return _shIdxHiProc;
+            }
+        }
+        private bool f_shIdxLoProc;
+        private int _shIdxLoProc;
+        public int ShIdxLoProc
+        {
+            get
+            {
+                if (f_shIdxLoProc)
+                    return _shIdxLoProc;
+                _shIdxLoProc = (int) (65280);
+                f_shIdxLoProc = true;
+                return _shIdxLoProc;
+            }
+        }
+        private bool f_shIdxHiOs;
+        private int _shIdxHiOs;
+        public int ShIdxHiOs
+        {
+            get
+            {
+                if (f_shIdxHiOs)
+                    return _shIdxHiOs;
+                _shIdxHiOs = (int) (65343);
+                f_shIdxHiOs = true;
+                return _shIdxHiOs;
+            }
+        }
+        private bool f_shIdxHiReserved;
+        private int _shIdxHiReserved;
+        public int ShIdxHiReserved
+        {
+            get
+            {
+                if (f_shIdxHiReserved)
+                    return _shIdxHiReserved;
+                _shIdxHiReserved = (int) (65535);
+                f_shIdxHiReserved = true;
+                return _shIdxHiReserved;
+            }
         }
         private byte[] _magic;
         private Bits _bits;

@@ -8,10 +8,34 @@ end
 
 
 ##
+# @see https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
 # @see https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
 # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source
-# @see https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
 class Elf < Kaitai::Struct::Struct
+
+  SYMBOL_VISIBILITY = {
+    0 => :symbol_visibility_default,
+    1 => :symbol_visibility_internal,
+    2 => :symbol_visibility_hidden,
+    3 => :symbol_visibility_protected,
+    4 => :symbol_visibility_exported,
+    5 => :symbol_visibility_singleton,
+    6 => :symbol_visibility_eliminate,
+  }
+  I__SYMBOL_VISIBILITY = SYMBOL_VISIBILITY.invert
+
+  SYMBOL_BINDING = {
+    0 => :symbol_binding_local,
+    1 => :symbol_binding_global,
+    2 => :symbol_binding_weak,
+    10 => :symbol_binding_os10,
+    11 => :symbol_binding_os11,
+    12 => :symbol_binding_os12,
+    13 => :symbol_binding_proc13,
+    14 => :symbol_binding_proc14,
+    15 => :symbol_binding_proc15,
+  }
+  I__SYMBOL_BINDING = SYMBOL_BINDING.invert
 
   ENDIAN = {
     1 => :endian_le,
@@ -108,6 +132,23 @@ class Elf < Kaitai::Struct::Struct
     252 => :machine_csky,
   }
   I__MACHINE = MACHINE.invert
+
+  SYMBOL_TYPE = {
+    0 => :symbol_type_no_type,
+    1 => :symbol_type_object,
+    2 => :symbol_type_func,
+    3 => :symbol_type_section,
+    4 => :symbol_type_file,
+    5 => :symbol_type_common,
+    6 => :symbol_type_tls,
+    10 => :symbol_type_os10,
+    11 => :symbol_type_os11,
+    12 => :symbol_type_os12,
+    13 => :symbol_type_proc13,
+    14 => :symbol_type_proc14,
+    15 => :symbol_type_proc15,
+  }
+  I__SYMBOL_TYPE = SYMBOL_TYPE.invert
 
   DYNAMIC_ARRAY_TAGS = {
     0 => :dynamic_array_tags_null,
@@ -217,7 +258,6 @@ class Elf < Kaitai::Struct::Struct
     1685382482 => :ph_type_gnu_relro,
     1685382483 => :ph_type_gnu_property,
     1694766464 => :ph_type_pax_flags,
-    1879048191 => :ph_type_hios,
     1879048193 => :ph_type_arm_exidx,
   }
   I__PH_TYPE = PH_TYPE.invert
@@ -230,6 +270,18 @@ class Elf < Kaitai::Struct::Struct
     4 => :obj_type_core,
   }
   I__OBJ_TYPE = OBJ_TYPE.invert
+
+  SECTION_HEADER_IDX_SPECIAL = {
+    0 => :section_header_idx_special_undefined,
+    65280 => :section_header_idx_special_before,
+    65281 => :section_header_idx_special_after,
+    65282 => :section_header_idx_special_amd64_lcommon,
+    65343 => :section_header_idx_special_sunw_ignore,
+    65521 => :section_header_idx_special_abs,
+    65522 => :section_header_idx_special_common,
+    65535 => :section_header_idx_special_xindex,
+  }
+  I__SECTION_HEADER_IDX_SPECIAL = SECTION_HEADER_IDX_SPECIAL.invert
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
     _read
@@ -705,51 +757,6 @@ class Elf < Kaitai::Struct::Struct
       @section_names_idx = @_io.read_u2be
       self
     end
-    class DynsymSectionEntry64 < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self, _is_le = nil)
-        super(_io, _parent, _root)
-        @_is_le = _is_le
-        _read
-      end
-
-      def _read
-
-        if @_is_le == true
-          _read_le
-        elsif @_is_le == false
-          _read_be
-        else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry64")
-        end
-        self
-      end
-
-      def _read_le
-        @name_offset = @_io.read_u4le
-        @info = @_io.read_u1
-        @other = @_io.read_u1
-        @shndx = @_io.read_u2le
-        @value = @_io.read_u8le
-        @size = @_io.read_u8le
-        self
-      end
-
-      def _read_be
-        @name_offset = @_io.read_u4be
-        @info = @_io.read_u1
-        @other = @_io.read_u1
-        @shndx = @_io.read_u2be
-        @value = @_io.read_u8be
-        @size = @_io.read_u8be
-        self
-      end
-      attr_reader :name_offset
-      attr_reader :info
-      attr_reader :other
-      attr_reader :shndx
-      attr_reader :value
-      attr_reader :size
-    end
     class NoteSection < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
@@ -1201,9 +1208,20 @@ class Elf < Kaitai::Struct::Struct
         io.seek(_pos)
         @body
       end
+
+      ##
+      # may reference a later section header, so don't try to access too early (use only lazy `instances`)
+      # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link Source
+      def linked_section
+        return @linked_section unless @linked_section.nil?
+        if  ((linked_section_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (linked_section_idx < _root.header.qty_section_header)) 
+          @linked_section = _root.header.section_headers[linked_section_idx]
+        end
+        @linked_section
+      end
       def name
         return @name unless @name.nil?
-        io = _root.header.strings._io
+        io = _root.header.section_names._io
         _pos = io.pos
         io.seek(ofs_name)
         if @_is_le
@@ -1344,12 +1362,7 @@ class Elf < Kaitai::Struct::Struct
         @entries = []
         i = 0
         while not @_io.eof?
-          case _root.bits
-          when :bits_b32
-            @entries << DynsymSectionEntry32.new(@_io, self, @_root, @_is_le)
-          when :bits_b64
-            @entries << DynsymSectionEntry64.new(@_io, self, @_root, @_is_le)
-          end
+          @entries << DynsymSectionEntry.new(@_io, self, @_root, @_is_le)
           i += 1
         end
         self
@@ -1359,15 +1372,15 @@ class Elf < Kaitai::Struct::Struct
         @entries = []
         i = 0
         while not @_io.eof?
-          case _root.bits
-          when :bits_b32
-            @entries << DynsymSectionEntry32.new(@_io, self, @_root, @_is_le)
-          when :bits_b64
-            @entries << DynsymSectionEntry64.new(@_io, self, @_root, @_is_le)
-          end
+          @entries << DynsymSectionEntry.new(@_io, self, @_root, @_is_le)
           i += 1
         end
         self
+      end
+      def is_string_table_linked
+        return @is_string_table_linked unless @is_string_table_linked.nil?
+        @is_string_table_linked = _parent.linked_section.type == :sh_type_strtab
+        @is_string_table_linked
       end
       attr_reader :entries
     end
@@ -1441,7 +1454,11 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :info
       attr_reader :addend
     end
-    class DynsymSectionEntry32 < Kaitai::Struct::Struct
+
+    ##
+    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
+    class DynsymSectionEntry < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
         @_is_le = _is_le
@@ -1455,36 +1472,119 @@ class Elf < Kaitai::Struct::Struct
         elsif @_is_le == false
           _read_be
         else
-          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry32")
+          raise Kaitai::Struct::UndecidedEndiannessError.new("/types/endian_elf/types/dynsym_section_entry")
         end
         self
       end
 
       def _read_le
-        @name_offset = @_io.read_u4le
-        @value = @_io.read_u4le
-        @size = @_io.read_u4le
-        @info = @_io.read_u1
+        @ofs_name = @_io.read_u4le
+        if _root.bits == :bits_b32
+          @value_b32 = @_io.read_u4le
+        end
+        if _root.bits == :bits_b32
+          @size_b32 = @_io.read_u4le
+        end
+        @bind = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_BINDING, @_io.read_bits_int_be(4))
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_TYPE, @_io.read_bits_int_be(4))
+        @_io.align_to_byte
         @other = @_io.read_u1
-        @shndx = @_io.read_u2le
+        @sh_idx = @_io.read_u2le
+        if _root.bits == :bits_b64
+          @value_b64 = @_io.read_u8le
+        end
+        if _root.bits == :bits_b64
+          @size_b64 = @_io.read_u8le
+        end
         self
       end
 
       def _read_be
-        @name_offset = @_io.read_u4be
-        @value = @_io.read_u4be
-        @size = @_io.read_u4be
-        @info = @_io.read_u1
+        @ofs_name = @_io.read_u4be
+        if _root.bits == :bits_b32
+          @value_b32 = @_io.read_u4be
+        end
+        if _root.bits == :bits_b32
+          @size_b32 = @_io.read_u4be
+        end
+        @bind = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_BINDING, @_io.read_bits_int_be(4))
+        @type = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_TYPE, @_io.read_bits_int_be(4))
+        @_io.align_to_byte
         @other = @_io.read_u1
-        @shndx = @_io.read_u2be
+        @sh_idx = @_io.read_u2be
+        if _root.bits == :bits_b64
+          @value_b64 = @_io.read_u8be
+        end
+        if _root.bits == :bits_b64
+          @size_b64 = @_io.read_u8be
+        end
         self
       end
-      attr_reader :name_offset
-      attr_reader :value
-      attr_reader :size
-      attr_reader :info
+      def is_sh_idx_reserved
+        return @is_sh_idx_reserved unless @is_sh_idx_reserved.nil?
+        @is_sh_idx_reserved =  ((sh_idx >= _root.sh_idx_lo_reserved) && (sh_idx <= _root.sh_idx_hi_reserved)) 
+        @is_sh_idx_reserved
+      end
+      def is_sh_idx_os
+        return @is_sh_idx_os unless @is_sh_idx_os.nil?
+        @is_sh_idx_os =  ((sh_idx >= _root.sh_idx_lo_os) && (sh_idx <= _root.sh_idx_hi_os)) 
+        @is_sh_idx_os
+      end
+      def is_sh_idx_proc
+        return @is_sh_idx_proc unless @is_sh_idx_proc.nil?
+        @is_sh_idx_proc =  ((sh_idx >= _root.sh_idx_lo_proc) && (sh_idx <= _root.sh_idx_hi_proc)) 
+        @is_sh_idx_proc
+      end
+      def size
+        return @size unless @size.nil?
+        @size = (_root.bits == :bits_b32 ? size_b32 : (_root.bits == :bits_b64 ? size_b64 : 0))
+        @size
+      end
+      def visibility
+        return @visibility unless @visibility.nil?
+        @visibility = Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_VISIBILITY, (other & 3))
+        @visibility
+      end
+      def value
+        return @value unless @value.nil?
+        @value = (_root.bits == :bits_b32 ? value_b32 : (_root.bits == :bits_b64 ? value_b64 : 0))
+        @value
+      end
+      def name
+        return @name unless @name.nil?
+        if  ((ofs_name != 0) && (_parent.is_string_table_linked)) 
+          io = _parent._parent.linked_section.body._io
+          _pos = io.pos
+          io.seek(ofs_name)
+          if @_is_le
+            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          else
+            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          end
+          io.seek(_pos)
+        end
+        @name
+      end
+      def sh_idx_special
+        return @sh_idx_special unless @sh_idx_special.nil?
+        @sh_idx_special = Kaitai::Struct::Stream::resolve_enum(Elf::SECTION_HEADER_IDX_SPECIAL, sh_idx)
+        @sh_idx_special
+      end
+      attr_reader :ofs_name
+      attr_reader :value_b32
+      attr_reader :size_b32
+      attr_reader :bind
+      attr_reader :type
+
+      ##
+      # don't read this field, access `visibility` instead
       attr_reader :other
-      attr_reader :shndx
+
+      ##
+      # section header index
+      attr_reader :sh_idx
+      attr_reader :value_b64
+      attr_reader :size_b64
     end
 
     ##
@@ -1632,21 +1732,21 @@ class Elf < Kaitai::Struct::Struct
       @_io.seek(_pos)
       @section_headers
     end
-    def strings
-      return @strings unless @strings.nil?
+    def section_names
+      return @section_names unless @section_names.nil?
       _pos = @_io.pos
       @_io.seek(section_headers[section_names_idx].ofs_body)
       if @_is_le
-        @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].len_body)
-        _io__raw_strings = Kaitai::Struct::Stream.new(@_raw_strings)
-        @strings = StringsStruct.new(_io__raw_strings, self, @_root, @_is_le)
+        @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
+        _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
+        @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
       else
-        @_raw_strings = @_io.read_bytes(section_headers[section_names_idx].len_body)
-        _io__raw_strings = Kaitai::Struct::Stream.new(@_raw_strings)
-        @strings = StringsStruct.new(_io__raw_strings, self, @_root, @_is_le)
+        @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
+        _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
+        @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
       end
       @_io.seek(_pos)
-      @strings
+      @section_names
     end
     attr_reader :e_type
     attr_reader :machine
@@ -1663,7 +1763,37 @@ class Elf < Kaitai::Struct::Struct
     attr_reader :section_names_idx
     attr_reader :_raw_program_headers
     attr_reader :_raw_section_headers
-    attr_reader :_raw_strings
+    attr_reader :_raw_section_names
+  end
+  def sh_idx_lo_os
+    return @sh_idx_lo_os unless @sh_idx_lo_os.nil?
+    @sh_idx_lo_os = 65312
+    @sh_idx_lo_os
+  end
+  def sh_idx_lo_reserved
+    return @sh_idx_lo_reserved unless @sh_idx_lo_reserved.nil?
+    @sh_idx_lo_reserved = 65280
+    @sh_idx_lo_reserved
+  end
+  def sh_idx_hi_proc
+    return @sh_idx_hi_proc unless @sh_idx_hi_proc.nil?
+    @sh_idx_hi_proc = 65311
+    @sh_idx_hi_proc
+  end
+  def sh_idx_lo_proc
+    return @sh_idx_lo_proc unless @sh_idx_lo_proc.nil?
+    @sh_idx_lo_proc = 65280
+    @sh_idx_lo_proc
+  end
+  def sh_idx_hi_os
+    return @sh_idx_hi_os unless @sh_idx_hi_os.nil?
+    @sh_idx_hi_os = 65343
+    @sh_idx_hi_os
+  end
+  def sh_idx_hi_reserved
+    return @sh_idx_hi_reserved unless @sh_idx_hi_reserved.nil?
+    @sh_idx_hi_reserved = 65535
+    @sh_idx_hi_reserved
   end
 
   ##

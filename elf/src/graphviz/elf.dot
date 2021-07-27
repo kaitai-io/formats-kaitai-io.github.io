@@ -16,6 +16,30 @@ digraph {
 			<TR><TD PORT="pad_pos">9</TD><TD PORT="pad_size">7</TD><TD></TD><TD PORT="pad_type">pad</TD></TR>
 			<TR><TD PORT="header_pos">16</TD><TD PORT="header_size">...</TD><TD>EndianElf</TD><TD PORT="header_type">header</TD></TR>
 		</TABLE>>];
+		elf__inst__sh_idx_lo_os [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sh_idx_lo_os</TD><TD>65312</TD></TR>
+		</TABLE>>];
+		elf__inst__sh_idx_lo_reserved [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sh_idx_lo_reserved</TD><TD>65280</TD></TR>
+		</TABLE>>];
+		elf__inst__sh_idx_hi_proc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sh_idx_hi_proc</TD><TD>65311</TD></TR>
+		</TABLE>>];
+		elf__inst__sh_idx_lo_proc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sh_idx_lo_proc</TD><TD>65280</TD></TR>
+		</TABLE>>];
+		elf__inst__sh_idx_hi_os [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sh_idx_hi_os</TD><TD>65343</TD></TR>
+		</TABLE>>];
+		elf__inst__sh_idx_hi_reserved [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>sh_idx_hi_reserved</TD><TD>65535</TD></TR>
+		</TABLE>>];
 		subgraph cluster__phdr_type_flags {
 			label="Elf::PhdrTypeFlags";
 			graph[style=dotted];
@@ -254,9 +278,9 @@ digraph {
 				<TR><TD PORT="section_headers_pos">section_header_offset</TD><TD PORT="section_headers_size">section_header_entry_size</TD><TD>SectionHeader</TD><TD PORT="section_headers_type">section_headers</TD></TR>
 				<TR><TD COLSPAN="4" PORT="section_headers__repeat">repeat qty_section_header times</TD></TR>
 			</TABLE>>];
-			endian_elf__inst__strings [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			endian_elf__inst__section_names [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-				<TR><TD PORT="strings_pos">section_headers[section_names_idx].ofs_body</TD><TD PORT="strings_size">section_headers[section_names_idx].len_body</TD><TD>StringsStruct</TD><TD PORT="strings_type">strings</TD></TR>
+				<TR><TD PORT="section_names_pos">section_headers[section_names_idx].ofs_body</TD><TD PORT="section_names_size">section_headers[section_names_idx].len_body</TD><TD>StringsStruct</TD><TD PORT="section_names_type">section_names</TD></TR>
 			</TABLE>>];
 endian_elf__seq_entry_point_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -267,20 +291,6 @@ endian_elf__seq_program_header_offset_switch [label=<<TABLE BORDER="0" CELLBORDE
 endian_elf__seq_section_header_offset_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
-			subgraph cluster__dynsym_section_entry64 {
-				label="Elf::EndianElf::DynsymSectionEntry64";
-				graph[style=dotted];
-
-				dynsym_section_entry64__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_offset_pos">0</TD><TD PORT="name_offset_size">4</TD><TD>u4</TD><TD PORT="name_offset_type">name_offset</TD></TR>
-					<TR><TD PORT="info_pos">4</TD><TD PORT="info_size">1</TD><TD>u1</TD><TD PORT="info_type">info</TD></TR>
-					<TR><TD PORT="other_pos">5</TD><TD PORT="other_size">1</TD><TD>u1</TD><TD PORT="other_type">other</TD></TR>
-					<TR><TD PORT="shndx_pos">6</TD><TD PORT="shndx_size">2</TD><TD>u2</TD><TD PORT="shndx_type">shndx</TD></TR>
-					<TR><TD PORT="value_pos">8</TD><TD PORT="value_size">8</TD><TD>u8</TD><TD PORT="value_type">value</TD></TR>
-					<TR><TD PORT="size_pos">16</TD><TD PORT="size_size">8</TD><TD>u8</TD><TD PORT="size_type">size</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__note_section {
 				label="Elf::EndianElf::NoteSection";
 				graph[style=dotted];
@@ -384,6 +394,10 @@ dynamic_section_entry__seq_value_or_ptr_switch [label=<<TABLE BORDER="0" CELLBOR
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="body_pos">ofs_body</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
 				</TABLE>>];
+				section_header__inst__linked_section [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>linked_section</TD><TD>_root.header.section_headers[linked_section_idx]</TD></TR>
+				</TABLE>>];
 				section_header__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
@@ -447,14 +461,13 @@ section_header__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" 
 
 				dynsym_section__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="entries_type">entries</TD></TR>
+					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">32</TD><TD>DynsymSectionEntry</TD><TD PORT="entries_type">entries</TD></TR>
 					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
 				</TABLE>>];
-dynsym_section__seq_entries_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
-	<TR><TD>:bits_b32</TD><TD PORT="case0">DynsymSectionEntry32</TD></TR>
-	<TR><TD>:bits_b64</TD><TD PORT="case1">DynsymSectionEntry64</TD></TR>
-</TABLE>>];
+				dynsym_section__inst__is_string_table_linked [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_string_table_linked</TD><TD>_parent.linked_section.type == :sh_type_strtab</TD></TR>
+				</TABLE>>];
 			}
 			subgraph cluster__relocation_section_entry {
 				label="Elf::EndianElf::RelocationSectionEntry";
@@ -476,18 +489,53 @@ relocation_section_entry__seq_addend_switch [label=<<TABLE BORDER="0" CELLBORDER
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 </TABLE>>];
 			}
-			subgraph cluster__dynsym_section_entry32 {
-				label="Elf::EndianElf::DynsymSectionEntry32";
+			subgraph cluster__dynsym_section_entry {
+				label="Elf::EndianElf::DynsymSectionEntry";
 				graph[style=dotted];
 
-				dynsym_section_entry32__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				dynsym_section_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="name_offset_pos">0</TD><TD PORT="name_offset_size">4</TD><TD>u4</TD><TD PORT="name_offset_type">name_offset</TD></TR>
-					<TR><TD PORT="value_pos">4</TD><TD PORT="value_size">4</TD><TD>u4</TD><TD PORT="value_type">value</TD></TR>
-					<TR><TD PORT="size_pos">8</TD><TD PORT="size_size">4</TD><TD>u4</TD><TD PORT="size_type">size</TD></TR>
-					<TR><TD PORT="info_pos">12</TD><TD PORT="info_size">1</TD><TD>u1</TD><TD PORT="info_type">info</TD></TR>
+					<TR><TD PORT="ofs_name_pos">0</TD><TD PORT="ofs_name_size">4</TD><TD>u4</TD><TD PORT="ofs_name_type">ofs_name</TD></TR>
+					<TR><TD PORT="value_b32_pos">4</TD><TD PORT="value_b32_size">4</TD><TD>u4</TD><TD PORT="value_b32_type">value_b32</TD></TR>
+					<TR><TD PORT="size_b32_pos">8</TD><TD PORT="size_b32_size">4</TD><TD>u4</TD><TD PORT="size_b32_type">size_b32</TD></TR>
+					<TR><TD PORT="bind_pos">12</TD><TD PORT="bind_size">4b</TD><TD>b4→SymbolBinding</TD><TD PORT="bind_type">bind</TD></TR>
+					<TR><TD PORT="type_pos">12:4</TD><TD PORT="type_size">4b</TD><TD>b4→SymbolType</TD><TD PORT="type_type">type</TD></TR>
 					<TR><TD PORT="other_pos">13</TD><TD PORT="other_size">1</TD><TD>u1</TD><TD PORT="other_type">other</TD></TR>
-					<TR><TD PORT="shndx_pos">14</TD><TD PORT="shndx_size">2</TD><TD>u2</TD><TD PORT="shndx_type">shndx</TD></TR>
+					<TR><TD PORT="sh_idx_pos">14</TD><TD PORT="sh_idx_size">2</TD><TD>u2</TD><TD PORT="sh_idx_type">sh_idx</TD></TR>
+					<TR><TD PORT="value_b64_pos">16</TD><TD PORT="value_b64_size">8</TD><TD>u8</TD><TD PORT="value_b64_type">value_b64</TD></TR>
+					<TR><TD PORT="size_b64_pos">24</TD><TD PORT="size_b64_size">8</TD><TD>u8</TD><TD PORT="size_b64_type">size_b64</TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__is_sh_idx_reserved [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_sh_idx_reserved</TD><TD> ((sh_idx &gt;= _root.sh_idx_lo_reserved) &amp;&amp; (sh_idx &lt;= _root.sh_idx_hi_reserved)) </TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__is_sh_idx_os [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_sh_idx_os</TD><TD> ((sh_idx &gt;= _root.sh_idx_lo_os) &amp;&amp; (sh_idx &lt;= _root.sh_idx_hi_os)) </TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__is_sh_idx_proc [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_sh_idx_proc</TD><TD> ((sh_idx &gt;= _root.sh_idx_lo_proc) &amp;&amp; (sh_idx &lt;= _root.sh_idx_hi_proc)) </TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__size [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>size</TD><TD>(_root.bits == :bits_b32 ? size_b32 : (_root.bits == :bits_b64 ? size_b64 : 0))</TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__visibility [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>visibility</TD><TD>Kaitai::Struct::Stream::resolve_enum(Elf::SYMBOL_VISIBILITY, (other &amp; 3))</TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__value [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>value</TD><TD>(_root.bits == :bits_b32 ? value_b32 : (_root.bits == :bits_b64 ? value_b64 : 0))</TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				</TABLE>>];
+				dynsym_section_entry__inst__sh_idx_special [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>sh_idx_special</TD><TD>Kaitai::Struct::Stream::resolve_enum(Elf::SECTION_HEADER_IDX_SPECIAL, sh_idx)</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__note_section_entry {
@@ -578,9 +626,9 @@ relocation_section_entry__seq_addend_switch [label=<<TABLE BORDER="0" CELLBORDER
 	endian_elf__seq:section_header_entry_size_type -> endian_elf__inst__section_headers:section_headers_size [color="#404040"];
 	endian_elf__inst__section_headers:section_headers_type -> section_header__seq [style=bold];
 	endian_elf__seq:qty_section_header_type -> endian_elf__inst__section_headers:section_headers__repeat [color="#404040"];
-	section_header__seq:ofs_body_type -> endian_elf__inst__strings:strings_pos [color="#404040"];
-	section_header__seq:len_body_type -> endian_elf__inst__strings:strings_size [color="#404040"];
-	endian_elf__inst__strings:strings_type -> strings_struct__seq [style=bold];
+	section_header__seq:ofs_body_type -> endian_elf__inst__section_names:section_names_pos [color="#404040"];
+	section_header__seq:len_body_type -> endian_elf__inst__section_names:section_names_size [color="#404040"];
+	endian_elf__inst__section_names:section_names_type -> strings_struct__seq [style=bold];
 	note_section__seq:entries_type -> note_section_entry__seq [style=bold];
 	program_header__seq:offset_type -> program_header__seq_offset_switch [style=bold];
 	elf__seq:bits_type -> program_header__seq:offset_type [color="#404040"];
@@ -629,20 +677,43 @@ relocation_section_entry__seq_addend_switch [label=<<TABLE BORDER="0" CELLBORDER
 	section_header__inst__body_body_switch:case5 -> dynsym_section__seq [style=bold];
 	section_header__inst__body_body_switch:case6 -> relocation_section__seq [style=bold];
 	section_header__seq:type_type -> section_header__inst__body:body_type [color="#404040"];
+	endian_elf__inst__section_headers:section_headers_type -> section_header__inst__linked_section [color="#404040"];
+	section_header__seq:linked_section_idx_type -> section_header__inst__linked_section [color="#404040"];
 	section_header__seq:ofs_name_type -> section_header__inst__name:name_pos [color="#404040"];
 	section_header__inst__flags_obj:flags_obj_type -> section_header_flags__seq [style=bold];
 	relocation_section__seq:entries_type -> relocation_section_entry__seq [style=bold];
 	dynamic_section__seq:entries_type -> dynamic_section_entry__seq [style=bold];
-	dynsym_section__seq:entries_type -> dynsym_section__seq_entries_switch [style=bold];
-	dynsym_section__seq_entries_switch:case0 -> dynsym_section_entry32__seq [style=bold];
-	dynsym_section__seq_entries_switch:case1 -> dynsym_section_entry64__seq [style=bold];
-	elf__seq:bits_type -> dynsym_section__seq:entries_type [color="#404040"];
+	dynsym_section__seq:entries_type -> dynsym_section_entry__seq [style=bold];
+	section_header__seq:type_type -> dynsym_section__inst__is_string_table_linked [color="#404040"];
 	relocation_section_entry__seq:offset_type -> relocation_section_entry__seq_offset_switch [style=bold];
 	elf__seq:bits_type -> relocation_section_entry__seq:offset_type [color="#404040"];
 	relocation_section_entry__seq:info_type -> relocation_section_entry__seq_info_switch [style=bold];
 	elf__seq:bits_type -> relocation_section_entry__seq:info_type [color="#404040"];
 	relocation_section_entry__seq:addend_type -> relocation_section_entry__seq_addend_switch [style=bold];
 	elf__seq:bits_type -> relocation_section_entry__seq:addend_type [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__is_sh_idx_reserved [color="#404040"];
+	elf__inst__sh_idx_lo_reserved:sh_idx_lo_reserved_type -> dynsym_section_entry__inst__is_sh_idx_reserved [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__is_sh_idx_reserved [color="#404040"];
+	elf__inst__sh_idx_hi_reserved:sh_idx_hi_reserved_type -> dynsym_section_entry__inst__is_sh_idx_reserved [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__is_sh_idx_os [color="#404040"];
+	elf__inst__sh_idx_lo_os:sh_idx_lo_os_type -> dynsym_section_entry__inst__is_sh_idx_os [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__is_sh_idx_os [color="#404040"];
+	elf__inst__sh_idx_hi_os:sh_idx_hi_os_type -> dynsym_section_entry__inst__is_sh_idx_os [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__is_sh_idx_proc [color="#404040"];
+	elf__inst__sh_idx_lo_proc:sh_idx_lo_proc_type -> dynsym_section_entry__inst__is_sh_idx_proc [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__is_sh_idx_proc [color="#404040"];
+	elf__inst__sh_idx_hi_proc:sh_idx_hi_proc_type -> dynsym_section_entry__inst__is_sh_idx_proc [color="#404040"];
+	elf__seq:bits_type -> dynsym_section_entry__inst__size [color="#404040"];
+	dynsym_section_entry__seq:size_b32_type -> dynsym_section_entry__inst__size [color="#404040"];
+	elf__seq:bits_type -> dynsym_section_entry__inst__size [color="#404040"];
+	dynsym_section_entry__seq:size_b64_type -> dynsym_section_entry__inst__size [color="#404040"];
+	dynsym_section_entry__seq:other_type -> dynsym_section_entry__inst__visibility [color="#404040"];
+	elf__seq:bits_type -> dynsym_section_entry__inst__value [color="#404040"];
+	dynsym_section_entry__seq:value_b32_type -> dynsym_section_entry__inst__value [color="#404040"];
+	elf__seq:bits_type -> dynsym_section_entry__inst__value [color="#404040"];
+	dynsym_section_entry__seq:value_b64_type -> dynsym_section_entry__inst__value [color="#404040"];
+	dynsym_section_entry__seq:ofs_name_type -> dynsym_section_entry__inst__name:name_pos [color="#404040"];
+	dynsym_section_entry__seq:sh_idx_type -> dynsym_section_entry__inst__sh_idx_special [color="#404040"];
 	note_section_entry__seq:len_name_type -> note_section_entry__seq:name_size [color="#404040"];
 	note_section_entry__seq:len_name_type -> note_section_entry__seq:name_padding_size [color="#404040"];
 	note_section_entry__seq:len_descriptor_type -> note_section_entry__seq:descriptor_size [color="#404040"];

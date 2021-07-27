@@ -7,12 +7,35 @@ require("kaitaistruct")
 local enum = require("enum")
 local stringstream = require("string_stream")
 local str_decode = require("string_decode")
+local utils = require("utils")
 
 -- 
+-- See also: Source (https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD)
 -- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html)
 -- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html)
--- See also: Source (https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD)
 Elf = class.class(KaitaiStruct)
+
+Elf.SymbolVisibility = enum.Enum {
+  default = 0,
+  internal = 1,
+  hidden = 2,
+  protected = 3,
+  exported = 4,
+  singleton = 5,
+  eliminate = 6,
+}
+
+Elf.SymbolBinding = enum.Enum {
+  local = 0,
+  global = 1,
+  weak = 2,
+  os10 = 10,
+  os11 = 11,
+  os12 = 12,
+  proc13 = 13,
+  proc14 = 14,
+  proc15 = 15,
+}
 
 Elf.Endian = enum.Enum {
   le = 1,
@@ -104,6 +127,22 @@ Elf.Machine = enum.Enum {
   riscv = 243,
   bpf = 247,
   csky = 252,
+}
+
+Elf.SymbolType = enum.Enum {
+  no_type = 0,
+  object = 1,
+  func = 2,
+  section = 3,
+  file = 4,
+  common = 5,
+  tls = 6,
+  os10 = 10,
+  os11 = 11,
+  os12 = 12,
+  proc13 = 13,
+  proc14 = 14,
+  proc15 = 15,
 }
 
 Elf.DynamicArrayTags = enum.Enum {
@@ -212,7 +251,6 @@ Elf.PhType = enum.Enum {
   gnu_relro = 1685382482,
   gnu_property = 1685382483,
   pax_flags = 1694766464,
-  hios = 1879048191,
   arm_exidx = 1879048193,
 }
 
@@ -222,6 +260,17 @@ Elf.ObjType = enum.Enum {
   executable = 2,
   shared = 3,
   core = 4,
+}
+
+Elf.SectionHeaderIdxSpecial = enum.Enum {
+  undefined = 0,
+  before = 65280,
+  after = 65281,
+  amd64_lcommon = 65282,
+  sunw_ignore = 65343,
+  abs = 65521,
+  common = 65522,
+  xindex = 65535,
 }
 
 function Elf:_init(io, parent, root)
@@ -243,6 +292,66 @@ function Elf:_read()
   self.abi_version = self._io:read_u1()
   self.pad = self._io:read_bytes(7)
   self.header = Elf.EndianElf(self._io, self, self._root)
+end
+
+Elf.property.sh_idx_lo_os = {}
+function Elf.property.sh_idx_lo_os:get()
+  if self._m_sh_idx_lo_os ~= nil then
+    return self._m_sh_idx_lo_os
+  end
+
+  self._m_sh_idx_lo_os = 65312
+  return self._m_sh_idx_lo_os
+end
+
+Elf.property.sh_idx_lo_reserved = {}
+function Elf.property.sh_idx_lo_reserved:get()
+  if self._m_sh_idx_lo_reserved ~= nil then
+    return self._m_sh_idx_lo_reserved
+  end
+
+  self._m_sh_idx_lo_reserved = 65280
+  return self._m_sh_idx_lo_reserved
+end
+
+Elf.property.sh_idx_hi_proc = {}
+function Elf.property.sh_idx_hi_proc:get()
+  if self._m_sh_idx_hi_proc ~= nil then
+    return self._m_sh_idx_hi_proc
+  end
+
+  self._m_sh_idx_hi_proc = 65311
+  return self._m_sh_idx_hi_proc
+end
+
+Elf.property.sh_idx_lo_proc = {}
+function Elf.property.sh_idx_lo_proc:get()
+  if self._m_sh_idx_lo_proc ~= nil then
+    return self._m_sh_idx_lo_proc
+  end
+
+  self._m_sh_idx_lo_proc = 65280
+  return self._m_sh_idx_lo_proc
+end
+
+Elf.property.sh_idx_hi_os = {}
+function Elf.property.sh_idx_hi_os:get()
+  if self._m_sh_idx_hi_os ~= nil then
+    return self._m_sh_idx_hi_os
+  end
+
+  self._m_sh_idx_hi_os = 65343
+  return self._m_sh_idx_hi_os
+end
+
+Elf.property.sh_idx_hi_reserved = {}
+function Elf.property.sh_idx_hi_reserved:get()
+  if self._m_sh_idx_hi_reserved ~= nil then
+    return self._m_sh_idx_hi_reserved
+  end
+
+  self._m_sh_idx_hi_reserved = 65535
+  return self._m_sh_idx_hi_reserved
 end
 
 -- 
@@ -980,65 +1089,25 @@ function Elf.EndianElf.property.section_headers:get()
   return self._m_section_headers
 end
 
-Elf.EndianElf.property.strings = {}
-function Elf.EndianElf.property.strings:get()
-  if self._m_strings ~= nil then
-    return self._m_strings
+Elf.EndianElf.property.section_names = {}
+function Elf.EndianElf.property.section_names:get()
+  if self._m_section_names ~= nil then
+    return self._m_section_names
   end
 
   local _pos = self._io:pos()
   self._io:seek(self.section_headers[self.section_names_idx + 1].ofs_body)
   if self._is_le then
-    self._raw__m_strings = self._io:read_bytes(self.section_headers[self.section_names_idx + 1].len_body)
-    local _io = KaitaiStream(stringstream(self._raw__m_strings))
-    self._m_strings = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
+    self._raw__m_section_names = self._io:read_bytes(self.section_headers[self.section_names_idx + 1].len_body)
+    local _io = KaitaiStream(stringstream(self._raw__m_section_names))
+    self._m_section_names = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
   else
-    self._raw__m_strings = self._io:read_bytes(self.section_headers[self.section_names_idx + 1].len_body)
-    local _io = KaitaiStream(stringstream(self._raw__m_strings))
-    self._m_strings = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
+    self._raw__m_section_names = self._io:read_bytes(self.section_headers[self.section_names_idx + 1].len_body)
+    local _io = KaitaiStream(stringstream(self._raw__m_section_names))
+    self._m_section_names = Elf.EndianElf.StringsStruct(_io, self, self._root, self._is_le)
   end
   self._io:seek(_pos)
-  return self._m_strings
-end
-
-
-Elf.EndianElf.DynsymSectionEntry64 = class.class(KaitaiStruct)
-
-function Elf.EndianElf.DynsymSectionEntry64:_init(io, parent, root, is_le)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self._is_le = is_le
-  self:_read()
-end
-
-function Elf.EndianElf.DynsymSectionEntry64:_read()
-
-  if self._is_le then
-    self:_read_le()
-  elseif not self._is_le then
-    self:_read_be()
-  else
-    error("unable to decide endianness")
-  end
-end
-
-function Elf.EndianElf.DynsymSectionEntry64:_read_le()
-  self.name_offset = self._io:read_u4le()
-  self.info = self._io:read_u1()
-  self.other = self._io:read_u1()
-  self.shndx = self._io:read_u2le()
-  self.value = self._io:read_u8le()
-  self.size = self._io:read_u8le()
-end
-
-function Elf.EndianElf.DynsymSectionEntry64:_read_be()
-  self.name_offset = self._io:read_u4be()
-  self.info = self._io:read_u1()
-  self.other = self._io:read_u1()
-  self.shndx = self._io:read_u2be()
-  self.value = self._io:read_u8be()
-  self.size = self._io:read_u8be()
+  return self._m_section_names
 end
 
 
@@ -1509,13 +1578,28 @@ function Elf.EndianElf.SectionHeader.property.body:get()
   return self._m_body
 end
 
+-- 
+-- may reference a later section header, so don't try to access too early (use only lazy `instances`).
+-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link)
+Elf.EndianElf.SectionHeader.property.linked_section = {}
+function Elf.EndianElf.SectionHeader.property.linked_section:get()
+  if self._m_linked_section ~= nil then
+    return self._m_linked_section
+  end
+
+  if  ((self.linked_section_idx ~= Elf.SectionHeaderIdxSpecial.undefined.value) and (self.linked_section_idx < self._root.header.qty_section_header))  then
+    self._m_linked_section = self._root.header.section_headers[self.linked_section_idx + 1]
+  end
+  return self._m_linked_section
+end
+
 Elf.EndianElf.SectionHeader.property.name = {}
 function Elf.EndianElf.SectionHeader.property.name:get()
   if self._m_name ~= nil then
     return self._m_name
   end
 
-  local _io = self._root.header.strings._io
+  local _io = self._root.header.section_names._io
   local _pos = _io:pos()
   _io:seek(self.ofs_name)
   if self._is_le then
@@ -1651,12 +1735,7 @@ function Elf.EndianElf.DynsymSection:_read_le()
   self.entries = {}
   local i = 0
   while not self._io:is_eof() do
-    local _on = self._root.bits
-    if _on == Elf.Bits.b32 then
-      self.entries[i + 1] = Elf.EndianElf.DynsymSectionEntry32(self._io, self, self._root, self._is_le)
-    elseif _on == Elf.Bits.b64 then
-      self.entries[i + 1] = Elf.EndianElf.DynsymSectionEntry64(self._io, self, self._root, self._is_le)
-    end
+    self.entries[i + 1] = Elf.EndianElf.DynsymSectionEntry(self._io, self, self._root, self._is_le)
     i = i + 1
   end
 end
@@ -1665,14 +1744,19 @@ function Elf.EndianElf.DynsymSection:_read_be()
   self.entries = {}
   local i = 0
   while not self._io:is_eof() do
-    local _on = self._root.bits
-    if _on == Elf.Bits.b32 then
-      self.entries[i + 1] = Elf.EndianElf.DynsymSectionEntry32(self._io, self, self._root, self._is_le)
-    elseif _on == Elf.Bits.b64 then
-      self.entries[i + 1] = Elf.EndianElf.DynsymSectionEntry64(self._io, self, self._root, self._is_le)
-    end
+    self.entries[i + 1] = Elf.EndianElf.DynsymSectionEntry(self._io, self, self._root, self._is_le)
     i = i + 1
   end
+end
+
+Elf.EndianElf.DynsymSection.property.is_string_table_linked = {}
+function Elf.EndianElf.DynsymSection.property.is_string_table_linked:get()
+  if self._m_is_string_table_linked ~= nil then
+    return self._m_is_string_table_linked
+  end
+
+  self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+  return self._m_is_string_table_linked
 end
 
 
@@ -1744,9 +1828,12 @@ function Elf.EndianElf.RelocationSectionEntry:_read_be()
 end
 
 
-Elf.EndianElf.DynsymSectionEntry32 = class.class(KaitaiStruct)
+-- 
+-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html)
+-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html)
+Elf.EndianElf.DynsymSectionEntry = class.class(KaitaiStruct)
 
-function Elf.EndianElf.DynsymSectionEntry32:_init(io, parent, root, is_le)
+function Elf.EndianElf.DynsymSectionEntry:_init(io, parent, root, is_le)
   KaitaiStruct._init(self, io)
   self._parent = parent
   self._root = root or self
@@ -1754,7 +1841,7 @@ function Elf.EndianElf.DynsymSectionEntry32:_init(io, parent, root, is_le)
   self:_read()
 end
 
-function Elf.EndianElf.DynsymSectionEntry32:_read()
+function Elf.EndianElf.DynsymSectionEntry:_read()
 
   if self._is_le then
     self:_read_le()
@@ -1765,24 +1852,142 @@ function Elf.EndianElf.DynsymSectionEntry32:_read()
   end
 end
 
-function Elf.EndianElf.DynsymSectionEntry32:_read_le()
-  self.name_offset = self._io:read_u4le()
-  self.value = self._io:read_u4le()
-  self.size = self._io:read_u4le()
-  self.info = self._io:read_u1()
+function Elf.EndianElf.DynsymSectionEntry:_read_le()
+  self.ofs_name = self._io:read_u4le()
+  if self._root.bits == Elf.Bits.b32 then
+    self.value_b32 = self._io:read_u4le()
+  end
+  if self._root.bits == Elf.Bits.b32 then
+    self.size_b32 = self._io:read_u4le()
+  end
+  self.bind = Elf.SymbolBinding(self._io:read_bits_int_be(4))
+  self.type = Elf.SymbolType(self._io:read_bits_int_be(4))
+  self._io:align_to_byte()
   self.other = self._io:read_u1()
-  self.shndx = self._io:read_u2le()
+  self.sh_idx = self._io:read_u2le()
+  if self._root.bits == Elf.Bits.b64 then
+    self.value_b64 = self._io:read_u8le()
+  end
+  if self._root.bits == Elf.Bits.b64 then
+    self.size_b64 = self._io:read_u8le()
+  end
 end
 
-function Elf.EndianElf.DynsymSectionEntry32:_read_be()
-  self.name_offset = self._io:read_u4be()
-  self.value = self._io:read_u4be()
-  self.size = self._io:read_u4be()
-  self.info = self._io:read_u1()
+function Elf.EndianElf.DynsymSectionEntry:_read_be()
+  self.ofs_name = self._io:read_u4be()
+  if self._root.bits == Elf.Bits.b32 then
+    self.value_b32 = self._io:read_u4be()
+  end
+  if self._root.bits == Elf.Bits.b32 then
+    self.size_b32 = self._io:read_u4be()
+  end
+  self.bind = Elf.SymbolBinding(self._io:read_bits_int_be(4))
+  self.type = Elf.SymbolType(self._io:read_bits_int_be(4))
+  self._io:align_to_byte()
   self.other = self._io:read_u1()
-  self.shndx = self._io:read_u2be()
+  self.sh_idx = self._io:read_u2be()
+  if self._root.bits == Elf.Bits.b64 then
+    self.value_b64 = self._io:read_u8be()
+  end
+  if self._root.bits == Elf.Bits.b64 then
+    self.size_b64 = self._io:read_u8be()
+  end
 end
 
+Elf.EndianElf.DynsymSectionEntry.property.is_sh_idx_reserved = {}
+function Elf.EndianElf.DynsymSectionEntry.property.is_sh_idx_reserved:get()
+  if self._m_is_sh_idx_reserved ~= nil then
+    return self._m_is_sh_idx_reserved
+  end
+
+  self._m_is_sh_idx_reserved =  ((self.sh_idx >= self._root.sh_idx_lo_reserved) and (self.sh_idx <= self._root.sh_idx_hi_reserved)) 
+  return self._m_is_sh_idx_reserved
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.is_sh_idx_os = {}
+function Elf.EndianElf.DynsymSectionEntry.property.is_sh_idx_os:get()
+  if self._m_is_sh_idx_os ~= nil then
+    return self._m_is_sh_idx_os
+  end
+
+  self._m_is_sh_idx_os =  ((self.sh_idx >= self._root.sh_idx_lo_os) and (self.sh_idx <= self._root.sh_idx_hi_os)) 
+  return self._m_is_sh_idx_os
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.is_sh_idx_proc = {}
+function Elf.EndianElf.DynsymSectionEntry.property.is_sh_idx_proc:get()
+  if self._m_is_sh_idx_proc ~= nil then
+    return self._m_is_sh_idx_proc
+  end
+
+  self._m_is_sh_idx_proc =  ((self.sh_idx >= self._root.sh_idx_lo_proc) and (self.sh_idx <= self._root.sh_idx_hi_proc)) 
+  return self._m_is_sh_idx_proc
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.size = {}
+function Elf.EndianElf.DynsymSectionEntry.property.size:get()
+  if self._m_size ~= nil then
+    return self._m_size
+  end
+
+  self._m_size = utils.box_unwrap((self._root.bits == Elf.Bits.b32) and utils.box_wrap(self.size_b32) or (utils.box_unwrap((self._root.bits == Elf.Bits.b64) and utils.box_wrap(self.size_b64) or (0))))
+  return self._m_size
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.visibility = {}
+function Elf.EndianElf.DynsymSectionEntry.property.visibility:get()
+  if self._m_visibility ~= nil then
+    return self._m_visibility
+  end
+
+  self._m_visibility = Elf.SymbolVisibility((self.other & 3))
+  return self._m_visibility
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.value = {}
+function Elf.EndianElf.DynsymSectionEntry.property.value:get()
+  if self._m_value ~= nil then
+    return self._m_value
+  end
+
+  self._m_value = utils.box_unwrap((self._root.bits == Elf.Bits.b32) and utils.box_wrap(self.value_b32) or (utils.box_unwrap((self._root.bits == Elf.Bits.b64) and utils.box_wrap(self.value_b64) or (0))))
+  return self._m_value
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.name = {}
+function Elf.EndianElf.DynsymSectionEntry.property.name:get()
+  if self._m_name ~= nil then
+    return self._m_name
+  end
+
+  if  ((self.ofs_name ~= 0) and (self._parent.is_string_table_linked))  then
+    local _io = self._parent._parent.linked_section.body._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_name)
+    if self._is_le then
+      self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+    else
+      self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+    end
+    _io:seek(_pos)
+  end
+  return self._m_name
+end
+
+Elf.EndianElf.DynsymSectionEntry.property.sh_idx_special = {}
+function Elf.EndianElf.DynsymSectionEntry.property.sh_idx_special:get()
+  if self._m_sh_idx_special ~= nil then
+    return self._m_sh_idx_special
+  end
+
+  self._m_sh_idx_special = Elf.SectionHeaderIdxSpecial(self.sh_idx)
+  return self._m_sh_idx_special
+end
+
+-- 
+-- don't read this field, access `visibility` instead.
+-- 
+-- section header index.
 
 -- 
 -- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html)

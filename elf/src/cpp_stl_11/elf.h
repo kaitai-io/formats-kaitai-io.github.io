@@ -12,9 +12,9 @@
 #endif
 
 /**
+ * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
  * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
  * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source
- * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
  */
 
 class elf_t : public kaitai::kstruct {
@@ -24,6 +24,28 @@ public:
     class section_header_flags_t;
     class dt_flag_1_values_t;
     class endian_elf_t;
+
+    enum symbol_visibility_t {
+        SYMBOL_VISIBILITY_DEFAULT = 0,
+        SYMBOL_VISIBILITY_INTERNAL = 1,
+        SYMBOL_VISIBILITY_HIDDEN = 2,
+        SYMBOL_VISIBILITY_PROTECTED = 3,
+        SYMBOL_VISIBILITY_EXPORTED = 4,
+        SYMBOL_VISIBILITY_SINGLETON = 5,
+        SYMBOL_VISIBILITY_ELIMINATE = 6
+    };
+
+    enum symbol_binding_t {
+        SYMBOL_BINDING_LOCAL = 0,
+        SYMBOL_BINDING_GLOBAL = 1,
+        SYMBOL_BINDING_WEAK = 2,
+        SYMBOL_BINDING_OS10 = 10,
+        SYMBOL_BINDING_OS11 = 11,
+        SYMBOL_BINDING_OS12 = 12,
+        SYMBOL_BINDING_PROC13 = 13,
+        SYMBOL_BINDING_PROC14 = 14,
+        SYMBOL_BINDING_PROC15 = 15
+    };
 
     enum endian_t {
         ENDIAN_LE = 1,
@@ -115,6 +137,22 @@ public:
         MACHINE_RISCV = 243,
         MACHINE_BPF = 247,
         MACHINE_CSKY = 252
+    };
+
+    enum symbol_type_t {
+        SYMBOL_TYPE_NO_TYPE = 0,
+        SYMBOL_TYPE_OBJECT = 1,
+        SYMBOL_TYPE_FUNC = 2,
+        SYMBOL_TYPE_SECTION = 3,
+        SYMBOL_TYPE_FILE = 4,
+        SYMBOL_TYPE_COMMON = 5,
+        SYMBOL_TYPE_TLS = 6,
+        SYMBOL_TYPE_OS10 = 10,
+        SYMBOL_TYPE_OS11 = 11,
+        SYMBOL_TYPE_OS12 = 12,
+        SYMBOL_TYPE_PROC13 = 13,
+        SYMBOL_TYPE_PROC14 = 14,
+        SYMBOL_TYPE_PROC15 = 15
     };
 
     enum dynamic_array_tags_t {
@@ -223,7 +261,6 @@ public:
         PH_TYPE_GNU_RELRO = 1685382482,
         PH_TYPE_GNU_PROPERTY = 1685382483,
         PH_TYPE_PAX_FLAGS = 1694766464,
-        PH_TYPE_HIOS = 1879048191,
         PH_TYPE_ARM_EXIDX = 1879048193
     };
 
@@ -233,6 +270,17 @@ public:
         OBJ_TYPE_EXECUTABLE = 2,
         OBJ_TYPE_SHARED = 3,
         OBJ_TYPE_CORE = 4
+    };
+
+    enum section_header_idx_special_t {
+        SECTION_HEADER_IDX_SPECIAL_UNDEFINED = 0,
+        SECTION_HEADER_IDX_SPECIAL_BEFORE = 65280,
+        SECTION_HEADER_IDX_SPECIAL_AFTER = 65281,
+        SECTION_HEADER_IDX_SPECIAL_AMD64_LCOMMON = 65282,
+        SECTION_HEADER_IDX_SPECIAL_SUNW_IGNORE = 65343,
+        SECTION_HEADER_IDX_SPECIAL_ABS = 65521,
+        SECTION_HEADER_IDX_SPECIAL_COMMON = 65522,
+        SECTION_HEADER_IDX_SPECIAL_XINDEX = 65535
     };
 
     elf_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, elf_t* p__root = nullptr);
@@ -781,7 +829,6 @@ public:
     class endian_elf_t : public kaitai::kstruct {
 
     public:
-        class dynsym_section_entry64_t;
         class note_section_t;
         class program_header_t;
         class dynamic_section_entry_t;
@@ -790,7 +837,7 @@ public:
         class dynamic_section_t;
         class dynsym_section_t;
         class relocation_section_entry_t;
-        class dynsym_section_entry32_t;
+        class dynsym_section_entry_t;
         class note_section_entry_t;
         class strings_struct_t;
 
@@ -809,47 +856,6 @@ public:
 
     public:
         ~endian_elf_t();
-
-        class dynsym_section_entry64_t : public kaitai::kstruct {
-
-        public:
-
-            dynsym_section_entry64_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynsym_section_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
-
-        private:
-            int m__is_le;
-
-        public:
-
-        private:
-            void _read();
-            void _read_le();
-            void _read_be();
-            void _clean_up();
-
-        public:
-            ~dynsym_section_entry64_t();
-
-        private:
-            uint32_t m_name_offset;
-            uint8_t m_info;
-            uint8_t m_other;
-            uint16_t m_shndx;
-            uint64_t m_value;
-            uint64_t m_size;
-            elf_t* m__root;
-            elf_t::endian_elf_t::dynsym_section_t* m__parent;
-
-        public:
-            uint32_t name_offset() const { return m_name_offset; }
-            uint8_t info() const { return m_info; }
-            uint8_t other() const { return m_other; }
-            uint16_t shndx() const { return m_shndx; }
-            uint64_t value() const { return m_value; }
-            uint64_t size() const { return m_size; }
-            elf_t* _root() const { return m__root; }
-            elf_t::endian_elf_t::dynsym_section_t* _parent() const { return m__parent; }
-        };
 
         class note_section_t : public kaitai::kstruct {
 
@@ -1112,6 +1118,24 @@ public:
             kaitai::kstruct* body();
 
         private:
+            bool f_linked_section;
+            section_header_t* m_linked_section;
+            bool n_linked_section;
+
+        public:
+            bool _is_null_linked_section() { linked_section(); return n_linked_section; };
+
+        private:
+
+        public:
+
+            /**
+             * may reference a later section header, so don't try to access too early (use only lazy `instances`)
+             * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.sheader.html#sh_link Source
+             */
+            section_header_t* linked_section();
+
+        private:
             bool f_name;
             std::string m_name;
 
@@ -1284,12 +1308,19 @@ public:
             ~dynsym_section_t();
 
         private:
-            std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstruct>>> m_entries;
+            bool f_is_string_table_linked;
+            bool m_is_string_table_linked;
+
+        public:
+            bool is_string_table_linked();
+
+        private:
+            std::unique_ptr<std::vector<std::unique_ptr<dynsym_section_entry_t>>> m_entries;
             elf_t* m__root;
             elf_t::endian_elf_t::section_header_t* m__parent;
 
         public:
-            std::vector<std::unique_ptr<kaitai::kstruct>>* entries() const { return m_entries.get(); }
+            std::vector<std::unique_ptr<dynsym_section_entry_t>>* entries() const { return m_entries.get(); }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
         };
@@ -1347,11 +1378,16 @@ public:
             elf_t::endian_elf_t::relocation_section_t* _parent() const { return m__parent; }
         };
 
-        class dynsym_section_entry32_t : public kaitai::kstruct {
+        /**
+         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html Source
+         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
+         */
+
+        class dynsym_section_entry_t : public kaitai::kstruct {
 
         public:
 
-            dynsym_section_entry32_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynsym_section_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
+            dynsym_section_entry_t(kaitai::kstream* p__io, elf_t::endian_elf_t::dynsym_section_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
 
         private:
             int m__is_le;
@@ -1365,25 +1401,125 @@ public:
             void _clean_up();
 
         public:
-            ~dynsym_section_entry32_t();
+            ~dynsym_section_entry_t();
 
         private:
-            uint32_t m_name_offset;
-            uint32_t m_value;
-            uint32_t m_size;
-            uint8_t m_info;
+            bool f_is_sh_idx_reserved;
+            bool m_is_sh_idx_reserved;
+
+        public:
+            bool is_sh_idx_reserved();
+
+        private:
+            bool f_is_sh_idx_os;
+            bool m_is_sh_idx_os;
+
+        public:
+            bool is_sh_idx_os();
+
+        private:
+            bool f_is_sh_idx_proc;
+            bool m_is_sh_idx_proc;
+
+        public:
+            bool is_sh_idx_proc();
+
+        private:
+            bool f_size;
+            uint64_t m_size;
+
+        public:
+            uint64_t size();
+
+        private:
+            bool f_visibility;
+            symbol_visibility_t m_visibility;
+
+        public:
+            symbol_visibility_t visibility();
+
+        private:
+            bool f_value;
+            uint64_t m_value;
+
+        public:
+            uint64_t value();
+
+        private:
+            bool f_name;
+            std::string m_name;
+            bool n_name;
+
+        public:
+            bool _is_null_name() { name(); return n_name; };
+
+        private:
+
+        public:
+            std::string name();
+
+        private:
+            bool f_sh_idx_special;
+            section_header_idx_special_t m_sh_idx_special;
+
+        public:
+            section_header_idx_special_t sh_idx_special();
+
+        private:
+            uint32_t m_ofs_name;
+            uint32_t m_value_b32;
+            bool n_value_b32;
+
+        public:
+            bool _is_null_value_b32() { value_b32(); return n_value_b32; };
+
+        private:
+            uint32_t m_size_b32;
+            bool n_size_b32;
+
+        public:
+            bool _is_null_size_b32() { size_b32(); return n_size_b32; };
+
+        private:
+            symbol_binding_t m_bind;
+            symbol_type_t m_type;
             uint8_t m_other;
-            uint16_t m_shndx;
+            uint16_t m_sh_idx;
+            uint64_t m_value_b64;
+            bool n_value_b64;
+
+        public:
+            bool _is_null_value_b64() { value_b64(); return n_value_b64; };
+
+        private:
+            uint64_t m_size_b64;
+            bool n_size_b64;
+
+        public:
+            bool _is_null_size_b64() { size_b64(); return n_size_b64; };
+
+        private:
             elf_t* m__root;
             elf_t::endian_elf_t::dynsym_section_t* m__parent;
 
         public:
-            uint32_t name_offset() const { return m_name_offset; }
-            uint32_t value() const { return m_value; }
-            uint32_t size() const { return m_size; }
-            uint8_t info() const { return m_info; }
+            uint32_t ofs_name() const { return m_ofs_name; }
+            uint32_t value_b32() const { return m_value_b32; }
+            uint32_t size_b32() const { return m_size_b32; }
+            symbol_binding_t bind() const { return m_bind; }
+            symbol_type_t type() const { return m_type; }
+
+            /**
+             * don't read this field, access `visibility` instead
+             */
             uint8_t other() const { return m_other; }
-            uint16_t shndx() const { return m_shndx; }
+
+            /**
+             * section header index
+             */
+            uint16_t sh_idx() const { return m_sh_idx; }
+            uint64_t value_b64() const { return m_value_b64; }
+            uint64_t size_b64() const { return m_size_b64; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t::dynsym_section_t* _parent() const { return m__parent; }
         };
@@ -1489,11 +1625,11 @@ public:
         std::vector<std::unique_ptr<section_header_t>>* section_headers();
 
     private:
-        bool f_strings;
-        std::unique_ptr<strings_struct_t> m_strings;
+        bool f_section_names;
+        std::unique_ptr<strings_struct_t> m_section_names;
 
     public:
-        strings_struct_t* strings();
+        strings_struct_t* section_names();
 
     private:
         obj_type_t m_e_type;
@@ -1533,8 +1669,8 @@ public:
         std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>> m__io__raw_program_headers;
         std::unique_ptr<std::vector<std::string>> m__raw_section_headers;
         std::unique_ptr<std::vector<std::unique_ptr<kaitai::kstream>>> m__io__raw_section_headers;
-        std::string m__raw_strings;
-        std::unique_ptr<kaitai::kstream> m__io__raw_strings;
+        std::string m__raw_section_names;
+        std::unique_ptr<kaitai::kstream> m__io__raw_section_names;
 
     public:
         obj_type_t e_type() const { return m_e_type; }
@@ -1556,9 +1692,51 @@ public:
         std::vector<std::unique_ptr<kaitai::kstream>>* _io__raw_program_headers() const { return m__io__raw_program_headers.get(); }
         std::vector<std::string>* _raw_section_headers() const { return m__raw_section_headers.get(); }
         std::vector<std::unique_ptr<kaitai::kstream>>* _io__raw_section_headers() const { return m__io__raw_section_headers.get(); }
-        std::string _raw_strings() const { return m__raw_strings; }
-        kaitai::kstream* _io__raw_strings() const { return m__io__raw_strings.get(); }
+        std::string _raw_section_names() const { return m__raw_section_names; }
+        kaitai::kstream* _io__raw_section_names() const { return m__io__raw_section_names.get(); }
     };
+
+private:
+    bool f_sh_idx_lo_os;
+    int32_t m_sh_idx_lo_os;
+
+public:
+    int32_t sh_idx_lo_os();
+
+private:
+    bool f_sh_idx_lo_reserved;
+    int32_t m_sh_idx_lo_reserved;
+
+public:
+    int32_t sh_idx_lo_reserved();
+
+private:
+    bool f_sh_idx_hi_proc;
+    int32_t m_sh_idx_hi_proc;
+
+public:
+    int32_t sh_idx_hi_proc();
+
+private:
+    bool f_sh_idx_lo_proc;
+    int32_t m_sh_idx_lo_proc;
+
+public:
+    int32_t sh_idx_lo_proc();
+
+private:
+    bool f_sh_idx_hi_os;
+    int32_t m_sh_idx_hi_os;
+
+public:
+    int32_t sh_idx_hi_os();
+
+private:
+    bool f_sh_idx_hi_reserved;
+    int32_t m_sh_idx_hi_reserved;
+
+public:
+    int32_t sh_idx_hi_reserved();
 
 private:
     std::string m_magic;
