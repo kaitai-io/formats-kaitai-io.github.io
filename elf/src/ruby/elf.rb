@@ -909,25 +909,6 @@ class Elf < Kaitai::Struct::Struct
         end
         self
       end
-      def dynamic
-        return @dynamic unless @dynamic.nil?
-        if type == :ph_type_dynamic
-          io = _root._io
-          _pos = io.pos
-          io.seek(offset)
-          if @_is_le
-            @_raw_dynamic = io.read_bytes(filesz)
-            _io__raw_dynamic = Kaitai::Struct::Stream.new(@_raw_dynamic)
-            @dynamic = DynamicSection.new(_io__raw_dynamic, self, @_root, @_is_le)
-          else
-            @_raw_dynamic = io.read_bytes(filesz)
-            _io__raw_dynamic = Kaitai::Struct::Stream.new(@_raw_dynamic)
-            @dynamic = DynamicSection.new(_io__raw_dynamic, self, @_root, @_is_le)
-          end
-          io.seek(_pos)
-        end
-        @dynamic
-      end
       def flags_obj
         return @flags_obj unless @flags_obj.nil?
         if @_is_le
@@ -956,8 +937,11 @@ class Elf < Kaitai::Struct::Struct
       attr_reader :memsz
       attr_reader :flags32
       attr_reader :align
-      attr_reader :_raw_dynamic
     end
+
+    ##
+    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html Source
+    # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
     class DynamicSectionEntry < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
         super(_io, _parent, _root)
@@ -1023,6 +1007,26 @@ class Elf < Kaitai::Struct::Struct
           end
         end
         @flag_1_values
+      end
+      def value_str
+        return @value_str unless @value_str.nil?
+        if  ((is_value_str) && (_parent.is_string_table_linked)) 
+          io = _parent._parent.linked_section.body._io
+          _pos = io.pos
+          io.seek(value_or_ptr)
+          if @_is_le
+            @value_str = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          else
+            @value_str = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          end
+          io.seek(_pos)
+        end
+        @value_str
+      end
+      def is_value_str
+        return @is_value_str unless @is_value_str.nil?
+        @is_value_str =  ((value_or_ptr != 0) && ( ((tag_enum == :dynamic_array_tags_needed) || (tag_enum == :dynamic_array_tags_soname) || (tag_enum == :dynamic_array_tags_rpath) || (tag_enum == :dynamic_array_tags_runpath) || (tag_enum == :dynamic_array_tags_sunw_auxiliary) || (tag_enum == :dynamic_array_tags_sunw_filter) || (tag_enum == :dynamic_array_tags_auxiliary) || (tag_enum == :dynamic_array_tags_filter) || (tag_enum == :dynamic_array_tags_config) || (tag_enum == :dynamic_array_tags_depaudit) || (tag_enum == :dynamic_array_tags_audit)) )) 
+        @is_value_str
       end
       attr_reader :tag
       attr_reader :value_or_ptr
@@ -1336,6 +1340,11 @@ class Elf < Kaitai::Struct::Struct
           i += 1
         end
         self
+      end
+      def is_string_table_linked
+        return @is_string_table_linked unless @is_string_table_linked.nil?
+        @is_string_table_linked = _parent.linked_section.type == :sh_type_strtab
+        @is_string_table_linked
       end
       attr_reader :entries
     end

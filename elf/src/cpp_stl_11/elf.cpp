@@ -716,9 +716,6 @@ elf_t::endian_elf_t::program_header_t::program_header_t(kaitai::kstream* p__io, 
     m__parent = p__parent;
     m__root = p__root;
     m__is_le = p_is_le;
-    m_dynamic = nullptr;
-    m__io__raw_dynamic = nullptr;
-    f_dynamic = false;
     f_flags_obj = false;
     _read();
 }
@@ -939,34 +936,8 @@ void elf_t::endian_elf_t::program_header_t::_clean_up() {
     }
     if (!n_align) {
     }
-    if (f_dynamic && !n_dynamic) {
-    }
     if (f_flags_obj && !n_flags_obj) {
     }
-}
-
-elf_t::endian_elf_t::dynamic_section_t* elf_t::endian_elf_t::program_header_t::dynamic() {
-    if (f_dynamic)
-        return m_dynamic.get();
-    n_dynamic = true;
-    if (type() == elf_t::PH_TYPE_DYNAMIC) {
-        n_dynamic = false;
-        kaitai::kstream *io = _root()->_io();
-        std::streampos _pos = io->pos();
-        io->seek(offset());
-        if (m__is_le == 1) {
-            m__raw_dynamic = io->read_bytes(filesz());
-            m__io__raw_dynamic = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_dynamic));
-            m_dynamic = std::unique_ptr<dynamic_section_t>(new dynamic_section_t(m__io__raw_dynamic.get(), this, m__root, m__is_le));
-        } else {
-            m__raw_dynamic = io->read_bytes(filesz());
-            m__io__raw_dynamic = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_dynamic));
-            m_dynamic = std::unique_ptr<dynamic_section_t>(new dynamic_section_t(m__io__raw_dynamic.get(), this, m__root, m__is_le));
-        }
-        io->seek(_pos);
-        f_dynamic = true;
-    }
-    return m_dynamic.get();
 }
 
 elf_t::phdr_type_flags_t* elf_t::endian_elf_t::program_header_t::flags_obj() {
@@ -1012,6 +983,8 @@ elf_t::endian_elf_t::dynamic_section_entry_t::dynamic_section_entry_t(kaitai::ks
     m_flag_1_values = nullptr;
     f_tag_enum = false;
     f_flag_1_values = false;
+    f_value_str = false;
+    f_is_value_str = false;
     _read();
 }
 
@@ -1095,6 +1068,8 @@ void elf_t::endian_elf_t::dynamic_section_entry_t::_clean_up() {
     }
     if (f_flag_1_values && !n_flag_1_values) {
     }
+    if (f_value_str && !n_value_str) {
+    }
 }
 
 elf_t::dynamic_array_tags_t elf_t::endian_elf_t::dynamic_section_entry_t::tag_enum() {
@@ -1119,6 +1094,34 @@ elf_t::dt_flag_1_values_t* elf_t::endian_elf_t::dynamic_section_entry_t::flag_1_
         f_flag_1_values = true;
     }
     return m_flag_1_values.get();
+}
+
+std::string elf_t::endian_elf_t::dynamic_section_entry_t::value_str() {
+    if (f_value_str)
+        return m_value_str;
+    n_value_str = true;
+    if ( ((is_value_str()) && (_parent()->is_string_table_linked())) ) {
+        n_value_str = false;
+        kaitai::kstream *io = static_cast<elf_t::endian_elf_t::strings_struct_t*>(_parent()->_parent()->linked_section()->body())->_io();
+        std::streampos _pos = io->pos();
+        io->seek(value_or_ptr());
+        if (m__is_le == 1) {
+            m_value_str = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("ASCII"));
+        } else {
+            m_value_str = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("ASCII"));
+        }
+        io->seek(_pos);
+        f_value_str = true;
+    }
+    return m_value_str;
+}
+
+bool elf_t::endian_elf_t::dynamic_section_entry_t::is_value_str() {
+    if (f_is_value_str)
+        return m_is_value_str;
+    m_is_value_str =  ((value_or_ptr() != 0) && ( ((tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_NEEDED) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_SONAME) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_RPATH) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_RUNPATH) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_SUNW_FILTER) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_AUXILIARY) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_FILTER) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_CONFIG) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_DEPAUDIT) || (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_AUDIT)) )) ;
+    f_is_value_str = true;
+    return m_is_value_str;
 }
 
 elf_t::endian_elf_t::section_header_t::section_header_t(kaitai::kstream* p__io, elf_t::endian_elf_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
@@ -1555,11 +1558,12 @@ elf_t::endian_elf_t::relocation_section_t::~relocation_section_t() {
 void elf_t::endian_elf_t::relocation_section_t::_clean_up() {
 }
 
-elf_t::endian_elf_t::dynamic_section_t::dynamic_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
+elf_t::endian_elf_t::dynamic_section_t::dynamic_section_t(kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
     m__is_le = p_is_le;
     m_entries = nullptr;
+    f_is_string_table_linked = false;
     _read();
 }
 
@@ -1601,6 +1605,14 @@ elf_t::endian_elf_t::dynamic_section_t::~dynamic_section_t() {
 }
 
 void elf_t::endian_elf_t::dynamic_section_t::_clean_up() {
+}
+
+bool elf_t::endian_elf_t::dynamic_section_t::is_string_table_linked() {
+    if (f_is_string_table_linked)
+        return m_is_string_table_linked;
+    m_is_string_table_linked = _parent()->linked_section()->type() == elf_t::SH_TYPE_STRTAB;
+    f_is_string_table_linked = true;
+    return m_is_string_table_linked;
 }
 
 elf_t::endian_elf_t::dynsym_section_t::dynsym_section_t(kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent, elf_t* p__root, int p_is_le) : kaitai::kstruct(p__io) {

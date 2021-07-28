@@ -909,19 +909,6 @@ public:
             ~program_header_t();
 
         private:
-            bool f_dynamic;
-            std::unique_ptr<dynamic_section_t> m_dynamic;
-            bool n_dynamic;
-
-        public:
-            bool _is_null_dynamic() { dynamic(); return n_dynamic; };
-
-        private:
-
-        public:
-            dynamic_section_t* dynamic();
-
-        private:
             bool f_flags_obj;
             std::unique_ptr<phdr_type_flags_t> m_flags_obj;
             bool n_flags_obj;
@@ -994,14 +981,6 @@ public:
         private:
             elf_t* m__root;
             elf_t::endian_elf_t* m__parent;
-            std::string m__raw_dynamic;
-            bool n__raw_dynamic;
-
-        public:
-            bool _is_null__raw_dynamic() { _raw_dynamic(); return n__raw_dynamic; };
-
-        private:
-            std::unique_ptr<kaitai::kstream> m__io__raw_dynamic;
 
         public:
             ph_type_t type() const { return m_type; }
@@ -1015,9 +994,12 @@ public:
             uint64_t align() const { return m_align; }
             elf_t* _root() const { return m__root; }
             elf_t::endian_elf_t* _parent() const { return m__parent; }
-            std::string _raw_dynamic() const { return m__raw_dynamic; }
-            kaitai::kstream* _io__raw_dynamic() const { return m__io__raw_dynamic.get(); }
         };
+
+        /**
+         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html Source
+         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
+         */
 
         class dynamic_section_entry_t : public kaitai::kstruct {
 
@@ -1058,6 +1040,26 @@ public:
 
         public:
             dt_flag_1_values_t* flag_1_values();
+
+        private:
+            bool f_value_str;
+            std::string m_value_str;
+            bool n_value_str;
+
+        public:
+            bool _is_null_value_str() { value_str(); return n_value_str; };
+
+        private:
+
+        public:
+            std::string value_str();
+
+        private:
+            bool f_is_value_str;
+            bool m_is_value_str;
+
+        public:
+            bool is_value_str();
 
         private:
             uint64_t m_tag;
@@ -1260,7 +1262,7 @@ public:
 
         public:
 
-            dynamic_section_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
+            dynamic_section_t(kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent = nullptr, elf_t* p__root = nullptr, int p_is_le = -1);
 
         private:
             int m__is_le;
@@ -1277,14 +1279,21 @@ public:
             ~dynamic_section_t();
 
         private:
+            bool f_is_string_table_linked;
+            bool m_is_string_table_linked;
+
+        public:
+            bool is_string_table_linked();
+
+        private:
             std::unique_ptr<std::vector<std::unique_ptr<dynamic_section_entry_t>>> m_entries;
             elf_t* m__root;
-            kaitai::kstruct* m__parent;
+            elf_t::endian_elf_t::section_header_t* m__parent;
 
         public:
             std::vector<std::unique_ptr<dynamic_section_entry_t>>* entries() const { return m_entries.get(); }
             elf_t* _root() const { return m__root; }
-            kaitai::kstruct* _parent() const { return m__parent; }
+            elf_t::endian_elf_t::section_header_t* _parent() const { return m__parent; }
         };
 
         class dynsym_section_t : public kaitai::kstruct {

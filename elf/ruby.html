@@ -1221,25 +1221,6 @@ section#format-index .row {
         <span class="k">end</span>
         <span class="nb">self</span>
       <span class="k">end</span>
-      <span class="k">def</span> <span class="nf">dynamic</span>
-        <span class="k">return</span> <span class="vi">@dynamic</span> <span class="k">unless</span> <span class="vi">@dynamic</span><span class="o">.</span><span class="n">nil?</span>
-        <span class="k">if</span> <span class="n">type</span> <span class="o">==</span> <span class="ss">:ph_type_dynamic</span>
-          <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
-          <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
-          <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
-          <span class="k">if</span> <span class="vi">@_is_le</span>
-            <span class="vi">@_raw_dynamic</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">filesz</span><span class="p">)</span>
-            <span class="n">_io__raw_dynamic</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_dynamic</span><span class="p">)</span>
-            <span class="vi">@dynamic</span> <span class="o">=</span> <span class="no">DynamicSection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_dynamic</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="vi">@_is_le</span><span class="p">)</span>
-          <span class="k">else</span>
-            <span class="vi">@_raw_dynamic</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">filesz</span><span class="p">)</span>
-            <span class="n">_io__raw_dynamic</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_dynamic</span><span class="p">)</span>
-            <span class="vi">@dynamic</span> <span class="o">=</span> <span class="no">DynamicSection</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_dynamic</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="vi">@_is_le</span><span class="p">)</span>
-          <span class="k">end</span>
-          <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
-        <span class="k">end</span>
-        <span class="vi">@dynamic</span>
-      <span class="k">end</span>
       <span class="k">def</span> <span class="nf">flags_obj</span>
         <span class="k">return</span> <span class="vi">@flags_obj</span> <span class="k">unless</span> <span class="vi">@flags_obj</span><span class="o">.</span><span class="n">nil?</span>
         <span class="k">if</span> <span class="vi">@_is_le</span>
@@ -1268,8 +1249,11 @@ section#format-index .row {
       <span class="kp">attr_reader</span> <span class="ss">:memsz</span>
       <span class="kp">attr_reader</span> <span class="ss">:flags32</span>
       <span class="kp">attr_reader</span> <span class="ss">:align</span>
-      <span class="kp">attr_reader</span> <span class="ss">:_raw_dynamic</span>
     <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html Source</span>
+    <span class="c1"># @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source</span>
     <span class="k">class</span> <span class="nc">DynamicSectionEntry</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
       <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">_is_le</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
         <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
@@ -1335,6 +1319,26 @@ section#format-index .row {
           <span class="k">end</span>
         <span class="k">end</span>
         <span class="vi">@flag_1_values</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">value_str</span>
+        <span class="k">return</span> <span class="vi">@value_str</span> <span class="k">unless</span> <span class="vi">@value_str</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="k">if</span>  <span class="p">((</span><span class="n">is_value_str</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">_parent</span><span class="o">.</span><span class="n">is_string_table_linked</span><span class="p">))</span> 
+          <span class="n">io</span> <span class="o">=</span> <span class="n">_parent</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">linked_section</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">_io</span>
+          <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+          <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">value_or_ptr</span><span class="p">)</span>
+          <span class="k">if</span> <span class="vi">@_is_le</span>
+            <span class="vi">@value_str</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+          <span class="k">else</span>
+            <span class="vi">@value_str</span> <span class="o">=</span> <span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+          <span class="k">end</span>
+          <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+        <span class="k">end</span>
+        <span class="vi">@value_str</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">is_value_str</span>
+        <span class="k">return</span> <span class="vi">@is_value_str</span> <span class="k">unless</span> <span class="vi">@is_value_str</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="vi">@is_value_str</span> <span class="o">=</span>  <span class="p">((</span><span class="n">value_or_ptr</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span> <span class="p">((</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_needed</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_soname</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_rpath</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_runpath</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_sunw_auxiliary</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_sunw_filter</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_auxiliary</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_filter</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_config</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_depaudit</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="ss">:dynamic_array_tags_audit</span><span class="p">))</span> <span class="p">))</span> 
+        <span class="vi">@is_value_str</span>
       <span class="k">end</span>
       <span class="kp">attr_reader</span> <span class="ss">:tag</span>
       <span class="kp">attr_reader</span> <span class="ss">:value_or_ptr</span>
@@ -1648,6 +1652,11 @@ section#format-index .row {
           <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">end</span>
         <span class="nb">self</span>
+      <span class="k">end</span>
+      <span class="k">def</span> <span class="nf">is_string_table_linked</span>
+        <span class="k">return</span> <span class="vi">@is_string_table_linked</span> <span class="k">unless</span> <span class="vi">@is_string_table_linked</span><span class="o">.</span><span class="n">nil?</span>
+        <span class="vi">@is_string_table_linked</span> <span class="o">=</span> <span class="n">_parent</span><span class="o">.</span><span class="n">linked_section</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="ss">:sh_type_strtab</span>
+        <span class="vi">@is_string_table_linked</span>
       <span class="k">end</span>
       <span class="kp">attr_reader</span> <span class="ss">:entries</span>
     <span class="k">end</span>

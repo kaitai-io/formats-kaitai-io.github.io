@@ -1264,30 +1264,6 @@ function Elf.EndianElf.ProgramHeader:_read_be()
   end
 end
 
-Elf.EndianElf.ProgramHeader.property.dynamic = {}
-function Elf.EndianElf.ProgramHeader.property.dynamic:get()
-  if self._m_dynamic ~= nil then
-    return self._m_dynamic
-  end
-
-  if self.type == Elf.PhType.dynamic then
-    local _io = self._root._io
-    local _pos = _io:pos()
-    _io:seek(self.offset)
-    if self._is_le then
-      self._raw__m_dynamic = _io:read_bytes(self.filesz)
-      local _io = KaitaiStream(stringstream(self._raw__m_dynamic))
-      self._m_dynamic = Elf.EndianElf.DynamicSection(_io, self, self._root, self._is_le)
-    else
-      self._raw__m_dynamic = _io:read_bytes(self.filesz)
-      local _io = KaitaiStream(stringstream(self._raw__m_dynamic))
-      self._m_dynamic = Elf.EndianElf.DynamicSection(_io, self, self._root, self._is_le)
-    end
-    _io:seek(_pos)
-  end
-  return self._m_dynamic
-end
-
 Elf.EndianElf.ProgramHeader.property.flags_obj = {}
 function Elf.EndianElf.ProgramHeader.property.flags_obj:get()
   if self._m_flags_obj ~= nil then
@@ -1313,6 +1289,9 @@ function Elf.EndianElf.ProgramHeader.property.flags_obj:get()
 end
 
 
+-- 
+-- See also: Source (https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html)
+-- See also: Source (https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section)
 Elf.EndianElf.DynamicSectionEntry = class.class(KaitaiStruct)
 
 function Elf.EndianElf.DynamicSectionEntry:_init(io, parent, root, is_le)
@@ -1388,6 +1367,36 @@ function Elf.EndianElf.DynamicSectionEntry.property.flag_1_values:get()
     end
   end
   return self._m_flag_1_values
+end
+
+Elf.EndianElf.DynamicSectionEntry.property.value_str = {}
+function Elf.EndianElf.DynamicSectionEntry.property.value_str:get()
+  if self._m_value_str ~= nil then
+    return self._m_value_str
+  end
+
+  if  ((self.is_value_str) and (self._parent.is_string_table_linked))  then
+    local _io = self._parent._parent.linked_section.body._io
+    local _pos = _io:pos()
+    _io:seek(self.value_or_ptr)
+    if self._is_le then
+      self._m_value_str = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+    else
+      self._m_value_str = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+    end
+    _io:seek(_pos)
+  end
+  return self._m_value_str
+end
+
+Elf.EndianElf.DynamicSectionEntry.property.is_value_str = {}
+function Elf.EndianElf.DynamicSectionEntry.property.is_value_str:get()
+  if self._m_is_value_str ~= nil then
+    return self._m_is_value_str
+  end
+
+  self._m_is_value_str =  ((self.value_or_ptr ~= 0) and ( ((self.tag_enum == Elf.DynamicArrayTags.needed) or (self.tag_enum == Elf.DynamicArrayTags.soname) or (self.tag_enum == Elf.DynamicArrayTags.rpath) or (self.tag_enum == Elf.DynamicArrayTags.runpath) or (self.tag_enum == Elf.DynamicArrayTags.sunw_auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.sunw_filter) or (self.tag_enum == Elf.DynamicArrayTags.auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.filter) or (self.tag_enum == Elf.DynamicArrayTags.config) or (self.tag_enum == Elf.DynamicArrayTags.depaudit) or (self.tag_enum == Elf.DynamicArrayTags.audit)) )) 
+  return self._m_is_value_str
 end
 
 
@@ -1707,6 +1716,16 @@ function Elf.EndianElf.DynamicSection:_read_be()
     self.entries[i + 1] = Elf.EndianElf.DynamicSectionEntry(self._io, self, self._root, self._is_le)
     i = i + 1
   end
+end
+
+Elf.EndianElf.DynamicSection.property.is_string_table_linked = {}
+function Elf.EndianElf.DynamicSection.property.is_string_table_linked:get()
+  if self._m_is_string_table_linked ~= nil then
+    return self._m_is_string_table_linked
+  end
+
+  self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+  return self._m_is_string_table_linked
 end
 
 

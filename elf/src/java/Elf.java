@@ -1438,27 +1438,6 @@ public class Elf extends KaitaiStruct {
                     }
                 }
             }
-            private DynamicSection dynamic;
-            public DynamicSection dynamic() {
-                if (this.dynamic != null)
-                    return this.dynamic;
-                if (type() == Elf.PhType.DYNAMIC) {
-                    KaitaiStream io = _root._io();
-                    long _pos = io.pos();
-                    io.seek(offset());
-                    if (_is_le) {
-                        this._raw_dynamic = io.readBytes(filesz());
-                        KaitaiStream _io__raw_dynamic = new ByteBufferKaitaiStream(_raw_dynamic);
-                        this.dynamic = new DynamicSection(_io__raw_dynamic, this, _root, _is_le);
-                    } else {
-                        this._raw_dynamic = io.readBytes(filesz());
-                        KaitaiStream _io__raw_dynamic = new ByteBufferKaitaiStream(_raw_dynamic);
-                        this.dynamic = new DynamicSection(_io__raw_dynamic, this, _root, _is_le);
-                    }
-                    io.seek(_pos);
-                }
-                return this.dynamic;
-            }
             private PhdrTypeFlags flagsObj;
             public PhdrTypeFlags flagsObj() {
                 if (this.flagsObj != null)
@@ -1509,7 +1488,6 @@ public class Elf extends KaitaiStruct {
             private Long align;
             private Elf _root;
             private Elf.EndianElf _parent;
-            private byte[] _raw_dynamic;
             public PhType type() { return type; }
             public Long flags64() { return flags64; }
             public Long offset() { return offset; }
@@ -1521,8 +1499,12 @@ public class Elf extends KaitaiStruct {
             public Long align() { return align; }
             public Elf _root() { return _root; }
             public Elf.EndianElf _parent() { return _parent; }
-            public byte[] _raw_dynamic() { return _raw_dynamic; }
         }
+
+        /**
+         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html">Source</a>
+         * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
+         */
         public static class DynamicSectionEntry extends KaitaiStruct {
             private Boolean _is_le;
 
@@ -1626,6 +1608,31 @@ public class Elf extends KaitaiStruct {
                     }
                 }
                 return this.flag1Values;
+            }
+            private String valueStr;
+            public String valueStr() {
+                if (this.valueStr != null)
+                    return this.valueStr;
+                if ( ((isValueStr()) && (_parent().isStringTableLinked())) ) {
+                    KaitaiStream io = ((Elf.EndianElf.StringsStruct) (_parent()._parent().linkedSection().body()))._io();
+                    long _pos = io.pos();
+                    io.seek(valueOrPtr());
+                    if (_is_le) {
+                        this.valueStr = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                    } else {
+                        this.valueStr = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                    }
+                    io.seek(_pos);
+                }
+                return this.valueStr;
+            }
+            private Boolean isValueStr;
+            public Boolean isValueStr() {
+                if (this.isValueStr != null)
+                    return this.isValueStr;
+                boolean _tmp = (boolean) ( ((valueOrPtr() != 0) && ( ((tagEnum() == Elf.DynamicArrayTags.NEEDED) || (tagEnum() == Elf.DynamicArrayTags.SONAME) || (tagEnum() == Elf.DynamicArrayTags.RPATH) || (tagEnum() == Elf.DynamicArrayTags.RUNPATH) || (tagEnum() == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.SUNW_FILTER) || (tagEnum() == Elf.DynamicArrayTags.AUXILIARY) || (tagEnum() == Elf.DynamicArrayTags.FILTER) || (tagEnum() == Elf.DynamicArrayTags.CONFIG) || (tagEnum() == Elf.DynamicArrayTags.DEPAUDIT) || (tagEnum() == Elf.DynamicArrayTags.AUDIT)) )) );
+                this.isValueStr = _tmp;
+                return this.isValueStr;
             }
             private Long tag;
             private Long valueOrPtr;
@@ -2096,7 +2103,7 @@ public class Elf extends KaitaiStruct {
         public static class DynamicSection extends KaitaiStruct {
             private Boolean _is_le;
 
-            public DynamicSection(KaitaiStream _io, KaitaiStruct _parent, Elf _root, boolean _is_le) {
+            public DynamicSection(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, boolean _is_le) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;
@@ -2133,12 +2140,20 @@ public class Elf extends KaitaiStruct {
                     }
                 }
             }
+            private Boolean isStringTableLinked;
+            public Boolean isStringTableLinked() {
+                if (this.isStringTableLinked != null)
+                    return this.isStringTableLinked;
+                boolean _tmp = (boolean) (_parent().linkedSection().type() == Elf.ShType.STRTAB);
+                this.isStringTableLinked = _tmp;
+                return this.isStringTableLinked;
+            }
             private ArrayList<DynamicSectionEntry> entries;
             private Elf _root;
-            private KaitaiStruct _parent;
+            private Elf.EndianElf.SectionHeader _parent;
             public ArrayList<DynamicSectionEntry> entries() { return entries; }
             public Elf _root() { return _root; }
-            public KaitaiStruct _parent() { return _parent; }
+            public Elf.EndianElf.SectionHeader _parent() { return _parent; }
         }
         public static class DynsymSection extends KaitaiStruct {
             private Boolean _is_le;

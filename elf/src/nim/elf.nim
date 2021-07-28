@@ -344,8 +344,6 @@ type
     `flags32`*: uint32
     `align`*: uint64
     `parent`*: Elf_EndianElf
-    `rawDynamicInst`*: seq[byte]
-    `dynamicInst`*: Elf_EndianElf_DynamicSection
     `flagsObjInst`*: Elf_PhdrTypeFlags
     isLe: bool
   Elf_EndianElf_DynamicSectionEntry* = ref object of KaitaiStruct
@@ -354,6 +352,8 @@ type
     `parent`*: Elf_EndianElf_DynamicSection
     `tagEnumInst`*: Elf_DynamicArrayTags
     `flag1ValuesInst`*: Elf_DtFlag1Values
+    `valueStrInst`*: string
+    `isValueStrInst`*: bool
     isLe: bool
   Elf_EndianElf_SectionHeader* = ref object of KaitaiStruct
     `ofsName`*: uint32
@@ -380,7 +380,8 @@ type
     isLe: bool
   Elf_EndianElf_DynamicSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_DynamicSectionEntry]
-    `parent`*: KaitaiStruct
+    `parent`*: Elf_EndianElf_SectionHeader
+    `isStringTableLinkedInst`*: bool
     isLe: bool
   Elf_EndianElf_DynsymSection* = ref object of KaitaiStruct
     `entries`*: seq[Elf_EndianElf_DynsymSectionEntry]
@@ -438,7 +439,7 @@ proc read*(_: typedesc[Elf_EndianElf_ProgramHeader], io: KaitaiStream, root: Kai
 proc read*(_: typedesc[Elf_EndianElf_DynamicSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynamicSection): Elf_EndianElf_DynamicSectionEntry
 proc read*(_: typedesc[Elf_EndianElf_SectionHeader], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf): Elf_EndianElf_SectionHeader
 proc read*(_: typedesc[Elf_EndianElf_RelocationSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader, hasAddend: any): Elf_EndianElf_RelocationSection
-proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf_EndianElf_DynamicSection
+proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_DynamicSection
 proc read*(_: typedesc[Elf_EndianElf_DynsymSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_DynsymSection
 proc read*(_: typedesc[Elf_EndianElf_RelocationSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_RelocationSection): Elf_EndianElf_RelocationSectionEntry
 proc read*(_: typedesc[Elf_EndianElf_DynsymSectionEntry], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_DynsymSection): Elf_EndianElf_DynsymSectionEntry
@@ -500,14 +501,16 @@ proc nodeflib*(this: Elf_DtFlag1Values): bool
 proc programHeaders*(this: Elf_EndianElf): seq[Elf_EndianElf_ProgramHeader]
 proc sectionHeaders*(this: Elf_EndianElf): seq[Elf_EndianElf_SectionHeader]
 proc sectionNames*(this: Elf_EndianElf): Elf_EndianElf_StringsStruct
-proc dynamic*(this: Elf_EndianElf_ProgramHeader): Elf_EndianElf_DynamicSection
 proc flagsObj*(this: Elf_EndianElf_ProgramHeader): Elf_PhdrTypeFlags
 proc tagEnum*(this: Elf_EndianElf_DynamicSectionEntry): Elf_DynamicArrayTags
 proc flag1Values*(this: Elf_EndianElf_DynamicSectionEntry): Elf_DtFlag1Values
+proc valueStr*(this: Elf_EndianElf_DynamicSectionEntry): string
+proc isValueStr*(this: Elf_EndianElf_DynamicSectionEntry): bool
 proc body*(this: Elf_EndianElf_SectionHeader): KaitaiStruct
 proc linkedSection*(this: Elf_EndianElf_SectionHeader): Elf_EndianElf_SectionHeader
 proc name*(this: Elf_EndianElf_SectionHeader): string
 proc flagsObj*(this: Elf_EndianElf_SectionHeader): Elf_SectionHeaderFlags
+proc isStringTableLinked*(this: Elf_EndianElf_DynamicSection): bool
 proc isStringTableLinked*(this: Elf_EndianElf_DynsymSection): bool
 proc isShIdxReserved*(this: Elf_EndianElf_DynsymSectionEntry): bool
 proc isShIdxOs*(this: Elf_EndianElf_DynsymSectionEntry): bool
@@ -1537,29 +1540,6 @@ proc read*(_: typedesc[Elf_EndianElf_ProgramHeader], io: KaitaiStream, root: Kai
   else:
     readBe(this)
 
-proc dynamic(this: Elf_EndianElf_ProgramHeader): Elf_EndianElf_DynamicSection = 
-  if this.dynamicInst != nil:
-    return this.dynamicInst
-  if this.type == elf.dynamic:
-    let io = Elf(this.root).io
-    let pos = io.pos()
-    io.seek(int(this.offset))
-    if this.isLe:
-      let rawDynamicInstExpr = io.readBytes(int(this.filesz))
-      this.rawDynamicInst = rawDynamicInstExpr
-      let rawDynamicInstIo = newKaitaiStream(rawDynamicInstExpr)
-      let dynamicInstExpr = Elf_EndianElf_DynamicSection.read(rawDynamicInstIo, this.root, this)
-      this.dynamicInst = dynamicInstExpr
-    else:
-      let rawDynamicInstExpr = io.readBytes(int(this.filesz))
-      this.rawDynamicInst = rawDynamicInstExpr
-      let rawDynamicInstIo = newKaitaiStream(rawDynamicInstExpr)
-      let dynamicInstExpr = Elf_EndianElf_DynamicSection.read(rawDynamicInstIo, this.root, this)
-      this.dynamicInst = dynamicInstExpr
-    io.seek(pos)
-  if this.dynamicInst != nil:
-    return this.dynamicInst
-
 proc flagsObj(this: Elf_EndianElf_ProgramHeader): Elf_PhdrTypeFlags = 
   if this.flagsObjInst != nil:
     return this.flagsObjInst
@@ -1587,6 +1567,11 @@ proc flagsObj(this: Elf_EndianElf_ProgramHeader): Elf_PhdrTypeFlags =
 proc fromFile*(_: typedesc[Elf_EndianElf_ProgramHeader], filename: string): Elf_EndianElf_ProgramHeader =
   Elf_EndianElf_ProgramHeader.read(newKaitaiFileStream(filename), nil, nil)
 
+
+##[
+@see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html">Source</a>
+@see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
+]##
 
 proc readLe(this: Elf_EndianElf_DynamicSectionEntry) =
   block:
@@ -1660,6 +1645,31 @@ proc flag1Values(this: Elf_EndianElf_DynamicSectionEntry): Elf_DtFlag1Values =
       this.flag1ValuesInst = flag1ValuesInstExpr
   if this.flag1ValuesInst != nil:
     return this.flag1ValuesInst
+
+proc valueStr(this: Elf_EndianElf_DynamicSectionEntry): string = 
+  if this.valueStrInst.len != 0:
+    return this.valueStrInst
+  if  ((this.isValueStr) and (this.parent.isStringTableLinked)) :
+    let io = (Elf_EndianElf_StringsStruct(this.parent.parent.linkedSection.body)).io
+    let pos = io.pos()
+    io.seek(int(this.valueOrPtr))
+    if this.isLe:
+      let valueStrInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
+      this.valueStrInst = valueStrInstExpr
+    else:
+      let valueStrInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
+      this.valueStrInst = valueStrInstExpr
+    io.seek(pos)
+  if this.valueStrInst.len != 0:
+    return this.valueStrInst
+
+proc isValueStr(this: Elf_EndianElf_DynamicSectionEntry): bool = 
+  if this.isValueStrInst != nil:
+    return this.isValueStrInst
+  let isValueStrInstExpr = bool( ((this.valueOrPtr != 0) and ( ((this.tagEnum == elf.needed) or (this.tagEnum == elf.soname) or (this.tagEnum == elf.rpath) or (this.tagEnum == elf.runpath) or (this.tagEnum == elf.sunw_auxiliary) or (this.tagEnum == elf.sunw_filter) or (this.tagEnum == elf.auxiliary) or (this.tagEnum == elf.filter) or (this.tagEnum == elf.config) or (this.tagEnum == elf.depaudit) or (this.tagEnum == elf.audit)) )) )
+  this.isValueStrInst = isValueStrInstExpr
+  if this.isValueStrInst != nil:
+    return this.isValueStrInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynamicSectionEntry], filename: string): Elf_EndianElf_DynamicSectionEntry =
   Elf_EndianElf_DynamicSectionEntry.read(newKaitaiFileStream(filename), nil, nil)
@@ -2009,7 +2019,7 @@ proc readBe(this: Elf_EndianElf_DynamicSection) =
       this.entries.add(it)
       inc i
 
-proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Elf_EndianElf_DynamicSection =
+proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: KaitaiStruct, parent: Elf_EndianElf_SectionHeader): Elf_EndianElf_DynamicSection =
   template this: untyped = result
   this = new(Elf_EndianElf_DynamicSection)
   let root = if root == nil: cast[Elf](this) else: cast[Elf](root)
@@ -2023,6 +2033,14 @@ proc read*(_: typedesc[Elf_EndianElf_DynamicSection], io: KaitaiStream, root: Ka
     readLe(this)
   else:
     readBe(this)
+
+proc isStringTableLinked(this: Elf_EndianElf_DynamicSection): bool = 
+  if this.isStringTableLinkedInst != nil:
+    return this.isStringTableLinkedInst
+  let isStringTableLinkedInstExpr = bool(this.parent.linkedSection.type == elf.strtab)
+  this.isStringTableLinkedInst = isStringTableLinkedInstExpr
+  if this.isStringTableLinkedInst != nil:
+    return this.isStringTableLinkedInst
 
 proc fromFile*(_: typedesc[Elf_EndianElf_DynamicSection], filename: string): Elf_EndianElf_DynamicSection =
   Elf_EndianElf_DynamicSection.read(newKaitaiFileStream(filename), nil, nil)

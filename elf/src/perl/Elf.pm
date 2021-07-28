@@ -1277,27 +1277,6 @@ sub _read_be {
     }
 }
 
-sub dynamic {
-    my ($self) = @_;
-    return $self->{dynamic} if ($self->{dynamic});
-    if ($self->type() == $Elf::PH_TYPE_DYNAMIC) {
-        my $io = $self->_root()->_io();
-        my $_pos = $io->pos();
-        $io->seek($self->offset());
-        if ($self->{_is_le}) {
-            $self->{_raw_dynamic} = $io->read_bytes($self->filesz());
-            my $io__raw_dynamic = IO::KaitaiStruct::Stream->new($self->{_raw_dynamic});
-            $self->{dynamic} = Elf::EndianElf::DynamicSection->new($io__raw_dynamic, $self, $self->{_root}, $self->{_is_le});
-        } else {
-            $self->{_raw_dynamic} = $io->read_bytes($self->filesz());
-            my $io__raw_dynamic = IO::KaitaiStruct::Stream->new($self->{_raw_dynamic});
-            $self->{dynamic} = Elf::EndianElf::DynamicSection->new($io__raw_dynamic, $self, $self->{_root}, $self->{_is_le});
-        }
-        $io->seek($_pos);
-    }
-    return $self->{dynamic};
-}
-
 sub flags_obj {
     my ($self) = @_;
     return $self->{flags_obj} if ($self->{flags_obj});
@@ -1364,11 +1343,6 @@ sub flags32 {
 sub align {
     my ($self) = @_;
     return $self->{align};
-}
-
-sub _raw_dynamic {
-    my ($self) = @_;
-    return $self->{_raw_dynamic};
 }
 
 ########################################################################
@@ -1467,6 +1441,30 @@ sub flag_1_values {
         }
     }
     return $self->{flag_1_values};
+}
+
+sub value_str {
+    my ($self) = @_;
+    return $self->{value_str} if ($self->{value_str});
+    if ( (($self->is_value_str()) && ($self->_parent()->is_string_table_linked())) ) {
+        my $io = $self->_parent()->_parent()->linked_section()->body()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->value_or_ptr());
+        if ($self->{_is_le}) {
+            $self->{value_str} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+        } else {
+            $self->{value_str} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+        }
+        $io->seek($_pos);
+    }
+    return $self->{value_str};
+}
+
+sub is_value_str {
+    my ($self) = @_;
+    return $self->{is_value_str} if ($self->{is_value_str});
+    $self->{is_value_str} =  (($self->value_or_ptr() != 0) && ( (($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_NEEDED) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SONAME) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_RUNPATH) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_SUNW_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUXILIARY) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FILTER) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_CONFIG) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_DEPAUDIT) || ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_AUDIT)) )) ;
+    return $self->{is_value_str};
 }
 
 sub tag {
@@ -1926,6 +1924,13 @@ sub _read_be {
     while (!$self->{_io}->is_eof()) {
         push @{$self->{entries}}, Elf::EndianElf::DynamicSectionEntry->new($self->{_io}, $self, $self->{_root}, $self->{_is_le});
     }
+}
+
+sub is_string_table_linked {
+    my ($self) = @_;
+    return $self->{is_string_table_linked} if ($self->{is_string_table_linked});
+    $self->{is_string_table_linked} = $self->_parent()->linked_section()->type() == $Elf::SH_TYPE_STRTAB;
+    return $self->{is_string_table_linked};
 }
 
 sub entries {

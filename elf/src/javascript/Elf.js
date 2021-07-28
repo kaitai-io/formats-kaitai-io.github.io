@@ -1353,28 +1353,6 @@ var Elf = (function() {
           break;
         }
       }
-      Object.defineProperty(ProgramHeader.prototype, 'dynamic', {
-        get: function() {
-          if (this._m_dynamic !== undefined)
-            return this._m_dynamic;
-          if (this.type == Elf.PhType.DYNAMIC) {
-            var io = this._root._io;
-            var _pos = io.pos;
-            io.seek(this.offset);
-            if (this._is_le) {
-              this._raw__m_dynamic = io.readBytes(this.filesz);
-              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
-              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
-            } else {
-              this._raw__m_dynamic = io.readBytes(this.filesz);
-              var _io__raw__m_dynamic = new KaitaiStream(this._raw__m_dynamic);
-              this._m_dynamic = new DynamicSection(_io__raw__m_dynamic, this, this._root, this._is_le);
-            }
-            io.seek(_pos);
-          }
-          return this._m_dynamic;
-        }
-      });
       Object.defineProperty(ProgramHeader.prototype, 'flagsObj', {
         get: function() {
           if (this._m_flagsObj !== undefined)
@@ -1404,6 +1382,11 @@ var Elf = (function() {
 
       return ProgramHeader;
     })();
+
+    /**
+     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html|Source}
+     * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section|Source}
+     */
 
     var DynamicSectionEntry = EndianElf.DynamicSectionEntry = (function() {
       function DynamicSectionEntry(_io, _parent, _root, _is_le) {
@@ -1480,6 +1463,32 @@ var Elf = (function() {
             }
           }
           return this._m_flag1Values;
+        }
+      });
+      Object.defineProperty(DynamicSectionEntry.prototype, 'valueStr', {
+        get: function() {
+          if (this._m_valueStr !== undefined)
+            return this._m_valueStr;
+          if ( ((this.isValueStr) && (this._parent.isStringTableLinked)) ) {
+            var io = this._parent._parent.linkedSection.body._io;
+            var _pos = io.pos;
+            io.seek(this.valueOrPtr);
+            if (this._is_le) {
+              this._m_valueStr = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+            } else {
+              this._m_valueStr = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+            }
+            io.seek(_pos);
+          }
+          return this._m_valueStr;
+        }
+      });
+      Object.defineProperty(DynamicSectionEntry.prototype, 'isValueStr', {
+        get: function() {
+          if (this._m_isValueStr !== undefined)
+            return this._m_isValueStr;
+          this._m_isValueStr =  ((this.valueOrPtr != 0) && ( ((this.tagEnum == Elf.DynamicArrayTags.NEEDED) || (this.tagEnum == Elf.DynamicArrayTags.SONAME) || (this.tagEnum == Elf.DynamicArrayTags.RPATH) || (this.tagEnum == Elf.DynamicArrayTags.RUNPATH) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.SUNW_FILTER) || (this.tagEnum == Elf.DynamicArrayTags.AUXILIARY) || (this.tagEnum == Elf.DynamicArrayTags.FILTER) || (this.tagEnum == Elf.DynamicArrayTags.CONFIG) || (this.tagEnum == Elf.DynamicArrayTags.DEPAUDIT) || (this.tagEnum == Elf.DynamicArrayTags.AUDIT)) )) ;
+          return this._m_isValueStr;
         }
       });
 
@@ -1834,6 +1843,14 @@ var Elf = (function() {
           i++;
         }
       }
+      Object.defineProperty(DynamicSection.prototype, 'isStringTableLinked', {
+        get: function() {
+          if (this._m_isStringTableLinked !== undefined)
+            return this._m_isStringTableLinked;
+          this._m_isStringTableLinked = this._parent.linkedSection.type == Elf.ShType.STRTAB;
+          return this._m_isStringTableLinked;
+        }
+      });
 
       return DynamicSection;
     })();

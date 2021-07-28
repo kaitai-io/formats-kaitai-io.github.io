@@ -927,27 +927,6 @@ class Elf(KaitaiStruct):
                     self.align = self._io.read_u8be()
 
             @property
-            def dynamic(self):
-                if hasattr(self, '_m_dynamic'):
-                    return self._m_dynamic if hasattr(self, '_m_dynamic') else None
-
-                if self.type == Elf.PhType.dynamic:
-                    io = self._root._io
-                    _pos = io.pos()
-                    io.seek(self.offset)
-                    if self._is_le:
-                        self._raw__m_dynamic = io.read_bytes(self.filesz)
-                        _io__raw__m_dynamic = KaitaiStream(BytesIO(self._raw__m_dynamic))
-                        self._m_dynamic = Elf.EndianElf.DynamicSection(_io__raw__m_dynamic, self, self._root, self._is_le)
-                    else:
-                        self._raw__m_dynamic = io.read_bytes(self.filesz)
-                        _io__raw__m_dynamic = KaitaiStream(BytesIO(self._raw__m_dynamic))
-                        self._m_dynamic = Elf.EndianElf.DynamicSection(_io__raw__m_dynamic, self, self._root, self._is_le)
-                    io.seek(_pos)
-
-                return self._m_dynamic if hasattr(self, '_m_dynamic') else None
-
-            @property
             def flags_obj(self):
                 if hasattr(self, '_m_flags_obj'):
                     return self._m_flags_obj if hasattr(self, '_m_flags_obj') else None
@@ -968,6 +947,14 @@ class Elf(KaitaiStruct):
 
 
         class DynamicSectionEntry(KaitaiStruct):
+            """
+            .. seealso::
+               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html
+            
+            
+            .. seealso::
+               Source - https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section
+            """
             def __init__(self, _io, _parent=None, _root=None, _is_le=None):
                 self._io = _io
                 self._parent = _parent
@@ -1027,6 +1014,31 @@ class Elf(KaitaiStruct):
                         self._m_flag_1_values = Elf.DtFlag1Values(self.value_or_ptr, self._io, self, self._root)
 
                 return self._m_flag_1_values if hasattr(self, '_m_flag_1_values') else None
+
+            @property
+            def value_str(self):
+                if hasattr(self, '_m_value_str'):
+                    return self._m_value_str if hasattr(self, '_m_value_str') else None
+
+                if  ((self.is_value_str) and (self._parent.is_string_table_linked)) :
+                    io = self._parent._parent.linked_section.body._io
+                    _pos = io.pos()
+                    io.seek(self.value_or_ptr)
+                    if self._is_le:
+                        self._m_value_str = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    else:
+                        self._m_value_str = (io.read_bytes_term(0, False, True, True)).decode(u"ASCII")
+                    io.seek(_pos)
+
+                return self._m_value_str if hasattr(self, '_m_value_str') else None
+
+            @property
+            def is_value_str(self):
+                if hasattr(self, '_m_is_value_str'):
+                    return self._m_is_value_str if hasattr(self, '_m_is_value_str') else None
+
+                self._m_is_value_str =  ((self.value_or_ptr != 0) and ( ((self.tag_enum == Elf.DynamicArrayTags.needed) or (self.tag_enum == Elf.DynamicArrayTags.soname) or (self.tag_enum == Elf.DynamicArrayTags.rpath) or (self.tag_enum == Elf.DynamicArrayTags.runpath) or (self.tag_enum == Elf.DynamicArrayTags.sunw_auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.sunw_filter) or (self.tag_enum == Elf.DynamicArrayTags.auxiliary) or (self.tag_enum == Elf.DynamicArrayTags.filter) or (self.tag_enum == Elf.DynamicArrayTags.config) or (self.tag_enum == Elf.DynamicArrayTags.depaudit) or (self.tag_enum == Elf.DynamicArrayTags.audit)) )) 
+                return self._m_is_value_str if hasattr(self, '_m_is_value_str') else None
 
 
         class SectionHeader(KaitaiStruct):
@@ -1307,6 +1319,14 @@ class Elf(KaitaiStruct):
                     self.entries.append(Elf.EndianElf.DynamicSectionEntry(self._io, self, self._root, self._is_le))
                     i += 1
 
+
+            @property
+            def is_string_table_linked(self):
+                if hasattr(self, '_m_is_string_table_linked'):
+                    return self._m_is_string_table_linked if hasattr(self, '_m_is_string_table_linked') else None
+
+                self._m_is_string_table_linked = self._parent.linked_section.type == Elf.ShType.strtab
+                return self._m_is_string_table_linked if hasattr(self, '_m_is_string_table_linked') else None
 
 
         class DynsymSection(KaitaiStruct):

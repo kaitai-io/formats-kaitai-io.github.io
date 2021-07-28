@@ -317,10 +317,6 @@ endian_elf__seq_section_header_offset_switch [label=<<TABLE BORDER="0" CELLBORDE
 					<TR><TD PORT="flags32_pos">...</TD><TD PORT="flags32_size">4</TD><TD>u4</TD><TD PORT="flags32_type">flags32</TD></TR>
 					<TR><TD PORT="align_pos">...</TD><TD PORT="align_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="align_type">align</TD></TR>
 				</TABLE>>];
-				program_header__inst__dynamic [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="dynamic_pos">offset</TD><TD PORT="dynamic_size">filesz</TD><TD>DynamicSection</TD><TD PORT="dynamic_type">dynamic</TD></TR>
-				</TABLE>>];
 				program_header__inst__flags_obj [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="flags_obj_pos">...</TD><TD PORT="flags_obj_size">...</TD><TD>switch (_root.bits)</TD><TD PORT="flags_obj_type">flags_obj</TD></TR>
@@ -365,6 +361,14 @@ program_header__inst__flags_obj_flags_obj_switch [label=<<TABLE BORDER="0" CELLB
 				dynamic_section_entry__inst__flag_1_values [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="flag_1_values_pos">...</TD><TD PORT="flag_1_values_size">0</TD><TD>DtFlag1Values</TD><TD PORT="flag_1_values_type">flag_1_values</TD></TR>
+				</TABLE>>];
+				dynamic_section_entry__inst__value_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="value_str_pos">value_or_ptr</TD><TD PORT="value_str_size">...</TD><TD>str(ASCII)</TD><TD PORT="value_str_type">value_str</TD></TR>
+				</TABLE>>];
+				dynamic_section_entry__inst__is_value_str [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_value_str</TD><TD> ((value_or_ptr != 0) &amp;&amp; ( ((tag_enum == :dynamic_array_tags_needed) || (tag_enum == :dynamic_array_tags_soname) || (tag_enum == :dynamic_array_tags_rpath) || (tag_enum == :dynamic_array_tags_runpath) || (tag_enum == :dynamic_array_tags_sunw_auxiliary) || (tag_enum == :dynamic_array_tags_sunw_filter) || (tag_enum == :dynamic_array_tags_auxiliary) || (tag_enum == :dynamic_array_tags_filter) || (tag_enum == :dynamic_array_tags_config) || (tag_enum == :dynamic_array_tags_depaudit) || (tag_enum == :dynamic_array_tags_audit)) )) </TD></TR>
 				</TABLE>>];
 dynamic_section_entry__seq_tag_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
@@ -453,6 +457,10 @@ section_header__inst__body_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" 
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">...</TD><TD>DynamicSectionEntry</TD><TD PORT="entries_type">entries</TD></TR>
 					<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+				</TABLE>>];
+				dynamic_section__inst__is_string_table_linked [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+					<TR><TD>is_string_table_linked</TD><TD>_parent.linked_section.type == :sh_type_strtab</TD></TR>
 				</TABLE>>];
 			}
 			subgraph cluster__dynsym_section {
@@ -642,9 +650,6 @@ relocation_section_entry__seq_addend_switch [label=<<TABLE BORDER="0" CELLBORDER
 	elf__seq:bits_type -> program_header__seq:memsz_type [color="#404040"];
 	program_header__seq:align_type -> program_header__seq_align_switch [style=bold];
 	elf__seq:bits_type -> program_header__seq:align_type [color="#404040"];
-	program_header__seq:offset_type -> program_header__inst__dynamic:dynamic_pos [color="#404040"];
-	program_header__seq:filesz_type -> program_header__inst__dynamic:dynamic_size [color="#404040"];
-	program_header__inst__dynamic:dynamic_type -> dynamic_section__seq [style=bold];
 	program_header__inst__flags_obj:flags_obj_type -> program_header__inst__flags_obj_flags_obj_switch [style=bold];
 	program_header__inst__flags_obj_flags_obj_switch:case0 -> phdr_type_flags__seq [style=bold];
 	program_header__inst__flags_obj_flags_obj_switch:case1 -> phdr_type_flags__seq [style=bold];
@@ -655,6 +660,19 @@ relocation_section_entry__seq_addend_switch [label=<<TABLE BORDER="0" CELLBORDER
 	elf__seq:bits_type -> dynamic_section_entry__seq:value_or_ptr_type [color="#404040"];
 	dynamic_section_entry__seq:tag_type -> dynamic_section_entry__inst__tag_enum [color="#404040"];
 	dynamic_section_entry__inst__flag_1_values:flag_1_values_type -> dt_flag_1_values__seq [style=bold];
+	dynamic_section_entry__seq:value_or_ptr_type -> dynamic_section_entry__inst__value_str:value_str_pos [color="#404040"];
+	dynamic_section_entry__seq:value_or_ptr_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
+	dynamic_section_entry__inst__tag_enum:tag_enum_type -> dynamic_section_entry__inst__is_value_str [color="#404040"];
 	section_header__seq:flags_type -> section_header__seq_flags_switch [style=bold];
 	elf__seq:bits_type -> section_header__seq:flags_type [color="#404040"];
 	section_header__seq:addr_type -> section_header__seq_addr_switch [style=bold];
@@ -683,6 +701,7 @@ relocation_section_entry__seq_addend_switch [label=<<TABLE BORDER="0" CELLBORDER
 	section_header__inst__flags_obj:flags_obj_type -> section_header_flags__seq [style=bold];
 	relocation_section__seq:entries_type -> relocation_section_entry__seq [style=bold];
 	dynamic_section__seq:entries_type -> dynamic_section_entry__seq [style=bold];
+	section_header__seq:type_type -> dynamic_section__inst__is_string_table_linked [color="#404040"];
 	dynsym_section__seq:entries_type -> dynsym_section_entry__seq [style=bold];
 	section_header__seq:type_type -> dynsym_section__inst__is_string_table_linked [color="#404040"];
 	relocation_section_entry__seq:offset_type -> relocation_section_entry__seq_offset_switch [style=bold];

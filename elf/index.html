@@ -603,12 +603,6 @@ section#format-index .row {
                 <span class="s">&#39;bits::b32&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
                 <span class="s">&#39;bits::b64&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
         <span class="nt">instances</span><span class="p">:</span>
-          <span class="nt">dynamic</span><span class="p">:</span>
-            <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
-            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">offset</span>
-            <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filesz</span>
-            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section</span>
-            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type == ph_type::dynamic</span>
           <span class="nt">flags_obj</span><span class="p">:</span>
             <span class="nt">type</span><span class="p">:</span>
               <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.bits</span>
@@ -718,7 +712,14 @@ section#format-index .row {
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_section_entry</span>
             <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+        <span class="nt">instances</span><span class="p">:</span>
+          <span class="nt">is_string_table_linked</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.linked_section.type == sh_type::strtab</span>
       <span class="nt">dynamic_section_entry</span><span class="p">:</span>
+        <span class="nt">doc-ref</span><span class="p">:</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html</span>
+          <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section</span>
+        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{tag_enum}:</span><span class="nv"> </span><span class="s">{value_or_ptr}</span><span class="nv"> </span><span class="s">{value_str}</span><span class="nv"> </span><span class="s">{flag_1_values:flags}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
             <span class="nt">type</span><span class="p">:</span>
@@ -740,7 +741,28 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dt_flag_1_values(value_or_ptr)</span>
             <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;tag_enum</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">dynamic_array_tags::flags_1&quot;</span>
             <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
-        <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{tag_enum}:</span><span class="nv"> </span><span class="s">{value_or_ptr}</span><span class="nv"> </span><span class="s">{flag_1_values:flags}&quot;</span>
+          <span class="nt">value_str</span><span class="p">:</span>
+            <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._parent.linked_section.body.as&lt;strings_struct&gt;._io</span>
+            <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value_or_ptr</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_value_str and _parent.is_string_table_linked</span>
+            <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
+          <span class="nt">is_value_str</span><span class="p">:</span>
+            <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+              <span class="no">value_or_ptr != 0 and (</span>
+                <span class="no">tag_enum == dynamic_array_tags::needed or</span>
+                <span class="no">tag_enum == dynamic_array_tags::soname or</span>
+                <span class="no">tag_enum == dynamic_array_tags::rpath or</span>
+                <span class="no">tag_enum == dynamic_array_tags::runpath or</span>
+                <span class="no">tag_enum == dynamic_array_tags::sunw_auxiliary or</span>
+                <span class="no">tag_enum == dynamic_array_tags::sunw_filter or</span>
+                <span class="no">tag_enum == dynamic_array_tags::auxiliary or</span>
+                <span class="no">tag_enum == dynamic_array_tags::filter or</span>
+                <span class="no">tag_enum == dynamic_array_tags::config or</span>
+                <span class="no">tag_enum == dynamic_array_tags::depaudit or</span>
+                <span class="no">tag_enum == dynamic_array_tags::audit</span>
+              <span class="no">)</span>
       <span class="nt">dynsym_section</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>

@@ -1006,27 +1006,6 @@ namespace Elf\EndianElf {
                     break;
             }
         }
-        protected $_m_dynamic;
-        public function dynamic() {
-            if ($this->_m_dynamic !== null)
-                return $this->_m_dynamic;
-            if ($this->type() == \Elf\PhType::DYNAMIC) {
-                $io = $this->_root()->_io();
-                $_pos = $io->pos();
-                $io->seek($this->offset());
-                if ($this->_m__is_le) {
-                    $this->_m__raw_dynamic = $io->readBytes($this->filesz());
-                    $_io__raw_dynamic = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
-                    $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($_io__raw_dynamic, $this, $this->_root, $this->_m__is_le);
-                } else {
-                    $this->_m__raw_dynamic = $io->readBytes($this->filesz());
-                    $_io__raw_dynamic = new \Kaitai\Struct\Stream($this->_m__raw_dynamic);
-                    $this->_m_dynamic = new \Elf\EndianElf\DynamicSection($_io__raw_dynamic, $this, $this->_root, $this->_m__is_le);
-                }
-                $io->seek($_pos);
-            }
-            return $this->_m_dynamic;
-        }
         protected $_m_flagsObj;
         public function flagsObj() {
             if ($this->_m_flagsObj !== null)
@@ -1061,7 +1040,6 @@ namespace Elf\EndianElf {
         protected $_m_memsz;
         protected $_m_flags32;
         protected $_m_align;
-        protected $_m__raw_dynamic;
         public function type() { return $this->_m_type; }
         public function flags64() { return $this->_m_flags64; }
         public function offset() { return $this->_m_offset; }
@@ -1071,7 +1049,6 @@ namespace Elf\EndianElf {
         public function memsz() { return $this->_m_memsz; }
         public function flags32() { return $this->_m_flags32; }
         public function align() { return $this->_m_align; }
-        public function _raw_dynamic() { return $this->_m__raw_dynamic; }
     }
 }
 
@@ -1152,6 +1129,30 @@ namespace Elf\EndianElf {
                 }
             }
             return $this->_m_flag1Values;
+        }
+        protected $_m_valueStr;
+        public function valueStr() {
+            if ($this->_m_valueStr !== null)
+                return $this->_m_valueStr;
+            if ( (($this->isValueStr()) && ($this->_parent()->isStringTableLinked())) ) {
+                $io = $this->_parent()->_parent()->linkedSection()->body()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->valueOrPtr());
+                if ($this->_m__is_le) {
+                    $this->_m_valueStr = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "ASCII");
+                } else {
+                    $this->_m_valueStr = \Kaitai\Struct\Stream::bytesToStr($io->readBytesTerm(0, false, true, true), "ASCII");
+                }
+                $io->seek($_pos);
+            }
+            return $this->_m_valueStr;
+        }
+        protected $_m_isValueStr;
+        public function isValueStr() {
+            if ($this->_m_isValueStr !== null)
+                return $this->_m_isValueStr;
+            $this->_m_isValueStr =  (($this->valueOrPtr() != 0) && ( (($this->tagEnum() == \Elf\DynamicArrayTags::NEEDED) || ($this->tagEnum() == \Elf\DynamicArrayTags::SONAME) || ($this->tagEnum() == \Elf\DynamicArrayTags::RPATH) || ($this->tagEnum() == \Elf\DynamicArrayTags::RUNPATH) || ($this->tagEnum() == \Elf\DynamicArrayTags::SUNW_AUXILIARY) || ($this->tagEnum() == \Elf\DynamicArrayTags::SUNW_FILTER) || ($this->tagEnum() == \Elf\DynamicArrayTags::AUXILIARY) || ($this->tagEnum() == \Elf\DynamicArrayTags::FILTER) || ($this->tagEnum() == \Elf\DynamicArrayTags::CONFIG) || ($this->tagEnum() == \Elf\DynamicArrayTags::DEPAUDIT) || ($this->tagEnum() == \Elf\DynamicArrayTags::AUDIT)) )) ;
+            return $this->_m_isValueStr;
         }
         protected $_m_tag;
         protected $_m_valueOrPtr;
@@ -1497,7 +1498,7 @@ namespace Elf\EndianElf {
     class DynamicSection extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
-        public function __construct(\Kaitai\Struct\Stream $_io, \Kaitai\Struct\Struct $_parent = null, \Elf $_root = null, $is_le = null) {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Elf\EndianElf\SectionHeader $_parent = null, \Elf $_root = null, $is_le = null) {
             parent::__construct($_io, $_parent, $_root);
             $this->_m__is_le = $is_le;
             $this->_read();
@@ -1530,6 +1531,13 @@ namespace Elf\EndianElf {
                 $this->_m_entries[] = new \Elf\EndianElf\DynamicSectionEntry($this->_io, $this, $this->_root, $this->_m__is_le);
                 $i++;
             }
+        }
+        protected $_m_isStringTableLinked;
+        public function isStringTableLinked() {
+            if ($this->_m_isStringTableLinked !== null)
+                return $this->_m_isStringTableLinked;
+            $this->_m_isStringTableLinked = $this->_parent()->linkedSection()->type() == \Elf\ShType::STRTAB;
+            return $this->_m_isStringTableLinked;
         }
         protected $_m_entries;
         public function entries() { return $this->_m_entries; }
