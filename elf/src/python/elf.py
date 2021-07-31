@@ -139,6 +139,8 @@ class Elf(KaitaiStruct):
         file = 4
         common = 5
         tls = 6
+        relc = 8
+        srelc = 9
         gnu_ifunc = 10
         os11 = 11
         os12 = 12

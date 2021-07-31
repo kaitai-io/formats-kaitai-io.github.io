@@ -203,6 +203,8 @@ public class Elf extends KaitaiStruct {
         FILE(4),
         COMMON(5),
         TLS(6),
+        RELC(8),
+        SRELC(9),
         GNU_IFUNC(10),
         OS11(11),
         OS12(12),
@@ -213,7 +215,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         SymbolType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, SymbolType> byId = new HashMap<Long, SymbolType>(13);
+        private static final Map<Long, SymbolType> byId = new HashMap<Long, SymbolType>(15);
         static {
             for (SymbolType e : SymbolType.values())
                 byId.put(e.id(), e);

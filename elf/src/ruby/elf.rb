@@ -141,6 +141,8 @@ class Elf < Kaitai::Struct::Struct
     4 => :symbol_type_file,
     5 => :symbol_type_common,
     6 => :symbol_type_tls,
+    8 => :symbol_type_relc,
+    9 => :symbol_type_srelc,
     10 => :symbol_type_gnu_ifunc,
     11 => :symbol_type_os11,
     12 => :symbol_type_os12,

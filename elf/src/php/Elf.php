@@ -2109,12 +2109,46 @@ namespace Elf {
 namespace Elf {
     class SymbolType {
         const NO_TYPE = 0;
+
+        /**
+         * associated with a data object, such as a variable, an array, and so on
+         */
         const OBJECT = 1;
+
+        /**
+         * associated with a function or other executable code
+         */
         const FUNC = 2;
+
+        /**
+         * associated with a section
+         */
         const SECTION = 3;
+
+        /**
+         * symbol's name gives the name of the source file associated with the object file
+         */
         const FILE = 4;
+
+        /**
+         * labels an uninitialized common block
+         */
         const COMMON = 5;
+
+        /**
+         * specifies a thread-local storage entity
+         */
         const TLS = 6;
+
+        /**
+         * complex relocation expression
+         */
+        const RELC = 8;
+
+        /**
+         * signed complex relocation expression
+         */
+        const SRELC = 9;
 
         /**
          * reserved for OS-specific semantics

@@ -152,6 +152,8 @@ namespace Kaitai
             File = 4,
             Common = 5,
             Tls = 6,
+            Relc = 8,
+            Srelc = 9,
             GnuIfunc = 10,
             Os11 = 11,
             Os12 = 12,

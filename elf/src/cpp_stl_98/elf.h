@@ -147,6 +147,8 @@ public:
         SYMBOL_TYPE_FILE = 4,
         SYMBOL_TYPE_COMMON = 5,
         SYMBOL_TYPE_TLS = 6,
+        SYMBOL_TYPE_RELC = 8,
+        SYMBOL_TYPE_SRELC = 9,
         SYMBOL_TYPE_GNU_IFUNC = 10,
         SYMBOL_TYPE_OS11 = 11,
         SYMBOL_TYPE_OS12 = 12,
