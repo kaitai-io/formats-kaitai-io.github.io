@@ -2118,8 +2118,10 @@ namespace Elf {
 
         /**
          * reserved for OS-specific semantics
+         * 
+         * `STT_GNU_IFUNC` is a GNU extension to ELF format that adds support for "indirect functions"
          */
-        const OS10 = 10;
+        const GNU_IFUNC = 10;
 
         /**
          * reserved for OS-specific semantics
@@ -2183,7 +2185,7 @@ namespace Elf {
         const FLAGS = 30;
         const PREINIT_ARRAY = 32;
         const PREINIT_ARRAYSZ = 33;
-        const MAXPOSTAGS = 34;
+        const SYMTAB_SHNDX = 34;
         const SUNW_AUXILIARY = 1610612749;
         const SUNW_FILTER = 1610612750;
         const SUNW_CAP = 1610612752;

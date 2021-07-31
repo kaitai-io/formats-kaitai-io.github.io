@@ -139,7 +139,7 @@ class Elf(KaitaiStruct):
         file = 4
         common = 5
         tls = 6
-        os10 = 10
+        gnu_ifunc = 10
         os11 = 11
         os12 = 12
         proc13 = 13
@@ -180,7 +180,7 @@ class Elf(KaitaiStruct):
         flags = 30
         preinit_array = 32
         preinit_arraysz = 33
-        maxpostags = 34
+        symtab_shndx = 34
         sunw_auxiliary = 1610612749
         sunw_filter = 1610612750
         sunw_cap = 1610612752
