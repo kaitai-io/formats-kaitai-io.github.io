@@ -723,7 +723,7 @@ void elf_t::endian_elf_t::_clean_up() {
             delete m_section_headers; m_section_headers = 0;
         }
     }
-    if (f_section_names) {
+    if (f_section_names && !n_section_names) {
         if (m__io__raw_section_names) {
             delete m__io__raw_section_names; m__io__raw_section_names = 0;
         }
@@ -2323,19 +2323,23 @@ std::vector<elf_t::endian_elf_t::section_header_t*>* elf_t::endian_elf_t::sectio
 elf_t::endian_elf_t::strings_struct_t* elf_t::endian_elf_t::section_names() {
     if (f_section_names)
         return m_section_names;
-    std::streampos _pos = m__io->pos();
-    m__io->seek(section_headers()->at(section_names_idx())->ofs_body());
-    if (m__is_le == 1) {
-        m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
-        m__io__raw_section_names = new kaitai::kstream(m__raw_section_names);
-        m_section_names = new strings_struct_t(m__io__raw_section_names, this, m__root, m__is_le);
-    } else {
-        m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
-        m__io__raw_section_names = new kaitai::kstream(m__raw_section_names);
-        m_section_names = new strings_struct_t(m__io__raw_section_names, this, m__root, m__is_le);
+    n_section_names = true;
+    if ( ((section_names_idx() != elf_t::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && (section_names_idx() < _root()->header()->qty_section_header())) ) {
+        n_section_names = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek(section_headers()->at(section_names_idx())->ofs_body());
+        if (m__is_le == 1) {
+            m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
+            m__io__raw_section_names = new kaitai::kstream(m__raw_section_names);
+            m_section_names = new strings_struct_t(m__io__raw_section_names, this, m__root, m__is_le);
+        } else {
+            m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
+            m__io__raw_section_names = new kaitai::kstream(m__raw_section_names);
+            m_section_names = new strings_struct_t(m__io__raw_section_names, this, m__root, m__is_le);
+        }
+        m__io->seek(_pos);
+        f_section_names = true;
     }
-    m__io->seek(_pos);
-    f_section_names = true;
     return m_section_names;
 }
 

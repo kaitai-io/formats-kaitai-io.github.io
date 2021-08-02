@@ -12,7 +12,7 @@
 /**
  * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}
  * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html|Source}
- * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html|Source}
+ * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html|Source}
  */
 
 var Elf = (function() {
@@ -82,6 +82,9 @@ var Elf = (function() {
     PREINIT_ARRAY: 16,
     GROUP: 17,
     SYMTAB_SHNDX: 18,
+    SUNW_SYMNSORT: 1879048172,
+    SUNW_PHNAME: 1879048173,
+    SUNW_ANCILLARY: 1879048174,
     SUNW_CAPCHAIN: 1879048175,
     SUNW_CAPINFO: 1879048176,
     SUNW_SYMSORT: 1879048177,
@@ -103,6 +106,8 @@ var Elf = (function() {
     AMD64_UNWIND: 1879048193,
     ARM_PREEMPTMAP: 1879048194,
     ARM_ATTRIBUTES: 1879048195,
+    ARM_DEBUGOVERLAY: 1879048196,
+    ARM_OVERLAYSECTION: 1879048197,
 
     0: "NULL_TYPE",
     1: "PROGBITS",
@@ -121,6 +126,9 @@ var Elf = (function() {
     16: "PREINIT_ARRAY",
     17: "GROUP",
     18: "SYMTAB_SHNDX",
+    1879048172: "SUNW_SYMNSORT",
+    1879048173: "SUNW_PHNAME",
+    1879048174: "SUNW_ANCILLARY",
     1879048175: "SUNW_CAPCHAIN",
     1879048176: "SUNW_CAPINFO",
     1879048177: "SUNW_SYMSORT",
@@ -142,6 +150,8 @@ var Elf = (function() {
     1879048193: "AMD64_UNWIND",
     1879048194: "ARM_PREEMPTMAP",
     1879048195: "ARM_ATTRIBUTES",
+    1879048196: "ARM_DEBUGOVERLAY",
+    1879048197: "ARM_OVERLAYSECTION",
   });
 
   Elf.OsAbi = Object.freeze({
@@ -301,8 +311,10 @@ var Elf = (function() {
     PREINIT_ARRAY: 32,
     PREINIT_ARRAYSZ: 33,
     SYMTAB_SHNDX: 34,
+    DEPRECATED_SPARC_REGISTER: 117440513,
     SUNW_AUXILIARY: 1610612749,
-    SUNW_FILTER: 1610612750,
+    SUNW_RTLDINF: 1610612750,
+    SUNW_FILTER: 1610612751,
     SUNW_CAP: 1610612752,
     SUNW_SYMTAB: 1610612753,
     SUNW_SYMSZ: 1610612754,
@@ -315,8 +327,23 @@ var Elf = (function() {
     SUNW_STRPAD: 1610612761,
     SUNW_CAPCHAIN: 1610612762,
     SUNW_LDMACH: 1610612763,
+    SUNW_SYMTAB_SHNDX: 1610612764,
     SUNW_CAPCHAINENT: 1610612765,
+    SUNW_DEFERRED: 1610612766,
     SUNW_CAPCHAINSZ: 1610612767,
+    SUNW_PHNAME: 1610612768,
+    SUNW_PARENT: 1610612769,
+    SUNW_SX_ASLR: 1610612771,
+    SUNW_RELAX: 1610612773,
+    SUNW_KMOD: 1610612775,
+    SUNW_SX_NXHEAP: 1610612777,
+    SUNW_SX_NXSTACK: 1610612779,
+    SUNW_SX_ADIHEAP: 1610612781,
+    SUNW_SX_ADISTACK: 1610612783,
+    SUNW_SX_SSBD: 1610612785,
+    SUNW_SYMNSORT: 1610612786,
+    SUNW_SYMNSORTSZ: 1610612787,
+    GNU_FLAGS_1: 1879047668,
     GNU_PRELINKED: 1879047669,
     GNU_CONFLICTSZ: 1879047670,
     GNU_LIBLISTSZ: 1879047671,
@@ -386,8 +413,10 @@ var Elf = (function() {
     32: "PREINIT_ARRAY",
     33: "PREINIT_ARRAYSZ",
     34: "SYMTAB_SHNDX",
+    117440513: "DEPRECATED_SPARC_REGISTER",
     1610612749: "SUNW_AUXILIARY",
-    1610612750: "SUNW_FILTER",
+    1610612750: "SUNW_RTLDINF",
+    1610612751: "SUNW_FILTER",
     1610612752: "SUNW_CAP",
     1610612753: "SUNW_SYMTAB",
     1610612754: "SUNW_SYMSZ",
@@ -400,8 +429,23 @@ var Elf = (function() {
     1610612761: "SUNW_STRPAD",
     1610612762: "SUNW_CAPCHAIN",
     1610612763: "SUNW_LDMACH",
+    1610612764: "SUNW_SYMTAB_SHNDX",
     1610612765: "SUNW_CAPCHAINENT",
+    1610612766: "SUNW_DEFERRED",
     1610612767: "SUNW_CAPCHAINSZ",
+    1610612768: "SUNW_PHNAME",
+    1610612769: "SUNW_PARENT",
+    1610612771: "SUNW_SX_ASLR",
+    1610612773: "SUNW_RELAX",
+    1610612775: "SUNW_KMOD",
+    1610612777: "SUNW_SX_NXHEAP",
+    1610612779: "SUNW_SX_NXSTACK",
+    1610612781: "SUNW_SX_ADIHEAP",
+    1610612783: "SUNW_SX_ADISTACK",
+    1610612785: "SUNW_SX_SSBD",
+    1610612786: "SUNW_SYMNSORT",
+    1610612787: "SUNW_SYMNSORTSZ",
+    1879047668: "GNU_FLAGS_1",
     1879047669: "GNU_PRELINKED",
     1879047670: "GNU_CONFLICTSZ",
     1879047671: "GNU_LIBLISTSZ",
@@ -1388,7 +1432,7 @@ var Elf = (function() {
     })();
 
     /**
-     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html|Source}
+     * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html|Source}
      * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section|Source}
      */
 
@@ -1768,7 +1812,7 @@ var Elf = (function() {
     })();
 
     /**
-     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html|Source}
+     * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html|Source}
      * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html|Source}
      */
 
@@ -1986,7 +2030,7 @@ var Elf = (function() {
     })();
 
     /**
-     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html|Source}
+     * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html|Source}
      * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html|Source}
      */
 
@@ -2136,7 +2180,7 @@ var Elf = (function() {
     })();
 
     /**
-     * @see {@link https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html|Source}
+     * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html|Source}
      * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section|Source}
      */
 
@@ -2284,18 +2328,20 @@ var Elf = (function() {
       get: function() {
         if (this._m_sectionNames !== undefined)
           return this._m_sectionNames;
-        var _pos = this._io.pos;
-        this._io.seek(this.sectionHeaders[this.sectionNamesIdx].ofsBody);
-        if (this._is_le) {
-          this._raw__m_sectionNames = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
-          var _io__raw__m_sectionNames = new KaitaiStream(this._raw__m_sectionNames);
-          this._m_sectionNames = new StringsStruct(_io__raw__m_sectionNames, this, this._root, this._is_le);
-        } else {
-          this._raw__m_sectionNames = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
-          var _io__raw__m_sectionNames = new KaitaiStream(this._raw__m_sectionNames);
-          this._m_sectionNames = new StringsStruct(_io__raw__m_sectionNames, this, this._root, this._is_le);
+        if ( ((this.sectionNamesIdx != Elf.SectionHeaderIdxSpecial.UNDEFINED) && (this.sectionNamesIdx < this._root.header.qtySectionHeader)) ) {
+          var _pos = this._io.pos;
+          this._io.seek(this.sectionHeaders[this.sectionNamesIdx].ofsBody);
+          if (this._is_le) {
+            this._raw__m_sectionNames = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
+            var _io__raw__m_sectionNames = new KaitaiStream(this._raw__m_sectionNames);
+            this._m_sectionNames = new StringsStruct(_io__raw__m_sectionNames, this, this._root, this._is_le);
+          } else {
+            this._raw__m_sectionNames = this._io.readBytes(this.sectionHeaders[this.sectionNamesIdx].lenBody);
+            var _io__raw__m_sectionNames = new KaitaiStream(this._raw__m_sectionNames);
+            this._m_sectionNames = new StringsStruct(_io__raw__m_sectionNames, this, this._root, this._is_le);
+          }
+          this._io.seek(_pos);
         }
-        this._io.seek(_pos);
         return this._m_sectionNames;
       }
     });

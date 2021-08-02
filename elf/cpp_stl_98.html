@@ -363,7 +363,7 @@ and build them along with your project.</p>
 <span class="cm">/**</span>
 <span class="cm"> * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source</span>
 <span class="cm"> * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source</span>
-<span class="cm"> * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source</span>
+<span class="cm"> * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html Source</span>
 <span class="cm"> */</span>
 
 <span class="k">class</span> <span class="nc">elf_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -419,6 +419,9 @@ and build them along with your project.</p>
         <span class="n">SH_TYPE_PREINIT_ARRAY</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
         <span class="n">SH_TYPE_GROUP</span> <span class="o">=</span> <span class="mi">17</span><span class="p">,</span>
         <span class="n">SH_TYPE_SYMTAB_SHNDX</span> <span class="o">=</span> <span class="mi">18</span><span class="p">,</span>
+        <span class="n">SH_TYPE_SUNW_SYMNSORT</span> <span class="o">=</span> <span class="mi">1879048172</span><span class="p">,</span>
+        <span class="n">SH_TYPE_SUNW_PHNAME</span> <span class="o">=</span> <span class="mi">1879048173</span><span class="p">,</span>
+        <span class="n">SH_TYPE_SUNW_ANCILLARY</span> <span class="o">=</span> <span class="mi">1879048174</span><span class="p">,</span>
         <span class="n">SH_TYPE_SUNW_CAPCHAIN</span> <span class="o">=</span> <span class="mi">1879048175</span><span class="p">,</span>
         <span class="n">SH_TYPE_SUNW_CAPINFO</span> <span class="o">=</span> <span class="mi">1879048176</span><span class="p">,</span>
         <span class="n">SH_TYPE_SUNW_SYMSORT</span> <span class="o">=</span> <span class="mi">1879048177</span><span class="p">,</span>
@@ -439,7 +442,9 @@ and build them along with your project.</p>
         <span class="n">SH_TYPE_SPARC_GOTDATA</span> <span class="o">=</span> <span class="mi">1879048192</span><span class="p">,</span>
         <span class="n">SH_TYPE_AMD64_UNWIND</span> <span class="o">=</span> <span class="mi">1879048193</span><span class="p">,</span>
         <span class="n">SH_TYPE_ARM_PREEMPTMAP</span> <span class="o">=</span> <span class="mi">1879048194</span><span class="p">,</span>
-        <span class="n">SH_TYPE_ARM_ATTRIBUTES</span> <span class="o">=</span> <span class="mi">1879048195</span>
+        <span class="n">SH_TYPE_ARM_ATTRIBUTES</span> <span class="o">=</span> <span class="mi">1879048195</span><span class="p">,</span>
+        <span class="n">SH_TYPE_ARM_DEBUGOVERLAY</span> <span class="o">=</span> <span class="mi">1879048196</span><span class="p">,</span>
+        <span class="n">SH_TYPE_ARM_OVERLAYSECTION</span> <span class="o">=</span> <span class="mi">1879048197</span>
     <span class="p">};</span>
 
     <span class="k">enum</span> <span class="nc">os_abi_t</span> <span class="p">{</span>
@@ -541,8 +546,10 @@ and build them along with your project.</p>
         <span class="n">DYNAMIC_ARRAY_TAGS_PREINIT_ARRAY</span> <span class="o">=</span> <span class="mi">32</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_PREINIT_ARRAYSZ</span> <span class="o">=</span> <span class="mi">33</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SYMTAB_SHNDX</span> <span class="o">=</span> <span class="mi">34</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_DEPRECATED_SPARC_REGISTER</span> <span class="o">=</span> <span class="mi">117440513</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY</span> <span class="o">=</span> <span class="mi">1610612749</span><span class="p">,</span>
-        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_FILTER</span> <span class="o">=</span> <span class="mi">1610612750</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_RTLDINF</span> <span class="o">=</span> <span class="mi">1610612750</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_FILTER</span> <span class="o">=</span> <span class="mi">1610612751</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_CAP</span> <span class="o">=</span> <span class="mi">1610612752</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB</span> <span class="o">=</span> <span class="mi">1610612753</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SYMSZ</span> <span class="o">=</span> <span class="mi">1610612754</span><span class="p">,</span>
@@ -555,8 +562,23 @@ and build them along with your project.</p>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_STRPAD</span> <span class="o">=</span> <span class="mi">1610612761</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAIN</span> <span class="o">=</span> <span class="mi">1610612762</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_LDMACH</span> <span class="o">=</span> <span class="mi">1610612763</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB_SHNDX</span> <span class="o">=</span> <span class="mi">1610612764</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINENT</span> <span class="o">=</span> <span class="mi">1610612765</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_DEFERRED</span> <span class="o">=</span> <span class="mi">1610612766</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINSZ</span> <span class="o">=</span> <span class="mi">1610612767</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_PHNAME</span> <span class="o">=</span> <span class="mi">1610612768</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_PARENT</span> <span class="o">=</span> <span class="mi">1610612769</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SX_ASLR</span> <span class="o">=</span> <span class="mi">1610612771</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_RELAX</span> <span class="o">=</span> <span class="mi">1610612773</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_KMOD</span> <span class="o">=</span> <span class="mi">1610612775</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SX_NXHEAP</span> <span class="o">=</span> <span class="mi">1610612777</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SX_NXSTACK</span> <span class="o">=</span> <span class="mi">1610612779</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SX_ADIHEAP</span> <span class="o">=</span> <span class="mi">1610612781</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SX_ADISTACK</span> <span class="o">=</span> <span class="mi">1610612783</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SX_SSBD</span> <span class="o">=</span> <span class="mi">1610612785</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SYMNSORT</span> <span class="o">=</span> <span class="mi">1610612786</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_SUNW_SYMNSORTSZ</span> <span class="o">=</span> <span class="mi">1610612787</span><span class="p">,</span>
+        <span class="n">DYNAMIC_ARRAY_TAGS_GNU_FLAGS_1</span> <span class="o">=</span> <span class="mi">1879047668</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_GNU_PRELINKED</span> <span class="o">=</span> <span class="mi">1879047669</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_GNU_CONFLICTSZ</span> <span class="o">=</span> <span class="mi">1879047670</span><span class="p">,</span>
         <span class="n">DYNAMIC_ARRAY_TAGS_GNU_LIBLISTSZ</span> <span class="o">=</span> <span class="mi">1879047671</span><span class="p">,</span>
@@ -1348,7 +1370,7 @@ and build them along with your project.</p>
         <span class="p">};</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html Source</span>
+<span class="cm">         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html Source</span>
 <span class="cm">         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source</span>
 <span class="cm">         */</span>
 
@@ -1572,7 +1594,7 @@ and build them along with your project.</p>
         <span class="p">};</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html Source</span>
+<span class="cm">         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html Source</span>
 <span class="cm">         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source</span>
 <span class="cm">         */</span>
 
@@ -1739,7 +1761,7 @@ and build them along with your project.</p>
         <span class="p">};</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html Source</span>
+<span class="cm">         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html Source</span>
 <span class="cm">         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source</span>
 <span class="cm">         */</span>
 
@@ -1885,7 +1907,7 @@ and build them along with your project.</p>
         <span class="p">};</span>
 
         <span class="cm">/**</span>
-<span class="cm">         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html Source</span>
+<span class="cm">         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html Source</span>
 <span class="cm">         * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source</span>
 <span class="cm">         */</span>
 
@@ -1987,6 +2009,12 @@ and build them along with your project.</p>
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">bool</span> <span class="n">f_section_names</span><span class="p">;</span>
         <span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">m_section_names</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_section_names</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_section_names</span><span class="p">()</span> <span class="p">{</span> <span class="n">section_names</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_section_names</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">section_names</span><span class="p">();</span>
@@ -2030,6 +2058,12 @@ and build them along with your project.</p>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;*</span> <span class="n">m__raw_section_headers</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*&gt;*</span> <span class="n">m__io__raw_section_headers</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m__raw_section_names</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n__raw_section_names</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null__raw_section_names</span><span class="p">()</span> <span class="p">{</span> <span class="n">_raw_section_names</span><span class="p">();</span> <span class="k">return</span> <span class="n">n__raw_section_names</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
         <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">m__io__raw_section_names</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
@@ -2893,7 +2927,7 @@ and build them along with your project.</p>
             <span class="k">delete</span> <span class="n">m_section_headers</span><span class="p">;</span> <span class="n">m_section_headers</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_section_names</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_section_names</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_section_names</span><span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">delete</span> <span class="n">m__io__raw_section_names</span><span class="p">;</span> <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="p">}</span>
@@ -4493,19 +4527,23 @@ and build them along with your project.</p>
 <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">strings_struct_t</span><span class="o">*</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">endian_elf_t</span><span class="o">::</span><span class="n">section_names</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_section_names</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_section_names</span><span class="p">;</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
-    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">ofs_body</span><span class="p">());</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">m__raw_section_names</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
-        <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_section_names</span><span class="p">);</span>
-        <span class="n">m_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">);</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="n">m__raw_section_names</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
-        <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_section_names</span><span class="p">);</span>
-        <span class="n">m_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">);</span>
+    <span class="n">n_section_names</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="n">section_names_idx</span><span class="p">()</span> <span class="o">!=</span> <span class="n">elf_t</span><span class="o">::</span><span class="n">SECTION_HEADER_IDX_SPECIAL_UNDEFINED</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">section_names_idx</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">qty_section_header</span><span class="p">()))</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="n">n_section_names</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">ofs_body</span><span class="p">());</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m__is_le</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">m__raw_section_names</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
+            <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_section_names</span><span class="p">);</span>
+            <span class="n">m_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">m__raw_section_names</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">section_headers</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">at</span><span class="p">(</span><span class="n">section_names_idx</span><span class="p">())</span><span class="o">-&gt;</span><span class="n">len_body</span><span class="p">());</span>
+            <span class="n">m__io__raw_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_section_names</span><span class="p">);</span>
+            <span class="n">m_section_names</span> <span class="o">=</span> <span class="k">new</span> <span class="n">strings_struct_t</span><span class="p">(</span><span class="n">m__io__raw_section_names</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">,</span> <span class="n">m__is_le</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="n">f_section_names</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-    <span class="n">f_section_names</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
     <span class="k">return</span> <span class="n">m_section_names</span><span class="p">;</span>
 <span class="p">}</span>
 

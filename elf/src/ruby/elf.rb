@@ -10,7 +10,7 @@ end
 ##
 # @see https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
 # @see https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
-# @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source
+# @see https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html Source
 class Elf < Kaitai::Struct::Struct
 
   SYMBOL_VISIBILITY = {
@@ -61,6 +61,9 @@ class Elf < Kaitai::Struct::Struct
     16 => :sh_type_preinit_array,
     17 => :sh_type_group,
     18 => :sh_type_symtab_shndx,
+    1879048172 => :sh_type_sunw_symnsort,
+    1879048173 => :sh_type_sunw_phname,
+    1879048174 => :sh_type_sunw_ancillary,
     1879048175 => :sh_type_sunw_capchain,
     1879048176 => :sh_type_sunw_capinfo,
     1879048177 => :sh_type_sunw_symsort,
@@ -82,6 +85,8 @@ class Elf < Kaitai::Struct::Struct
     1879048193 => :sh_type_amd64_unwind,
     1879048194 => :sh_type_arm_preemptmap,
     1879048195 => :sh_type_arm_attributes,
+    1879048196 => :sh_type_arm_debugoverlay,
+    1879048197 => :sh_type_arm_overlaysection,
   }
   I__SH_TYPE = SH_TYPE.invert
 
@@ -187,8 +192,10 @@ class Elf < Kaitai::Struct::Struct
     32 => :dynamic_array_tags_preinit_array,
     33 => :dynamic_array_tags_preinit_arraysz,
     34 => :dynamic_array_tags_symtab_shndx,
+    117440513 => :dynamic_array_tags_deprecated_sparc_register,
     1610612749 => :dynamic_array_tags_sunw_auxiliary,
-    1610612750 => :dynamic_array_tags_sunw_filter,
+    1610612750 => :dynamic_array_tags_sunw_rtldinf,
+    1610612751 => :dynamic_array_tags_sunw_filter,
     1610612752 => :dynamic_array_tags_sunw_cap,
     1610612753 => :dynamic_array_tags_sunw_symtab,
     1610612754 => :dynamic_array_tags_sunw_symsz,
@@ -201,8 +208,23 @@ class Elf < Kaitai::Struct::Struct
     1610612761 => :dynamic_array_tags_sunw_strpad,
     1610612762 => :dynamic_array_tags_sunw_capchain,
     1610612763 => :dynamic_array_tags_sunw_ldmach,
+    1610612764 => :dynamic_array_tags_sunw_symtab_shndx,
     1610612765 => :dynamic_array_tags_sunw_capchainent,
+    1610612766 => :dynamic_array_tags_sunw_deferred,
     1610612767 => :dynamic_array_tags_sunw_capchainsz,
+    1610612768 => :dynamic_array_tags_sunw_phname,
+    1610612769 => :dynamic_array_tags_sunw_parent,
+    1610612771 => :dynamic_array_tags_sunw_sx_aslr,
+    1610612773 => :dynamic_array_tags_sunw_relax,
+    1610612775 => :dynamic_array_tags_sunw_kmod,
+    1610612777 => :dynamic_array_tags_sunw_sx_nxheap,
+    1610612779 => :dynamic_array_tags_sunw_sx_nxstack,
+    1610612781 => :dynamic_array_tags_sunw_sx_adiheap,
+    1610612783 => :dynamic_array_tags_sunw_sx_adistack,
+    1610612785 => :dynamic_array_tags_sunw_sx_ssbd,
+    1610612786 => :dynamic_array_tags_sunw_symnsort,
+    1610612787 => :dynamic_array_tags_sunw_symnsortsz,
+    1879047668 => :dynamic_array_tags_gnu_flags_1,
     1879047669 => :dynamic_array_tags_gnu_prelinked,
     1879047670 => :dynamic_array_tags_gnu_conflictsz,
     1879047671 => :dynamic_array_tags_gnu_liblistsz,
@@ -942,7 +964,7 @@ class Elf < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html Source
+    # @see https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html Source
     # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
     class DynamicSectionEntry < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
@@ -1261,7 +1283,7 @@ class Elf < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html Source
+    # @see https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html Source
     # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
     class RelocationSection < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil, has_addend)
@@ -1467,7 +1489,7 @@ class Elf < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html Source
+    # @see https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html Source
     # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
     class DynsymSectionEntry < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
@@ -1599,7 +1621,7 @@ class Elf < Kaitai::Struct::Struct
     end
 
     ##
-    # @see https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html Source
+    # @see https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html Source
     # @see https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
     class NoteSectionEntry < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self, _is_le = nil)
@@ -1745,18 +1767,20 @@ class Elf < Kaitai::Struct::Struct
     end
     def section_names
       return @section_names unless @section_names.nil?
-      _pos = @_io.pos
-      @_io.seek(section_headers[section_names_idx].ofs_body)
-      if @_is_le
-        @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
-        _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
-        @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
-      else
-        @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
-        _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
-        @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
+      if  ((section_names_idx != Elf::I__SECTION_HEADER_IDX_SPECIAL[:section_header_idx_special_undefined]) && (section_names_idx < _root.header.qty_section_header)) 
+        _pos = @_io.pos
+        @_io.seek(section_headers[section_names_idx].ofs_body)
+        if @_is_le
+          @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
+          _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
+          @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
+        else
+          @_raw_section_names = @_io.read_bytes(section_headers[section_names_idx].len_body)
+          _io__raw_section_names = Kaitai::Struct::Stream.new(@_raw_section_names)
+          @section_names = StringsStruct.new(_io__raw_section_names, self, @_root, @_is_le)
+        end
+        @_io.seek(_pos)
       end
-      @_io.seek(_pos)
       @section_names
     end
     attr_reader :e_type

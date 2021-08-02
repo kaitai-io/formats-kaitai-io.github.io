@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
 /**
  * @see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
  * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
- * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html">Source</a>
+ * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html">Source</a>
  */
 public class Elf extends KaitaiStruct {
     public static Elf fromFile(String fileName) throws IOException {
@@ -96,6 +96,9 @@ public class Elf extends KaitaiStruct {
         PREINIT_ARRAY(16),
         GROUP(17),
         SYMTAB_SHNDX(18),
+        SUNW_SYMNSORT(1879048172),
+        SUNW_PHNAME(1879048173),
+        SUNW_ANCILLARY(1879048174),
         SUNW_CAPCHAIN(1879048175),
         SUNW_CAPINFO(1879048176),
         SUNW_SYMSORT(1879048177),
@@ -116,12 +119,14 @@ public class Elf extends KaitaiStruct {
         SPARC_GOTDATA(1879048192),
         AMD64_UNWIND(1879048193),
         ARM_PREEMPTMAP(1879048194),
-        ARM_ATTRIBUTES(1879048195);
+        ARM_ATTRIBUTES(1879048195),
+        ARM_DEBUGOVERLAY(1879048196),
+        ARM_OVERLAYSECTION(1879048197);
 
         private final long id;
         ShType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(38);
+        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(43);
         static {
             for (ShType e : ShType.values())
                 byId.put(e.id(), e);
@@ -258,8 +263,10 @@ public class Elf extends KaitaiStruct {
         PREINIT_ARRAY(32),
         PREINIT_ARRAYSZ(33),
         SYMTAB_SHNDX(34),
+        DEPRECATED_SPARC_REGISTER(117440513),
         SUNW_AUXILIARY(1610612749),
-        SUNW_FILTER(1610612750),
+        SUNW_RTLDINF(1610612750),
+        SUNW_FILTER(1610612751),
         SUNW_CAP(1610612752),
         SUNW_SYMTAB(1610612753),
         SUNW_SYMSZ(1610612754),
@@ -272,8 +279,23 @@ public class Elf extends KaitaiStruct {
         SUNW_STRPAD(1610612761),
         SUNW_CAPCHAIN(1610612762),
         SUNW_LDMACH(1610612763),
+        SUNW_SYMTAB_SHNDX(1610612764),
         SUNW_CAPCHAINENT(1610612765),
+        SUNW_DEFERRED(1610612766),
         SUNW_CAPCHAINSZ(1610612767),
+        SUNW_PHNAME(1610612768),
+        SUNW_PARENT(1610612769),
+        SUNW_SX_ASLR(1610612771),
+        SUNW_RELAX(1610612773),
+        SUNW_KMOD(1610612775),
+        SUNW_SX_NXHEAP(1610612777),
+        SUNW_SX_NXSTACK(1610612779),
+        SUNW_SX_ADIHEAP(1610612781),
+        SUNW_SX_ADISTACK(1610612783),
+        SUNW_SX_SSBD(1610612785),
+        SUNW_SYMNSORT(1610612786),
+        SUNW_SYMNSORTSZ(1610612787),
+        GNU_FLAGS_1(1879047668),
         GNU_PRELINKED(1879047669),
         GNU_CONFLICTSZ(1879047670),
         GNU_LIBLISTSZ(1879047671),
@@ -312,7 +334,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         DynamicArrayTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(84);
+        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(101);
         static {
             for (DynamicArrayTags e : DynamicArrayTags.values())
                 byId.put(e.id(), e);
@@ -1504,7 +1526,7 @@ public class Elf extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html">Source</a>
+         * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html">Source</a>
          * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
          */
         public static class DynamicSectionEntry extends KaitaiStruct {
@@ -2049,7 +2071,7 @@ public class Elf extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html">Source</a>
+         * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html">Source</a>
          * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
          */
         public static class RelocationSection extends KaitaiStruct {
@@ -2343,7 +2365,7 @@ public class Elf extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html">Source</a>
+         * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html">Source</a>
          * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
          */
         public static class DynsymSectionEntry extends KaitaiStruct {
@@ -2510,7 +2532,7 @@ public class Elf extends KaitaiStruct {
         }
 
         /**
-         * @see <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html">Source</a>
+         * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html">Source</a>
          * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
          */
         public static class NoteSectionEntry extends KaitaiStruct {
@@ -2680,18 +2702,20 @@ public class Elf extends KaitaiStruct {
         public StringsStruct sectionNames() {
             if (this.sectionNames != null)
                 return this.sectionNames;
-            long _pos = this._io.pos();
-            this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).ofsBody());
-            if (_is_le) {
-                this._raw_sectionNames = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
-                KaitaiStream _io__raw_sectionNames = new ByteBufferKaitaiStream(_raw_sectionNames);
-                this.sectionNames = new StringsStruct(_io__raw_sectionNames, this, _root, _is_le);
-            } else {
-                this._raw_sectionNames = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
-                KaitaiStream _io__raw_sectionNames = new ByteBufferKaitaiStream(_raw_sectionNames);
-                this.sectionNames = new StringsStruct(_io__raw_sectionNames, this, _root, _is_le);
+            if ( ((sectionNamesIdx() != Elf.SectionHeaderIdxSpecial.UNDEFINED.id()) && (sectionNamesIdx() < _root.header().qtySectionHeader())) ) {
+                long _pos = this._io.pos();
+                this._io.seek(sectionHeaders().get((int) sectionNamesIdx()).ofsBody());
+                if (_is_le) {
+                    this._raw_sectionNames = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
+                    KaitaiStream _io__raw_sectionNames = new ByteBufferKaitaiStream(_raw_sectionNames);
+                    this.sectionNames = new StringsStruct(_io__raw_sectionNames, this, _root, _is_le);
+                } else {
+                    this._raw_sectionNames = this._io.readBytes(sectionHeaders().get((int) sectionNamesIdx()).lenBody());
+                    KaitaiStream _io__raw_sectionNames = new ByteBufferKaitaiStream(_raw_sectionNames);
+                    this.sectionNames = new StringsStruct(_io__raw_sectionNames, this, _root, _is_le);
+                }
+                this._io.seek(_pos);
             }
-            this._io.seek(_pos);
             return this.sectionNames;
         }
         private ObjType eType;

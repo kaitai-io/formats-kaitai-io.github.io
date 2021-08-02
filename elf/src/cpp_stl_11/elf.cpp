@@ -660,7 +660,7 @@ void elf_t::endian_elf_t::_clean_up() {
     }
     if (f_section_headers) {
     }
-    if (f_section_names) {
+    if (f_section_names && !n_section_names) {
     }
 }
 
@@ -2146,19 +2146,23 @@ std::vector<std::unique_ptr<elf_t::endian_elf_t::section_header_t>>* elf_t::endi
 elf_t::endian_elf_t::strings_struct_t* elf_t::endian_elf_t::section_names() {
     if (f_section_names)
         return m_section_names.get();
-    std::streampos _pos = m__io->pos();
-    m__io->seek(section_headers()->at(section_names_idx())->ofs_body());
-    if (m__is_le == 1) {
-        m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
-        m__io__raw_section_names = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_section_names));
-        m_section_names = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_section_names.get(), this, m__root, m__is_le));
-    } else {
-        m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
-        m__io__raw_section_names = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_section_names));
-        m_section_names = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_section_names.get(), this, m__root, m__is_le));
+    n_section_names = true;
+    if ( ((section_names_idx() != elf_t::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && (section_names_idx() < _root()->header()->qty_section_header())) ) {
+        n_section_names = false;
+        std::streampos _pos = m__io->pos();
+        m__io->seek(section_headers()->at(section_names_idx())->ofs_body());
+        if (m__is_le == 1) {
+            m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
+            m__io__raw_section_names = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_section_names));
+            m_section_names = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_section_names.get(), this, m__root, m__is_le));
+        } else {
+            m__raw_section_names = m__io->read_bytes(section_headers()->at(section_names_idx())->len_body());
+            m__io__raw_section_names = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_section_names));
+            m_section_names = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_section_names.get(), this, m__root, m__is_le));
+        }
+        m__io->seek(_pos);
+        f_section_names = true;
     }
-    m__io->seek(_pos);
-    f_section_names = true;
     return m_section_names.get();
 }
 

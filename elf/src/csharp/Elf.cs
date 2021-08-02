@@ -13,7 +13,7 @@ namespace Kaitai
     /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html">Source</a>
+    /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html">Source</a>
     /// </remarks>
     public partial class Elf : KaitaiStruct
     {
@@ -72,6 +72,9 @@ namespace Kaitai
             PreinitArray = 16,
             Group = 17,
             SymtabShndx = 18,
+            SunwSymnsort = 1879048172,
+            SunwPhname = 1879048173,
+            SunwAncillary = 1879048174,
             SunwCapchain = 1879048175,
             SunwCapinfo = 1879048176,
             SunwSymsort = 1879048177,
@@ -93,6 +96,8 @@ namespace Kaitai
             Amd64Unwind = 1879048193,
             ArmPreemptmap = 1879048194,
             ArmAttributes = 1879048195,
+            ArmDebugoverlay = 1879048196,
+            ArmOverlaysection = 1879048197,
         }
 
         public enum OsAbi
@@ -198,8 +203,10 @@ namespace Kaitai
             PreinitArray = 32,
             PreinitArraysz = 33,
             SymtabShndx = 34,
+            DeprecatedSparcRegister = 117440513,
             SunwAuxiliary = 1610612749,
-            SunwFilter = 1610612750,
+            SunwRtldinf = 1610612750,
+            SunwFilter = 1610612751,
             SunwCap = 1610612752,
             SunwSymtab = 1610612753,
             SunwSymsz = 1610612754,
@@ -212,8 +219,23 @@ namespace Kaitai
             SunwStrpad = 1610612761,
             SunwCapchain = 1610612762,
             SunwLdmach = 1610612763,
+            SunwSymtabShndx = 1610612764,
             SunwCapchainent = 1610612765,
+            SunwDeferred = 1610612766,
             SunwCapchainsz = 1610612767,
+            SunwPhname = 1610612768,
+            SunwParent = 1610612769,
+            SunwSxAslr = 1610612771,
+            SunwRelax = 1610612773,
+            SunwKmod = 1610612775,
+            SunwSxNxheap = 1610612777,
+            SunwSxNxstack = 1610612779,
+            SunwSxAdiheap = 1610612781,
+            SunwSxAdistack = 1610612783,
+            SunwSxSsbd = 1610612785,
+            SunwSymnsort = 1610612786,
+            SunwSymnsortsz = 1610612787,
+            GnuFlags1 = 1879047668,
             GnuPrelinked = 1879047669,
             GnuConflictsz = 1879047670,
             GnuLiblistsz = 1879047671,
@@ -1568,7 +1590,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section">Source</a>
@@ -2094,7 +2116,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html">Source</a>
@@ -2399,7 +2421,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html">Source</a>
@@ -2627,7 +2649,7 @@ namespace Kaitai
             }
 
             /// <remarks>
-            /// Reference: <a href="https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html">Source</a>
+            /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html">Source</a>
             /// </remarks>
             /// <remarks>
             /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section">Source</a>
@@ -2837,19 +2859,21 @@ namespace Kaitai
                 {
                     if (f_sectionNames)
                         return _sectionNames;
-                    long _pos = m_io.Pos;
-                    m_io.Seek(SectionHeaders[SectionNamesIdx].OfsBody);
-                    if (m_isLe == true) {
-                        __raw_sectionNames = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
-                        var io___raw_sectionNames = new KaitaiStream(__raw_sectionNames);
-                        _sectionNames = new StringsStruct(io___raw_sectionNames, this, m_root, m_isLe);
-                    } else {
-                        __raw_sectionNames = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
-                        var io___raw_sectionNames = new KaitaiStream(__raw_sectionNames);
-                        _sectionNames = new StringsStruct(io___raw_sectionNames, this, m_root, m_isLe);
+                    if ( ((SectionNamesIdx != Elf.SectionHeaderIdxSpecial.Undefined) && (SectionNamesIdx < M_Root.Header.QtySectionHeader)) ) {
+                        long _pos = m_io.Pos;
+                        m_io.Seek(SectionHeaders[SectionNamesIdx].OfsBody);
+                        if (m_isLe == true) {
+                            __raw_sectionNames = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
+                            var io___raw_sectionNames = new KaitaiStream(__raw_sectionNames);
+                            _sectionNames = new StringsStruct(io___raw_sectionNames, this, m_root, m_isLe);
+                        } else {
+                            __raw_sectionNames = m_io.ReadBytes(SectionHeaders[SectionNamesIdx].LenBody);
+                            var io___raw_sectionNames = new KaitaiStream(__raw_sectionNames);
+                            _sectionNames = new StringsStruct(io___raw_sectionNames, this, m_root, m_isLe);
+                        }
+                        m_io.Seek(_pos);
+                        f_sectionNames = true;
                     }
-                    m_io.Seek(_pos);
-                    f_sectionNames = true;
                     return _sectionNames;
                 }
             }

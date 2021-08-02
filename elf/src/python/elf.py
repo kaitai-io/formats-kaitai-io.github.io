@@ -20,7 +20,7 @@ class Elf(KaitaiStruct):
     
     
     .. seealso::
-       Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html
+       Source - https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html
     """
 
     class SymbolVisibility(Enum):
@@ -65,6 +65,9 @@ class Elf(KaitaiStruct):
         preinit_array = 16
         group = 17
         symtab_shndx = 18
+        sunw_symnsort = 1879048172
+        sunw_phname = 1879048173
+        sunw_ancillary = 1879048174
         sunw_capchain = 1879048175
         sunw_capinfo = 1879048176
         sunw_symsort = 1879048177
@@ -86,6 +89,8 @@ class Elf(KaitaiStruct):
         amd64_unwind = 1879048193
         arm_preemptmap = 1879048194
         arm_attributes = 1879048195
+        arm_debugoverlay = 1879048196
+        arm_overlaysection = 1879048197
 
     class OsAbi(Enum):
         system_v = 0
@@ -183,8 +188,10 @@ class Elf(KaitaiStruct):
         preinit_array = 32
         preinit_arraysz = 33
         symtab_shndx = 34
+        deprecated_sparc_register = 117440513
         sunw_auxiliary = 1610612749
-        sunw_filter = 1610612750
+        sunw_rtldinf = 1610612750
+        sunw_filter = 1610612751
         sunw_cap = 1610612752
         sunw_symtab = 1610612753
         sunw_symsz = 1610612754
@@ -197,8 +204,23 @@ class Elf(KaitaiStruct):
         sunw_strpad = 1610612761
         sunw_capchain = 1610612762
         sunw_ldmach = 1610612763
+        sunw_symtab_shndx = 1610612764
         sunw_capchainent = 1610612765
+        sunw_deferred = 1610612766
         sunw_capchainsz = 1610612767
+        sunw_phname = 1610612768
+        sunw_parent = 1610612769
+        sunw_sx_aslr = 1610612771
+        sunw_relax = 1610612773
+        sunw_kmod = 1610612775
+        sunw_sx_nxheap = 1610612777
+        sunw_sx_nxstack = 1610612779
+        sunw_sx_adiheap = 1610612781
+        sunw_sx_adistack = 1610612783
+        sunw_sx_ssbd = 1610612785
+        sunw_symnsort = 1610612786
+        sunw_symnsortsz = 1610612787
+        gnu_flags_1 = 1879047668
         gnu_prelinked = 1879047669
         gnu_conflictsz = 1879047670
         gnu_liblistsz = 1879047671
@@ -951,7 +973,7 @@ class Elf(KaitaiStruct):
         class DynamicSectionEntry(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html
+               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html
             
             
             .. seealso::
@@ -1251,7 +1273,7 @@ class Elf(KaitaiStruct):
         class RelocationSection(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html
+               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html
             
             
             .. seealso::
@@ -1430,7 +1452,7 @@ class Elf(KaitaiStruct):
         class DynsymSectionEntry(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html
+               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html
             
             
             .. seealso::
@@ -1568,7 +1590,7 @@ class Elf(KaitaiStruct):
         class NoteSectionEntry(KaitaiStruct):
             """
             .. seealso::
-               Source - https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html
+               Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html
             
             
             .. seealso::
@@ -1698,17 +1720,19 @@ class Elf(KaitaiStruct):
             if hasattr(self, '_m_section_names'):
                 return self._m_section_names if hasattr(self, '_m_section_names') else None
 
-            _pos = self._io.pos()
-            self._io.seek(self.section_headers[self.section_names_idx].ofs_body)
-            if self._is_le:
-                self._raw__m_section_names = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
-                _io__raw__m_section_names = KaitaiStream(BytesIO(self._raw__m_section_names))
-                self._m_section_names = Elf.EndianElf.StringsStruct(_io__raw__m_section_names, self, self._root, self._is_le)
-            else:
-                self._raw__m_section_names = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
-                _io__raw__m_section_names = KaitaiStream(BytesIO(self._raw__m_section_names))
-                self._m_section_names = Elf.EndianElf.StringsStruct(_io__raw__m_section_names, self, self._root, self._is_le)
-            self._io.seek(_pos)
+            if  ((self.section_names_idx != Elf.SectionHeaderIdxSpecial.undefined.value) and (self.section_names_idx < self._root.header.qty_section_header)) :
+                _pos = self._io.pos()
+                self._io.seek(self.section_headers[self.section_names_idx].ofs_body)
+                if self._is_le:
+                    self._raw__m_section_names = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
+                    _io__raw__m_section_names = KaitaiStream(BytesIO(self._raw__m_section_names))
+                    self._m_section_names = Elf.EndianElf.StringsStruct(_io__raw__m_section_names, self, self._root, self._is_le)
+                else:
+                    self._raw__m_section_names = self._io.read_bytes(self.section_headers[self.section_names_idx].len_body)
+                    _io__raw__m_section_names = KaitaiStream(BytesIO(self._raw__m_section_names))
+                    self._m_section_names = Elf.EndianElf.StringsStruct(_io__raw__m_section_names, self, self._root, self._is_le)
+                self._io.seek(_pos)
+
             return self._m_section_names if hasattr(self, '_m_section_names') else None
 
 

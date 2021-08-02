@@ -14,7 +14,7 @@
 /**
  * \sa https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
  * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
- * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-46512.html Source
+ * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html Source
  */
 
 class elf_t : public kaitai::kstruct {
@@ -70,6 +70,9 @@ public:
         SH_TYPE_PREINIT_ARRAY = 16,
         SH_TYPE_GROUP = 17,
         SH_TYPE_SYMTAB_SHNDX = 18,
+        SH_TYPE_SUNW_SYMNSORT = 1879048172,
+        SH_TYPE_SUNW_PHNAME = 1879048173,
+        SH_TYPE_SUNW_ANCILLARY = 1879048174,
         SH_TYPE_SUNW_CAPCHAIN = 1879048175,
         SH_TYPE_SUNW_CAPINFO = 1879048176,
         SH_TYPE_SUNW_SYMSORT = 1879048177,
@@ -90,7 +93,9 @@ public:
         SH_TYPE_SPARC_GOTDATA = 1879048192,
         SH_TYPE_AMD64_UNWIND = 1879048193,
         SH_TYPE_ARM_PREEMPTMAP = 1879048194,
-        SH_TYPE_ARM_ATTRIBUTES = 1879048195
+        SH_TYPE_ARM_ATTRIBUTES = 1879048195,
+        SH_TYPE_ARM_DEBUGOVERLAY = 1879048196,
+        SH_TYPE_ARM_OVERLAYSECTION = 1879048197
     };
 
     enum os_abi_t {
@@ -192,8 +197,10 @@ public:
         DYNAMIC_ARRAY_TAGS_PREINIT_ARRAY = 32,
         DYNAMIC_ARRAY_TAGS_PREINIT_ARRAYSZ = 33,
         DYNAMIC_ARRAY_TAGS_SYMTAB_SHNDX = 34,
+        DYNAMIC_ARRAY_TAGS_DEPRECATED_SPARC_REGISTER = 117440513,
         DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY = 1610612749,
-        DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612750,
+        DYNAMIC_ARRAY_TAGS_SUNW_RTLDINF = 1610612750,
+        DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612751,
         DYNAMIC_ARRAY_TAGS_SUNW_CAP = 1610612752,
         DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB = 1610612753,
         DYNAMIC_ARRAY_TAGS_SUNW_SYMSZ = 1610612754,
@@ -206,8 +213,23 @@ public:
         DYNAMIC_ARRAY_TAGS_SUNW_STRPAD = 1610612761,
         DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAIN = 1610612762,
         DYNAMIC_ARRAY_TAGS_SUNW_LDMACH = 1610612763,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB_SHNDX = 1610612764,
         DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINENT = 1610612765,
+        DYNAMIC_ARRAY_TAGS_SUNW_DEFERRED = 1610612766,
         DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINSZ = 1610612767,
+        DYNAMIC_ARRAY_TAGS_SUNW_PHNAME = 1610612768,
+        DYNAMIC_ARRAY_TAGS_SUNW_PARENT = 1610612769,
+        DYNAMIC_ARRAY_TAGS_SUNW_SX_ASLR = 1610612771,
+        DYNAMIC_ARRAY_TAGS_SUNW_RELAX = 1610612773,
+        DYNAMIC_ARRAY_TAGS_SUNW_KMOD = 1610612775,
+        DYNAMIC_ARRAY_TAGS_SUNW_SX_NXHEAP = 1610612777,
+        DYNAMIC_ARRAY_TAGS_SUNW_SX_NXSTACK = 1610612779,
+        DYNAMIC_ARRAY_TAGS_SUNW_SX_ADIHEAP = 1610612781,
+        DYNAMIC_ARRAY_TAGS_SUNW_SX_ADISTACK = 1610612783,
+        DYNAMIC_ARRAY_TAGS_SUNW_SX_SSBD = 1610612785,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMNSORT = 1610612786,
+        DYNAMIC_ARRAY_TAGS_SUNW_SYMNSORTSZ = 1610612787,
+        DYNAMIC_ARRAY_TAGS_GNU_FLAGS_1 = 1879047668,
         DYNAMIC_ARRAY_TAGS_GNU_PRELINKED = 1879047669,
         DYNAMIC_ARRAY_TAGS_GNU_CONFLICTSZ = 1879047670,
         DYNAMIC_ARRAY_TAGS_GNU_LIBLISTSZ = 1879047671,
@@ -999,7 +1021,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-42444.html Source
+         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.dynamic.html#dynamic_section Source
          */
 
@@ -1223,7 +1245,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-54839.html Source
+         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-54839.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.reloc.html Source
          */
 
@@ -1390,7 +1412,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-79797.html Source
+         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/man-sts.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.symtab.html Source
          */
 
@@ -1536,7 +1558,7 @@ public:
         };
 
         /**
-         * \sa https://docs.oracle.com/cd/E23824_01/html/819-0690/chapter6-18048.html Source
+         * \sa https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-18048.html Source
          * \sa https://refspecs.linuxfoundation.org/elf/gabi4+/ch5.pheader.html#note_section Source
          */
 
@@ -1638,6 +1660,12 @@ public:
     private:
         bool f_section_names;
         strings_struct_t* m_section_names;
+        bool n_section_names;
+
+    public:
+        bool _is_null_section_names() { section_names(); return n_section_names; };
+
+    private:
 
     public:
         strings_struct_t* section_names();
@@ -1681,6 +1709,12 @@ public:
         std::vector<std::string>* m__raw_section_headers;
         std::vector<kaitai::kstream*>* m__io__raw_section_headers;
         std::string m__raw_section_names;
+        bool n__raw_section_names;
+
+    public:
+        bool _is_null__raw_section_names() { _raw_section_names(); return n__raw_section_names; };
+
+    private:
         kaitai::kstream* m__io__raw_section_names;
 
     public:

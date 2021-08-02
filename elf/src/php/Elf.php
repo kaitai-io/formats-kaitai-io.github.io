@@ -778,18 +778,20 @@ namespace Elf {
         public function sectionNames() {
             if ($this->_m_sectionNames !== null)
                 return $this->_m_sectionNames;
-            $_pos = $this->_io->pos();
-            $this->_io->seek($this->sectionHeaders()[$this->sectionNamesIdx()]->ofsBody());
-            if ($this->_m__is_le) {
-                $this->_m__raw_sectionNames = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
-                $_io__raw_sectionNames = new \Kaitai\Struct\Stream($this->_m__raw_sectionNames);
-                $this->_m_sectionNames = new \Elf\EndianElf\StringsStruct($_io__raw_sectionNames, $this, $this->_root, $this->_m__is_le);
-            } else {
-                $this->_m__raw_sectionNames = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
-                $_io__raw_sectionNames = new \Kaitai\Struct\Stream($this->_m__raw_sectionNames);
-                $this->_m_sectionNames = new \Elf\EndianElf\StringsStruct($_io__raw_sectionNames, $this, $this->_root, $this->_m__is_le);
+            if ( (($this->sectionNamesIdx() != \Elf\SectionHeaderIdxSpecial::UNDEFINED) && ($this->sectionNamesIdx() < $this->_root()->header()->qtySectionHeader())) ) {
+                $_pos = $this->_io->pos();
+                $this->_io->seek($this->sectionHeaders()[$this->sectionNamesIdx()]->ofsBody());
+                if ($this->_m__is_le) {
+                    $this->_m__raw_sectionNames = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
+                    $_io__raw_sectionNames = new \Kaitai\Struct\Stream($this->_m__raw_sectionNames);
+                    $this->_m_sectionNames = new \Elf\EndianElf\StringsStruct($_io__raw_sectionNames, $this, $this->_root, $this->_m__is_le);
+                } else {
+                    $this->_m__raw_sectionNames = $this->_io->readBytes($this->sectionHeaders()[$this->sectionNamesIdx()]->lenBody());
+                    $_io__raw_sectionNames = new \Kaitai\Struct\Stream($this->_m__raw_sectionNames);
+                    $this->_m_sectionNames = new \Elf\EndianElf\StringsStruct($_io__raw_sectionNames, $this, $this->_root, $this->_m__is_le);
+                }
+                $this->_io->seek($_pos);
             }
-            $this->_io->seek($_pos);
             return $this->_m_sectionNames;
         }
         protected $_m_eType;
@@ -2032,6 +2034,9 @@ namespace Elf {
         const PREINIT_ARRAY = 16;
         const GROUP = 17;
         const SYMTAB_SHNDX = 18;
+        const SUNW_SYMNSORT = 1879048172;
+        const SUNW_PHNAME = 1879048173;
+        const SUNW_ANCILLARY = 1879048174;
         const SUNW_CAPCHAIN = 1879048175;
         const SUNW_CAPINFO = 1879048176;
         const SUNW_SYMSORT = 1879048177;
@@ -2053,6 +2058,8 @@ namespace Elf {
         const AMD64_UNWIND = 1879048193;
         const ARM_PREEMPTMAP = 1879048194;
         const ARM_ATTRIBUTES = 1879048195;
+        const ARM_DEBUGOVERLAY = 1879048196;
+        const ARM_OVERLAYSECTION = 1879048197;
     }
 }
 
@@ -2220,8 +2227,26 @@ namespace Elf {
         const PREINIT_ARRAY = 32;
         const PREINIT_ARRAYSZ = 33;
         const SYMTAB_SHNDX = 34;
+
+        /**
+         * DT_SPARC_REGISTER was originally assigned 0x7000001. It is processor
+         * specific, and should have been in the range DT_LOPROC-DT_HIPROC
+         * instead of here. When the error was fixed,
+         * DT_DEPRECATED_SPARC_REGISTER was created to maintain backward
+         * compatability.
+         */
+        const DEPRECATED_SPARC_REGISTER = 117440513;
         const SUNW_AUXILIARY = 1610612749;
-        const SUNW_FILTER = 1610612750;
+        const SUNW_RTLDINF = 1610612750;
+
+        /**
+         * Note: <https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter6-tbl-52>
+         * states that `DT_SUNW_FILTER` has the value `0x6000000e`, but this is
+         * apparently only a human error - that would make the value collide with
+         * the previous one (`DT_SUNW_RTLDINF`) and there is not even a single
+         * source supporting this other than verbatim copies of the same table.
+         */
+        const SUNW_FILTER = 1610612751;
         const SUNW_CAP = 1610612752;
         const SUNW_SYMTAB = 1610612753;
         const SUNW_SYMSZ = 1610612754;
@@ -2234,8 +2259,23 @@ namespace Elf {
         const SUNW_STRPAD = 1610612761;
         const SUNW_CAPCHAIN = 1610612762;
         const SUNW_LDMACH = 1610612763;
+        const SUNW_SYMTAB_SHNDX = 1610612764;
         const SUNW_CAPCHAINENT = 1610612765;
+        const SUNW_DEFERRED = 1610612766;
         const SUNW_CAPCHAINSZ = 1610612767;
+        const SUNW_PHNAME = 1610612768;
+        const SUNW_PARENT = 1610612769;
+        const SUNW_SX_ASLR = 1610612771;
+        const SUNW_RELAX = 1610612773;
+        const SUNW_KMOD = 1610612775;
+        const SUNW_SX_NXHEAP = 1610612777;
+        const SUNW_SX_NXSTACK = 1610612779;
+        const SUNW_SX_ADIHEAP = 1610612781;
+        const SUNW_SX_ADISTACK = 1610612783;
+        const SUNW_SX_SSBD = 1610612785;
+        const SUNW_SYMNSORT = 1610612786;
+        const SUNW_SYMNSORTSZ = 1610612787;
+        const GNU_FLAGS_1 = 1879047668;
         const GNU_PRELINKED = 1879047669;
         const GNU_CONFLICTSZ = 1879047670;
         const GNU_LIBLISTSZ = 1879047671;

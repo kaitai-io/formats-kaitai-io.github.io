@@ -1048,18 +1048,20 @@ section#format-index .row {
         <span class="k">public</span> <span class="k">function</span> <span class="nf">sectionNames</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span><span class="p">;</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionHeaders</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()]</span><span class="o">-&gt;</span><span class="na">ofsBody</span><span class="p">());</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">)</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionHeaders</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()]</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                <span class="nv">$_io__raw_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_sectionNames</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionHeaders</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()]</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                <span class="nv">$_io__raw_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span><span class="p">);</span>
-                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_sectionNames</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">\Elf\SectionHeaderIdxSpecial</span><span class="o">::</span><span class="na">UNDEFINED</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()</span> <span class="o">&lt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">header</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">qtySectionHeader</span><span class="p">()))</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionHeaders</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()]</span><span class="o">-&gt;</span><span class="na">ofsBody</span><span class="p">());</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionHeaders</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()]</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_sectionNames</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionHeaders</span><span class="p">()[</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sectionNamesIdx</span><span class="p">()]</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                    <span class="nv">$_io__raw_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_sectionNames</span><span class="p">);</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_sectionNames</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="p">}</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_sectionNames</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_eType</span><span class="p">;</span>
@@ -2302,6 +2304,9 @@ section#format-index .row {
         <span class="k">const</span> <span class="no">PREINIT_ARRAY</span> <span class="o">=</span> <span class="mi">16</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">GROUP</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SYMTAB_SHNDX</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SYMNSORT</span> <span class="o">=</span> <span class="mi">1879048172</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_PHNAME</span> <span class="o">=</span> <span class="mi">1879048173</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_ANCILLARY</span> <span class="o">=</span> <span class="mi">1879048174</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_CAPCHAIN</span> <span class="o">=</span> <span class="mi">1879048175</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_CAPINFO</span> <span class="o">=</span> <span class="mi">1879048176</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_SYMSORT</span> <span class="o">=</span> <span class="mi">1879048177</span><span class="p">;</span>
@@ -2323,6 +2328,8 @@ section#format-index .row {
         <span class="k">const</span> <span class="no">AMD64_UNWIND</span> <span class="o">=</span> <span class="mi">1879048193</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">ARM_PREEMPTMAP</span> <span class="o">=</span> <span class="mi">1879048194</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">ARM_ATTRIBUTES</span> <span class="o">=</span> <span class="mi">1879048195</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ARM_DEBUGOVERLAY</span> <span class="o">=</span> <span class="mi">1879048196</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">ARM_OVERLAYSECTION</span> <span class="o">=</span> <span class="mi">1879048197</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -2490,8 +2497,26 @@ section#format-index .row {
         <span class="k">const</span> <span class="no">PREINIT_ARRAY</span> <span class="o">=</span> <span class="mi">32</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">PREINIT_ARRAYSZ</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SYMTAB_SHNDX</span> <span class="o">=</span> <span class="mi">34</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * DT_SPARC_REGISTER was originally assigned 0x7000001. It is processor</span>
+<span class="sd">         * specific, and should have been in the range DT_LOPROC-DT_HIPROC</span>
+<span class="sd">         * instead of here. When the error was fixed,</span>
+<span class="sd">         * DT_DEPRECATED_SPARC_REGISTER was created to maintain backward</span>
+<span class="sd">         * compatability.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">DEPRECATED_SPARC_REGISTER</span> <span class="o">=</span> <span class="mi">117440513</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_AUXILIARY</span> <span class="o">=</span> <span class="mi">1610612749</span><span class="p">;</span>
-        <span class="k">const</span> <span class="no">SUNW_FILTER</span> <span class="o">=</span> <span class="mi">1610612750</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_RTLDINF</span> <span class="o">=</span> <span class="mi">1610612750</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Note: &lt;https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter6-tbl-52&gt;</span>
+<span class="sd">         * states that `DT_SUNW_FILTER` has the value `0x6000000e`, but this is</span>
+<span class="sd">         * apparently only a human error - that would make the value collide with</span>
+<span class="sd">         * the previous one (`DT_SUNW_RTLDINF`) and there is not even a single</span>
+<span class="sd">         * source supporting this other than verbatim copies of the same table.</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SUNW_FILTER</span> <span class="o">=</span> <span class="mi">1610612751</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_CAP</span> <span class="o">=</span> <span class="mi">1610612752</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_SYMTAB</span> <span class="o">=</span> <span class="mi">1610612753</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_SYMSZ</span> <span class="o">=</span> <span class="mi">1610612754</span><span class="p">;</span>
@@ -2504,8 +2529,23 @@ section#format-index .row {
         <span class="k">const</span> <span class="no">SUNW_STRPAD</span> <span class="o">=</span> <span class="mi">1610612761</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_CAPCHAIN</span> <span class="o">=</span> <span class="mi">1610612762</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_LDMACH</span> <span class="o">=</span> <span class="mi">1610612763</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SYMTAB_SHNDX</span> <span class="o">=</span> <span class="mi">1610612764</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_CAPCHAINENT</span> <span class="o">=</span> <span class="mi">1610612765</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_DEFERRED</span> <span class="o">=</span> <span class="mi">1610612766</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">SUNW_CAPCHAINSZ</span> <span class="o">=</span> <span class="mi">1610612767</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_PHNAME</span> <span class="o">=</span> <span class="mi">1610612768</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_PARENT</span> <span class="o">=</span> <span class="mi">1610612769</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SX_ASLR</span> <span class="o">=</span> <span class="mi">1610612771</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_RELAX</span> <span class="o">=</span> <span class="mi">1610612773</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_KMOD</span> <span class="o">=</span> <span class="mi">1610612775</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SX_NXHEAP</span> <span class="o">=</span> <span class="mi">1610612777</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SX_NXSTACK</span> <span class="o">=</span> <span class="mi">1610612779</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SX_ADIHEAP</span> <span class="o">=</span> <span class="mi">1610612781</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SX_ADISTACK</span> <span class="o">=</span> <span class="mi">1610612783</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SX_SSBD</span> <span class="o">=</span> <span class="mi">1610612785</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SYMNSORT</span> <span class="o">=</span> <span class="mi">1610612786</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">SUNW_SYMNSORTSZ</span> <span class="o">=</span> <span class="mi">1610612787</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GNU_FLAGS_1</span> <span class="o">=</span> <span class="mi">1879047668</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">GNU_PRELINKED</span> <span class="o">=</span> <span class="mi">1879047669</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">GNU_CONFLICTSZ</span> <span class="o">=</span> <span class="mi">1879047670</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">GNU_LIBLISTSZ</span> <span class="o">=</span> <span class="mi">1879047671</span><span class="p">;</span>

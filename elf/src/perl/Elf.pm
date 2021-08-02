@@ -57,6 +57,9 @@ our $SH_TYPE_FINI_ARRAY = 15;
 our $SH_TYPE_PREINIT_ARRAY = 16;
 our $SH_TYPE_GROUP = 17;
 our $SH_TYPE_SYMTAB_SHNDX = 18;
+our $SH_TYPE_SUNW_SYMNSORT = 1879048172;
+our $SH_TYPE_SUNW_PHNAME = 1879048173;
+our $SH_TYPE_SUNW_ANCILLARY = 1879048174;
 our $SH_TYPE_SUNW_CAPCHAIN = 1879048175;
 our $SH_TYPE_SUNW_CAPINFO = 1879048176;
 our $SH_TYPE_SUNW_SYMSORT = 1879048177;
@@ -78,6 +81,8 @@ our $SH_TYPE_SPARC_GOTDATA = 1879048192;
 our $SH_TYPE_AMD64_UNWIND = 1879048193;
 our $SH_TYPE_ARM_PREEMPTMAP = 1879048194;
 our $SH_TYPE_ARM_ATTRIBUTES = 1879048195;
+our $SH_TYPE_ARM_DEBUGOVERLAY = 1879048196;
+our $SH_TYPE_ARM_OVERLAYSECTION = 1879048197;
 
 our $OS_ABI_SYSTEM_V = 0;
 our $OS_ABI_HP_UX = 1;
@@ -171,8 +176,10 @@ our $DYNAMIC_ARRAY_TAGS_FLAGS = 30;
 our $DYNAMIC_ARRAY_TAGS_PREINIT_ARRAY = 32;
 our $DYNAMIC_ARRAY_TAGS_PREINIT_ARRAYSZ = 33;
 our $DYNAMIC_ARRAY_TAGS_SYMTAB_SHNDX = 34;
+our $DYNAMIC_ARRAY_TAGS_DEPRECATED_SPARC_REGISTER = 117440513;
 our $DYNAMIC_ARRAY_TAGS_SUNW_AUXILIARY = 1610612749;
-our $DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612750;
+our $DYNAMIC_ARRAY_TAGS_SUNW_RTLDINF = 1610612750;
+our $DYNAMIC_ARRAY_TAGS_SUNW_FILTER = 1610612751;
 our $DYNAMIC_ARRAY_TAGS_SUNW_CAP = 1610612752;
 our $DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB = 1610612753;
 our $DYNAMIC_ARRAY_TAGS_SUNW_SYMSZ = 1610612754;
@@ -185,8 +192,23 @@ our $DYNAMIC_ARRAY_TAGS_SUNW_CAPINFO = 1610612760;
 our $DYNAMIC_ARRAY_TAGS_SUNW_STRPAD = 1610612761;
 our $DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAIN = 1610612762;
 our $DYNAMIC_ARRAY_TAGS_SUNW_LDMACH = 1610612763;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMTAB_SHNDX = 1610612764;
 our $DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINENT = 1610612765;
+our $DYNAMIC_ARRAY_TAGS_SUNW_DEFERRED = 1610612766;
 our $DYNAMIC_ARRAY_TAGS_SUNW_CAPCHAINSZ = 1610612767;
+our $DYNAMIC_ARRAY_TAGS_SUNW_PHNAME = 1610612768;
+our $DYNAMIC_ARRAY_TAGS_SUNW_PARENT = 1610612769;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SX_ASLR = 1610612771;
+our $DYNAMIC_ARRAY_TAGS_SUNW_RELAX = 1610612773;
+our $DYNAMIC_ARRAY_TAGS_SUNW_KMOD = 1610612775;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SX_NXHEAP = 1610612777;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SX_NXSTACK = 1610612779;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SX_ADIHEAP = 1610612781;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SX_ADISTACK = 1610612783;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SX_SSBD = 1610612785;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMNSORT = 1610612786;
+our $DYNAMIC_ARRAY_TAGS_SUNW_SYMNSORTSZ = 1610612787;
+our $DYNAMIC_ARRAY_TAGS_GNU_FLAGS_1 = 1879047668;
 our $DYNAMIC_ARRAY_TAGS_GNU_PRELINKED = 1879047669;
 our $DYNAMIC_ARRAY_TAGS_GNU_CONFLICTSZ = 1879047670;
 our $DYNAMIC_ARRAY_TAGS_GNU_LIBLISTSZ = 1879047671;
@@ -973,18 +995,20 @@ sub section_headers {
 sub section_names {
     my ($self) = @_;
     return $self->{section_names} if ($self->{section_names});
-    my $_pos = $self->{_io}->pos();
-    $self->{_io}->seek(@{$self->section_headers()}[$self->section_names_idx()]->ofs_body());
-    if ($self->{_is_le}) {
-        $self->{_raw_section_names} = $self->{_io}->read_bytes(@{$self->section_headers()}[$self->section_names_idx()]->len_body());
-        my $io__raw_section_names = IO::KaitaiStruct::Stream->new($self->{_raw_section_names});
-        $self->{section_names} = Elf::EndianElf::StringsStruct->new($io__raw_section_names, $self, $self->{_root}, $self->{_is_le});
-    } else {
-        $self->{_raw_section_names} = $self->{_io}->read_bytes(@{$self->section_headers()}[$self->section_names_idx()]->len_body());
-        my $io__raw_section_names = IO::KaitaiStruct::Stream->new($self->{_raw_section_names});
-        $self->{section_names} = Elf::EndianElf::StringsStruct->new($io__raw_section_names, $self, $self->{_root}, $self->{_is_le});
+    if ( (($self->section_names_idx() != $Elf::SECTION_HEADER_IDX_SPECIAL_UNDEFINED) && ($self->section_names_idx() < $self->_root()->header()->qty_section_header())) ) {
+        my $_pos = $self->{_io}->pos();
+        $self->{_io}->seek(@{$self->section_headers()}[$self->section_names_idx()]->ofs_body());
+        if ($self->{_is_le}) {
+            $self->{_raw_section_names} = $self->{_io}->read_bytes(@{$self->section_headers()}[$self->section_names_idx()]->len_body());
+            my $io__raw_section_names = IO::KaitaiStruct::Stream->new($self->{_raw_section_names});
+            $self->{section_names} = Elf::EndianElf::StringsStruct->new($io__raw_section_names, $self, $self->{_root}, $self->{_is_le});
+        } else {
+            $self->{_raw_section_names} = $self->{_io}->read_bytes(@{$self->section_headers()}[$self->section_names_idx()]->len_body());
+            my $io__raw_section_names = IO::KaitaiStruct::Stream->new($self->{_raw_section_names});
+            $self->{section_names} = Elf::EndianElf::StringsStruct->new($io__raw_section_names, $self, $self->{_root}, $self->{_is_le});
+        }
+        $self->{_io}->seek($_pos);
     }
-    $self->{_io}->seek($_pos);
     return $self->{section_names};
 }
 
