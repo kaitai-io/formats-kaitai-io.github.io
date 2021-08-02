@@ -37,7 +37,7 @@ public:
 
     enum symbol_binding_t {
         SYMBOL_BINDING_LOCAL = 0,
-        SYMBOL_BINDING_GLOBAL = 1,
+        SYMBOL_BINDING_GLOBAL_SYMBOL = 1,
         SYMBOL_BINDING_WEAK = 2,
         SYMBOL_BINDING_OS10 = 10,
         SYMBOL_BINDING_OS11 = 11,

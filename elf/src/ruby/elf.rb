@@ -26,7 +26,7 @@ class Elf < Kaitai::Struct::Struct
 
   SYMBOL_BINDING = {
     0 => :symbol_binding_local,
-    1 => :symbol_binding_global,
+    1 => :symbol_binding_global_symbol,
     2 => :symbol_binding_weak,
     10 => :symbol_binding_os10,
     11 => :symbol_binding_os11,

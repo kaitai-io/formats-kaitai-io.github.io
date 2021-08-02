@@ -36,7 +36,7 @@ var Elf = (function() {
 
   Elf.SymbolBinding = Object.freeze({
     LOCAL: 0,
-    GLOBAL: 1,
+    GLOBAL_SYMBOL: 1,
     WEAK: 2,
     OS10: 10,
     OS11: 11,
@@ -46,7 +46,7 @@ var Elf = (function() {
     PROC15: 15,
 
     0: "LOCAL",
-    1: "GLOBAL",
+    1: "GLOBAL_SYMBOL",
     2: "WEAK",
     10: "OS10",
     11: "OS11",

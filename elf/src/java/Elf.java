@@ -43,7 +43,7 @@ public class Elf extends KaitaiStruct {
 
     public enum SymbolBinding {
         LOCAL(0),
-        GLOBAL(1),
+        GLOBAL_SYMBOL(1),
         WEAK(2),
         OS10(10),
         OS11(11),

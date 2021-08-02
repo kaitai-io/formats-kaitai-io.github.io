@@ -34,7 +34,7 @@ class Elf(KaitaiStruct):
 
     class SymbolBinding(Enum):
         local = 0
-        global = 1
+        global_symbol = 1
         weak = 2
         os10 = 10
         os11 = 11

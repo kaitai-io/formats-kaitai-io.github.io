@@ -37,7 +37,7 @@ namespace Kaitai
         public enum SymbolBinding
         {
             Local = 0,
-            Global = 1,
+            GlobalSymbol = 1,
             Weak = 2,
             Os10 = 10,
             Os11 = 11,

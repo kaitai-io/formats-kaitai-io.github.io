@@ -1968,11 +1968,14 @@ namespace Elf {
 
         /**
          * visible to all object files being combined
+         * 
+         * As of KSC 0.9, this enum key can't be called `global` because it would
+         * cause a syntax error in Python (it is a keyword).
          */
-        const GLOBAL = 1;
+        const GLOBAL_SYMBOL = 1;
 
         /**
-         * like `symbol_binding::global`, but their definitions have lower precedence
+         * like `symbol_binding::global_symbol`, but their definitions have lower precedence
          */
         const WEAK = 2;
 
