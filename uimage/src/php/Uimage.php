@@ -373,35 +373,11 @@ namespace Uimage {
          * No Compression Used
          */
         const NONE = 0;
-
-        /**
-         * gzip Compression Used
-         */
         const GZIP = 1;
-
-        /**
-         * bzip2 Compression Used
-         */
         const BZIP2 = 2;
-
-        /**
-         * lzma Compression Used
-         */
         const LZMA = 3;
-
-        /**
-         * lzo Compression Used
-         */
         const LZO = 4;
-
-        /**
-         * lz4 Compression Used
-         */
         const LZ4 = 5;
-
-        /**
-         * zstd Compression Used
-         */
         const ZSTD = 6;
     }
 }
