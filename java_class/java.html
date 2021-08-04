@@ -345,7 +345,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="k">this</span><span class="p">.</span><span class="na">constantPoolCount</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="n">constantPool</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ConstantPoolEntry</span><span class="o">&gt;</span><span class="p">(((</span><span class="n">Number</span><span class="p">)</span> <span class="p">((</span><span class="n">constantPoolCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))).</span><span class="na">intValue</span><span class="p">());</span>
         <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">constantPoolCount</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">constantPool</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">ConstantPoolEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">));</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">constantPool</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">ConstantPoolEntry</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">constantPool</span><span class="p">().</span><span class="na">get</span><span class="p">((</span><span class="kt">int</span><span class="p">)</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)).</span><span class="na">isTwoEntries</span><span class="p">()</span> <span class="p">:</span> <span class="kc">false</span><span class="p">)));</span>
         <span class="p">}</span>
         <span class="k">this</span><span class="p">.</span><span class="na">accessFlags</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="k">this</span><span class="p">.</span><span class="na">thisClass</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
@@ -1338,9 +1338,6 @@ for instructions how to add it into your project with the build tool that you us
 <span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm">     */</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ConstantPoolEntry</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
-        <span class="kd">public</span> <span class="kd">static</span> <span class="n">ConstantPoolEntry</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="k">new</span> <span class="n">ConstantPoolEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-        <span class="p">}</span>
 
         <span class="kd">public</span> <span class="kd">enum</span> <span class="n">TagEnum</span> <span class="p">{</span>
             <span class="n">UTF8</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
@@ -1369,92 +1366,107 @@ for instructions how to add it into your project with the build tool that you us
             <span class="kd">public</span> <span class="kd">static</span> <span class="n">TagEnum</span> <span class="nf">byId</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="n">byId</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">id</span><span class="p">);</span> <span class="p">}</span>
         <span class="p">}</span>
 
-        <span class="kd">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="kd">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">boolean</span> <span class="n">isPrevTwoEntries</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">isPrevTwoEntries</span><span class="p">);</span>
         <span class="p">}</span>
 
-        <span class="kd">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="kd">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">boolean</span> <span class="n">isPrevTwoEntries</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">isPrevTwoEntries</span><span class="p">);</span>
         <span class="p">}</span>
 
-        <span class="kd">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">boolean</span> <span class="n">isPrevTwoEntries</span><span class="p">)</span> <span class="p">{</span>
             <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
             <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isPrevTwoEntries</span> <span class="o">=</span> <span class="n">isPrevTwoEntries</span><span class="p">;</span>
             <span class="n">_read</span><span class="p">();</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="n">TagEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
-            <span class="p">{</span>
-                <span class="n">TagEnum</span> <span class="n">on</span> <span class="o">=</span> <span class="n">tag</span><span class="p">();</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-                    <span class="k">switch</span> <span class="p">(</span><span class="n">tag</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="n">INTERFACE_METHOD_REF</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">CLASS_TYPE</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">UTF8</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">METHOD_TYPE</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodTypeCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">INTEGER</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IntegerCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">STRING</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">FLOAT</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">LONG</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LongCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">METHOD_REF</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodRefCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">DOUBLE</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">INVOKE_DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InvokeDynamicCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">FIELD_REF</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FieldRefCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">METHOD_HANDLE</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">NAME_AND_TYPE</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">isPrevTwoEntries</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">tag</span> <span class="o">=</span> <span class="n">TagEnum</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">isPrevTwoEntries</span><span class="p">()))</span> <span class="p">{</span>
+                <span class="p">{</span>
+                    <span class="n">TagEnum</span> <span class="n">on</span> <span class="o">=</span> <span class="n">tag</span><span class="p">();</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">switch</span> <span class="p">(</span><span class="n">tag</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="n">INTERFACE_METHOD_REF</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">CLASS_TYPE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">UTF8</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">METHOD_TYPE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodTypeCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">INTEGER</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IntegerCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">STRING</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">FLOAT</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">LONG</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LongCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">METHOD_REF</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodRefCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">DOUBLE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DoubleCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">INVOKE_DYNAMIC</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">InvokeDynamicCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">FIELD_REF</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FieldRefCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">METHOD_HANDLE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">case</span> <span class="n">NAME_AND_TYPE</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="k">this</span><span class="p">.</span><span class="na">cpInfo</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="p">}</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
         <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isTwoEntries</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isTwoEntries</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isTwoEntries</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isTwoEntries</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">tag</span><span class="p">()</span> <span class="o">==</span> <span class="n">TagEnum</span><span class="p">.</span><span class="na">LONG</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag</span><span class="p">()</span> <span class="o">==</span> <span class="n">TagEnum</span><span class="p">.</span><span class="na">DOUBLE</span><span class="p">))</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isTwoEntries</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isTwoEntries</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="kd">private</span> <span class="n">TagEnum</span> <span class="n">tag</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">KaitaiStruct</span> <span class="n">cpInfo</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">isPrevTwoEntries</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">JavaClass</span> <span class="n">_parent</span><span class="p">;</span>
         <span class="kd">public</span> <span class="n">TagEnum</span> <span class="nf">tag</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tag</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">KaitaiStruct</span> <span class="nf">cpInfo</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">cpInfo</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isPrevTwoEntries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">isPrevTwoEntries</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">JavaClass</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>

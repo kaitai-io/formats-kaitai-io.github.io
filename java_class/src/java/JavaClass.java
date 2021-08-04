@@ -43,7 +43,7 @@ public class JavaClass extends KaitaiStruct {
         this.constantPoolCount = this._io.readU2be();
         constantPool = new ArrayList<ConstantPoolEntry>(((Number) ((constantPoolCount() - 1))).intValue());
         for (int i = 0; i < (constantPoolCount() - 1); i++) {
-            this.constantPool.add(new ConstantPoolEntry(this._io, this, _root));
+            this.constantPool.add(new ConstantPoolEntry(this._io, this, _root, (i != 0 ? constantPool().get((int) (i - 1)).isTwoEntries() : false)));
         }
         this.accessFlags = this._io.readU2be();
         this.thisClass = this._io.readU2be();
@@ -1036,9 +1036,6 @@ public class JavaClass extends KaitaiStruct {
      * @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Source</a>
      */
     public static class ConstantPoolEntry extends KaitaiStruct {
-        public static ConstantPoolEntry fromFile(String fileName) throws IOException {
-            return new ConstantPoolEntry(new ByteBufferKaitaiStream(fileName));
-        }
 
         public enum TagEnum {
             UTF8(1),
@@ -1067,92 +1064,107 @@ public class JavaClass extends KaitaiStruct {
             public static TagEnum byId(long id) { return byId.get(id); }
         }
 
-        public ConstantPoolEntry(KaitaiStream _io) {
-            this(_io, null, null);
+        public ConstantPoolEntry(KaitaiStream _io, boolean isPrevTwoEntries) {
+            this(_io, null, null, isPrevTwoEntries);
         }
 
-        public ConstantPoolEntry(KaitaiStream _io, JavaClass _parent) {
-            this(_io, _parent, null);
+        public ConstantPoolEntry(KaitaiStream _io, JavaClass _parent, boolean isPrevTwoEntries) {
+            this(_io, _parent, null, isPrevTwoEntries);
         }
 
-        public ConstantPoolEntry(KaitaiStream _io, JavaClass _parent, JavaClass _root) {
+        public ConstantPoolEntry(KaitaiStream _io, JavaClass _parent, JavaClass _root, boolean isPrevTwoEntries) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
+            this.isPrevTwoEntries = isPrevTwoEntries;
             _read();
         }
         private void _read() {
-            this.tag = TagEnum.byId(this._io.readU1());
-            {
-                TagEnum on = tag();
-                if (on != null) {
-                    switch (tag()) {
-                    case INTERFACE_METHOD_REF: {
-                        this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case CLASS_TYPE: {
-                        this.cpInfo = new ClassCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case UTF8: {
-                        this.cpInfo = new Utf8CpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case METHOD_TYPE: {
-                        this.cpInfo = new MethodTypeCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case INTEGER: {
-                        this.cpInfo = new IntegerCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case STRING: {
-                        this.cpInfo = new StringCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case FLOAT: {
-                        this.cpInfo = new FloatCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case LONG: {
-                        this.cpInfo = new LongCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case METHOD_REF: {
-                        this.cpInfo = new MethodRefCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case DOUBLE: {
-                        this.cpInfo = new DoubleCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case INVOKE_DYNAMIC: {
-                        this.cpInfo = new InvokeDynamicCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case FIELD_REF: {
-                        this.cpInfo = new FieldRefCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case METHOD_HANDLE: {
-                        this.cpInfo = new MethodHandleCpInfo(this._io, this, _root);
-                        break;
-                    }
-                    case NAME_AND_TYPE: {
-                        this.cpInfo = new NameAndTypeCpInfo(this._io, this, _root);
-                        break;
-                    }
+            if (!(isPrevTwoEntries())) {
+                this.tag = TagEnum.byId(this._io.readU1());
+            }
+            if (!(isPrevTwoEntries())) {
+                {
+                    TagEnum on = tag();
+                    if (on != null) {
+                        switch (tag()) {
+                        case INTERFACE_METHOD_REF: {
+                            this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case CLASS_TYPE: {
+                            this.cpInfo = new ClassCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case UTF8: {
+                            this.cpInfo = new Utf8CpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case METHOD_TYPE: {
+                            this.cpInfo = new MethodTypeCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case INTEGER: {
+                            this.cpInfo = new IntegerCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case STRING: {
+                            this.cpInfo = new StringCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case FLOAT: {
+                            this.cpInfo = new FloatCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case LONG: {
+                            this.cpInfo = new LongCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case METHOD_REF: {
+                            this.cpInfo = new MethodRefCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case DOUBLE: {
+                            this.cpInfo = new DoubleCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case INVOKE_DYNAMIC: {
+                            this.cpInfo = new InvokeDynamicCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case FIELD_REF: {
+                            this.cpInfo = new FieldRefCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case METHOD_HANDLE: {
+                            this.cpInfo = new MethodHandleCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        case NAME_AND_TYPE: {
+                            this.cpInfo = new NameAndTypeCpInfo(this._io, this, _root);
+                            break;
+                        }
+                        }
                     }
                 }
             }
         }
+        private Boolean isTwoEntries;
+        public Boolean isTwoEntries() {
+            if (this.isTwoEntries != null)
+                return this.isTwoEntries;
+            boolean _tmp = (boolean) ( ((tag() == TagEnum.LONG) || (tag() == TagEnum.DOUBLE)) );
+            this.isTwoEntries = _tmp;
+            return this.isTwoEntries;
+        }
         private TagEnum tag;
         private KaitaiStruct cpInfo;
+        private boolean isPrevTwoEntries;
         private JavaClass _root;
         private JavaClass _parent;
         public TagEnum tag() { return tag; }
         public KaitaiStruct cpInfo() { return cpInfo; }
+        public boolean isPrevTwoEntries() { return isPrevTwoEntries; }
         public JavaClass _root() { return _root; }
         public JavaClass _parent() { return _parent; }
     }

@@ -19,7 +19,7 @@ namespace {
             $this->_m_constantPool = [];
             $n = ($this->constantPoolCount() - 1);
             for ($i = 0; $i < $n; $i++) {
-                $this->_m_constantPool[] = new \JavaClass\ConstantPoolEntry($this->_io, $this, $this->_root);
+                $this->_m_constantPool[] = new \JavaClass\ConstantPoolEntry(($i != 0 ? $this->constantPool()[($i - 1)]->isTwoEntries() : false), $this->_io, $this, $this->_root);
             }
             $this->_m_accessFlags = $this->_io->readU2be();
             $this->_m_thisClass = $this->_io->readU2be();
@@ -670,62 +670,76 @@ namespace JavaClass {
 
 namespace JavaClass {
     class ConstantPoolEntry extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \JavaClass $_parent = null, \JavaClass $_root = null) {
+        public function __construct(bool $isPrevTwoEntries, \Kaitai\Struct\Stream $_io, \JavaClass $_parent = null, \JavaClass $_root = null) {
             parent::__construct($_io, $_parent, $_root);
+            $this->_m_isPrevTwoEntries = $isPrevTwoEntries;
             $this->_read();
         }
 
         private function _read() {
-            $this->_m_tag = $this->_io->readU1();
-            switch ($this->tag()) {
-                case \JavaClass\ConstantPoolEntry\TagEnum::INTERFACE_METHOD_REF:
-                    $this->_m_cpInfo = new \JavaClass\InterfaceMethodRefCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::CLASS_TYPE:
-                    $this->_m_cpInfo = new \JavaClass\ClassCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::UTF8:
-                    $this->_m_cpInfo = new \JavaClass\Utf8CpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_TYPE:
-                    $this->_m_cpInfo = new \JavaClass\MethodTypeCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::INTEGER:
-                    $this->_m_cpInfo = new \JavaClass\IntegerCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::STRING:
-                    $this->_m_cpInfo = new \JavaClass\StringCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::FLOAT:
-                    $this->_m_cpInfo = new \JavaClass\FloatCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::LONG:
-                    $this->_m_cpInfo = new \JavaClass\LongCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_REF:
-                    $this->_m_cpInfo = new \JavaClass\MethodRefCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::DOUBLE:
-                    $this->_m_cpInfo = new \JavaClass\DoubleCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::INVOKE_DYNAMIC:
-                    $this->_m_cpInfo = new \JavaClass\InvokeDynamicCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::FIELD_REF:
-                    $this->_m_cpInfo = new \JavaClass\FieldRefCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_HANDLE:
-                    $this->_m_cpInfo = new \JavaClass\MethodHandleCpInfo($this->_io, $this, $this->_root);
-                    break;
-                case \JavaClass\ConstantPoolEntry\TagEnum::NAME_AND_TYPE:
-                    $this->_m_cpInfo = new \JavaClass\NameAndTypeCpInfo($this->_io, $this, $this->_root);
-                    break;
+            if (!($this->isPrevTwoEntries())) {
+                $this->_m_tag = $this->_io->readU1();
             }
+            if (!($this->isPrevTwoEntries())) {
+                switch ($this->tag()) {
+                    case \JavaClass\ConstantPoolEntry\TagEnum::INTERFACE_METHOD_REF:
+                        $this->_m_cpInfo = new \JavaClass\InterfaceMethodRefCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::CLASS_TYPE:
+                        $this->_m_cpInfo = new \JavaClass\ClassCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::UTF8:
+                        $this->_m_cpInfo = new \JavaClass\Utf8CpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_TYPE:
+                        $this->_m_cpInfo = new \JavaClass\MethodTypeCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::INTEGER:
+                        $this->_m_cpInfo = new \JavaClass\IntegerCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::STRING:
+                        $this->_m_cpInfo = new \JavaClass\StringCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::FLOAT:
+                        $this->_m_cpInfo = new \JavaClass\FloatCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::LONG:
+                        $this->_m_cpInfo = new \JavaClass\LongCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_REF:
+                        $this->_m_cpInfo = new \JavaClass\MethodRefCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::DOUBLE:
+                        $this->_m_cpInfo = new \JavaClass\DoubleCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::INVOKE_DYNAMIC:
+                        $this->_m_cpInfo = new \JavaClass\InvokeDynamicCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::FIELD_REF:
+                        $this->_m_cpInfo = new \JavaClass\FieldRefCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::METHOD_HANDLE:
+                        $this->_m_cpInfo = new \JavaClass\MethodHandleCpInfo($this->_io, $this, $this->_root);
+                        break;
+                    case \JavaClass\ConstantPoolEntry\TagEnum::NAME_AND_TYPE:
+                        $this->_m_cpInfo = new \JavaClass\NameAndTypeCpInfo($this->_io, $this, $this->_root);
+                        break;
+                }
+            }
+        }
+        protected $_m_isTwoEntries;
+        public function isTwoEntries() {
+            if ($this->_m_isTwoEntries !== null)
+                return $this->_m_isTwoEntries;
+            $this->_m_isTwoEntries =  (($this->tag() == \JavaClass\ConstantPoolEntry\TagEnum::LONG) || ($this->tag() == \JavaClass\ConstantPoolEntry\TagEnum::DOUBLE)) ;
+            return $this->_m_isTwoEntries;
         }
         protected $_m_tag;
         protected $_m_cpInfo;
+        protected $_m_isPrevTwoEntries;
         public function tag() { return $this->_m_tag; }
         public function cpInfo() { return $this->_m_cpInfo; }
+        public function isPrevTwoEntries() { return $this->_m_isPrevTwoEntries; }
     }
 }
 

@@ -138,7 +138,9 @@ type
   JavaClass_ConstantPoolEntry* = ref object of KaitaiStruct
     `tag`*: JavaClass_ConstantPoolEntry_TagEnum
     `cpInfo`*: KaitaiStruct
+    `isPrevTwoEntries`*: bool
     `parent`*: JavaClass
+    `isTwoEntriesInst`*: bool
   JavaClass_ConstantPoolEntry_TagEnum* = enum
     utf8 = 1
     integer = 3
@@ -194,7 +196,7 @@ proc read*(_: typedesc[JavaClass_StringCpInfo], io: KaitaiStream, root: KaitaiSt
 proc read*(_: typedesc[JavaClass_MethodTypeCpInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass_ConstantPoolEntry): JavaClass_MethodTypeCpInfo
 proc read*(_: typedesc[JavaClass_InterfaceMethodRefCpInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass_ConstantPoolEntry): JavaClass_InterfaceMethodRefCpInfo
 proc read*(_: typedesc[JavaClass_ClassCpInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass_ConstantPoolEntry): JavaClass_ClassCpInfo
-proc read*(_: typedesc[JavaClass_ConstantPoolEntry], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass): JavaClass_ConstantPoolEntry
+proc read*(_: typedesc[JavaClass_ConstantPoolEntry], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass, isPrevTwoEntries: any): JavaClass_ConstantPoolEntry
 proc read*(_: typedesc[JavaClass_MethodInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass): JavaClass_MethodInfo
 proc read*(_: typedesc[JavaClass_IntegerCpInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass_ConstantPoolEntry): JavaClass_IntegerCpInfo
 proc read*(_: typedesc[JavaClass_FieldRefCpInfo], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass_ConstantPoolEntry): JavaClass_FieldRefCpInfo
@@ -215,6 +217,7 @@ proc classAsInfo*(this: JavaClass_InterfaceMethodRefCpInfo): JavaClass_ClassCpIn
 proc nameAndTypeAsInfo*(this: JavaClass_InterfaceMethodRefCpInfo): JavaClass_NameAndTypeCpInfo
 proc nameAsInfo*(this: JavaClass_ClassCpInfo): JavaClass_Utf8CpInfo
 proc nameAsStr*(this: JavaClass_ClassCpInfo): string
+proc isTwoEntries*(this: JavaClass_ConstantPoolEntry): bool
 proc nameAsStr*(this: JavaClass_MethodInfo): string
 proc classAsInfo*(this: JavaClass_FieldRefCpInfo): JavaClass_ClassCpInfo
 proc nameAndTypeAsInfo*(this: JavaClass_FieldRefCpInfo): JavaClass_NameAndTypeCpInfo
@@ -240,7 +243,7 @@ proc read*(_: typedesc[JavaClass], io: KaitaiStream, root: KaitaiStruct, parent:
   let constantPoolCountExpr = this.io.readU2be()
   this.constantPoolCount = constantPoolCountExpr
   for i in 0 ..< int((this.constantPoolCount - 1)):
-    let it = JavaClass_ConstantPoolEntry.read(this.io, this.root, this)
+    let it = JavaClass_ConstantPoolEntry.read(this.io, this.root, this, (if i != 0: this.constantPool[(i - 1)].isTwoEntries else: false))
     this.constantPool.add(it)
   let accessFlagsExpr = this.io.readU2be()
   this.accessFlags = accessFlagsExpr
@@ -880,60 +883,72 @@ proc fromFile*(_: typedesc[JavaClass_ClassCpInfo], filename: string): JavaClass_
 ##[
 @see <a href="https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4">Source</a>
 ]##
-proc read*(_: typedesc[JavaClass_ConstantPoolEntry], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass): JavaClass_ConstantPoolEntry =
+proc read*(_: typedesc[JavaClass_ConstantPoolEntry], io: KaitaiStream, root: KaitaiStruct, parent: JavaClass, isPrevTwoEntries: any): JavaClass_ConstantPoolEntry =
   template this: untyped = result
   this = new(JavaClass_ConstantPoolEntry)
   let root = if root == nil: cast[JavaClass](this) else: cast[JavaClass](root)
   this.io = io
   this.root = root
   this.parent = parent
+  let isPrevTwoEntriesExpr = bool(isPrevTwoEntries)
+  this.isPrevTwoEntries = isPrevTwoEntriesExpr
 
-  let tagExpr = JavaClass_ConstantPoolEntry_TagEnum(this.io.readU1())
-  this.tag = tagExpr
-  block:
-    let on = this.tag
-    if on == java_class.interface_method_ref:
-      let cpInfoExpr = JavaClass_InterfaceMethodRefCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.class_type:
-      let cpInfoExpr = JavaClass_ClassCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.utf8:
-      let cpInfoExpr = JavaClass_Utf8CpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.method_type:
-      let cpInfoExpr = JavaClass_MethodTypeCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.integer:
-      let cpInfoExpr = JavaClass_IntegerCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.string:
-      let cpInfoExpr = JavaClass_StringCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.float:
-      let cpInfoExpr = JavaClass_FloatCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.long:
-      let cpInfoExpr = JavaClass_LongCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.method_ref:
-      let cpInfoExpr = JavaClass_MethodRefCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.double:
-      let cpInfoExpr = JavaClass_DoubleCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.invoke_dynamic:
-      let cpInfoExpr = JavaClass_InvokeDynamicCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.field_ref:
-      let cpInfoExpr = JavaClass_FieldRefCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.method_handle:
-      let cpInfoExpr = JavaClass_MethodHandleCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
-    elif on == java_class.name_and_type:
-      let cpInfoExpr = JavaClass_NameAndTypeCpInfo.read(this.io, this.root, this)
-      this.cpInfo = cpInfoExpr
+  if not(this.isPrevTwoEntries):
+    let tagExpr = JavaClass_ConstantPoolEntry_TagEnum(this.io.readU1())
+    this.tag = tagExpr
+  if not(this.isPrevTwoEntries):
+    block:
+      let on = this.tag
+      if on == java_class.interface_method_ref:
+        let cpInfoExpr = JavaClass_InterfaceMethodRefCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.class_type:
+        let cpInfoExpr = JavaClass_ClassCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.utf8:
+        let cpInfoExpr = JavaClass_Utf8CpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.method_type:
+        let cpInfoExpr = JavaClass_MethodTypeCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.integer:
+        let cpInfoExpr = JavaClass_IntegerCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.string:
+        let cpInfoExpr = JavaClass_StringCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.float:
+        let cpInfoExpr = JavaClass_FloatCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.long:
+        let cpInfoExpr = JavaClass_LongCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.method_ref:
+        let cpInfoExpr = JavaClass_MethodRefCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.double:
+        let cpInfoExpr = JavaClass_DoubleCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.invoke_dynamic:
+        let cpInfoExpr = JavaClass_InvokeDynamicCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.field_ref:
+        let cpInfoExpr = JavaClass_FieldRefCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.method_handle:
+        let cpInfoExpr = JavaClass_MethodHandleCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+      elif on == java_class.name_and_type:
+        let cpInfoExpr = JavaClass_NameAndTypeCpInfo.read(this.io, this.root, this)
+        this.cpInfo = cpInfoExpr
+
+proc isTwoEntries(this: JavaClass_ConstantPoolEntry): bool = 
+  if this.isTwoEntriesInst != nil:
+    return this.isTwoEntriesInst
+  let isTwoEntriesInstExpr = bool( ((this.tag == java_class.long) or (this.tag == java_class.double)) )
+  this.isTwoEntriesInst = isTwoEntriesInstExpr
+  if this.isTwoEntriesInst != nil:
+    return this.isTwoEntriesInst
 
 proc fromFile*(_: typedesc[JavaClass_ConstantPoolEntry], filename: string): JavaClass_ConstantPoolEntry =
   JavaClass_ConstantPoolEntry.read(newKaitaiFileStream(filename), nil, nil)

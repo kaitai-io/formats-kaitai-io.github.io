@@ -266,7 +266,7 @@ section#format-index .row {
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_pool_count</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_pool</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_pool_entry</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;constant_pool_entry(_index</span><span class="nv"> </span><span class="s">!=</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">constant_pool[_index</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1].is_two_entries</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">false)&#39;</span>
     <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
     <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">constant_pool_count - 1</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">access_flags</span>
@@ -302,10 +302,14 @@ section#format-index .row {
 <span class="nt">types</span><span class="p">:</span>
   <span class="nt">constant_pool_entry</span><span class="p">:</span>
     <span class="nt">doc-ref</span><span class="p">:</span> <span class="s">&#39;https://docs.oracle.com/javase/specs/jvms/se8/html/jvms-4.html#jvms-4.4&#39;</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_prev_two_entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
         <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_enum</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_prev_two_entries</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cp_info</span>
         <span class="nt">type</span><span class="p">:</span>
           <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
@@ -324,6 +328,10 @@ section#format-index .row {
             <span class="s">&#39;tag_enum::method_handle&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">method_handle_cp_info</span>
             <span class="s">&#39;tag_enum::method_type&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">method_type_cp_info</span>
             <span class="s">&#39;tag_enum::invoke_dynamic&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">invoke_dynamic_cp_info</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_prev_two_entries</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_two_entries</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;tag</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">tag_enum::long</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">tag</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">tag_enum::double&#39;</span>
     <span class="nt">enums</span><span class="p">:</span>
       <span class="nt">tag_enum</span><span class="p">:</span>
         <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class_type</span>

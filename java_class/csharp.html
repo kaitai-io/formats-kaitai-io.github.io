@@ -334,7 +334,7 @@ can also be found there.</p>
             <span class="n">_constantPool</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ConstantPoolEntry</span><span class="p">&gt;((</span><span class="kt">int</span><span class="p">)</span> <span class="p">((</span><span class="n">ConstantPoolCount</span> <span class="p">-</span> <span class="m">1</span><span class="p">)));</span>
             <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="p">(</span><span class="n">ConstantPoolCount</span> <span class="p">-</span> <span class="m">1</span><span class="p">);</span> <span class="n">i</span><span class="p">++)</span>
             <span class="p">{</span>
-                <span class="n">_constantPool</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">ConstantPoolEntry</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
+                <span class="n">_constantPool</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">ConstantPoolEntry</span><span class="p">((</span><span class="n">i</span> <span class="p">!=</span> <span class="m">0</span> <span class="p">?</span> <span class="n">ConstantPool</span><span class="p">[(</span><span class="n">i</span> <span class="p">-</span> <span class="m">1</span><span class="p">)].</span><span class="n">IsTwoEntries</span> <span class="p">:</span> <span class="k">false</span><span class="p">),</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">));</span>
             <span class="p">}</span>
             <span class="n">_accessFlags</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
             <span class="n">_thisClass</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
@@ -1335,11 +1335,6 @@ can also be found there.</p>
         <span class="c1">/// &lt;/remarks&gt;</span>
         <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">ConstantPoolEntry</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
         <span class="p">{</span>
-            <span class="k">public</span> <span class="k">static</span> <span class="n">ConstantPoolEntry</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
-
 
             <span class="k">public</span> <span class="k">enum</span> <span class="n">TagEnum</span>
             <span class="p">{</span>
@@ -1358,80 +1353,101 @@ can also be found there.</p>
                 <span class="n">MethodType</span> <span class="p">=</span> <span class="m">16</span><span class="p">,</span>
                 <span class="n">InvokeDynamic</span> <span class="p">=</span> <span class="m">18</span><span class="p">,</span>
             <span class="p">}</span>
-            <span class="k">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="k">public</span> <span class="nf">ConstantPoolEntry</span><span class="p">(</span><span class="kt">bool</span> <span class="n">p_isPrevTwoEntries</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">JavaClass</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
             <span class="p">{</span>
                 <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_isPrevTwoEntries</span> <span class="p">=</span> <span class="n">p_isPrevTwoEntries</span><span class="p">;</span>
+                <span class="n">f_isTwoEntries</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
-                <span class="n">_tag</span> <span class="p">=</span> <span class="p">((</span><span class="n">TagEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="n">Tag</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">InterfaceMethodRef</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">IsPrevTwoEntries</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="n">_tag</span> <span class="p">=</span> <span class="p">((</span><span class="n">TagEnum</span><span class="p">)</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">());</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">ClassType</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(!(</span><span class="n">IsPrevTwoEntries</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="n">Tag</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">InterfaceMethodRef</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InterfaceMethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">ClassType</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">ClassCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Utf8</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodType</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Integer</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IntegerCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LongCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodRef</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DoubleCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">InvokeDynamic</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InvokeDynamicCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">FieldRef</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FieldRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodHandle</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">NameAndType</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Utf8</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Utf8CpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodType</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Integer</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">IntegerCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">String</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Float</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FloatCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">LongCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodRef</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Double</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DoubleCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">InvokeDynamic</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">InvokeDynamicCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">FieldRef</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">FieldRefCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">MethodHandle</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MethodHandleCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">NameAndType</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_cpInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NameAndTypeCpInfo</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isTwoEntries</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isTwoEntries</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsTwoEntries</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isTwoEntries</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isTwoEntries</span><span class="p">;</span>
+                    <span class="n">_isTwoEntries</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">Tag</span> <span class="p">==</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Long</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">Tag</span> <span class="p">==</span> <span class="n">TagEnum</span><span class="p">.</span><span class="n">Double</span><span class="p">))</span> <span class="p">);</span>
+                    <span class="n">f_isTwoEntries</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isTwoEntries</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="n">TagEnum</span> <span class="n">_tag</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">KaitaiStruct</span> <span class="n">_cpInfo</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isPrevTwoEntries</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">JavaClass</span> <span class="n">m_root</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">JavaClass</span> <span class="n">m_parent</span><span class="p">;</span>
             <span class="k">public</span> <span class="n">TagEnum</span> <span class="n">Tag</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tag</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">KaitaiStruct</span> <span class="n">CpInfo</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_cpInfo</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsPrevTwoEntries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_isPrevTwoEntries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">JavaClass</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">JavaClass</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>

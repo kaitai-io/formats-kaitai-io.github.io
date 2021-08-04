@@ -34,7 +34,7 @@ namespace Kaitai
             _constantPool = new List<ConstantPoolEntry>((int) ((ConstantPoolCount - 1)));
             for (var i = 0; i < (ConstantPoolCount - 1); i++)
             {
-                _constantPool.Add(new ConstantPoolEntry(m_io, this, m_root));
+                _constantPool.Add(new ConstantPoolEntry((i != 0 ? ConstantPool[(i - 1)].IsTwoEntries : false), m_io, this, m_root));
             }
             _accessFlags = m_io.ReadU2be();
             _thisClass = m_io.ReadU2be();
@@ -1035,11 +1035,6 @@ namespace Kaitai
         /// </remarks>
         public partial class ConstantPoolEntry : KaitaiStruct
         {
-            public static ConstantPoolEntry FromFile(string fileName)
-            {
-                return new ConstantPoolEntry(new KaitaiStream(fileName));
-            }
-
 
             public enum TagEnum
             {
@@ -1058,80 +1053,101 @@ namespace Kaitai
                 MethodType = 16,
                 InvokeDynamic = 18,
             }
-            public ConstantPoolEntry(KaitaiStream p__io, JavaClass p__parent = null, JavaClass p__root = null) : base(p__io)
+            public ConstantPoolEntry(bool p_isPrevTwoEntries, KaitaiStream p__io, JavaClass p__parent = null, JavaClass p__root = null) : base(p__io)
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                _isPrevTwoEntries = p_isPrevTwoEntries;
+                f_isTwoEntries = false;
                 _read();
             }
             private void _read()
             {
-                _tag = ((TagEnum) m_io.ReadU1());
-                switch (Tag) {
-                case TagEnum.InterfaceMethodRef: {
-                    _cpInfo = new InterfaceMethodRefCpInfo(m_io, this, m_root);
-                    break;
+                if (!(IsPrevTwoEntries)) {
+                    _tag = ((TagEnum) m_io.ReadU1());
                 }
-                case TagEnum.ClassType: {
-                    _cpInfo = new ClassCpInfo(m_io, this, m_root);
-                    break;
+                if (!(IsPrevTwoEntries)) {
+                    switch (Tag) {
+                    case TagEnum.InterfaceMethodRef: {
+                        _cpInfo = new InterfaceMethodRefCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.ClassType: {
+                        _cpInfo = new ClassCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Utf8: {
+                        _cpInfo = new Utf8CpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.MethodType: {
+                        _cpInfo = new MethodTypeCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Integer: {
+                        _cpInfo = new IntegerCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.String: {
+                        _cpInfo = new StringCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Float: {
+                        _cpInfo = new FloatCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Long: {
+                        _cpInfo = new LongCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.MethodRef: {
+                        _cpInfo = new MethodRefCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.Double: {
+                        _cpInfo = new DoubleCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.InvokeDynamic: {
+                        _cpInfo = new InvokeDynamicCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.FieldRef: {
+                        _cpInfo = new FieldRefCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.MethodHandle: {
+                        _cpInfo = new MethodHandleCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    case TagEnum.NameAndType: {
+                        _cpInfo = new NameAndTypeCpInfo(m_io, this, m_root);
+                        break;
+                    }
+                    }
                 }
-                case TagEnum.Utf8: {
-                    _cpInfo = new Utf8CpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.MethodType: {
-                    _cpInfo = new MethodTypeCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Integer: {
-                    _cpInfo = new IntegerCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.String: {
-                    _cpInfo = new StringCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Float: {
-                    _cpInfo = new FloatCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Long: {
-                    _cpInfo = new LongCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.MethodRef: {
-                    _cpInfo = new MethodRefCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.Double: {
-                    _cpInfo = new DoubleCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.InvokeDynamic: {
-                    _cpInfo = new InvokeDynamicCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.FieldRef: {
-                    _cpInfo = new FieldRefCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.MethodHandle: {
-                    _cpInfo = new MethodHandleCpInfo(m_io, this, m_root);
-                    break;
-                }
-                case TagEnum.NameAndType: {
-                    _cpInfo = new NameAndTypeCpInfo(m_io, this, m_root);
-                    break;
-                }
+            }
+            private bool f_isTwoEntries;
+            private bool _isTwoEntries;
+            public bool IsTwoEntries
+            {
+                get
+                {
+                    if (f_isTwoEntries)
+                        return _isTwoEntries;
+                    _isTwoEntries = (bool) ( ((Tag == TagEnum.Long) || (Tag == TagEnum.Double)) );
+                    f_isTwoEntries = true;
+                    return _isTwoEntries;
                 }
             }
             private TagEnum _tag;
             private KaitaiStruct _cpInfo;
+            private bool _isPrevTwoEntries;
             private JavaClass m_root;
             private JavaClass m_parent;
             public TagEnum Tag { get { return _tag; } }
             public KaitaiStruct CpInfo { get { return _cpInfo; } }
+            public bool IsPrevTwoEntries { get { return _isPrevTwoEntries; } }
             public JavaClass M_Root { get { return m_root; } }
             public JavaClass M_Parent { get { return m_parent; } }
         }

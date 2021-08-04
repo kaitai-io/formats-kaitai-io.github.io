@@ -23,7 +23,7 @@ class JavaClass < Kaitai::Struct::Struct
     @constant_pool_count = @_io.read_u2be
     @constant_pool = Array.new((constant_pool_count - 1))
     ((constant_pool_count - 1)).times { |i|
-      @constant_pool[i] = ConstantPoolEntry.new(@_io, self, @_root)
+      @constant_pool[i] = ConstantPoolEntry.new(@_io, self, @_root, (i != 0 ? constant_pool[(i - 1)].is_two_entries : false))
     }
     @access_flags = @_io.read_u2be
     @this_class = @_io.read_u2be
@@ -577,47 +577,58 @@ class JavaClass < Kaitai::Struct::Struct
       18 => :tag_enum_invoke_dynamic,
     }
     I__TAG_ENUM = TAG_ENUM.invert
-    def initialize(_io, _parent = nil, _root = self)
+    def initialize(_io, _parent = nil, _root = self, is_prev_two_entries)
       super(_io, _parent, _root)
+      @is_prev_two_entries = is_prev_two_entries
       _read
     end
 
     def _read
-      @tag = Kaitai::Struct::Stream::resolve_enum(TAG_ENUM, @_io.read_u1)
-      case tag
-      when :tag_enum_interface_method_ref
-        @cp_info = InterfaceMethodRefCpInfo.new(@_io, self, @_root)
-      when :tag_enum_class_type
-        @cp_info = ClassCpInfo.new(@_io, self, @_root)
-      when :tag_enum_utf8
-        @cp_info = Utf8CpInfo.new(@_io, self, @_root)
-      when :tag_enum_method_type
-        @cp_info = MethodTypeCpInfo.new(@_io, self, @_root)
-      when :tag_enum_integer
-        @cp_info = IntegerCpInfo.new(@_io, self, @_root)
-      when :tag_enum_string
-        @cp_info = StringCpInfo.new(@_io, self, @_root)
-      when :tag_enum_float
-        @cp_info = FloatCpInfo.new(@_io, self, @_root)
-      when :tag_enum_long
-        @cp_info = LongCpInfo.new(@_io, self, @_root)
-      when :tag_enum_method_ref
-        @cp_info = MethodRefCpInfo.new(@_io, self, @_root)
-      when :tag_enum_double
-        @cp_info = DoubleCpInfo.new(@_io, self, @_root)
-      when :tag_enum_invoke_dynamic
-        @cp_info = InvokeDynamicCpInfo.new(@_io, self, @_root)
-      when :tag_enum_field_ref
-        @cp_info = FieldRefCpInfo.new(@_io, self, @_root)
-      when :tag_enum_method_handle
-        @cp_info = MethodHandleCpInfo.new(@_io, self, @_root)
-      when :tag_enum_name_and_type
-        @cp_info = NameAndTypeCpInfo.new(@_io, self, @_root)
+      if !(is_prev_two_entries)
+        @tag = Kaitai::Struct::Stream::resolve_enum(TAG_ENUM, @_io.read_u1)
+      end
+      if !(is_prev_two_entries)
+        case tag
+        when :tag_enum_interface_method_ref
+          @cp_info = InterfaceMethodRefCpInfo.new(@_io, self, @_root)
+        when :tag_enum_class_type
+          @cp_info = ClassCpInfo.new(@_io, self, @_root)
+        when :tag_enum_utf8
+          @cp_info = Utf8CpInfo.new(@_io, self, @_root)
+        when :tag_enum_method_type
+          @cp_info = MethodTypeCpInfo.new(@_io, self, @_root)
+        when :tag_enum_integer
+          @cp_info = IntegerCpInfo.new(@_io, self, @_root)
+        when :tag_enum_string
+          @cp_info = StringCpInfo.new(@_io, self, @_root)
+        when :tag_enum_float
+          @cp_info = FloatCpInfo.new(@_io, self, @_root)
+        when :tag_enum_long
+          @cp_info = LongCpInfo.new(@_io, self, @_root)
+        when :tag_enum_method_ref
+          @cp_info = MethodRefCpInfo.new(@_io, self, @_root)
+        when :tag_enum_double
+          @cp_info = DoubleCpInfo.new(@_io, self, @_root)
+        when :tag_enum_invoke_dynamic
+          @cp_info = InvokeDynamicCpInfo.new(@_io, self, @_root)
+        when :tag_enum_field_ref
+          @cp_info = FieldRefCpInfo.new(@_io, self, @_root)
+        when :tag_enum_method_handle
+          @cp_info = MethodHandleCpInfo.new(@_io, self, @_root)
+        when :tag_enum_name_and_type
+          @cp_info = NameAndTypeCpInfo.new(@_io, self, @_root)
+        end
       end
       self
     end
+    def is_two_entries
+      return @is_two_entries unless @is_two_entries.nil?
+      @is_two_entries =  ((tag == :tag_enum_long) || (tag == :tag_enum_double)) 
+      @is_two_entries
+    end
     attr_reader :tag
     attr_reader :cp_info
+    attr_reader :is_prev_two_entries
   end
 
   ##

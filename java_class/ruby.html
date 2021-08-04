@@ -323,7 +323,7 @@ section#format-index .row {
     <span class="vi">@constant_pool_count</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@constant_pool</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">constant_pool_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
     <span class="p">((</span><span class="n">constant_pool_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-      <span class="vi">@constant_pool</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ConstantPoolEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="vi">@constant_pool</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">ConstantPoolEntry</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="n">constant_pool</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">].</span><span class="n">is_two_entries</span> <span class="p">:</span> <span class="kp">false</span><span class="p">))</span>
     <span class="p">}</span>
     <span class="vi">@access_flags</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
     <span class="vi">@this_class</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
@@ -877,47 +877,58 @@ section#format-index .row {
       <span class="mi">18</span> <span class="o">=&gt;</span> <span class="ss">:tag_enum_invoke_dynamic</span><span class="p">,</span>
     <span class="p">}</span>
     <span class="no">I__TAG_ENUM</span> <span class="o">=</span> <span class="no">TAG_ENUM</span><span class="o">.</span><span class="n">invert</span>
-    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">is_prev_two_entries</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@is_prev_two_entries</span> <span class="o">=</span> <span class="n">is_prev_two_entries</span>
       <span class="n">_read</span>
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="n">_read</span>
-      <span class="vi">@tag</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">TAG_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
-      <span class="k">case</span> <span class="n">tag</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_interface_method_ref</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InterfaceMethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_class_type</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">ClassCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_utf8</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">Utf8CpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_method_type</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_integer</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">IntegerCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_string</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">StringCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_float</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FloatCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_long</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">LongCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_method_ref</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_double</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">DoubleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_invoke_dynamic</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InvokeDynamicCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_field_ref</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FieldRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_method_handle</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodHandleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
-      <span class="k">when</span> <span class="ss">:tag_enum_name_and_type</span>
-        <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">NameAndTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">is_prev_two_entries</span><span class="p">)</span>
+        <span class="vi">@tag</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">TAG_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="k">if</span> <span class="o">!</span><span class="p">(</span><span class="n">is_prev_two_entries</span><span class="p">)</span>
+        <span class="k">case</span> <span class="n">tag</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_interface_method_ref</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InterfaceMethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_class_type</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">ClassCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_utf8</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">Utf8CpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_method_type</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_integer</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">IntegerCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_string</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">StringCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_float</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FloatCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_long</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">LongCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_method_ref</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_double</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">DoubleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_invoke_dynamic</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">InvokeDynamicCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_field_ref</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">FieldRefCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_method_handle</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">MethodHandleCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">when</span> <span class="ss">:tag_enum_name_and_type</span>
+          <span class="vi">@cp_info</span> <span class="o">=</span> <span class="no">NameAndTypeCpInfo</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+        <span class="k">end</span>
       <span class="k">end</span>
       <span class="nb">self</span>
     <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_two_entries</span>
+      <span class="k">return</span> <span class="vi">@is_two_entries</span> <span class="k">unless</span> <span class="vi">@is_two_entries</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_two_entries</span> <span class="o">=</span>  <span class="p">((</span><span class="n">tag</span> <span class="o">==</span> <span class="ss">:tag_enum_long</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">tag</span> <span class="o">==</span> <span class="ss">:tag_enum_double</span><span class="p">))</span> 
+      <span class="vi">@is_two_entries</span>
+    <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:tag</span>
     <span class="kp">attr_reader</span> <span class="ss">:cp_info</span>
+    <span class="kp">attr_reader</span> <span class="ss">:is_prev_two_entries</span>
   <span class="k">end</span>
 
   <span class="c1">##</span>

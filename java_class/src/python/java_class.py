@@ -29,7 +29,7 @@ class JavaClass(KaitaiStruct):
         self.constant_pool_count = self._io.read_u2be()
         self.constant_pool = [None] * ((self.constant_pool_count - 1))
         for i in range((self.constant_pool_count - 1)):
-            self.constant_pool[i] = JavaClass.ConstantPoolEntry(self._io, self, self._root)
+            self.constant_pool[i] = JavaClass.ConstantPoolEntry((self.constant_pool[(i - 1)].is_two_entries if i != 0 else False), self._io, self, self._root)
 
         self.access_flags = self._io.read_u2be()
         self.this_class = self._io.read_u2be()
@@ -582,43 +582,56 @@ class JavaClass(KaitaiStruct):
             method_handle = 15
             method_type = 16
             invoke_dynamic = 18
-        def __init__(self, _io, _parent=None, _root=None):
+        def __init__(self, is_prev_two_entries, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
             self._root = _root if _root else self
+            self.is_prev_two_entries = is_prev_two_entries
             self._read()
 
         def _read(self):
-            self.tag = KaitaiStream.resolve_enum(JavaClass.ConstantPoolEntry.TagEnum, self._io.read_u1())
-            _on = self.tag
-            if _on == JavaClass.ConstantPoolEntry.TagEnum.interface_method_ref:
-                self.cp_info = JavaClass.InterfaceMethodRefCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.class_type:
-                self.cp_info = JavaClass.ClassCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.utf8:
-                self.cp_info = JavaClass.Utf8CpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_type:
-                self.cp_info = JavaClass.MethodTypeCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.integer:
-                self.cp_info = JavaClass.IntegerCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.string:
-                self.cp_info = JavaClass.StringCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.float:
-                self.cp_info = JavaClass.FloatCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.long:
-                self.cp_info = JavaClass.LongCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_ref:
-                self.cp_info = JavaClass.MethodRefCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.double:
-                self.cp_info = JavaClass.DoubleCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.invoke_dynamic:
-                self.cp_info = JavaClass.InvokeDynamicCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.field_ref:
-                self.cp_info = JavaClass.FieldRefCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_handle:
-                self.cp_info = JavaClass.MethodHandleCpInfo(self._io, self, self._root)
-            elif _on == JavaClass.ConstantPoolEntry.TagEnum.name_and_type:
-                self.cp_info = JavaClass.NameAndTypeCpInfo(self._io, self, self._root)
+            if not (self.is_prev_two_entries):
+                self.tag = KaitaiStream.resolve_enum(JavaClass.ConstantPoolEntry.TagEnum, self._io.read_u1())
+
+            if not (self.is_prev_two_entries):
+                _on = self.tag
+                if _on == JavaClass.ConstantPoolEntry.TagEnum.interface_method_ref:
+                    self.cp_info = JavaClass.InterfaceMethodRefCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.class_type:
+                    self.cp_info = JavaClass.ClassCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.utf8:
+                    self.cp_info = JavaClass.Utf8CpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_type:
+                    self.cp_info = JavaClass.MethodTypeCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.integer:
+                    self.cp_info = JavaClass.IntegerCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.string:
+                    self.cp_info = JavaClass.StringCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.float:
+                    self.cp_info = JavaClass.FloatCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.long:
+                    self.cp_info = JavaClass.LongCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_ref:
+                    self.cp_info = JavaClass.MethodRefCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.double:
+                    self.cp_info = JavaClass.DoubleCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.invoke_dynamic:
+                    self.cp_info = JavaClass.InvokeDynamicCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.field_ref:
+                    self.cp_info = JavaClass.FieldRefCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.method_handle:
+                    self.cp_info = JavaClass.MethodHandleCpInfo(self._io, self, self._root)
+                elif _on == JavaClass.ConstantPoolEntry.TagEnum.name_and_type:
+                    self.cp_info = JavaClass.NameAndTypeCpInfo(self._io, self, self._root)
+
+
+        @property
+        def is_two_entries(self):
+            if hasattr(self, '_m_is_two_entries'):
+                return self._m_is_two_entries if hasattr(self, '_m_is_two_entries') else None
+
+            self._m_is_two_entries =  ((self.tag == JavaClass.ConstantPoolEntry.TagEnum.long) or (self.tag == JavaClass.ConstantPoolEntry.TagEnum.double)) 
+            return self._m_is_two_entries if hasattr(self, '_m_is_two_entries') else None
 
 
     class MethodInfo(KaitaiStruct):

@@ -31,7 +31,7 @@ var JavaClass = (function() {
     this.constantPoolCount = this._io.readU2be();
     this.constantPool = new Array((this.constantPoolCount - 1));
     for (var i = 0; i < (this.constantPoolCount - 1); i++) {
-      this.constantPool[i] = new ConstantPoolEntry(this._io, this, this._root);
+      this.constantPool[i] = new ConstantPoolEntry(this._io, this, this._root, (i != 0 ? this.constantPool[(i - 1)].isTwoEntries : false));
     }
     this.accessFlags = this._io.readU2be();
     this.thisClass = this._io.readU2be();
@@ -722,60 +722,73 @@ var JavaClass = (function() {
       18: "INVOKE_DYNAMIC",
     });
 
-    function ConstantPoolEntry(_io, _parent, _root) {
+    function ConstantPoolEntry(_io, _parent, _root, isPrevTwoEntries) {
       this._io = _io;
       this._parent = _parent;
       this._root = _root || this;
+      this.isPrevTwoEntries = isPrevTwoEntries;
 
       this._read();
     }
     ConstantPoolEntry.prototype._read = function() {
-      this.tag = this._io.readU1();
-      switch (this.tag) {
-      case JavaClass.ConstantPoolEntry.TagEnum.INTERFACE_METHOD_REF:
-        this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.CLASS_TYPE:
-        this.cpInfo = new ClassCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.UTF8:
-        this.cpInfo = new Utf8CpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_TYPE:
-        this.cpInfo = new MethodTypeCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.INTEGER:
-        this.cpInfo = new IntegerCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.STRING:
-        this.cpInfo = new StringCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.FLOAT:
-        this.cpInfo = new FloatCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.LONG:
-        this.cpInfo = new LongCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_REF:
-        this.cpInfo = new MethodRefCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.DOUBLE:
-        this.cpInfo = new DoubleCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.INVOKE_DYNAMIC:
-        this.cpInfo = new InvokeDynamicCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.FIELD_REF:
-        this.cpInfo = new FieldRefCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.METHOD_HANDLE:
-        this.cpInfo = new MethodHandleCpInfo(this._io, this, this._root);
-        break;
-      case JavaClass.ConstantPoolEntry.TagEnum.NAME_AND_TYPE:
-        this.cpInfo = new NameAndTypeCpInfo(this._io, this, this._root);
-        break;
+      if (!(this.isPrevTwoEntries)) {
+        this.tag = this._io.readU1();
+      }
+      if (!(this.isPrevTwoEntries)) {
+        switch (this.tag) {
+        case JavaClass.ConstantPoolEntry.TagEnum.INTERFACE_METHOD_REF:
+          this.cpInfo = new InterfaceMethodRefCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.CLASS_TYPE:
+          this.cpInfo = new ClassCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.UTF8:
+          this.cpInfo = new Utf8CpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.METHOD_TYPE:
+          this.cpInfo = new MethodTypeCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.INTEGER:
+          this.cpInfo = new IntegerCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.STRING:
+          this.cpInfo = new StringCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.FLOAT:
+          this.cpInfo = new FloatCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.LONG:
+          this.cpInfo = new LongCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.METHOD_REF:
+          this.cpInfo = new MethodRefCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.DOUBLE:
+          this.cpInfo = new DoubleCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.INVOKE_DYNAMIC:
+          this.cpInfo = new InvokeDynamicCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.FIELD_REF:
+          this.cpInfo = new FieldRefCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.METHOD_HANDLE:
+          this.cpInfo = new MethodHandleCpInfo(this._io, this, this._root);
+          break;
+        case JavaClass.ConstantPoolEntry.TagEnum.NAME_AND_TYPE:
+          this.cpInfo = new NameAndTypeCpInfo(this._io, this, this._root);
+          break;
+        }
       }
     }
+    Object.defineProperty(ConstantPoolEntry.prototype, 'isTwoEntries', {
+      get: function() {
+        if (this._m_isTwoEntries !== undefined)
+          return this._m_isTwoEntries;
+        this._m_isTwoEntries =  ((this.tag == JavaClass.ConstantPoolEntry.TagEnum.LONG) || (this.tag == JavaClass.ConstantPoolEntry.TagEnum.DOUBLE)) ;
+        return this._m_isTwoEntries;
+      }
+    });
 
     return ConstantPoolEntry;
   })();

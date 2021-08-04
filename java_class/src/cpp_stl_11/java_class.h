@@ -868,7 +868,7 @@ public:
             TAG_ENUM_INVOKE_DYNAMIC = 18
         };
 
-        constant_pool_entry_t(kaitai::kstream* p__io, java_class_t* p__parent = nullptr, java_class_t* p__root = nullptr);
+        constant_pool_entry_t(bool p_is_prev_two_entries, kaitai::kstream* p__io, java_class_t* p__parent = nullptr, java_class_t* p__root = nullptr);
 
     private:
         void _read();
@@ -878,7 +878,20 @@ public:
         ~constant_pool_entry_t();
 
     private:
+        bool f_is_two_entries;
+        bool m_is_two_entries;
+
+    public:
+        bool is_two_entries();
+
+    private:
         tag_enum_t m_tag;
+        bool n_tag;
+
+    public:
+        bool _is_null_tag() { tag(); return n_tag; };
+
+    private:
         std::unique_ptr<kaitai::kstruct> m_cp_info;
         bool n_cp_info;
 
@@ -886,12 +899,14 @@ public:
         bool _is_null_cp_info() { cp_info(); return n_cp_info; };
 
     private:
+        bool m_is_prev_two_entries;
         java_class_t* m__root;
         java_class_t* m__parent;
 
     public:
         tag_enum_t tag() const { return m_tag; }
         kaitai::kstruct* cp_info() const { return m_cp_info.get(); }
+        bool is_prev_two_entries() const { return m_is_prev_two_entries; }
         java_class_t* _root() const { return m__root; }
         java_class_t* _parent() const { return m__parent; }
     };
