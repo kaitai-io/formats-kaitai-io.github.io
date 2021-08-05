@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 
 /**
- * A variable-length unsigned integer using base128 encoding. 1-byte groups
+ * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * "least significant group first", i.e. in "little-endian" manner.
  * 
@@ -127,7 +127,7 @@ public class VlqBase128Le extends KaitaiStruct {
     private Integer value;
 
     /**
-     * Resulting value as normal integer
+     * Resulting unsigned value as normal integer
      */
     public Integer value() {
         if (this.value != null)
@@ -135,6 +135,26 @@ public class VlqBase128Le extends KaitaiStruct {
         int _tmp = (int) ((((((((groups().get((int) 0).value() + (len() >= 2 ? (groups().get((int) 1).value() << 7) : 0)) + (len() >= 3 ? (groups().get((int) 2).value() << 14) : 0)) + (len() >= 4 ? (groups().get((int) 3).value() << 21) : 0)) + (len() >= 5 ? (groups().get((int) 4).value() << 28) : 0)) + (len() >= 6 ? (groups().get((int) 5).value() << 35) : 0)) + (len() >= 7 ? (groups().get((int) 6).value() << 42) : 0)) + (len() >= 8 ? (groups().get((int) 7).value() << 49) : 0)));
         this.value = _tmp;
         return this.value;
+    }
+    private Integer signBit;
+    public Integer signBit() {
+        if (this.signBit != null)
+            return this.signBit;
+        int _tmp = (int) ((1 << ((7 * len()) - 1)));
+        this.signBit = _tmp;
+        return this.signBit;
+    }
+    private Integer valueSigned;
+
+    /**
+     * @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
+     */
+    public Integer valueSigned() {
+        if (this.valueSigned != null)
+            return this.valueSigned;
+        int _tmp = (int) (((value() ^ signBit()) - signBit()));
+        this.valueSigned = _tmp;
+        return this.valueSigned;
     }
     private ArrayList<Group> groups;
     private VlqBase128Le _root;

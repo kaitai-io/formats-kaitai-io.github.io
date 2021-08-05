@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <summary>
-    /// A variable-length unsigned integer using base128 encoding. 1-byte groups
+    /// A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
     /// consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
     /// &quot;least significant group first&quot;, i.e. in &quot;little-endian&quot; manner.
     /// 
@@ -39,6 +39,8 @@ namespace Kaitai
             m_root = p__root ?? this;
             f_len = false;
             f_value = false;
+            f_signBit = false;
+            f_valueSigned = false;
             _read();
         }
         private void _read()
@@ -135,7 +137,7 @@ namespace Kaitai
         private int _value;
 
         /// <summary>
-        /// Resulting value as normal integer
+        /// Resulting unsigned value as normal integer
         /// </summary>
         public int Value
         {
@@ -146,6 +148,36 @@ namespace Kaitai
                 _value = (int) ((((((((Groups[0].Value + (Len >= 2 ? (Groups[1].Value << 7) : 0)) + (Len >= 3 ? (Groups[2].Value << 14) : 0)) + (Len >= 4 ? (Groups[3].Value << 21) : 0)) + (Len >= 5 ? (Groups[4].Value << 28) : 0)) + (Len >= 6 ? (Groups[5].Value << 35) : 0)) + (Len >= 7 ? (Groups[6].Value << 42) : 0)) + (Len >= 8 ? (Groups[7].Value << 49) : 0)));
                 f_value = true;
                 return _value;
+            }
+        }
+        private bool f_signBit;
+        private int _signBit;
+        public int SignBit
+        {
+            get
+            {
+                if (f_signBit)
+                    return _signBit;
+                _signBit = (int) ((1 << ((7 * Len) - 1)));
+                f_signBit = true;
+                return _signBit;
+            }
+        }
+        private bool f_valueSigned;
+        private int _valueSigned;
+
+        /// <remarks>
+        /// Reference: <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
+        /// </remarks>
+        public int ValueSigned
+        {
+            get
+            {
+                if (f_valueSigned)
+                    return _valueSigned;
+                _valueSigned = (int) (((Value ^ SignBit) - SignBit));
+                f_valueSigned = true;
+                return _valueSigned;
             }
         }
         private List<Group> _groups;

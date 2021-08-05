@@ -7,7 +7,7 @@ require("kaitaistruct")
 local utils = require("utils")
 
 -- 
--- A variable-length unsigned integer using base128 encoding. 1-byte groups
+-- A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
 -- consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 -- "least significant group first", i.e. in "little-endian" manner.
 -- 
@@ -59,7 +59,7 @@ return self._m_len
 end
 
 -- 
--- Resulting value as normal integer.
+-- Resulting unsigned value as normal integer.
 VlqBase128Le.property.value = {}
 function VlqBase128Le.property.value:get()
 if self._m_value ~= nil then
@@ -68,6 +68,28 @@ end
 
 self._m_value = (((((((self.groups[0 + 1].value + utils.box_unwrap((self.len >= 2) and utils.box_wrap((self.groups[1 + 1].value << 7)) or (0))) + utils.box_unwrap((self.len >= 3) and utils.box_wrap((self.groups[2 + 1].value << 14)) or (0))) + utils.box_unwrap((self.len >= 4) and utils.box_wrap((self.groups[3 + 1].value << 21)) or (0))) + utils.box_unwrap((self.len >= 5) and utils.box_wrap((self.groups[4 + 1].value << 28)) or (0))) + utils.box_unwrap((self.len >= 6) and utils.box_wrap((self.groups[5 + 1].value << 35)) or (0))) + utils.box_unwrap((self.len >= 7) and utils.box_wrap((self.groups[6 + 1].value << 42)) or (0))) + utils.box_unwrap((self.len >= 8) and utils.box_wrap((self.groups[7 + 1].value << 49)) or (0)))
 return self._m_value
+end
+
+VlqBase128Le.property.sign_bit = {}
+function VlqBase128Le.property.sign_bit:get()
+if self._m_sign_bit ~= nil then
+  return self._m_sign_bit
+end
+
+self._m_sign_bit = (1 << ((7 * self.len) - 1))
+return self._m_sign_bit
+end
+
+-- 
+-- See also: Source (https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend)
+VlqBase128Le.property.value_signed = {}
+function VlqBase128Le.property.value_signed:get()
+if self._m_value_signed ~= nil then
+  return self._m_value_signed
+end
+
+self._m_value_signed = ((self.value ~ self.sign_bit) - self.sign_bit)
+return self._m_value_signed
 end
 
 

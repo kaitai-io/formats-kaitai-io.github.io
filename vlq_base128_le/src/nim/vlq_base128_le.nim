@@ -7,6 +7,8 @@ type
     `parent`*: KaitaiStruct
     `lenInst`*: int
     `valueInst`*: int
+    `signBitInst`*: int
+    `valueSignedInst`*: int
   VlqBase128Le_Group* = ref object of KaitaiStruct
     `b`*: uint8
     `parent`*: VlqBase128Le
@@ -18,12 +20,14 @@ proc read*(_: typedesc[VlqBase128Le_Group], io: KaitaiStream, root: KaitaiStruct
 
 proc len*(this: VlqBase128Le): int
 proc value*(this: VlqBase128Le): int
+proc signBit*(this: VlqBase128Le): int
+proc valueSigned*(this: VlqBase128Le): int
 proc hasNext*(this: VlqBase128Le_Group): bool
 proc value*(this: VlqBase128Le_Group): int
 
 
 ##[
-A variable-length unsigned integer using base128 encoding. 1-byte groups
+A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
 consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
 "least significant group first", i.e. in "little-endian" manner.
 
@@ -72,7 +76,7 @@ proc len(this: VlqBase128Le): int =
 proc value(this: VlqBase128Le): int = 
 
   ##[
-  Resulting value as normal integer
+  Resulting unsigned value as normal integer
   ]##
   if this.valueInst != nil:
     return this.valueInst
@@ -80,6 +84,26 @@ proc value(this: VlqBase128Le): int =
   this.valueInst = valueInstExpr
   if this.valueInst != nil:
     return this.valueInst
+
+proc signBit(this: VlqBase128Le): int = 
+  if this.signBitInst != nil:
+    return this.signBitInst
+  let signBitInstExpr = int((1 shl ((7 * this.len) - 1)))
+  this.signBitInst = signBitInstExpr
+  if this.signBitInst != nil:
+    return this.signBitInst
+
+proc valueSigned(this: VlqBase128Le): int = 
+
+  ##[
+  @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
+  ]##
+  if this.valueSignedInst != nil:
+    return this.valueSignedInst
+  let valueSignedInstExpr = int(((this.value xor this.signBit) - this.signBit))
+  this.valueSignedInst = valueSignedInstExpr
+  if this.valueSignedInst != nil:
+    return this.valueSignedInst
 
 proc fromFile*(_: typedesc[VlqBase128Le], filename: string): VlqBase128Le =
   VlqBase128Le.read(newKaitaiFileStream(filename), nil, nil)

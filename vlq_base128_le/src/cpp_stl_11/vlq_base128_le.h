@@ -12,7 +12,7 @@
 #endif
 
 /**
- * A variable-length unsigned integer using base128 encoding. 1-byte groups
+ * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * "least significant group first", i.e. in "little-endian" manner.
  * 
@@ -111,9 +111,27 @@ private:
 public:
 
     /**
-     * Resulting value as normal integer
+     * Resulting unsigned value as normal integer
      */
     int32_t value();
+
+private:
+    bool f_sign_bit;
+    int32_t m_sign_bit;
+
+public:
+    int32_t sign_bit();
+
+private:
+    bool f_value_signed;
+    int32_t m_value_signed;
+
+public:
+
+    /**
+     * \sa https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend Source
+     */
+    int32_t value_signed();
 
 private:
     std::unique_ptr<std::vector<std::unique_ptr<group_t>>> m_groups;

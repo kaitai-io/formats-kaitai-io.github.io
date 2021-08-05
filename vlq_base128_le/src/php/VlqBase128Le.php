@@ -2,7 +2,7 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 /**
- * A variable-length unsigned integer using base128 encoding. 1-byte groups
+ * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * "least significant group first", i.e. in "little-endian" manner.
  * 
@@ -49,13 +49,27 @@ namespace {
         protected $_m_value;
 
         /**
-         * Resulting value as normal integer
+         * Resulting unsigned value as normal integer
          */
         public function value() {
             if ($this->_m_value !== null)
                 return $this->_m_value;
             $this->_m_value = ((((((($this->groups()[0]->value() + ($this->len() >= 2 ? ($this->groups()[1]->value() << 7) : 0)) + ($this->len() >= 3 ? ($this->groups()[2]->value() << 14) : 0)) + ($this->len() >= 4 ? ($this->groups()[3]->value() << 21) : 0)) + ($this->len() >= 5 ? ($this->groups()[4]->value() << 28) : 0)) + ($this->len() >= 6 ? ($this->groups()[5]->value() << 35) : 0)) + ($this->len() >= 7 ? ($this->groups()[6]->value() << 42) : 0)) + ($this->len() >= 8 ? ($this->groups()[7]->value() << 49) : 0));
             return $this->_m_value;
+        }
+        protected $_m_signBit;
+        public function signBit() {
+            if ($this->_m_signBit !== null)
+                return $this->_m_signBit;
+            $this->_m_signBit = (1 << ((7 * $this->len()) - 1));
+            return $this->_m_signBit;
+        }
+        protected $_m_valueSigned;
+        public function valueSigned() {
+            if ($this->_m_valueSigned !== null)
+                return $this->_m_valueSigned;
+            $this->_m_valueSigned = (($this->value() ^ $this->signBit()) - $this->signBit());
+            return $this->_m_valueSigned;
         }
         protected $_m_groups;
         public function groups() { return $this->_m_groups; }

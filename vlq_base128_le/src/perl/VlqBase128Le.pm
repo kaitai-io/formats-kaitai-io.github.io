@@ -55,6 +55,20 @@ sub value {
     return $self->{value};
 }
 
+sub sign_bit {
+    my ($self) = @_;
+    return $self->{sign_bit} if ($self->{sign_bit});
+    $self->{sign_bit} = (1 << ((7 * $self->len()) - 1));
+    return $self->{sign_bit};
+}
+
+sub value_signed {
+    my ($self) = @_;
+    return $self->{value_signed} if ($self->{value_signed});
+    $self->{value_signed} = (($self->value() ^ $self->sign_bit()) - $self->sign_bit());
+    return $self->{value_signed};
+}
+
 sub groups {
     my ($self) = @_;
     return $self->{groups};

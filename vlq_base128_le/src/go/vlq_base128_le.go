@@ -4,7 +4,7 @@ import "github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 
 
 /**
- * A variable-length unsigned integer using base128 encoding. 1-byte groups
+ * A variable-length unsigned/signed integer using base128 encoding. 1-byte groups
  * consist of 1-bit flag of continuation and 7-bit value chunk, and are ordered
  * "least significant group first", i.e. in "little-endian" manner.
  * 
@@ -33,6 +33,10 @@ type VlqBase128Le struct {
 	len int
 	_f_value bool
 	value int
+	_f_signBit bool
+	signBit int
+	_f_valueSigned bool
+	valueSigned int
 }
 func NewVlqBase128Le() *VlqBase128Le {
 	return &VlqBase128Le{
@@ -72,7 +76,7 @@ func (this *VlqBase128Le) Len() (v int, err error) {
 }
 
 /**
- * Resulting value as normal integer
+ * Resulting unsigned value as normal integer
  */
 func (this *VlqBase128Le) Value() (v int, err error) {
 	if (this._f_value) {
@@ -184,6 +188,42 @@ func (this *VlqBase128Le) Value() (v int, err error) {
 	this._f_value = true
 	return this.value, nil
 }
+func (this *VlqBase128Le) SignBit() (v int, err error) {
+	if (this._f_signBit) {
+		return this.signBit, nil
+	}
+	tmp25, err := this.Len()
+	if err != nil {
+		return 0, err
+	}
+	this.signBit = int((1 << ((7 * tmp25) - 1)))
+	this._f_signBit = true
+	return this.signBit, nil
+}
+
+/**
+ * @see <a href="https://graphics.stanford.edu/~seander/bithacks.html#VariableSignExtend">Source</a>
+ */
+func (this *VlqBase128Le) ValueSigned() (v int, err error) {
+	if (this._f_valueSigned) {
+		return this.valueSigned, nil
+	}
+	tmp26, err := this.Value()
+	if err != nil {
+		return 0, err
+	}
+	tmp27, err := this.SignBit()
+	if err != nil {
+		return 0, err
+	}
+	tmp28, err := this.SignBit()
+	if err != nil {
+		return 0, err
+	}
+	this.valueSigned = int(((tmp26 ^ tmp27) - tmp28))
+	this._f_valueSigned = true
+	return this.valueSigned, nil
+}
 
 /**
  * One byte group, clearly divided into 7-bit "value" chunk and 1-bit "continuation" flag.
@@ -208,11 +248,11 @@ func (this *VlqBase128Le_Group) Read(io *kaitai.Stream, parent *VlqBase128Le, ro
 	this._parent = parent
 	this._root = root
 
-	tmp25, err := this._io.ReadU1()
+	tmp29, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.B = tmp25
+	this.B = tmp29
 	return err
 }
 
