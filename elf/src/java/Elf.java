@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
+ * @see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532">Source</a>
  * @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
  * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html">Source</a>
  */
@@ -171,28 +171,203 @@ public class Elf extends KaitaiStruct {
         X86(3),
         M68K(4),
         M88K(5),
+        IAMCU(6),
+        I860(7),
         MIPS(8),
+        S370(9),
+        MIPS_RS3_LE(10),
+        PARISC(15),
+        VPP500(17),
+        SPARC32PLUS(18),
+        I960(19),
         POWERPC(20),
         POWERPC64(21),
         S390(22),
+        SPU(23),
+        V800(36),
+        FR20(37),
+        RH32(38),
+        RCE(39),
         ARM(40),
+        ALPHA(41),
         SUPERH(42),
-        SPARCV9(43),
+        SPARC_V9(43),
+        TRICORE(44),
+        ARC(45),
+        H8_300(46),
+        H8_300H(47),
+        H8S(48),
+        H8_500(49),
         IA_64(50),
+        MIPS_X(51),
+        COLDFIRE(52),
+        M68HC12(53),
+        MMA(54),
+        PCP(55),
+        NCPU(56),
+        NDR1(57),
+        STARCORE(58),
+        ME16(59),
+        ST100(60),
+        TINYJ(61),
         X86_64(62),
+        PDSP(63),
+        PDP10(64),
+        PDP11(65),
+        FX66(66),
+        ST9PLUS(67),
+        ST7(68),
+        MC68HC16(69),
+        MC68HC11(70),
+        MC68HC08(71),
+        MC68HC05(72),
+        SVX(73),
+        ST19(74),
+        VAX(75),
+        CRIS(76),
+        JAVELIN(77),
+        FIREPATH(78),
+        ZSP(79),
+        MMIX(80),
+        HUANY(81),
+        PRISM(82),
         AVR(83),
+        FR30(84),
+        D10V(85),
+        D30V(86),
+        V850(87),
+        M32R(88),
+        MN10300(89),
+        MN10200(90),
+        PICOJAVA(91),
+        OPENRISC(92),
+        ARC_COMPACT(93),
+        XTENSA(94),
+        VIDEOCORE(95),
+        TMM_GPP(96),
+        NS32K(97),
+        TPC(98),
+        SNP1K(99),
+        ST200(100),
+        IP2K(101),
+        MAX(102),
+        COMPACT_RISC(103),
+        F2MC16(104),
+        MSP430(105),
+        BLACKFIN(106),
+        SE_C33(107),
+        SEP(108),
+        ARCA(109),
+        UNICORE(110),
+        EXCESS(111),
+        DXP(112),
+        ALTERA_NIOS2(113),
+        CRX(114),
+        XGATE(115),
+        C166(116),
+        M16C(117),
+        DSPIC30F(118),
+        FREESCALE_CE(119),
+        M32C(120),
+        TSK3000(131),
+        RS08(132),
+        SHARC(133),
+        ECOG2(134),
+        SCORE7(135),
+        DSP24(136),
+        VIDEOCORE3(137),
+        LATTICEMICO32(138),
+        SE_C17(139),
+        TI_C6000(140),
+        TI_C2000(141),
+        TI_C5500(142),
+        TI_ARP32(143),
+        TI_PRU(144),
+        MMDSP_PLUS(160),
+        CYPRESS_M8C(161),
+        R32C(162),
+        TRIMEDIA(163),
         QDSP6(164),
+        I8051(165),
+        STXP7X(166),
+        NDS32(167),
+        ECOG1X(168),
+        MAXQ30(169),
+        XIMO16(170),
+        MANIK(171),
+        CRAYNV2(172),
+        RX(173),
+        METAG(174),
+        MCST_ELBRUS(175),
+        ECOG16(176),
+        CR16(177),
+        ETPU(178),
+        SLE9X(179),
+        L10M(180),
+        K10M(181),
         AARCH64(183),
         AVR32(185),
-        AMDGPU(224),
+        STM8(186),
+        TILE64(187),
+        TILEPRO(188),
+        MICROBLAZE(189),
+        CUDA(190),
+        TILEGX(191),
+        CLOUDSHIELD(192),
+        COREA_1ST(193),
+        COREA_2ND(194),
+        ARCV2(195),
+        OPEN8(196),
+        RL78(197),
+        VIDEOCORE5(198),
+        RENESAS_78KOR(199),
+        FREESCALE_56800EX(200),
+        BA1(201),
+        BA2(202),
+        XCORE(203),
+        MCHP_PIC(204),
+        INTELGT(205),
+        INTEL206(206),
+        INTEL207(207),
+        INTEL208(208),
+        INTEL209(209),
+        KM32(210),
+        KMX32(211),
+        KMX16(212),
+        KMX8(213),
+        KVARC(214),
+        CDP(215),
+        COGE(216),
+        COOL(217),
+        NORC(218),
+        CSR_KALIMBA(219),
+        Z80(220),
+        VISIUM(221),
+        FT32(222),
+        MOXIE(223),
+        AMD_GPU(224),
         RISCV(243),
+        LANAI(244),
+        CEVA(245),
+        CEVA_X2(246),
         BPF(247),
-        CSKY(252);
+        GRAPHCORE_IPU(248),
+        IMG1(249),
+        NFP(250),
+        VE(251),
+        CSKY(252),
+        ARC_COMPACT3_64(253),
+        MCS6502(254),
+        ARC_COMPACT3(255),
+        KVX(256),
+        WDC65816(257),
+        LOONGARCH(258),
+        KF32(259);
 
         private final long id;
         Machine(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(23);
+        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(198);
         static {
             for (Machine e : Machine.values())
                 byId.put(e.id(), e);
@@ -445,6 +620,9 @@ public class Elf extends KaitaiStruct {
         this.bits = Bits.byId(this._io.readU1());
         this.endian = Endian.byId(this._io.readU1());
         this.eiVersion = this._io.readU1();
+        if (!(eiVersion() == 1)) {
+            throw new KaitaiStream.ValidationNotEqualError(1, eiVersion(), _io(), "/seq/3");
+        }
         this.abi = OsAbi.byId(this._io.readU1());
         this.abiVersion = this._io.readU1();
         this.pad = this._io.readBytes(7);
@@ -1883,123 +2061,125 @@ public class Elf extends KaitaiStruct {
             public Object body() {
                 if (this.body != null)
                     return this.body;
-                KaitaiStream io = _root._io();
-                long _pos = io.pos();
-                io.seek(ofsBody());
-                if (_is_le) {
-                    {
-                        ShType on = type();
-                        if (on != null) {
-                            switch (type()) {
-                            case REL: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
-                                break;
-                            }
-                            case NOTE: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case SYMTAB: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case STRTAB: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case DYNAMIC: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case DYNSYM: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case RELA: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
-                                break;
-                            }
-                            default: {
+                if (type() != Elf.ShType.NOBITS) {
+                    KaitaiStream io = _root._io();
+                    long _pos = io.pos();
+                    io.seek(ofsBody());
+                    if (_is_le) {
+                        {
+                            ShType on = type();
+                            if (on != null) {
+                                switch (type()) {
+                                case REL: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
+                                    break;
+                                }
+                                case NOTE: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case SYMTAB: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case STRTAB: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case DYNAMIC: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case DYNSYM: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case RELA: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
+                                    break;
+                                }
+                                default: {
+                                    this.body = io.readBytes(lenBody());
+                                    break;
+                                }
+                                }
+                            } else {
                                 this.body = io.readBytes(lenBody());
-                                break;
                             }
+                        }
+                    } else {
+                        {
+                            ShType on = type();
+                            if (on != null) {
+                                switch (type()) {
+                                case REL: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
+                                    break;
+                                }
+                                case NOTE: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case SYMTAB: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case STRTAB: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case DYNAMIC: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case DYNSYM: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
+                                    break;
+                                }
+                                case RELA: {
+                                    this._raw_body = io.readBytes(lenBody());
+                                    KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                                    this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
+                                    break;
+                                }
+                                default: {
+                                    this.body = io.readBytes(lenBody());
+                                    break;
+                                }
+                                }
+                            } else {
+                                this.body = io.readBytes(lenBody());
                             }
-                        } else {
-                            this.body = io.readBytes(lenBody());
                         }
                     }
-                } else {
-                    {
-                        ShType on = type();
-                        if (on != null) {
-                            switch (type()) {
-                            case REL: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, false);
-                                break;
-                            }
-                            case NOTE: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new NoteSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case SYMTAB: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case STRTAB: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new StringsStruct(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case DYNAMIC: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new DynamicSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case DYNSYM: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new DynsymSection(_io__raw_body, this, _root, _is_le);
-                                break;
-                            }
-                            case RELA: {
-                                this._raw_body = io.readBytes(lenBody());
-                                KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                                this.body = new RelocationSection(_io__raw_body, this, _root, _is_le, true);
-                                break;
-                            }
-                            default: {
-                                this.body = io.readBytes(lenBody());
-                                break;
-                            }
-                            }
-                        } else {
-                            this.body = io.readBytes(lenBody());
-                        }
-                    }
+                    io.seek(_pos);
                 }
-                io.seek(_pos);
                 return this.body;
             }
             private SectionHeader linkedSection;

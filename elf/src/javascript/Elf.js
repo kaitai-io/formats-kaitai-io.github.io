@@ -10,7 +10,7 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD|Source}
+ * @see {@link https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532|Source}
  * @see {@link https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html|Source}
  * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html|Source}
  */
@@ -199,23 +199,198 @@ var Elf = (function() {
     X86: 3,
     M68K: 4,
     M88K: 5,
+    IAMCU: 6,
+    I860: 7,
     MIPS: 8,
+    S370: 9,
+    MIPS_RS3_LE: 10,
+    PARISC: 15,
+    VPP500: 17,
+    SPARC32PLUS: 18,
+    I960: 19,
     POWERPC: 20,
     POWERPC64: 21,
     S390: 22,
+    SPU: 23,
+    V800: 36,
+    FR20: 37,
+    RH32: 38,
+    RCE: 39,
     ARM: 40,
+    ALPHA: 41,
     SUPERH: 42,
-    SPARCV9: 43,
+    SPARC_V9: 43,
+    TRICORE: 44,
+    ARC: 45,
+    H8_300: 46,
+    H8_300H: 47,
+    H8S: 48,
+    H8_500: 49,
     IA_64: 50,
+    MIPS_X: 51,
+    COLDFIRE: 52,
+    M68HC12: 53,
+    MMA: 54,
+    PCP: 55,
+    NCPU: 56,
+    NDR1: 57,
+    STARCORE: 58,
+    ME16: 59,
+    ST100: 60,
+    TINYJ: 61,
     X86_64: 62,
+    PDSP: 63,
+    PDP10: 64,
+    PDP11: 65,
+    FX66: 66,
+    ST9PLUS: 67,
+    ST7: 68,
+    MC68HC16: 69,
+    MC68HC11: 70,
+    MC68HC08: 71,
+    MC68HC05: 72,
+    SVX: 73,
+    ST19: 74,
+    VAX: 75,
+    CRIS: 76,
+    JAVELIN: 77,
+    FIREPATH: 78,
+    ZSP: 79,
+    MMIX: 80,
+    HUANY: 81,
+    PRISM: 82,
     AVR: 83,
+    FR30: 84,
+    D10V: 85,
+    D30V: 86,
+    V850: 87,
+    M32R: 88,
+    MN10300: 89,
+    MN10200: 90,
+    PICOJAVA: 91,
+    OPENRISC: 92,
+    ARC_COMPACT: 93,
+    XTENSA: 94,
+    VIDEOCORE: 95,
+    TMM_GPP: 96,
+    NS32K: 97,
+    TPC: 98,
+    SNP1K: 99,
+    ST200: 100,
+    IP2K: 101,
+    MAX: 102,
+    COMPACT_RISC: 103,
+    F2MC16: 104,
+    MSP430: 105,
+    BLACKFIN: 106,
+    SE_C33: 107,
+    SEP: 108,
+    ARCA: 109,
+    UNICORE: 110,
+    EXCESS: 111,
+    DXP: 112,
+    ALTERA_NIOS2: 113,
+    CRX: 114,
+    XGATE: 115,
+    C166: 116,
+    M16C: 117,
+    DSPIC30F: 118,
+    FREESCALE_CE: 119,
+    M32C: 120,
+    TSK3000: 131,
+    RS08: 132,
+    SHARC: 133,
+    ECOG2: 134,
+    SCORE7: 135,
+    DSP24: 136,
+    VIDEOCORE3: 137,
+    LATTICEMICO32: 138,
+    SE_C17: 139,
+    TI_C6000: 140,
+    TI_C2000: 141,
+    TI_C5500: 142,
+    TI_ARP32: 143,
+    TI_PRU: 144,
+    MMDSP_PLUS: 160,
+    CYPRESS_M8C: 161,
+    R32C: 162,
+    TRIMEDIA: 163,
     QDSP6: 164,
+    I8051: 165,
+    STXP7X: 166,
+    NDS32: 167,
+    ECOG1X: 168,
+    MAXQ30: 169,
+    XIMO16: 170,
+    MANIK: 171,
+    CRAYNV2: 172,
+    RX: 173,
+    METAG: 174,
+    MCST_ELBRUS: 175,
+    ECOG16: 176,
+    CR16: 177,
+    ETPU: 178,
+    SLE9X: 179,
+    L10M: 180,
+    K10M: 181,
     AARCH64: 183,
     AVR32: 185,
-    AMDGPU: 224,
+    STM8: 186,
+    TILE64: 187,
+    TILEPRO: 188,
+    MICROBLAZE: 189,
+    CUDA: 190,
+    TILEGX: 191,
+    CLOUDSHIELD: 192,
+    COREA_1ST: 193,
+    COREA_2ND: 194,
+    ARCV2: 195,
+    OPEN8: 196,
+    RL78: 197,
+    VIDEOCORE5: 198,
+    RENESAS_78KOR: 199,
+    FREESCALE_56800EX: 200,
+    BA1: 201,
+    BA2: 202,
+    XCORE: 203,
+    MCHP_PIC: 204,
+    INTELGT: 205,
+    INTEL206: 206,
+    INTEL207: 207,
+    INTEL208: 208,
+    INTEL209: 209,
+    KM32: 210,
+    KMX32: 211,
+    KMX16: 212,
+    KMX8: 213,
+    KVARC: 214,
+    CDP: 215,
+    COGE: 216,
+    COOL: 217,
+    NORC: 218,
+    CSR_KALIMBA: 219,
+    Z80: 220,
+    VISIUM: 221,
+    FT32: 222,
+    MOXIE: 223,
+    AMD_GPU: 224,
     RISCV: 243,
+    LANAI: 244,
+    CEVA: 245,
+    CEVA_X2: 246,
     BPF: 247,
+    GRAPHCORE_IPU: 248,
+    IMG1: 249,
+    NFP: 250,
+    VE: 251,
     CSKY: 252,
+    ARC_COMPACT3_64: 253,
+    MCS6502: 254,
+    ARC_COMPACT3: 255,
+    KVX: 256,
+    WDC65816: 257,
+    LOONGARCH: 258,
+    KF32: 259,
 
     0: "NO_MACHINE",
     1: "M32",
@@ -223,23 +398,198 @@ var Elf = (function() {
     3: "X86",
     4: "M68K",
     5: "M88K",
+    6: "IAMCU",
+    7: "I860",
     8: "MIPS",
+    9: "S370",
+    10: "MIPS_RS3_LE",
+    15: "PARISC",
+    17: "VPP500",
+    18: "SPARC32PLUS",
+    19: "I960",
     20: "POWERPC",
     21: "POWERPC64",
     22: "S390",
+    23: "SPU",
+    36: "V800",
+    37: "FR20",
+    38: "RH32",
+    39: "RCE",
     40: "ARM",
+    41: "ALPHA",
     42: "SUPERH",
-    43: "SPARCV9",
+    43: "SPARC_V9",
+    44: "TRICORE",
+    45: "ARC",
+    46: "H8_300",
+    47: "H8_300H",
+    48: "H8S",
+    49: "H8_500",
     50: "IA_64",
+    51: "MIPS_X",
+    52: "COLDFIRE",
+    53: "M68HC12",
+    54: "MMA",
+    55: "PCP",
+    56: "NCPU",
+    57: "NDR1",
+    58: "STARCORE",
+    59: "ME16",
+    60: "ST100",
+    61: "TINYJ",
     62: "X86_64",
+    63: "PDSP",
+    64: "PDP10",
+    65: "PDP11",
+    66: "FX66",
+    67: "ST9PLUS",
+    68: "ST7",
+    69: "MC68HC16",
+    70: "MC68HC11",
+    71: "MC68HC08",
+    72: "MC68HC05",
+    73: "SVX",
+    74: "ST19",
+    75: "VAX",
+    76: "CRIS",
+    77: "JAVELIN",
+    78: "FIREPATH",
+    79: "ZSP",
+    80: "MMIX",
+    81: "HUANY",
+    82: "PRISM",
     83: "AVR",
+    84: "FR30",
+    85: "D10V",
+    86: "D30V",
+    87: "V850",
+    88: "M32R",
+    89: "MN10300",
+    90: "MN10200",
+    91: "PICOJAVA",
+    92: "OPENRISC",
+    93: "ARC_COMPACT",
+    94: "XTENSA",
+    95: "VIDEOCORE",
+    96: "TMM_GPP",
+    97: "NS32K",
+    98: "TPC",
+    99: "SNP1K",
+    100: "ST200",
+    101: "IP2K",
+    102: "MAX",
+    103: "COMPACT_RISC",
+    104: "F2MC16",
+    105: "MSP430",
+    106: "BLACKFIN",
+    107: "SE_C33",
+    108: "SEP",
+    109: "ARCA",
+    110: "UNICORE",
+    111: "EXCESS",
+    112: "DXP",
+    113: "ALTERA_NIOS2",
+    114: "CRX",
+    115: "XGATE",
+    116: "C166",
+    117: "M16C",
+    118: "DSPIC30F",
+    119: "FREESCALE_CE",
+    120: "M32C",
+    131: "TSK3000",
+    132: "RS08",
+    133: "SHARC",
+    134: "ECOG2",
+    135: "SCORE7",
+    136: "DSP24",
+    137: "VIDEOCORE3",
+    138: "LATTICEMICO32",
+    139: "SE_C17",
+    140: "TI_C6000",
+    141: "TI_C2000",
+    142: "TI_C5500",
+    143: "TI_ARP32",
+    144: "TI_PRU",
+    160: "MMDSP_PLUS",
+    161: "CYPRESS_M8C",
+    162: "R32C",
+    163: "TRIMEDIA",
     164: "QDSP6",
+    165: "I8051",
+    166: "STXP7X",
+    167: "NDS32",
+    168: "ECOG1X",
+    169: "MAXQ30",
+    170: "XIMO16",
+    171: "MANIK",
+    172: "CRAYNV2",
+    173: "RX",
+    174: "METAG",
+    175: "MCST_ELBRUS",
+    176: "ECOG16",
+    177: "CR16",
+    178: "ETPU",
+    179: "SLE9X",
+    180: "L10M",
+    181: "K10M",
     183: "AARCH64",
     185: "AVR32",
-    224: "AMDGPU",
+    186: "STM8",
+    187: "TILE64",
+    188: "TILEPRO",
+    189: "MICROBLAZE",
+    190: "CUDA",
+    191: "TILEGX",
+    192: "CLOUDSHIELD",
+    193: "COREA_1ST",
+    194: "COREA_2ND",
+    195: "ARCV2",
+    196: "OPEN8",
+    197: "RL78",
+    198: "VIDEOCORE5",
+    199: "RENESAS_78KOR",
+    200: "FREESCALE_56800EX",
+    201: "BA1",
+    202: "BA2",
+    203: "XCORE",
+    204: "MCHP_PIC",
+    205: "INTELGT",
+    206: "INTEL206",
+    207: "INTEL207",
+    208: "INTEL208",
+    209: "INTEL209",
+    210: "KM32",
+    211: "KMX32",
+    212: "KMX16",
+    213: "KMX8",
+    214: "KVARC",
+    215: "CDP",
+    216: "COGE",
+    217: "COOL",
+    218: "NORC",
+    219: "CSR_KALIMBA",
+    220: "Z80",
+    221: "VISIUM",
+    222: "FT32",
+    223: "MOXIE",
+    224: "AMD_GPU",
     243: "RISCV",
+    244: "LANAI",
+    245: "CEVA",
+    246: "CEVA_X2",
     247: "BPF",
+    248: "GRAPHCORE_IPU",
+    249: "IMG1",
+    250: "NFP",
+    251: "VE",
     252: "CSKY",
+    253: "ARC_COMPACT3_64",
+    254: "MCS6502",
+    255: "ARC_COMPACT3",
+    256: "KVX",
+    257: "WDC65816",
+    258: "LOONGARCH",
+    259: "KF32",
   });
 
   Elf.SymbolType = Object.freeze({
@@ -571,6 +921,9 @@ var Elf = (function() {
     this.bits = this._io.readU1();
     this.endian = this._io.readU1();
     this.eiVersion = this._io.readU1();
+    if (!(this.eiVersion == 1)) {
+      throw new KaitaiStream.ValidationNotEqualError(1, this.eiVersion, this._io, "/seq/3");
+    }
     this.abi = this._io.readU1();
     this.abiVersion = this._io.readU1();
     this.pad = this._io.readBytes(7);
@@ -1674,93 +2027,95 @@ var Elf = (function() {
         get: function() {
           if (this._m_body !== undefined)
             return this._m_body;
-          var io = this._root._io;
-          var _pos = io.pos;
-          io.seek(this.ofsBody);
-          if (this._is_le) {
-            switch (this.type) {
-            case Elf.ShType.REL:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, false);
-              break;
-            case Elf.ShType.NOTE:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.SYMTAB:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.STRTAB:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.DYNAMIC:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.DYNSYM:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.RELA:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, true);
-              break;
-            default:
-              this._m_body = io.readBytes(this.lenBody);
-              break;
+          if (this.type != Elf.ShType.NOBITS) {
+            var io = this._root._io;
+            var _pos = io.pos;
+            io.seek(this.ofsBody);
+            if (this._is_le) {
+              switch (this.type) {
+              case Elf.ShType.REL:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, false);
+                break;
+              case Elf.ShType.NOTE:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.SYMTAB:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.STRTAB:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.DYNAMIC:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.DYNSYM:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.RELA:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, true);
+                break;
+              default:
+                this._m_body = io.readBytes(this.lenBody);
+                break;
+              }
+            } else {
+              switch (this.type) {
+              case Elf.ShType.REL:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, false);
+                break;
+              case Elf.ShType.NOTE:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.SYMTAB:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.STRTAB:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.DYNAMIC:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.DYNSYM:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
+                break;
+              case Elf.ShType.RELA:
+                this._raw__m_body = io.readBytes(this.lenBody);
+                var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
+                this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, true);
+                break;
+              default:
+                this._m_body = io.readBytes(this.lenBody);
+                break;
+              }
             }
-          } else {
-            switch (this.type) {
-            case Elf.ShType.REL:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, false);
-              break;
-            case Elf.ShType.NOTE:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new NoteSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.SYMTAB:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.STRTAB:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new StringsStruct(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.DYNAMIC:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynamicSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.DYNSYM:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new DynsymSection(_io__raw__m_body, this, this._root, this._is_le);
-              break;
-            case Elf.ShType.RELA:
-              this._raw__m_body = io.readBytes(this.lenBody);
-              var _io__raw__m_body = new KaitaiStream(this._raw__m_body);
-              this._m_body = new RelocationSection(_io__raw__m_body, this, this._root, this._is_le, true);
-              break;
-            default:
-              this._m_body = io.readBytes(this.lenBody);
-              break;
-            }
+            io.seek(_pos);
           }
-          io.seek(_pos);
           return this._m_body;
         }
       });

@@ -7,7 +7,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
+    /// Reference: <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532">Source</a>
     /// </remarks>
     /// <remarks>
     /// Reference: <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
@@ -129,23 +129,198 @@ namespace Kaitai
             X86 = 3,
             M68k = 4,
             M88k = 5,
+            Iamcu = 6,
+            I860 = 7,
             Mips = 8,
+            S370 = 9,
+            MipsRs3Le = 10,
+            Parisc = 15,
+            Vpp500 = 17,
+            Sparc32plus = 18,
+            I960 = 19,
             Powerpc = 20,
             Powerpc64 = 21,
             S390 = 22,
+            Spu = 23,
+            V800 = 36,
+            Fr20 = 37,
+            Rh32 = 38,
+            Rce = 39,
             Arm = 40,
+            Alpha = 41,
             Superh = 42,
-            Sparcv9 = 43,
+            SparcV9 = 43,
+            Tricore = 44,
+            Arc = 45,
+            H8300 = 46,
+            H8300h = 47,
+            H8s = 48,
+            H8500 = 49,
             Ia64 = 50,
+            MipsX = 51,
+            Coldfire = 52,
+            M68hc12 = 53,
+            Mma = 54,
+            Pcp = 55,
+            Ncpu = 56,
+            Ndr1 = 57,
+            Starcore = 58,
+            Me16 = 59,
+            St100 = 60,
+            Tinyj = 61,
             X8664 = 62,
+            Pdsp = 63,
+            Pdp10 = 64,
+            Pdp11 = 65,
+            Fx66 = 66,
+            St9plus = 67,
+            St7 = 68,
+            Mc68hc16 = 69,
+            Mc68hc11 = 70,
+            Mc68hc08 = 71,
+            Mc68hc05 = 72,
+            Svx = 73,
+            St19 = 74,
+            Vax = 75,
+            Cris = 76,
+            Javelin = 77,
+            Firepath = 78,
+            Zsp = 79,
+            Mmix = 80,
+            Huany = 81,
+            Prism = 82,
             Avr = 83,
+            Fr30 = 84,
+            D10v = 85,
+            D30v = 86,
+            V850 = 87,
+            M32r = 88,
+            Mn10300 = 89,
+            Mn10200 = 90,
+            Picojava = 91,
+            Openrisc = 92,
+            ArcCompact = 93,
+            Xtensa = 94,
+            Videocore = 95,
+            TmmGpp = 96,
+            Ns32k = 97,
+            Tpc = 98,
+            Snp1k = 99,
+            St200 = 100,
+            Ip2k = 101,
+            Max = 102,
+            CompactRisc = 103,
+            F2mc16 = 104,
+            Msp430 = 105,
+            Blackfin = 106,
+            SeC33 = 107,
+            Sep = 108,
+            Arca = 109,
+            Unicore = 110,
+            Excess = 111,
+            Dxp = 112,
+            AlteraNios2 = 113,
+            Crx = 114,
+            Xgate = 115,
+            C166 = 116,
+            M16c = 117,
+            Dspic30f = 118,
+            FreescaleCe = 119,
+            M32c = 120,
+            Tsk3000 = 131,
+            Rs08 = 132,
+            Sharc = 133,
+            Ecog2 = 134,
+            Score7 = 135,
+            Dsp24 = 136,
+            Videocore3 = 137,
+            Latticemico32 = 138,
+            SeC17 = 139,
+            TiC6000 = 140,
+            TiC2000 = 141,
+            TiC5500 = 142,
+            TiArp32 = 143,
+            TiPru = 144,
+            MmdspPlus = 160,
+            CypressM8c = 161,
+            R32c = 162,
+            Trimedia = 163,
             Qdsp6 = 164,
+            I8051 = 165,
+            Stxp7x = 166,
+            Nds32 = 167,
+            Ecog1x = 168,
+            Maxq30 = 169,
+            Ximo16 = 170,
+            Manik = 171,
+            Craynv2 = 172,
+            Rx = 173,
+            Metag = 174,
+            McstElbrus = 175,
+            Ecog16 = 176,
+            Cr16 = 177,
+            Etpu = 178,
+            Sle9x = 179,
+            L10m = 180,
+            K10m = 181,
             Aarch64 = 183,
             Avr32 = 185,
-            Amdgpu = 224,
+            Stm8 = 186,
+            Tile64 = 187,
+            Tilepro = 188,
+            Microblaze = 189,
+            Cuda = 190,
+            Tilegx = 191,
+            Cloudshield = 192,
+            Corea1st = 193,
+            Corea2nd = 194,
+            Arcv2 = 195,
+            Open8 = 196,
+            Rl78 = 197,
+            Videocore5 = 198,
+            Renesas78kor = 199,
+            Freescale56800ex = 200,
+            Ba1 = 201,
+            Ba2 = 202,
+            Xcore = 203,
+            MchpPic = 204,
+            Intelgt = 205,
+            Intel206 = 206,
+            Intel207 = 207,
+            Intel208 = 208,
+            Intel209 = 209,
+            Km32 = 210,
+            Kmx32 = 211,
+            Kmx16 = 212,
+            Kmx8 = 213,
+            Kvarc = 214,
+            Cdp = 215,
+            Coge = 216,
+            Cool = 217,
+            Norc = 218,
+            CsrKalimba = 219,
+            Z80 = 220,
+            Visium = 221,
+            Ft32 = 222,
+            Moxie = 223,
+            AmdGpu = 224,
             Riscv = 243,
+            Lanai = 244,
+            Ceva = 245,
+            CevaX2 = 246,
             Bpf = 247,
+            GraphcoreIpu = 248,
+            Img1 = 249,
+            Nfp = 250,
+            Ve = 251,
             Csky = 252,
+            ArcCompact364 = 253,
+            Mcs6502 = 254,
+            ArcCompact3 = 255,
+            Kvx = 256,
+            Wdc65816 = 257,
+            Loongarch = 258,
+            Kf32 = 259,
         }
 
         public enum SymbolType
@@ -338,6 +513,10 @@ namespace Kaitai
             _bits = ((Bits) m_io.ReadU1());
             _endian = ((Endian) m_io.ReadU1());
             _eiVersion = m_io.ReadU1();
+            if (!(EiVersion == 1))
+            {
+                throw new ValidationNotEqualError(1, EiVersion, M_Io, "/seq/3");
+            }
             _abi = ((OsAbi) m_io.ReadU1());
             _abiVersion = m_io.ReadU1();
             _pad = m_io.ReadBytes(7);
@@ -1920,110 +2099,112 @@ namespace Kaitai
                     {
                         if (f_body)
                             return _body;
-                        KaitaiStream io = M_Root.M_Io;
-                        long _pos = io.Pos;
-                        io.Seek(OfsBody);
-                        if (m_isLe == true) {
-                            switch (Type) {
-                            case Elf.ShType.Rel: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new RelocationSection(false, io___raw_body, this, m_root, m_isLe);
-                                break;
+                        if (Type != Elf.ShType.Nobits) {
+                            KaitaiStream io = M_Root.M_Io;
+                            long _pos = io.Pos;
+                            io.Seek(OfsBody);
+                            if (m_isLe == true) {
+                                switch (Type) {
+                                case Elf.ShType.Rel: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new RelocationSection(false, io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Note: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new NoteSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Symtab: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Strtab: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Dynamic: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Dynsym: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Rela: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new RelocationSection(true, io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                default: {
+                                    _body = io.ReadBytes(LenBody);
+                                    break;
+                                }
+                                }
+                            } else {
+                                switch (Type) {
+                                case Elf.ShType.Rel: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new RelocationSection(false, io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Note: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new NoteSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Symtab: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Strtab: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Dynamic: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Dynsym: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                case Elf.ShType.Rela: {
+                                    __raw_body = io.ReadBytes(LenBody);
+                                    var io___raw_body = new KaitaiStream(__raw_body);
+                                    _body = new RelocationSection(true, io___raw_body, this, m_root, m_isLe);
+                                    break;
+                                }
+                                default: {
+                                    _body = io.ReadBytes(LenBody);
+                                    break;
+                                }
+                                }
                             }
-                            case Elf.ShType.Note: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new NoteSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Symtab: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Strtab: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Dynamic: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Dynsym: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Rela: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new RelocationSection(true, io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            default: {
-                                _body = io.ReadBytes(LenBody);
-                                break;
-                            }
-                            }
-                        } else {
-                            switch (Type) {
-                            case Elf.ShType.Rel: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new RelocationSection(false, io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Note: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new NoteSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Symtab: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Strtab: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new StringsStruct(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Dynamic: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynamicSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Dynsym: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new DynsymSection(io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            case Elf.ShType.Rela: {
-                                __raw_body = io.ReadBytes(LenBody);
-                                var io___raw_body = new KaitaiStream(__raw_body);
-                                _body = new RelocationSection(true, io___raw_body, this, m_root, m_isLe);
-                                break;
-                            }
-                            default: {
-                                _body = io.ReadBytes(LenBody);
-                                break;
-                            }
-                            }
+                            io.Seek(_pos);
+                            f_body = true;
                         }
-                        io.Seek(_pos);
-                        f_body = true;
                         return _body;
                     }
                 }

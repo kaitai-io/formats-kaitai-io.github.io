@@ -286,6 +286,9 @@ section#format-index .row {
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bits</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endian</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_eiVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eiVersion</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">eiVersion</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/seq/3&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abi</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_abiVersion</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pad</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
@@ -1567,93 +1570,95 @@ section#format-index .row {
         <span class="k">public</span> <span class="k">function</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
-            <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
-            <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsBody</span><span class="p">());</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">REL</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">false</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">NOTE</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\NoteSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">SYMTAB</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">STRTAB</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNAMIC</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynamicSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNSYM</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">RELA</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">default</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">()</span> <span class="o">!=</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">NOBITS</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$io</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">();</span>
+                <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ofsBody</span><span class="p">());</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">REL</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">false</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">NOTE</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\NoteSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">SYMTAB</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">STRTAB</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNAMIC</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynamicSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNSYM</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">RELA</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">default</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">REL</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">false</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">NOTE</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\NoteSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">SYMTAB</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">STRTAB</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNAMIC</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynamicSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNSYM</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">RELA</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
+                            <span class="k">break</span><span class="p">;</span>
+                        <span class="k">default</span><span class="o">:</span>
+                            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
+                            <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                 <span class="p">}</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">type</span><span class="p">())</span> <span class="p">{</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">REL</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">false</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">NOTE</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\NoteSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">SYMTAB</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">STRTAB</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\StringsStruct</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNAMIC</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynamicSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">DYNSYM</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\DynsymSection</span><span class="p">(</span><span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">case</span> <span class="nx">\Elf\ShType</span><span class="o">::</span><span class="na">RELA</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="nv">$_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__raw_body</span><span class="p">);</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\EndianElf\RelocationSection</span><span class="p">(</span><span class="k">true</span><span class="p">,</span> <span class="nv">$_io__raw_body</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="k">default</span><span class="o">:</span>
-                        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">lenBody</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
+                <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="p">}</span>
-            <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_body</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_linkedSection</span><span class="p">;</span>
@@ -2360,29 +2365,999 @@ section#format-index .row {
 
 <span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Machine</span> <span class="p">{</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * No machine</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">NO_MACHINE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * AT&amp;T WE 32100</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">M32</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Sun SPARC</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">SPARC</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel 80386</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">X86</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola m68k family</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">M68K</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola m88k family</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">M88K</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel MCU</span>
+<span class="sd">         * </span>
+<span class="sd">         * was assigned to `EM_486` (for Intel i486), but that value was deprecated</span>
+<span class="sd">         * and replaced with this one</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IAMCU</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel 80860</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">I860</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * MIPS R3000 big-endian</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">MIPS</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * IBM System/370</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">S370</span> <span class="o">=</span> <span class="mi">9</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * MIPS R3000 little-endian</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MIPS_RS3_LE</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Hewlett-Packard PA-RISC</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PARISC</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Fujitsu VPP500</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VPP500</span> <span class="o">=</span> <span class="mi">17</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Sun&#39;s &quot;v8plus&quot;</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SPARC32PLUS</span> <span class="o">=</span> <span class="mi">18</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel 80960</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">I960</span> <span class="o">=</span> <span class="mi">19</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * PowerPC</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">POWERPC</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * PowerPC 64-bit</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">POWERPC64</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * IBM System/390</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">S390</span> <span class="o">=</span> <span class="mi">22</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * IBM SPU/SPC</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SPU</span> <span class="o">=</span> <span class="mi">23</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NEC V800 series</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">V800</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Fujitsu FR20</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FR20</span> <span class="o">=</span> <span class="mi">37</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * TRW RH-32</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RH32</span> <span class="o">=</span> <span class="mi">38</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola RCE</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RCE</span> <span class="o">=</span> <span class="mi">39</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ARM</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">ARM</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * DEC Alpha</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALPHA</span> <span class="o">=</span> <span class="mi">41</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Hitachi SH</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">SUPERH</span> <span class="o">=</span> <span class="mi">42</span><span class="p">;</span>
-        <span class="k">const</span> <span class="no">SPARCV9</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * SPARC v9 64-bit</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SPARC_V9</span> <span class="o">=</span> <span class="mi">43</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Siemens TriCore</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TRICORE</span> <span class="o">=</span> <span class="mi">44</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Argonaut RISC Core</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ARC</span> <span class="o">=</span> <span class="mi">45</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Hitachi H8/300</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">H8_300</span> <span class="o">=</span> <span class="mi">46</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Hitachi H8/300H</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">H8_300H</span> <span class="o">=</span> <span class="mi">47</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Hitachi H8S</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">H8S</span> <span class="o">=</span> <span class="mi">48</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Hitachi H8/500</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">H8_500</span> <span class="o">=</span> <span class="mi">49</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel IA-64 processor architecture</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">IA_64</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Stanford MIPS-X</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MIPS_X</span> <span class="o">=</span> <span class="mi">51</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola ColdFire</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">COLDFIRE</span> <span class="o">=</span> <span class="mi">52</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola M68HC12</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">M68HC12</span> <span class="o">=</span> <span class="mi">53</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Fujitsu MMA Multimedia Accelerator</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MMA</span> <span class="o">=</span> <span class="mi">54</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Siemens PCP</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PCP</span> <span class="o">=</span> <span class="mi">55</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Sony nCPU embedded RISC processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NCPU</span> <span class="o">=</span> <span class="mi">56</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Denso NDR1 microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NDR1</span> <span class="o">=</span> <span class="mi">57</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola Star*Core processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">STARCORE</span> <span class="o">=</span> <span class="mi">58</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Toyota ME16 processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ME16</span> <span class="o">=</span> <span class="mi">59</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics ST100 processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ST100</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Advanced Logic Corp. TinyJ embedded processor family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TINYJ</span> <span class="o">=</span> <span class="mi">61</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * AMD x86-64 architecture</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">X86_64</span> <span class="o">=</span> <span class="mi">62</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Sony DSP Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PDSP</span> <span class="o">=</span> <span class="mi">63</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Digital Equipment Corp. PDP-10</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PDP10</span> <span class="o">=</span> <span class="mi">64</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Digital Equipment Corp. PDP-11</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PDP11</span> <span class="o">=</span> <span class="mi">65</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Siemens FX66 microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FX66</span> <span class="o">=</span> <span class="mi">66</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics ST9+ 8/16 bit microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ST9PLUS</span> <span class="o">=</span> <span class="mi">67</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics ST7 8-bit microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ST7</span> <span class="o">=</span> <span class="mi">68</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola MC68HC16 microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MC68HC16</span> <span class="o">=</span> <span class="mi">69</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola MC68HC11 microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MC68HC11</span> <span class="o">=</span> <span class="mi">70</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola MC68HC08 microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MC68HC08</span> <span class="o">=</span> <span class="mi">71</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola MC68HC05 microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MC68HC05</span> <span class="o">=</span> <span class="mi">72</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Silicon Graphics SVx</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SVX</span> <span class="o">=</span> <span class="mi">73</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics ST19 8-bit microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ST19</span> <span class="o">=</span> <span class="mi">74</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Digital VAX</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VAX</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Axis Communications 32-bit embedded processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CRIS</span> <span class="o">=</span> <span class="mi">76</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Infineon Technologies 32-bit embedded processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">JAVELIN</span> <span class="o">=</span> <span class="mi">77</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Element 14 64-bit DSP Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FIREPATH</span> <span class="o">=</span> <span class="mi">78</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * LSI Logic 16-bit DSP Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ZSP</span> <span class="o">=</span> <span class="mi">79</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Donald Knuth&#39;s educational 64-bit processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MMIX</span> <span class="o">=</span> <span class="mi">80</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Harvard University machine-independent object files</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">HUANY</span> <span class="o">=</span> <span class="mi">81</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * SiTera Prism</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PRISM</span> <span class="o">=</span> <span class="mi">82</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Atmel AVR 8-bit microcontroller</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">AVR</span> <span class="o">=</span> <span class="mi">83</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Fujitsu FR30</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FR30</span> <span class="o">=</span> <span class="mi">84</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Mitsubishi D10V</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">D10V</span> <span class="o">=</span> <span class="mi">85</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Mitsubishi D30V</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">D30V</span> <span class="o">=</span> <span class="mi">86</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NEC v850</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">V850</span> <span class="o">=</span> <span class="mi">87</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Mitsubishi M32R</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">M32R</span> <span class="o">=</span> <span class="mi">88</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Matsushita MN10300</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MN10300</span> <span class="o">=</span> <span class="mi">89</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Matsushita MN10200</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MN10200</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * picoJava</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">PICOJAVA</span> <span class="o">=</span> <span class="mi">91</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OpenRISC 32-bit embedded processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">OPENRISC</span> <span class="o">=</span> <span class="mi">92</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ARC International ARCompact processor (old spelling/synonym: EM_ARC_A5)</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ARC_COMPACT</span> <span class="o">=</span> <span class="mi">93</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Tensilica Xtensa Architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">XTENSA</span> <span class="o">=</span> <span class="mi">94</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Alphamosaic VideoCore processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VIDEOCORE</span> <span class="o">=</span> <span class="mi">95</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Thompson Multimedia General Purpose Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TMM_GPP</span> <span class="o">=</span> <span class="mi">96</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * National Semiconductor 32000 series</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NS32K</span> <span class="o">=</span> <span class="mi">97</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Tenor Network TPC processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TPC</span> <span class="o">=</span> <span class="mi">98</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Trebia SNP 1000 processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SNP1K</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics ST200</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ST200</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Ubicom IP2xxx microcontroller family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IP2K</span> <span class="o">=</span> <span class="mi">101</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * MAX processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MAX</span> <span class="o">=</span> <span class="mi">102</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * National Semiconductor CompactRISC microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">COMPACT_RISC</span> <span class="o">=</span> <span class="mi">103</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Fujitsu F2MC16</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">F2MC16</span> <span class="o">=</span> <span class="mi">104</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Texas Instruments embedded microcontroller MSP430</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MSP430</span> <span class="o">=</span> <span class="mi">105</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Analog Devices Blackfin (DSP) processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">BLACKFIN</span> <span class="o">=</span> <span class="mi">106</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Seiko Epson S1C33 family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SE_C33</span> <span class="o">=</span> <span class="mi">107</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Sharp embedded microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SEP</span> <span class="o">=</span> <span class="mi">108</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Arca RISC microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ARCA</span> <span class="o">=</span> <span class="mi">109</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * microprocessor series from PKU-Unity Ltd. and MPRC of Peking University</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">UNICORE</span> <span class="o">=</span> <span class="mi">110</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * eXcess: 16/32/64-bit configurable embedded CPU</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">EXCESS</span> <span class="o">=</span> <span class="mi">111</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Icera Semiconductor Inc. Deep Execution Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">DXP</span> <span class="o">=</span> <span class="mi">112</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Altera Nios II soft-core processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ALTERA_NIOS2</span> <span class="o">=</span> <span class="mi">113</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * National Semiconductor CompactRISC CRX microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CRX</span> <span class="o">=</span> <span class="mi">114</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Motorola XGATE embedded processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">XGATE</span> <span class="o">=</span> <span class="mi">115</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Infineon C16x/XC16x processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">C166</span> <span class="o">=</span> <span class="mi">116</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Renesas M16C series microprocessors</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">M16C</span> <span class="o">=</span> <span class="mi">117</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Microchip Technology dsPIC30F Digital Signal Controller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">DSPIC30F</span> <span class="o">=</span> <span class="mi">118</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Freescale Communication Engine RISC core</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FREESCALE_CE</span> <span class="o">=</span> <span class="mi">119</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Renesas M32C series microprocessors</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">M32C</span> <span class="o">=</span> <span class="mi">120</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Altium TSK3000 core</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TSK3000</span> <span class="o">=</span> <span class="mi">131</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Freescale RS08 embedded processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RS08</span> <span class="o">=</span> <span class="mi">132</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Analog Devices SHARC family of 32-bit DSP processors</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SHARC</span> <span class="o">=</span> <span class="mi">133</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Cyan Technology eCOG2 microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ECOG2</span> <span class="o">=</span> <span class="mi">134</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Sunplus S+core7 RISC processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SCORE7</span> <span class="o">=</span> <span class="mi">135</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * New Japan Radio (NJR) 24-bit DSP Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">DSP24</span> <span class="o">=</span> <span class="mi">136</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Broadcom VideoCore III processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VIDEOCORE3</span> <span class="o">=</span> <span class="mi">137</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * RISC processor for Lattice FPGA architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">LATTICEMICO32</span> <span class="o">=</span> <span class="mi">138</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Seiko Epson C17 family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SE_C17</span> <span class="o">=</span> <span class="mi">139</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Texas Instruments TMS320C6000 DSP family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TI_C6000</span> <span class="o">=</span> <span class="mi">140</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Texas Instruments TMS320C2000 DSP family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TI_C2000</span> <span class="o">=</span> <span class="mi">141</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Texas Instruments TMS320C55x DSP family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TI_C5500</span> <span class="o">=</span> <span class="mi">142</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Texas Instruments Application Specific RISC Processor, 32bit fetch</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TI_ARP32</span> <span class="o">=</span> <span class="mi">143</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Texas Instruments Programmable Realtime Unit</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TI_PRU</span> <span class="o">=</span> <span class="mi">144</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics 64bit VLIW Data Signal Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MMDSP_PLUS</span> <span class="o">=</span> <span class="mi">160</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Cypress M8C microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CYPRESS_M8C</span> <span class="o">=</span> <span class="mi">161</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Renesas R32C series microprocessors</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">R32C</span> <span class="o">=</span> <span class="mi">162</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NXP Semiconductors TriMedia architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TRIMEDIA</span> <span class="o">=</span> <span class="mi">163</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Qualcomm Hexagon processor</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">QDSP6</span> <span class="o">=</span> <span class="mi">164</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel 8051 and variants</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">I8051</span> <span class="o">=</span> <span class="mi">165</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroelectronics STxP7x family of configurable and extensible RISC processors</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">STXP7X</span> <span class="o">=</span> <span class="mi">166</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Andes Technology compact code size embedded RISC processor family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NDS32</span> <span class="o">=</span> <span class="mi">167</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Cyan Technology eCOG1X family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ECOG1X</span> <span class="o">=</span> <span class="mi">168</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Dallas Semiconductor MAXQ30 Core Micro-controllers</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MAXQ30</span> <span class="o">=</span> <span class="mi">169</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * New Japan Radio (NJR) 16-bit DSP Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">XIMO16</span> <span class="o">=</span> <span class="mi">170</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * M2000 Reconfigurable RISC Microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MANIK</span> <span class="o">=</span> <span class="mi">171</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Cray Inc. NV2 vector architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CRAYNV2</span> <span class="o">=</span> <span class="mi">172</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Renesas RX family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RX</span> <span class="o">=</span> <span class="mi">173</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Imagination Technologies META processor architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">METAG</span> <span class="o">=</span> <span class="mi">174</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * MCST Elbrus general purpose hardware architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MCST_ELBRUS</span> <span class="o">=</span> <span class="mi">175</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Cyan Technology eCOG16 family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ECOG16</span> <span class="o">=</span> <span class="mi">176</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * National Semiconductor CompactRISC CR16 16-bit microprocessor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CR16</span> <span class="o">=</span> <span class="mi">177</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Freescale Extended Time Processing Unit</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ETPU</span> <span class="o">=</span> <span class="mi">178</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Infineon Technologies SLE9X core</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">SLE9X</span> <span class="o">=</span> <span class="mi">179</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel L10M</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">L10M</span> <span class="o">=</span> <span class="mi">180</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel K10M</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">K10M</span> <span class="o">=</span> <span class="mi">181</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ARM AArch64</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">AARCH64</span> <span class="o">=</span> <span class="mi">183</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Atmel Corporation 32-bit microprocessor family</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">AVR32</span> <span class="o">=</span> <span class="mi">185</span><span class="p">;</span>
-        <span class="k">const</span> <span class="no">AMDGPU</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * STMicroeletronics STM8 8-bit microcontroller</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">STM8</span> <span class="o">=</span> <span class="mi">186</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Tilera TILE64 multicore architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TILE64</span> <span class="o">=</span> <span class="mi">187</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Tilera TILEPro multicore architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TILEPRO</span> <span class="o">=</span> <span class="mi">188</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Xilinx MicroBlaze 32-bit RISC soft processor core</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MICROBLAZE</span> <span class="o">=</span> <span class="mi">189</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NVIDIA CUDA architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CUDA</span> <span class="o">=</span> <span class="mi">190</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Tilera TILE-Gx multicore architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">TILEGX</span> <span class="o">=</span> <span class="mi">191</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * CloudShield architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CLOUDSHIELD</span> <span class="o">=</span> <span class="mi">192</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KIPO-KAIST Core-A 1st generation processor family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">COREA_1ST</span> <span class="o">=</span> <span class="mi">193</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KIPO-KAIST Core-A 2nd generation processor family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">COREA_2ND</span> <span class="o">=</span> <span class="mi">194</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Synopsys ARCv2 ISA</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ARCV2</span> <span class="o">=</span> <span class="mi">195</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Open8 8-bit RISC soft processor core</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">OPEN8</span> <span class="o">=</span> <span class="mi">196</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Renesas RL78 family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RL78</span> <span class="o">=</span> <span class="mi">197</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Broadcom VideoCore V processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VIDEOCORE5</span> <span class="o">=</span> <span class="mi">198</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Renesas 78KOR family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">RENESAS_78KOR</span> <span class="o">=</span> <span class="mi">199</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Freescale 56800EX Digital Signal Controller (DSC)</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FREESCALE_56800EX</span> <span class="o">=</span> <span class="mi">200</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Beyond BA1 CPU architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">BA1</span> <span class="o">=</span> <span class="mi">201</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Beyond BA2 CPU architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">BA2</span> <span class="o">=</span> <span class="mi">202</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * XMOS xCORE processor family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">XCORE</span> <span class="o">=</span> <span class="mi">203</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Microchip 8-bit PIC(r) family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MCHP_PIC</span> <span class="o">=</span> <span class="mi">204</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Intel Graphics Technology</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">INTELGT</span> <span class="o">=</span> <span class="mi">205</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Reserved by Intel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">INTEL206</span> <span class="o">=</span> <span class="mi">206</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Reserved by Intel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">INTEL207</span> <span class="o">=</span> <span class="mi">207</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Reserved by Intel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">INTEL208</span> <span class="o">=</span> <span class="mi">208</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Reserved by Intel</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">INTEL209</span> <span class="o">=</span> <span class="mi">209</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KM211 KM32 32-bit processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KM32</span> <span class="o">=</span> <span class="mi">210</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KM211 KMX32 32-bit processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KMX32</span> <span class="o">=</span> <span class="mi">211</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KM211 KMX16 16-bit processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KMX16</span> <span class="o">=</span> <span class="mi">212</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KM211 KMX8 8-bit processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KMX8</span> <span class="o">=</span> <span class="mi">213</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * KM211 KVARC processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KVARC</span> <span class="o">=</span> <span class="mi">214</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Paneve CDP architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CDP</span> <span class="o">=</span> <span class="mi">215</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Cognitive Smart Memory Processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">COGE</span> <span class="o">=</span> <span class="mi">216</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Bluechip Systems CoolEngine</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">COOL</span> <span class="o">=</span> <span class="mi">217</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Nanoradio Optimized RISC</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NORC</span> <span class="o">=</span> <span class="mi">218</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * CSR Kalimba architecture family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CSR_KALIMBA</span> <span class="o">=</span> <span class="mi">219</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Zilog Z80</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">Z80</span> <span class="o">=</span> <span class="mi">220</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Controls and Data Services VISIUMcore</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VISIUM</span> <span class="o">=</span> <span class="mi">221</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * FTDI Chip FT32</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">FT32</span> <span class="o">=</span> <span class="mi">222</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Moxie processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MOXIE</span> <span class="o">=</span> <span class="mi">223</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * AMD GPU architecture</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">AMD_GPU</span> <span class="o">=</span> <span class="mi">224</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * RISC-V</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">RISCV</span> <span class="o">=</span> <span class="mi">243</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Lanai 32-bit processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">LANAI</span> <span class="o">=</span> <span class="mi">244</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * CEVA Processor Architecture Family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CEVA</span> <span class="o">=</span> <span class="mi">245</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * CEVA X2 Processor Family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CEVA_X2</span> <span class="o">=</span> <span class="mi">246</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Linux BPF - in-kernel virtual machine</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">BPF</span> <span class="o">=</span> <span class="mi">247</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Graphcore Intelligent Processing Unit</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">GRAPHCORE_IPU</span> <span class="o">=</span> <span class="mi">248</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Imagination Technologies</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">IMG1</span> <span class="o">=</span> <span class="mi">249</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Netronome Flow Processor (NFP)</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">NFP</span> <span class="o">=</span> <span class="mi">250</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * NEC SX-Aurora Vector Engine (VE) processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">VE</span> <span class="o">=</span> <span class="mi">251</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * C-SKY 32-bit processor</span>
+<span class="sd">         */</span>
         <span class="k">const</span> <span class="no">CSKY</span> <span class="o">=</span> <span class="mi">252</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Synopsys ARCv3 64-bit ISA/HS6x cores</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ARC_COMPACT3_64</span> <span class="o">=</span> <span class="mi">253</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * MOS Technology MCS 6502 processor</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">MCS6502</span> <span class="o">=</span> <span class="mi">254</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Synopsys ARCv3 32-bit</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">ARC_COMPACT3</span> <span class="o">=</span> <span class="mi">255</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Kalray VLIW core of the MPPA processor family</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KVX</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * WDC 65816/65C816</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">WDC65816</span> <span class="o">=</span> <span class="mi">257</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * LoongArch</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">LOONGARCH</span> <span class="o">=</span> <span class="mi">258</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * ChipON KungFu32</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">KF32</span> <span class="o">=</span> <span class="mi">259</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 

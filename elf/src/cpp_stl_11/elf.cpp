@@ -24,6 +24,9 @@ void elf_t::_read() {
     m_bits = static_cast<elf_t::bits_t>(m__io->read_u1());
     m_endian = static_cast<elf_t::endian_t>(m__io->read_u1());
     m_ei_version = m__io->read_u1();
+    if (!(ei_version() == 1)) {
+        throw kaitai::validation_not_equal_error<uint8_t>(1, ei_version(), _io(), std::string("/seq/3"));
+    }
     m_abi = static_cast<elf_t::os_abi_t>(m__io->read_u1());
     m_abi_version = m__io->read_u1();
     m_pad = m__io->read_bytes(7);
@@ -1346,126 +1349,130 @@ void elf_t::endian_elf_t::section_header_t::_clean_up() {
 kaitai::kstruct* elf_t::endian_elf_t::section_header_t::body() {
     if (f_body)
         return m_body.get();
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(ofs_body());
-    if (m__is_le == 1) {
-        n_body = true;
-        switch (type()) {
-        case elf_t::SH_TYPE_REL: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(false, m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
+    n_body = true;
+    if (type() != elf_t::SH_TYPE_NOBITS) {
+        n_body = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(ofs_body());
+        if (m__is_le == 1) {
+            n_body = true;
+            switch (type()) {
+            case elf_t::SH_TYPE_REL: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(false, m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_NOTE: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<note_section_t>(new note_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_SYMTAB: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_STRTAB: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_DYNAMIC: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<dynamic_section_t>(new dynamic_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_DYNSYM: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_RELA: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(true, m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            default: {
+                m__raw_body = io->read_bytes(len_body());
+                break;
+            }
+            }
+        } else {
+            n_body = true;
+            switch (type()) {
+            case elf_t::SH_TYPE_REL: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(false, m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_NOTE: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<note_section_t>(new note_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_SYMTAB: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_STRTAB: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_DYNAMIC: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<dynamic_section_t>(new dynamic_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_DYNSYM: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            case elf_t::SH_TYPE_RELA: {
+                n_body = false;
+                m__raw_body = io->read_bytes(len_body());
+                m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+                m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(true, m__io__raw_body.get(), this, m__root, m__is_le));
+                break;
+            }
+            default: {
+                m__raw_body = io->read_bytes(len_body());
+                break;
+            }
+            }
         }
-        case elf_t::SH_TYPE_NOTE: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<note_section_t>(new note_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_SYMTAB: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_STRTAB: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_DYNAMIC: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<dynamic_section_t>(new dynamic_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_DYNSYM: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_RELA: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(true, m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        default: {
-            m__raw_body = io->read_bytes(len_body());
-            break;
-        }
-        }
-    } else {
-        n_body = true;
-        switch (type()) {
-        case elf_t::SH_TYPE_REL: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(false, m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_NOTE: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<note_section_t>(new note_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_SYMTAB: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_STRTAB: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<strings_struct_t>(new strings_struct_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_DYNAMIC: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<dynamic_section_t>(new dynamic_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_DYNSYM: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<dynsym_section_t>(new dynsym_section_t(m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        case elf_t::SH_TYPE_RELA: {
-            n_body = false;
-            m__raw_body = io->read_bytes(len_body());
-            m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-            m_body = std::unique_ptr<relocation_section_t>(new relocation_section_t(true, m__io__raw_body.get(), this, m__root, m__is_le));
-            break;
-        }
-        default: {
-            m__raw_body = io->read_bytes(len_body());
-            break;
-        }
-        }
+        io->seek(_pos);
+        f_body = true;
     }
-    io->seek(_pos);
-    f_body = true;
     return m_body.get();
 }
 

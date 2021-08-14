@@ -16,6 +16,9 @@ namespace {
             $this->_m_bits = $this->_io->readU1();
             $this->_m_endian = $this->_io->readU1();
             $this->_m_eiVersion = $this->_io->readU1();
+            if (!($this->eiVersion() == 1)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(1, $this->eiVersion(), $this->_io(), "/seq/3");
+            }
             $this->_m_abi = $this->_io->readU1();
             $this->_m_abiVersion = $this->_io->readU1();
             $this->_m_pad = $this->_io->readBytes(7);
@@ -1297,93 +1300,95 @@ namespace Elf\EndianElf {
         public function body() {
             if ($this->_m_body !== null)
                 return $this->_m_body;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->ofsBody());
-            if ($this->_m__is_le) {
-                switch ($this->type()) {
-                    case \Elf\ShType::REL:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\RelocationSection(false, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::NOTE:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\NoteSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::SYMTAB:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::STRTAB:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::DYNAMIC:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\DynamicSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::DYNSYM:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::RELA:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\RelocationSection(true, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    default:
-                        $this->_m_body = $io->readBytes($this->lenBody());
-                        break;
+            if ($this->type() != \Elf\ShType::NOBITS) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsBody());
+                if ($this->_m__is_le) {
+                    switch ($this->type()) {
+                        case \Elf\ShType::REL:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\RelocationSection(false, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::NOTE:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\NoteSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::SYMTAB:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::STRTAB:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::DYNAMIC:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\DynamicSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::DYNSYM:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::RELA:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\RelocationSection(true, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        default:
+                            $this->_m_body = $io->readBytes($this->lenBody());
+                            break;
+                    }
+                } else {
+                    switch ($this->type()) {
+                        case \Elf\ShType::REL:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\RelocationSection(false, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::NOTE:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\NoteSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::SYMTAB:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::STRTAB:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::DYNAMIC:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\DynamicSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::DYNSYM:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        case \Elf\ShType::RELA:
+                            $this->_m__raw_body = $io->readBytes($this->lenBody());
+                            $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                            $this->_m_body = new \Elf\EndianElf\RelocationSection(true, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
+                            break;
+                        default:
+                            $this->_m_body = $io->readBytes($this->lenBody());
+                            break;
+                    }
                 }
-            } else {
-                switch ($this->type()) {
-                    case \Elf\ShType::REL:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\RelocationSection(false, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::NOTE:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\NoteSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::SYMTAB:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::STRTAB:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\StringsStruct($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::DYNAMIC:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\DynamicSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::DYNSYM:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\DynsymSection($_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    case \Elf\ShType::RELA:
-                        $this->_m__raw_body = $io->readBytes($this->lenBody());
-                        $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                        $this->_m_body = new \Elf\EndianElf\RelocationSection(true, $_io__raw_body, $this, $this->_root, $this->_m__is_le);
-                        break;
-                    default:
-                        $this->_m_body = $io->readBytes($this->lenBody());
-                        break;
-                }
+                $io->seek($_pos);
             }
-            $io->seek($_pos);
             return $this->_m_body;
         }
         protected $_m_linkedSection;
@@ -2090,29 +2095,999 @@ namespace Elf {
 
 namespace Elf {
     class Machine {
+
+        /**
+         * No machine
+         */
         const NO_MACHINE = 0;
+
+        /**
+         * AT&T WE 32100
+         */
         const M32 = 1;
+
+        /**
+         * Sun SPARC
+         */
         const SPARC = 2;
+
+        /**
+         * Intel 80386
+         */
         const X86 = 3;
+
+        /**
+         * Motorola m68k family
+         */
         const M68K = 4;
+
+        /**
+         * Motorola m88k family
+         */
         const M88K = 5;
+
+        /**
+         * Intel MCU
+         * 
+         * was assigned to `EM_486` (for Intel i486), but that value was deprecated
+         * and replaced with this one
+         */
+        const IAMCU = 6;
+
+        /**
+         * Intel 80860
+         */
+        const I860 = 7;
+
+        /**
+         * MIPS R3000 big-endian
+         */
         const MIPS = 8;
+
+        /**
+         * IBM System/370
+         */
+        const S370 = 9;
+
+        /**
+         * MIPS R3000 little-endian
+         */
+        const MIPS_RS3_LE = 10;
+
+        /**
+         * Hewlett-Packard PA-RISC
+         */
+        const PARISC = 15;
+
+        /**
+         * Fujitsu VPP500
+         */
+        const VPP500 = 17;
+
+        /**
+         * Sun's "v8plus"
+         */
+        const SPARC32PLUS = 18;
+
+        /**
+         * Intel 80960
+         */
+        const I960 = 19;
+
+        /**
+         * PowerPC
+         */
         const POWERPC = 20;
+
+        /**
+         * PowerPC 64-bit
+         */
         const POWERPC64 = 21;
+
+        /**
+         * IBM System/390
+         */
         const S390 = 22;
+
+        /**
+         * IBM SPU/SPC
+         */
+        const SPU = 23;
+
+        /**
+         * NEC V800 series
+         */
+        const V800 = 36;
+
+        /**
+         * Fujitsu FR20
+         */
+        const FR20 = 37;
+
+        /**
+         * TRW RH-32
+         */
+        const RH32 = 38;
+
+        /**
+         * Motorola RCE
+         */
+        const RCE = 39;
+
+        /**
+         * ARM
+         */
         const ARM = 40;
+
+        /**
+         * DEC Alpha
+         */
+        const ALPHA = 41;
+
+        /**
+         * Hitachi SH
+         */
         const SUPERH = 42;
-        const SPARCV9 = 43;
+
+        /**
+         * SPARC v9 64-bit
+         */
+        const SPARC_V9 = 43;
+
+        /**
+         * Siemens TriCore
+         */
+        const TRICORE = 44;
+
+        /**
+         * Argonaut RISC Core
+         */
+        const ARC = 45;
+
+        /**
+         * Hitachi H8/300
+         */
+        const H8_300 = 46;
+
+        /**
+         * Hitachi H8/300H
+         */
+        const H8_300H = 47;
+
+        /**
+         * Hitachi H8S
+         */
+        const H8S = 48;
+
+        /**
+         * Hitachi H8/500
+         */
+        const H8_500 = 49;
+
+        /**
+         * Intel IA-64 processor architecture
+         */
         const IA_64 = 50;
+
+        /**
+         * Stanford MIPS-X
+         */
+        const MIPS_X = 51;
+
+        /**
+         * Motorola ColdFire
+         */
+        const COLDFIRE = 52;
+
+        /**
+         * Motorola M68HC12
+         */
+        const M68HC12 = 53;
+
+        /**
+         * Fujitsu MMA Multimedia Accelerator
+         */
+        const MMA = 54;
+
+        /**
+         * Siemens PCP
+         */
+        const PCP = 55;
+
+        /**
+         * Sony nCPU embedded RISC processor
+         */
+        const NCPU = 56;
+
+        /**
+         * Denso NDR1 microprocessor
+         */
+        const NDR1 = 57;
+
+        /**
+         * Motorola Star*Core processor
+         */
+        const STARCORE = 58;
+
+        /**
+         * Toyota ME16 processor
+         */
+        const ME16 = 59;
+
+        /**
+         * STMicroelectronics ST100 processor
+         */
+        const ST100 = 60;
+
+        /**
+         * Advanced Logic Corp. TinyJ embedded processor family
+         */
+        const TINYJ = 61;
+
+        /**
+         * AMD x86-64 architecture
+         */
         const X86_64 = 62;
+
+        /**
+         * Sony DSP Processor
+         */
+        const PDSP = 63;
+
+        /**
+         * Digital Equipment Corp. PDP-10
+         */
+        const PDP10 = 64;
+
+        /**
+         * Digital Equipment Corp. PDP-11
+         */
+        const PDP11 = 65;
+
+        /**
+         * Siemens FX66 microcontroller
+         */
+        const FX66 = 66;
+
+        /**
+         * STMicroelectronics ST9+ 8/16 bit microcontroller
+         */
+        const ST9PLUS = 67;
+
+        /**
+         * STMicroelectronics ST7 8-bit microcontroller
+         */
+        const ST7 = 68;
+
+        /**
+         * Motorola MC68HC16 microcontroller
+         */
+        const MC68HC16 = 69;
+
+        /**
+         * Motorola MC68HC11 microcontroller
+         */
+        const MC68HC11 = 70;
+
+        /**
+         * Motorola MC68HC08 microcontroller
+         */
+        const MC68HC08 = 71;
+
+        /**
+         * Motorola MC68HC05 microcontroller
+         */
+        const MC68HC05 = 72;
+
+        /**
+         * Silicon Graphics SVx
+         */
+        const SVX = 73;
+
+        /**
+         * STMicroelectronics ST19 8-bit microcontroller
+         */
+        const ST19 = 74;
+
+        /**
+         * Digital VAX
+         */
+        const VAX = 75;
+
+        /**
+         * Axis Communications 32-bit embedded processor
+         */
+        const CRIS = 76;
+
+        /**
+         * Infineon Technologies 32-bit embedded processor
+         */
+        const JAVELIN = 77;
+
+        /**
+         * Element 14 64-bit DSP Processor
+         */
+        const FIREPATH = 78;
+
+        /**
+         * LSI Logic 16-bit DSP Processor
+         */
+        const ZSP = 79;
+
+        /**
+         * Donald Knuth's educational 64-bit processor
+         */
+        const MMIX = 80;
+
+        /**
+         * Harvard University machine-independent object files
+         */
+        const HUANY = 81;
+
+        /**
+         * SiTera Prism
+         */
+        const PRISM = 82;
+
+        /**
+         * Atmel AVR 8-bit microcontroller
+         */
         const AVR = 83;
+
+        /**
+         * Fujitsu FR30
+         */
+        const FR30 = 84;
+
+        /**
+         * Mitsubishi D10V
+         */
+        const D10V = 85;
+
+        /**
+         * Mitsubishi D30V
+         */
+        const D30V = 86;
+
+        /**
+         * NEC v850
+         */
+        const V850 = 87;
+
+        /**
+         * Mitsubishi M32R
+         */
+        const M32R = 88;
+
+        /**
+         * Matsushita MN10300
+         */
+        const MN10300 = 89;
+
+        /**
+         * Matsushita MN10200
+         */
+        const MN10200 = 90;
+
+        /**
+         * picoJava
+         */
+        const PICOJAVA = 91;
+
+        /**
+         * OpenRISC 32-bit embedded processor
+         */
+        const OPENRISC = 92;
+
+        /**
+         * ARC International ARCompact processor (old spelling/synonym: EM_ARC_A5)
+         */
+        const ARC_COMPACT = 93;
+
+        /**
+         * Tensilica Xtensa Architecture
+         */
+        const XTENSA = 94;
+
+        /**
+         * Alphamosaic VideoCore processor
+         */
+        const VIDEOCORE = 95;
+
+        /**
+         * Thompson Multimedia General Purpose Processor
+         */
+        const TMM_GPP = 96;
+
+        /**
+         * National Semiconductor 32000 series
+         */
+        const NS32K = 97;
+
+        /**
+         * Tenor Network TPC processor
+         */
+        const TPC = 98;
+
+        /**
+         * Trebia SNP 1000 processor
+         */
+        const SNP1K = 99;
+
+        /**
+         * STMicroelectronics ST200
+         */
+        const ST200 = 100;
+
+        /**
+         * Ubicom IP2xxx microcontroller family
+         */
+        const IP2K = 101;
+
+        /**
+         * MAX processor
+         */
+        const MAX = 102;
+
+        /**
+         * National Semiconductor CompactRISC microprocessor
+         */
+        const COMPACT_RISC = 103;
+
+        /**
+         * Fujitsu F2MC16
+         */
+        const F2MC16 = 104;
+
+        /**
+         * Texas Instruments embedded microcontroller MSP430
+         */
+        const MSP430 = 105;
+
+        /**
+         * Analog Devices Blackfin (DSP) processor
+         */
+        const BLACKFIN = 106;
+
+        /**
+         * Seiko Epson S1C33 family
+         */
+        const SE_C33 = 107;
+
+        /**
+         * Sharp embedded microprocessor
+         */
+        const SEP = 108;
+
+        /**
+         * Arca RISC microprocessor
+         */
+        const ARCA = 109;
+
+        /**
+         * microprocessor series from PKU-Unity Ltd. and MPRC of Peking University
+         */
+        const UNICORE = 110;
+
+        /**
+         * eXcess: 16/32/64-bit configurable embedded CPU
+         */
+        const EXCESS = 111;
+
+        /**
+         * Icera Semiconductor Inc. Deep Execution Processor
+         */
+        const DXP = 112;
+
+        /**
+         * Altera Nios II soft-core processor
+         */
+        const ALTERA_NIOS2 = 113;
+
+        /**
+         * National Semiconductor CompactRISC CRX microprocessor
+         */
+        const CRX = 114;
+
+        /**
+         * Motorola XGATE embedded processor
+         */
+        const XGATE = 115;
+
+        /**
+         * Infineon C16x/XC16x processor
+         */
+        const C166 = 116;
+
+        /**
+         * Renesas M16C series microprocessors
+         */
+        const M16C = 117;
+
+        /**
+         * Microchip Technology dsPIC30F Digital Signal Controller
+         */
+        const DSPIC30F = 118;
+
+        /**
+         * Freescale Communication Engine RISC core
+         */
+        const FREESCALE_CE = 119;
+
+        /**
+         * Renesas M32C series microprocessors
+         */
+        const M32C = 120;
+
+        /**
+         * Altium TSK3000 core
+         */
+        const TSK3000 = 131;
+
+        /**
+         * Freescale RS08 embedded processor
+         */
+        const RS08 = 132;
+
+        /**
+         * Analog Devices SHARC family of 32-bit DSP processors
+         */
+        const SHARC = 133;
+
+        /**
+         * Cyan Technology eCOG2 microprocessor
+         */
+        const ECOG2 = 134;
+
+        /**
+         * Sunplus S+core7 RISC processor
+         */
+        const SCORE7 = 135;
+
+        /**
+         * New Japan Radio (NJR) 24-bit DSP Processor
+         */
+        const DSP24 = 136;
+
+        /**
+         * Broadcom VideoCore III processor
+         */
+        const VIDEOCORE3 = 137;
+
+        /**
+         * RISC processor for Lattice FPGA architecture
+         */
+        const LATTICEMICO32 = 138;
+
+        /**
+         * Seiko Epson C17 family
+         */
+        const SE_C17 = 139;
+
+        /**
+         * Texas Instruments TMS320C6000 DSP family
+         */
+        const TI_C6000 = 140;
+
+        /**
+         * Texas Instruments TMS320C2000 DSP family
+         */
+        const TI_C2000 = 141;
+
+        /**
+         * Texas Instruments TMS320C55x DSP family
+         */
+        const TI_C5500 = 142;
+
+        /**
+         * Texas Instruments Application Specific RISC Processor, 32bit fetch
+         */
+        const TI_ARP32 = 143;
+
+        /**
+         * Texas Instruments Programmable Realtime Unit
+         */
+        const TI_PRU = 144;
+
+        /**
+         * STMicroelectronics 64bit VLIW Data Signal Processor
+         */
+        const MMDSP_PLUS = 160;
+
+        /**
+         * Cypress M8C microprocessor
+         */
+        const CYPRESS_M8C = 161;
+
+        /**
+         * Renesas R32C series microprocessors
+         */
+        const R32C = 162;
+
+        /**
+         * NXP Semiconductors TriMedia architecture family
+         */
+        const TRIMEDIA = 163;
+
+        /**
+         * Qualcomm Hexagon processor
+         */
         const QDSP6 = 164;
+
+        /**
+         * Intel 8051 and variants
+         */
+        const I8051 = 165;
+
+        /**
+         * STMicroelectronics STxP7x family of configurable and extensible RISC processors
+         */
+        const STXP7X = 166;
+
+        /**
+         * Andes Technology compact code size embedded RISC processor family
+         */
+        const NDS32 = 167;
+
+        /**
+         * Cyan Technology eCOG1X family
+         */
+        const ECOG1X = 168;
+
+        /**
+         * Dallas Semiconductor MAXQ30 Core Micro-controllers
+         */
+        const MAXQ30 = 169;
+
+        /**
+         * New Japan Radio (NJR) 16-bit DSP Processor
+         */
+        const XIMO16 = 170;
+
+        /**
+         * M2000 Reconfigurable RISC Microprocessor
+         */
+        const MANIK = 171;
+
+        /**
+         * Cray Inc. NV2 vector architecture
+         */
+        const CRAYNV2 = 172;
+
+        /**
+         * Renesas RX family
+         */
+        const RX = 173;
+
+        /**
+         * Imagination Technologies META processor architecture
+         */
+        const METAG = 174;
+
+        /**
+         * MCST Elbrus general purpose hardware architecture
+         */
+        const MCST_ELBRUS = 175;
+
+        /**
+         * Cyan Technology eCOG16 family
+         */
+        const ECOG16 = 176;
+
+        /**
+         * National Semiconductor CompactRISC CR16 16-bit microprocessor
+         */
+        const CR16 = 177;
+
+        /**
+         * Freescale Extended Time Processing Unit
+         */
+        const ETPU = 178;
+
+        /**
+         * Infineon Technologies SLE9X core
+         */
+        const SLE9X = 179;
+
+        /**
+         * Intel L10M
+         */
+        const L10M = 180;
+
+        /**
+         * Intel K10M
+         */
+        const K10M = 181;
+
+        /**
+         * ARM AArch64
+         */
         const AARCH64 = 183;
+
+        /**
+         * Atmel Corporation 32-bit microprocessor family
+         */
         const AVR32 = 185;
-        const AMDGPU = 224;
+
+        /**
+         * STMicroeletronics STM8 8-bit microcontroller
+         */
+        const STM8 = 186;
+
+        /**
+         * Tilera TILE64 multicore architecture family
+         */
+        const TILE64 = 187;
+
+        /**
+         * Tilera TILEPro multicore architecture family
+         */
+        const TILEPRO = 188;
+
+        /**
+         * Xilinx MicroBlaze 32-bit RISC soft processor core
+         */
+        const MICROBLAZE = 189;
+
+        /**
+         * NVIDIA CUDA architecture
+         */
+        const CUDA = 190;
+
+        /**
+         * Tilera TILE-Gx multicore architecture family
+         */
+        const TILEGX = 191;
+
+        /**
+         * CloudShield architecture family
+         */
+        const CLOUDSHIELD = 192;
+
+        /**
+         * KIPO-KAIST Core-A 1st generation processor family
+         */
+        const COREA_1ST = 193;
+
+        /**
+         * KIPO-KAIST Core-A 2nd generation processor family
+         */
+        const COREA_2ND = 194;
+
+        /**
+         * Synopsys ARCv2 ISA
+         */
+        const ARCV2 = 195;
+
+        /**
+         * Open8 8-bit RISC soft processor core
+         */
+        const OPEN8 = 196;
+
+        /**
+         * Renesas RL78 family
+         */
+        const RL78 = 197;
+
+        /**
+         * Broadcom VideoCore V processor
+         */
+        const VIDEOCORE5 = 198;
+
+        /**
+         * Renesas 78KOR family
+         */
+        const RENESAS_78KOR = 199;
+
+        /**
+         * Freescale 56800EX Digital Signal Controller (DSC)
+         */
+        const FREESCALE_56800EX = 200;
+
+        /**
+         * Beyond BA1 CPU architecture
+         */
+        const BA1 = 201;
+
+        /**
+         * Beyond BA2 CPU architecture
+         */
+        const BA2 = 202;
+
+        /**
+         * XMOS xCORE processor family
+         */
+        const XCORE = 203;
+
+        /**
+         * Microchip 8-bit PIC(r) family
+         */
+        const MCHP_PIC = 204;
+
+        /**
+         * Intel Graphics Technology
+         */
+        const INTELGT = 205;
+
+        /**
+         * Reserved by Intel
+         */
+        const INTEL206 = 206;
+
+        /**
+         * Reserved by Intel
+         */
+        const INTEL207 = 207;
+
+        /**
+         * Reserved by Intel
+         */
+        const INTEL208 = 208;
+
+        /**
+         * Reserved by Intel
+         */
+        const INTEL209 = 209;
+
+        /**
+         * KM211 KM32 32-bit processor
+         */
+        const KM32 = 210;
+
+        /**
+         * KM211 KMX32 32-bit processor
+         */
+        const KMX32 = 211;
+
+        /**
+         * KM211 KMX16 16-bit processor
+         */
+        const KMX16 = 212;
+
+        /**
+         * KM211 KMX8 8-bit processor
+         */
+        const KMX8 = 213;
+
+        /**
+         * KM211 KVARC processor
+         */
+        const KVARC = 214;
+
+        /**
+         * Paneve CDP architecture family
+         */
+        const CDP = 215;
+
+        /**
+         * Cognitive Smart Memory Processor
+         */
+        const COGE = 216;
+
+        /**
+         * Bluechip Systems CoolEngine
+         */
+        const COOL = 217;
+
+        /**
+         * Nanoradio Optimized RISC
+         */
+        const NORC = 218;
+
+        /**
+         * CSR Kalimba architecture family
+         */
+        const CSR_KALIMBA = 219;
+
+        /**
+         * Zilog Z80
+         */
+        const Z80 = 220;
+
+        /**
+         * Controls and Data Services VISIUMcore
+         */
+        const VISIUM = 221;
+
+        /**
+         * FTDI Chip FT32
+         */
+        const FT32 = 222;
+
+        /**
+         * Moxie processor
+         */
+        const MOXIE = 223;
+
+        /**
+         * AMD GPU architecture
+         */
+        const AMD_GPU = 224;
+
+        /**
+         * RISC-V
+         */
         const RISCV = 243;
+
+        /**
+         * Lanai 32-bit processor
+         */
+        const LANAI = 244;
+
+        /**
+         * CEVA Processor Architecture Family
+         */
+        const CEVA = 245;
+
+        /**
+         * CEVA X2 Processor Family
+         */
+        const CEVA_X2 = 246;
+
+        /**
+         * Linux BPF - in-kernel virtual machine
+         */
         const BPF = 247;
+
+        /**
+         * Graphcore Intelligent Processing Unit
+         */
+        const GRAPHCORE_IPU = 248;
+
+        /**
+         * Imagination Technologies
+         */
+        const IMG1 = 249;
+
+        /**
+         * Netronome Flow Processor (NFP)
+         */
+        const NFP = 250;
+
+        /**
+         * NEC SX-Aurora Vector Engine (VE) processor
+         */
+        const VE = 251;
+
+        /**
+         * C-SKY 32-bit processor
+         */
         const CSKY = 252;
+
+        /**
+         * Synopsys ARCv3 64-bit ISA/HS6x cores
+         */
+        const ARC_COMPACT3_64 = 253;
+
+        /**
+         * MOS Technology MCS 6502 processor
+         */
+        const MCS6502 = 254;
+
+        /**
+         * Synopsys ARCv3 32-bit
+         */
+        const ARC_COMPACT3 = 255;
+
+        /**
+         * Kalray VLIW core of the MPPA processor family
+         */
+        const KVX = 256;
+
+        /**
+         * WDC 65816/65C816
+         */
+        const WDC65816 = 257;
+
+        /**
+         * LoongArch
+         */
+        const LOONGARCH = 258;
+
+        /**
+         * ChipON KungFu32
+         */
+        const KF32 = 259;
     }
 }
 

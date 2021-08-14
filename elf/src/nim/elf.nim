@@ -108,23 +108,198 @@ type
     x86 = 3
     m68k = 4
     m88k = 5
+    iamcu = 6
+    i860 = 7
     mips = 8
+    s370 = 9
+    mips_rs3_le = 10
+    parisc = 15
+    vpp500 = 17
+    sparc32plus = 18
+    i960 = 19
     powerpc = 20
     powerpc64 = 21
     s390 = 22
+    spu = 23
+    v800 = 36
+    fr20 = 37
+    rh32 = 38
+    rce = 39
     arm = 40
+    alpha = 41
     superh = 42
-    sparcv9 = 43
+    sparc_v9 = 43
+    tricore = 44
+    arc = 45
+    h8_300 = 46
+    h8_300h = 47
+    h8s = 48
+    h8_500 = 49
     ia_64 = 50
+    mips_x = 51
+    coldfire = 52
+    m68hc12 = 53
+    mma = 54
+    pcp = 55
+    ncpu = 56
+    ndr1 = 57
+    starcore = 58
+    me16 = 59
+    st100 = 60
+    tinyj = 61
     x86_64 = 62
+    pdsp = 63
+    pdp10 = 64
+    pdp11 = 65
+    fx66 = 66
+    st9plus = 67
+    st7 = 68
+    mc68hc16 = 69
+    mc68hc11 = 70
+    mc68hc08 = 71
+    mc68hc05 = 72
+    svx = 73
+    st19 = 74
+    vax = 75
+    cris = 76
+    javelin = 77
+    firepath = 78
+    zsp = 79
+    mmix = 80
+    huany = 81
+    prism = 82
     avr = 83
+    fr30 = 84
+    d10v = 85
+    d30v = 86
+    v850 = 87
+    m32r = 88
+    mn10300 = 89
+    mn10200 = 90
+    picojava = 91
+    openrisc = 92
+    arc_compact = 93
+    xtensa = 94
+    videocore = 95
+    tmm_gpp = 96
+    ns32k = 97
+    tpc = 98
+    snp1k = 99
+    st200 = 100
+    ip2k = 101
+    max = 102
+    compact_risc = 103
+    f2mc16 = 104
+    msp430 = 105
+    blackfin = 106
+    se_c33 = 107
+    sep = 108
+    arca = 109
+    unicore = 110
+    excess = 111
+    dxp = 112
+    altera_nios2 = 113
+    crx = 114
+    xgate = 115
+    c166 = 116
+    m16c = 117
+    dspic30f = 118
+    freescale_ce = 119
+    m32c = 120
+    tsk3000 = 131
+    rs08 = 132
+    sharc = 133
+    ecog2 = 134
+    score7 = 135
+    dsp24 = 136
+    videocore3 = 137
+    latticemico32 = 138
+    se_c17 = 139
+    ti_c6000 = 140
+    ti_c2000 = 141
+    ti_c5500 = 142
+    ti_arp32 = 143
+    ti_pru = 144
+    mmdsp_plus = 160
+    cypress_m8c = 161
+    r32c = 162
+    trimedia = 163
     qdsp6 = 164
+    i8051 = 165
+    stxp7x = 166
+    nds32 = 167
+    ecog1x = 168
+    maxq30 = 169
+    ximo16 = 170
+    manik = 171
+    craynv2 = 172
+    rx = 173
+    metag = 174
+    mcst_elbrus = 175
+    ecog16 = 176
+    cr16 = 177
+    etpu = 178
+    sle9x = 179
+    l10m = 180
+    k10m = 181
     aarch64 = 183
     avr32 = 185
-    amdgpu = 224
+    stm8 = 186
+    tile64 = 187
+    tilepro = 188
+    microblaze = 189
+    cuda = 190
+    tilegx = 191
+    cloudshield = 192
+    corea_1st = 193
+    corea_2nd = 194
+    arcv2 = 195
+    open8 = 196
+    rl78 = 197
+    videocore5 = 198
+    renesas_78kor = 199
+    freescale_56800ex = 200
+    ba1 = 201
+    ba2 = 202
+    xcore = 203
+    mchp_pic = 204
+    intelgt = 205
+    intel206 = 206
+    intel207 = 207
+    intel208 = 208
+    intel209 = 209
+    km32 = 210
+    kmx32 = 211
+    kmx16 = 212
+    kmx8 = 213
+    kvarc = 214
+    cdp = 215
+    coge = 216
+    cool = 217
+    norc = 218
+    csr_kalimba = 219
+    z80 = 220
+    visium = 221
+    ft32 = 222
+    moxie = 223
+    amd_gpu = 224
     riscv = 243
+    lanai = 244
+    ceva = 245
+    ceva_x2 = 246
     bpf = 247
+    graphcore_ipu = 248
+    img1 = 249
+    nfp = 250
+    ve = 251
     csky = 252
+    arc_compact3_64 = 253
+    mcs6502 = 254
+    arc_compact3 = 255
+    kvx = 256
+    wdc65816 = 257
+    loongarch = 258
+    kf32 = 259
   Elf_SymbolType* = enum
     no_type = 0
     object = 1
@@ -547,7 +722,7 @@ proc shIdxSpecial*(this: Elf_EndianElf_DynsymSectionEntry): Elf_SectionHeaderIdx
 
 
 ##[
-@see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD">Source</a>
+@see <a href="https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532">Source</a>
 @see <a href="https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html">Source</a>
 @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html">Source</a>
 ]##
@@ -1835,106 +2010,107 @@ proc read*(_: typedesc[Elf_EndianElf_SectionHeader], io: KaitaiStream, root: Kai
 proc body(this: Elf_EndianElf_SectionHeader): KaitaiStruct = 
   if this.bodyInst != nil:
     return this.bodyInst
-  let io = Elf(this.root).io
-  let pos = io.pos()
-  io.seek(int(this.ofsBody))
-  if this.isLe:
-    block:
-      let on = this.type
-      if on == elf.rel:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, false)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.note:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_NoteSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.symtab:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.strtab:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_StringsStruct.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.dynamic:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_DynamicSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.dynsym:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.rela:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, true)
-        this.bodyInst = bodyInstExpr
-      else:
-        let bodyInstExpr = io.readBytes(int(this.lenBody))
-        this.bodyInst = bodyInstExpr
-  else:
-    block:
-      let on = this.type
-      if on == elf.rel:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, false)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.note:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_NoteSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.symtab:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.strtab:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_StringsStruct.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.dynamic:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_DynamicSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.dynsym:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
-        this.bodyInst = bodyInstExpr
-      elif on == elf.rela:
-        let rawBodyInstExpr = io.readBytes(int(this.lenBody))
-        this.rawBodyInst = rawBodyInstExpr
-        let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
-        let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, true)
-        this.bodyInst = bodyInstExpr
-      else:
-        let bodyInstExpr = io.readBytes(int(this.lenBody))
-        this.bodyInst = bodyInstExpr
-  io.seek(pos)
+  if this.type != elf.nobits:
+    let io = Elf(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.ofsBody))
+    if this.isLe:
+      block:
+        let on = this.type
+        if on == elf.rel:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, false)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.note:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_NoteSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.symtab:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.strtab:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_StringsStruct.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.dynamic:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_DynamicSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.dynsym:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.rela:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, true)
+          this.bodyInst = bodyInstExpr
+        else:
+          let bodyInstExpr = io.readBytes(int(this.lenBody))
+          this.bodyInst = bodyInstExpr
+    else:
+      block:
+        let on = this.type
+        if on == elf.rel:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, false)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.note:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_NoteSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.symtab:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.strtab:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_StringsStruct.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.dynamic:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_DynamicSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.dynsym:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_DynsymSection.read(rawBodyInstIo, this.root, this)
+          this.bodyInst = bodyInstExpr
+        elif on == elf.rela:
+          let rawBodyInstExpr = io.readBytes(int(this.lenBody))
+          this.rawBodyInst = rawBodyInstExpr
+          let rawBodyInstIo = newKaitaiStream(rawBodyInstExpr)
+          let bodyInstExpr = Elf_EndianElf_RelocationSection.read(rawBodyInstIo, this.root, this, true)
+          this.bodyInst = bodyInstExpr
+        else:
+          let bodyInstExpr = io.readBytes(int(this.lenBody))
+          this.bodyInst = bodyInstExpr
+    io.seek(pos)
   if this.bodyInst != nil:
     return this.bodyInst
 

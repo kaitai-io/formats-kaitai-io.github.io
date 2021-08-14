@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=HEAD Source
+# @see https://sourceware.org/git/?p=glibc.git;a=blob;f=elf/elf.h;hb=0f62fe0532 Source
 # @see https://refspecs.linuxfoundation.org/elf/gabi4+/contents.html Source
 # @see https://docs.oracle.com/cd/E37838_01/html/E36783/glcfv.html Source
 class Elf < Kaitai::Struct::Struct
@@ -118,23 +118,198 @@ class Elf < Kaitai::Struct::Struct
     3 => :machine_x86,
     4 => :machine_m68k,
     5 => :machine_m88k,
+    6 => :machine_iamcu,
+    7 => :machine_i860,
     8 => :machine_mips,
+    9 => :machine_s370,
+    10 => :machine_mips_rs3_le,
+    15 => :machine_parisc,
+    17 => :machine_vpp500,
+    18 => :machine_sparc32plus,
+    19 => :machine_i960,
     20 => :machine_powerpc,
     21 => :machine_powerpc64,
     22 => :machine_s390,
+    23 => :machine_spu,
+    36 => :machine_v800,
+    37 => :machine_fr20,
+    38 => :machine_rh32,
+    39 => :machine_rce,
     40 => :machine_arm,
+    41 => :machine_alpha,
     42 => :machine_superh,
-    43 => :machine_sparcv9,
+    43 => :machine_sparc_v9,
+    44 => :machine_tricore,
+    45 => :machine_arc,
+    46 => :machine_h8_300,
+    47 => :machine_h8_300h,
+    48 => :machine_h8s,
+    49 => :machine_h8_500,
     50 => :machine_ia_64,
+    51 => :machine_mips_x,
+    52 => :machine_coldfire,
+    53 => :machine_m68hc12,
+    54 => :machine_mma,
+    55 => :machine_pcp,
+    56 => :machine_ncpu,
+    57 => :machine_ndr1,
+    58 => :machine_starcore,
+    59 => :machine_me16,
+    60 => :machine_st100,
+    61 => :machine_tinyj,
     62 => :machine_x86_64,
+    63 => :machine_pdsp,
+    64 => :machine_pdp10,
+    65 => :machine_pdp11,
+    66 => :machine_fx66,
+    67 => :machine_st9plus,
+    68 => :machine_st7,
+    69 => :machine_mc68hc16,
+    70 => :machine_mc68hc11,
+    71 => :machine_mc68hc08,
+    72 => :machine_mc68hc05,
+    73 => :machine_svx,
+    74 => :machine_st19,
+    75 => :machine_vax,
+    76 => :machine_cris,
+    77 => :machine_javelin,
+    78 => :machine_firepath,
+    79 => :machine_zsp,
+    80 => :machine_mmix,
+    81 => :machine_huany,
+    82 => :machine_prism,
     83 => :machine_avr,
+    84 => :machine_fr30,
+    85 => :machine_d10v,
+    86 => :machine_d30v,
+    87 => :machine_v850,
+    88 => :machine_m32r,
+    89 => :machine_mn10300,
+    90 => :machine_mn10200,
+    91 => :machine_picojava,
+    92 => :machine_openrisc,
+    93 => :machine_arc_compact,
+    94 => :machine_xtensa,
+    95 => :machine_videocore,
+    96 => :machine_tmm_gpp,
+    97 => :machine_ns32k,
+    98 => :machine_tpc,
+    99 => :machine_snp1k,
+    100 => :machine_st200,
+    101 => :machine_ip2k,
+    102 => :machine_max,
+    103 => :machine_compact_risc,
+    104 => :machine_f2mc16,
+    105 => :machine_msp430,
+    106 => :machine_blackfin,
+    107 => :machine_se_c33,
+    108 => :machine_sep,
+    109 => :machine_arca,
+    110 => :machine_unicore,
+    111 => :machine_excess,
+    112 => :machine_dxp,
+    113 => :machine_altera_nios2,
+    114 => :machine_crx,
+    115 => :machine_xgate,
+    116 => :machine_c166,
+    117 => :machine_m16c,
+    118 => :machine_dspic30f,
+    119 => :machine_freescale_ce,
+    120 => :machine_m32c,
+    131 => :machine_tsk3000,
+    132 => :machine_rs08,
+    133 => :machine_sharc,
+    134 => :machine_ecog2,
+    135 => :machine_score7,
+    136 => :machine_dsp24,
+    137 => :machine_videocore3,
+    138 => :machine_latticemico32,
+    139 => :machine_se_c17,
+    140 => :machine_ti_c6000,
+    141 => :machine_ti_c2000,
+    142 => :machine_ti_c5500,
+    143 => :machine_ti_arp32,
+    144 => :machine_ti_pru,
+    160 => :machine_mmdsp_plus,
+    161 => :machine_cypress_m8c,
+    162 => :machine_r32c,
+    163 => :machine_trimedia,
     164 => :machine_qdsp6,
+    165 => :machine_i8051,
+    166 => :machine_stxp7x,
+    167 => :machine_nds32,
+    168 => :machine_ecog1x,
+    169 => :machine_maxq30,
+    170 => :machine_ximo16,
+    171 => :machine_manik,
+    172 => :machine_craynv2,
+    173 => :machine_rx,
+    174 => :machine_metag,
+    175 => :machine_mcst_elbrus,
+    176 => :machine_ecog16,
+    177 => :machine_cr16,
+    178 => :machine_etpu,
+    179 => :machine_sle9x,
+    180 => :machine_l10m,
+    181 => :machine_k10m,
     183 => :machine_aarch64,
     185 => :machine_avr32,
-    224 => :machine_amdgpu,
+    186 => :machine_stm8,
+    187 => :machine_tile64,
+    188 => :machine_tilepro,
+    189 => :machine_microblaze,
+    190 => :machine_cuda,
+    191 => :machine_tilegx,
+    192 => :machine_cloudshield,
+    193 => :machine_corea_1st,
+    194 => :machine_corea_2nd,
+    195 => :machine_arcv2,
+    196 => :machine_open8,
+    197 => :machine_rl78,
+    198 => :machine_videocore5,
+    199 => :machine_renesas_78kor,
+    200 => :machine_freescale_56800ex,
+    201 => :machine_ba1,
+    202 => :machine_ba2,
+    203 => :machine_xcore,
+    204 => :machine_mchp_pic,
+    205 => :machine_intelgt,
+    206 => :machine_intel206,
+    207 => :machine_intel207,
+    208 => :machine_intel208,
+    209 => :machine_intel209,
+    210 => :machine_km32,
+    211 => :machine_kmx32,
+    212 => :machine_kmx16,
+    213 => :machine_kmx8,
+    214 => :machine_kvarc,
+    215 => :machine_cdp,
+    216 => :machine_coge,
+    217 => :machine_cool,
+    218 => :machine_norc,
+    219 => :machine_csr_kalimba,
+    220 => :machine_z80,
+    221 => :machine_visium,
+    222 => :machine_ft32,
+    223 => :machine_moxie,
+    224 => :machine_amd_gpu,
     243 => :machine_riscv,
+    244 => :machine_lanai,
+    245 => :machine_ceva,
+    246 => :machine_ceva_x2,
     247 => :machine_bpf,
+    248 => :machine_graphcore_ipu,
+    249 => :machine_img1,
+    250 => :machine_nfp,
+    251 => :machine_ve,
     252 => :machine_csky,
+    253 => :machine_arc_compact3_64,
+    254 => :machine_mcs6502,
+    255 => :machine_arc_compact3,
+    256 => :machine_kvx,
+    257 => :machine_wdc65816,
+    258 => :machine_loongarch,
+    259 => :machine_kf32,
   }
   I__MACHINE = MACHINE.invert
 
@@ -317,6 +492,7 @@ class Elf < Kaitai::Struct::Struct
     @bits = Kaitai::Struct::Stream::resolve_enum(BITS, @_io.read_u1)
     @endian = Kaitai::Struct::Stream::resolve_enum(ENDIAN, @_io.read_u1)
     @ei_version = @_io.read_u1
+    raise Kaitai::Struct::ValidationNotEqualError.new(1, ei_version, _io, "/seq/3") if not ei_version == 1
     @abi = Kaitai::Struct::Stream::resolve_enum(OS_ABI, @_io.read_u1)
     @abi_version = @_io.read_u1
     @pad = @_io.read_bytes(7)
@@ -1163,77 +1339,79 @@ class Elf < Kaitai::Struct::Struct
       end
       def body
         return @body unless @body.nil?
-        io = _root._io
-        _pos = io.pos
-        io.seek(ofs_body)
-        if @_is_le
-          case type
-          when :sh_type_rel
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
-          when :sh_type_note
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_symtab
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_strtab
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_dynamic
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_dynsym
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_rela
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
+        if type != :sh_type_nobits
+          io = _root._io
+          _pos = io.pos
+          io.seek(ofs_body)
+          if @_is_le
+            case type
+            when :sh_type_rel
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
+            when :sh_type_note
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_symtab
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_strtab
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_dynamic
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_dynsym
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_rela
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
+            else
+              @body = io.read_bytes(len_body)
+            end
           else
-            @body = io.read_bytes(len_body)
+            case type
+            when :sh_type_rel
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
+            when :sh_type_note
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_symtab
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_strtab
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_dynamic
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_dynsym
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
+            when :sh_type_rela
+              @_raw_body = io.read_bytes(len_body)
+              _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+              @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
+            else
+              @body = io.read_bytes(len_body)
+            end
           end
-        else
-          case type
-          when :sh_type_rel
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, false)
-          when :sh_type_note
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = NoteSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_symtab
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_strtab
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = StringsStruct.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_dynamic
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynamicSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_dynsym
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = DynsymSection.new(_io__raw_body, self, @_root, @_is_le)
-          when :sh_type_rela
-            @_raw_body = io.read_bytes(len_body)
-            _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-            @body = RelocationSection.new(_io__raw_body, self, @_root, @_is_le, true)
-          else
-            @body = io.read_bytes(len_body)
-          end
+          io.seek(_pos)
         end
-        io.seek(_pos)
         @body
       end
 

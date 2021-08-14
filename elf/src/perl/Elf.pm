@@ -108,23 +108,198 @@ our $MACHINE_SPARC = 2;
 our $MACHINE_X86 = 3;
 our $MACHINE_M68K = 4;
 our $MACHINE_M88K = 5;
+our $MACHINE_IAMCU = 6;
+our $MACHINE_I860 = 7;
 our $MACHINE_MIPS = 8;
+our $MACHINE_S370 = 9;
+our $MACHINE_MIPS_RS3_LE = 10;
+our $MACHINE_PARISC = 15;
+our $MACHINE_VPP500 = 17;
+our $MACHINE_SPARC32PLUS = 18;
+our $MACHINE_I960 = 19;
 our $MACHINE_POWERPC = 20;
 our $MACHINE_POWERPC64 = 21;
 our $MACHINE_S390 = 22;
+our $MACHINE_SPU = 23;
+our $MACHINE_V800 = 36;
+our $MACHINE_FR20 = 37;
+our $MACHINE_RH32 = 38;
+our $MACHINE_RCE = 39;
 our $MACHINE_ARM = 40;
+our $MACHINE_ALPHA = 41;
 our $MACHINE_SUPERH = 42;
-our $MACHINE_SPARCV9 = 43;
+our $MACHINE_SPARC_V9 = 43;
+our $MACHINE_TRICORE = 44;
+our $MACHINE_ARC = 45;
+our $MACHINE_H8_300 = 46;
+our $MACHINE_H8_300H = 47;
+our $MACHINE_H8S = 48;
+our $MACHINE_H8_500 = 49;
 our $MACHINE_IA_64 = 50;
+our $MACHINE_MIPS_X = 51;
+our $MACHINE_COLDFIRE = 52;
+our $MACHINE_M68HC12 = 53;
+our $MACHINE_MMA = 54;
+our $MACHINE_PCP = 55;
+our $MACHINE_NCPU = 56;
+our $MACHINE_NDR1 = 57;
+our $MACHINE_STARCORE = 58;
+our $MACHINE_ME16 = 59;
+our $MACHINE_ST100 = 60;
+our $MACHINE_TINYJ = 61;
 our $MACHINE_X86_64 = 62;
+our $MACHINE_PDSP = 63;
+our $MACHINE_PDP10 = 64;
+our $MACHINE_PDP11 = 65;
+our $MACHINE_FX66 = 66;
+our $MACHINE_ST9PLUS = 67;
+our $MACHINE_ST7 = 68;
+our $MACHINE_MC68HC16 = 69;
+our $MACHINE_MC68HC11 = 70;
+our $MACHINE_MC68HC08 = 71;
+our $MACHINE_MC68HC05 = 72;
+our $MACHINE_SVX = 73;
+our $MACHINE_ST19 = 74;
+our $MACHINE_VAX = 75;
+our $MACHINE_CRIS = 76;
+our $MACHINE_JAVELIN = 77;
+our $MACHINE_FIREPATH = 78;
+our $MACHINE_ZSP = 79;
+our $MACHINE_MMIX = 80;
+our $MACHINE_HUANY = 81;
+our $MACHINE_PRISM = 82;
 our $MACHINE_AVR = 83;
+our $MACHINE_FR30 = 84;
+our $MACHINE_D10V = 85;
+our $MACHINE_D30V = 86;
+our $MACHINE_V850 = 87;
+our $MACHINE_M32R = 88;
+our $MACHINE_MN10300 = 89;
+our $MACHINE_MN10200 = 90;
+our $MACHINE_PICOJAVA = 91;
+our $MACHINE_OPENRISC = 92;
+our $MACHINE_ARC_COMPACT = 93;
+our $MACHINE_XTENSA = 94;
+our $MACHINE_VIDEOCORE = 95;
+our $MACHINE_TMM_GPP = 96;
+our $MACHINE_NS32K = 97;
+our $MACHINE_TPC = 98;
+our $MACHINE_SNP1K = 99;
+our $MACHINE_ST200 = 100;
+our $MACHINE_IP2K = 101;
+our $MACHINE_MAX = 102;
+our $MACHINE_COMPACT_RISC = 103;
+our $MACHINE_F2MC16 = 104;
+our $MACHINE_MSP430 = 105;
+our $MACHINE_BLACKFIN = 106;
+our $MACHINE_SE_C33 = 107;
+our $MACHINE_SEP = 108;
+our $MACHINE_ARCA = 109;
+our $MACHINE_UNICORE = 110;
+our $MACHINE_EXCESS = 111;
+our $MACHINE_DXP = 112;
+our $MACHINE_ALTERA_NIOS2 = 113;
+our $MACHINE_CRX = 114;
+our $MACHINE_XGATE = 115;
+our $MACHINE_C166 = 116;
+our $MACHINE_M16C = 117;
+our $MACHINE_DSPIC30F = 118;
+our $MACHINE_FREESCALE_CE = 119;
+our $MACHINE_M32C = 120;
+our $MACHINE_TSK3000 = 131;
+our $MACHINE_RS08 = 132;
+our $MACHINE_SHARC = 133;
+our $MACHINE_ECOG2 = 134;
+our $MACHINE_SCORE7 = 135;
+our $MACHINE_DSP24 = 136;
+our $MACHINE_VIDEOCORE3 = 137;
+our $MACHINE_LATTICEMICO32 = 138;
+our $MACHINE_SE_C17 = 139;
+our $MACHINE_TI_C6000 = 140;
+our $MACHINE_TI_C2000 = 141;
+our $MACHINE_TI_C5500 = 142;
+our $MACHINE_TI_ARP32 = 143;
+our $MACHINE_TI_PRU = 144;
+our $MACHINE_MMDSP_PLUS = 160;
+our $MACHINE_CYPRESS_M8C = 161;
+our $MACHINE_R32C = 162;
+our $MACHINE_TRIMEDIA = 163;
 our $MACHINE_QDSP6 = 164;
+our $MACHINE_I8051 = 165;
+our $MACHINE_STXP7X = 166;
+our $MACHINE_NDS32 = 167;
+our $MACHINE_ECOG1X = 168;
+our $MACHINE_MAXQ30 = 169;
+our $MACHINE_XIMO16 = 170;
+our $MACHINE_MANIK = 171;
+our $MACHINE_CRAYNV2 = 172;
+our $MACHINE_RX = 173;
+our $MACHINE_METAG = 174;
+our $MACHINE_MCST_ELBRUS = 175;
+our $MACHINE_ECOG16 = 176;
+our $MACHINE_CR16 = 177;
+our $MACHINE_ETPU = 178;
+our $MACHINE_SLE9X = 179;
+our $MACHINE_L10M = 180;
+our $MACHINE_K10M = 181;
 our $MACHINE_AARCH64 = 183;
 our $MACHINE_AVR32 = 185;
-our $MACHINE_AMDGPU = 224;
+our $MACHINE_STM8 = 186;
+our $MACHINE_TILE64 = 187;
+our $MACHINE_TILEPRO = 188;
+our $MACHINE_MICROBLAZE = 189;
+our $MACHINE_CUDA = 190;
+our $MACHINE_TILEGX = 191;
+our $MACHINE_CLOUDSHIELD = 192;
+our $MACHINE_COREA_1ST = 193;
+our $MACHINE_COREA_2ND = 194;
+our $MACHINE_ARCV2 = 195;
+our $MACHINE_OPEN8 = 196;
+our $MACHINE_RL78 = 197;
+our $MACHINE_VIDEOCORE5 = 198;
+our $MACHINE_RENESAS_78KOR = 199;
+our $MACHINE_FREESCALE_56800EX = 200;
+our $MACHINE_BA1 = 201;
+our $MACHINE_BA2 = 202;
+our $MACHINE_XCORE = 203;
+our $MACHINE_MCHP_PIC = 204;
+our $MACHINE_INTELGT = 205;
+our $MACHINE_INTEL206 = 206;
+our $MACHINE_INTEL207 = 207;
+our $MACHINE_INTEL208 = 208;
+our $MACHINE_INTEL209 = 209;
+our $MACHINE_KM32 = 210;
+our $MACHINE_KMX32 = 211;
+our $MACHINE_KMX16 = 212;
+our $MACHINE_KMX8 = 213;
+our $MACHINE_KVARC = 214;
+our $MACHINE_CDP = 215;
+our $MACHINE_COGE = 216;
+our $MACHINE_COOL = 217;
+our $MACHINE_NORC = 218;
+our $MACHINE_CSR_KALIMBA = 219;
+our $MACHINE_Z80 = 220;
+our $MACHINE_VISIUM = 221;
+our $MACHINE_FT32 = 222;
+our $MACHINE_MOXIE = 223;
+our $MACHINE_AMD_GPU = 224;
 our $MACHINE_RISCV = 243;
+our $MACHINE_LANAI = 244;
+our $MACHINE_CEVA = 245;
+our $MACHINE_CEVA_X2 = 246;
 our $MACHINE_BPF = 247;
+our $MACHINE_GRAPHCORE_IPU = 248;
+our $MACHINE_IMG1 = 249;
+our $MACHINE_NFP = 250;
+our $MACHINE_VE = 251;
 our $MACHINE_CSKY = 252;
+our $MACHINE_ARC_COMPACT3_64 = 253;
+our $MACHINE_MCS6502 = 254;
+our $MACHINE_ARC_COMPACT3 = 255;
+our $MACHINE_KVX = 256;
+our $MACHINE_WDC65816 = 257;
+our $MACHINE_LOONGARCH = 258;
+our $MACHINE_KF32 = 259;
 
 our $SYMBOL_TYPE_NO_TYPE = 0;
 our $SYMBOL_TYPE_OBJECT = 1;
@@ -1648,91 +1823,93 @@ sub _read_be {
 sub body {
     my ($self) = @_;
     return $self->{body} if ($self->{body});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs_body());
-    if ($self->{_is_le}) {
-        my $_on = $self->type();
-        if ($_on == $Elf::SH_TYPE_REL) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+    if ($self->type() != $Elf::SH_TYPE_NOBITS) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_body());
+        if ($self->{_is_le}) {
+            my $_on = $self->type();
+            if ($_on == $Elf::SH_TYPE_REL) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_NOTE) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_SYMTAB) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_STRTAB) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_DYNAMIC) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_RELA) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            else {
+                $self->{body} = $io->read_bytes($self->len_body());
+            }
+        } else {
+            my $_on = $self->type();
+            if ($_on == $Elf::SH_TYPE_REL) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_NOTE) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_SYMTAB) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_STRTAB) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_DYNAMIC) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            elsif ($_on == $Elf::SH_TYPE_RELA) {
+                $self->{_raw_body} = $io->read_bytes($self->len_body());
+                my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+                $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
+            }
+            else {
+                $self->{body} = $io->read_bytes($self->len_body());
+            }
         }
-        elsif ($_on == $Elf::SH_TYPE_NOTE) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_SYMTAB) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_STRTAB) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_DYNAMIC) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_RELA) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        else {
-            $self->{body} = $io->read_bytes($self->len_body());
-        }
-    } else {
-        my $_on = $self->type();
-        if ($_on == $Elf::SH_TYPE_REL) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_NOTE) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::NoteSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_SYMTAB) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_STRTAB) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::StringsStruct->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_DYNAMIC) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::DynamicSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_DYNSYM) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::DynsymSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        elsif ($_on == $Elf::SH_TYPE_RELA) {
-            $self->{_raw_body} = $io->read_bytes($self->len_body());
-            my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-            $self->{body} = Elf::EndianElf::RelocationSection->new($io__raw_body, $self, $self->{_root}, $self->{_is_le});
-        }
-        else {
-            $self->{body} = $io->read_bytes($self->len_body());
-        }
+        $io->seek($_pos);
     }
-    $io->seek($_pos);
     return $self->{body};
 }
 
