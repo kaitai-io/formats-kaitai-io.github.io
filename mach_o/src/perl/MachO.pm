@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
 use Encode;
+use Asn1Der;
 
 ########################################################################
 package MachO;
@@ -370,7 +371,8 @@ our $CS_MAGIC_REQUIREMENTS = 4208856065;
 our $CS_MAGIC_CODE_DIRECTORY = 4208856066;
 our $CS_MAGIC_EMBEDDED_SIGNATURE = 4208856256;
 our $CS_MAGIC_DETACHED_SIGNATURE = 4208856257;
-our $CS_MAGIC_ENTITLEMENT = 4208882033;
+our $CS_MAGIC_ENTITLEMENTS = 4208882033;
+our $CS_MAGIC_DER_ENTITLEMENTS = 4208882034;
 
 sub new {
     my ($class, $_io, $_parent, $_root) = @_;
@@ -401,11 +403,6 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::CsBlob::CodeDirectory->new($io__raw_body, $self, $self->{_root});
     }
-    elsif ($_on == $MachO::CsBlob::CS_MAGIC_ENTITLEMENT) {
-        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
-        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
-        $self->{body} = MachO::CsBlob::Entitlement->new($io__raw_body, $self, $self->{_root});
-    }
     elsif ($_on == $MachO::CsBlob::CS_MAGIC_REQUIREMENTS) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
@@ -421,10 +418,20 @@ sub _read {
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::CsBlob::SuperBlob->new($io__raw_body, $self, $self->{_root});
     }
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_ENTITLEMENTS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = MachO::CsBlob::Entitlements->new($io__raw_body, $self, $self->{_root});
+    }
     elsif ($_on == $MachO::CsBlob::CS_MAGIC_DETACHED_SIGNATURE) {
         $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
         my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
         $self->{body} = MachO::CsBlob::SuperBlob->new($io__raw_body, $self, $self->{_root});
+    }
+    elsif ($_on == $MachO::CsBlob::CS_MAGIC_DER_ENTITLEMENTS) {
+        $self->{_raw_body} = $self->{_io}->read_bytes(($self->length() - 8));
+        my $io__raw_body = IO::KaitaiStruct::Stream->new($self->{_raw_body});
+        $self->{body} = Asn1Der->new($io__raw_body);
     }
     else {
         $self->{body} = $self->{_io}->read_bytes(($self->length() - 8));
@@ -449,44 +456,6 @@ sub body {
 sub _raw_body {
     my ($self) = @_;
     return $self->{_raw_body};
-}
-
-########################################################################
-package MachO::CsBlob::Entitlement;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-    $self->{data} = $self->{_io}->read_bytes_full();
-}
-
-sub data {
-    my ($self) = @_;
-    return $self->{data};
 }
 
 ########################################################################
@@ -1300,6 +1269,7 @@ our $CSSLOT_TYPE_REQUIREMENTS = 2;
 our $CSSLOT_TYPE_RESOURCE_DIR = 3;
 our $CSSLOT_TYPE_APPLICATION = 4;
 our $CSSLOT_TYPE_ENTITLEMENTS = 5;
+our $CSSLOT_TYPE_DER_ENTITLEMENTS = 7;
 our $CSSLOT_TYPE_ALTERNATE_CODE_DIRECTORIES = 4096;
 our $CSSLOT_TYPE_SIGNATURE_SLOT = 65536;
 
@@ -1501,6 +1471,44 @@ sub items {
 
 ########################################################################
 package MachO::CsBlob::BlobWrapper;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{data} = $self->{_io}->read_bytes_full();
+}
+
+sub data {
+    my ($self) = @_;
+    return $self->{data};
+}
+
+########################################################################
+package MachO::CsBlob::Entitlements;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
 

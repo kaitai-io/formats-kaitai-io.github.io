@@ -9,6 +9,7 @@ from enum import Enum
 if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
     raise Exception("Incompatible Kaitai Struct Python API: 0.9 or later is required, but you have %s" % (kaitaistruct.__version__))
 
+import asn1_der
 class MachO(KaitaiStruct):
 
     class MagicType(Enum):
@@ -198,7 +199,8 @@ class MachO(KaitaiStruct):
             code_directory = 4208856066
             embedded_signature = 4208856256
             detached_signature = 4208856257
-            entitlement = 4208882033
+            entitlements = 4208882033
+            der_entitlements = 4208882034
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent
@@ -217,10 +219,6 @@ class MachO(KaitaiStruct):
                 self._raw_body = self._io.read_bytes((self.length - 8))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = MachO.CsBlob.CodeDirectory(_io__raw_body, self, self._root)
-            elif _on == MachO.CsBlob.CsMagic.entitlement:
-                self._raw_body = self._io.read_bytes((self.length - 8))
-                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
-                self.body = MachO.CsBlob.Entitlement(_io__raw_body, self, self._root)
             elif _on == MachO.CsBlob.CsMagic.requirements:
                 self._raw_body = self._io.read_bytes((self.length - 8))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
@@ -233,23 +231,20 @@ class MachO(KaitaiStruct):
                 self._raw_body = self._io.read_bytes((self.length - 8))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = MachO.CsBlob.SuperBlob(_io__raw_body, self, self._root)
+            elif _on == MachO.CsBlob.CsMagic.entitlements:
+                self._raw_body = self._io.read_bytes((self.length - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = MachO.CsBlob.Entitlements(_io__raw_body, self, self._root)
             elif _on == MachO.CsBlob.CsMagic.detached_signature:
                 self._raw_body = self._io.read_bytes((self.length - 8))
                 _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
                 self.body = MachO.CsBlob.SuperBlob(_io__raw_body, self, self._root)
+            elif _on == MachO.CsBlob.CsMagic.der_entitlements:
+                self._raw_body = self._io.read_bytes((self.length - 8))
+                _io__raw_body = KaitaiStream(BytesIO(self._raw_body))
+                self.body = asn1_der.Asn1Der(_io__raw_body)
             else:
                 self.body = self._io.read_bytes((self.length - 8))
-
-        class Entitlement(KaitaiStruct):
-            def __init__(self, _io, _parent=None, _root=None):
-                self._io = _io
-                self._parent = _parent
-                self._root = _root if _root else self
-                self._read()
-
-            def _read(self):
-                self.data = self._io.read_bytes_full()
-
 
         class CodeDirectory(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
@@ -540,6 +535,7 @@ class MachO(KaitaiStruct):
                 resource_dir = 3
                 application = 4
                 entitlements = 5
+                der_entitlements = 7
                 alternate_code_directories = 4096
                 signature_slot = 65536
             def __init__(self, _io, _parent=None, _root=None):
@@ -620,6 +616,17 @@ class MachO(KaitaiStruct):
 
 
         class BlobWrapper(KaitaiStruct):
+            def __init__(self, _io, _parent=None, _root=None):
+                self._io = _io
+                self._parent = _parent
+                self._root = _root if _root else self
+                self._read()
+
+            def _read(self):
+                self.data = self._io.read_bytes_full()
+
+
+        class Entitlements(KaitaiStruct):
             def __init__(self, _io, _parent=None, _root=None):
                 self._io = _io
                 self._parent = _parent

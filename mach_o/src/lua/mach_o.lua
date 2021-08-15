@@ -9,6 +9,7 @@ local str_decode = require("string_decode")
 local utils = require("utils")
 local stringstream = require("string_stream")
 
+require("asn1_der")
 MachO = class.class(KaitaiStruct)
 
 MachO.MagicType = enum.Enum {
@@ -217,7 +218,8 @@ MachO.CsBlob.CsMagic = enum.Enum {
   code_directory = 4208856066,
   embedded_signature = 4208856256,
   detached_signature = 4208856257,
-  entitlement = 4208882033,
+  entitlements = 4208882033,
+  der_entitlements = 4208882034,
 }
 
 function MachO.CsBlob:_init(io, parent, root)
@@ -239,10 +241,6 @@ function MachO.CsBlob:_read()
     self._raw_body = self._io:read_bytes((self.length - 8))
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = MachO.CsBlob.CodeDirectory(_io, self, self._root)
-  elseif _on == MachO.CsBlob.CsMagic.entitlement then
-    self._raw_body = self._io:read_bytes((self.length - 8))
-    local _io = KaitaiStream(stringstream(self._raw_body))
-    self.body = MachO.CsBlob.Entitlement(_io, self, self._root)
   elseif _on == MachO.CsBlob.CsMagic.requirements then
     self._raw_body = self._io:read_bytes((self.length - 8))
     local _io = KaitaiStream(stringstream(self._raw_body))
@@ -255,27 +253,21 @@ function MachO.CsBlob:_read()
     self._raw_body = self._io:read_bytes((self.length - 8))
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = MachO.CsBlob.SuperBlob(_io, self, self._root)
+  elseif _on == MachO.CsBlob.CsMagic.entitlements then
+    self._raw_body = self._io:read_bytes((self.length - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = MachO.CsBlob.Entitlements(_io, self, self._root)
   elseif _on == MachO.CsBlob.CsMagic.detached_signature then
     self._raw_body = self._io:read_bytes((self.length - 8))
     local _io = KaitaiStream(stringstream(self._raw_body))
     self.body = MachO.CsBlob.SuperBlob(_io, self, self._root)
+  elseif _on == MachO.CsBlob.CsMagic.der_entitlements then
+    self._raw_body = self._io:read_bytes((self.length - 8))
+    local _io = KaitaiStream(stringstream(self._raw_body))
+    self.body = Asn1Der(_io)
   else
     self.body = self._io:read_bytes((self.length - 8))
   end
-end
-
-
-MachO.CsBlob.Entitlement = class.class(KaitaiStruct)
-
-function MachO.CsBlob.Entitlement:_init(io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self:_read()
-end
-
-function MachO.CsBlob.Entitlement:_read()
-  self.data = self._io:read_bytes_full()
 end
 
 
@@ -620,6 +612,7 @@ MachO.CsBlob.BlobIndex.CsslotType = enum.Enum {
   resource_dir = 3,
   application = 4,
   entitlements = 5,
+  der_entitlements = 7,
   alternate_code_directories = 4096,
   signature_slot = 65536,
 }
@@ -725,6 +718,20 @@ function MachO.CsBlob.BlobWrapper:_init(io, parent, root)
 end
 
 function MachO.CsBlob.BlobWrapper:_read()
+  self.data = self._io:read_bytes_full()
+end
+
+
+MachO.CsBlob.Entitlements = class.class(KaitaiStruct)
+
+function MachO.CsBlob.Entitlements:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function MachO.CsBlob.Entitlements:_read()
   self.data = self._io:read_bytes_full()
 end
 

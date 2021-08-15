@@ -5,11 +5,13 @@
 
 #include "kaitai/kaitaistruct.h"
 #include <stdint.h>
+#include "asn1_der.h"
 #include <vector>
 
 #if KAITAI_STRUCT_VERSION < 9000L
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
+class asn1_der_t;
 
 class mach_o_t : public kaitai::kstruct {
 
@@ -309,7 +311,6 @@ public:
     class cs_blob_t : public kaitai::kstruct {
 
     public:
-        class entitlement_t;
         class code_directory_t;
         class data_t;
         class super_blob_t;
@@ -319,6 +320,7 @@ public:
         class requirement_t;
         class requirements_t;
         class blob_wrapper_t;
+        class entitlements_t;
         class requirements_blob_index_t;
 
         enum cs_magic_t {
@@ -328,7 +330,8 @@ public:
             CS_MAGIC_CODE_DIRECTORY = 4208856066,
             CS_MAGIC_EMBEDDED_SIGNATURE = 4208856256,
             CS_MAGIC_DETACHED_SIGNATURE = 4208856257,
-            CS_MAGIC_ENTITLEMENT = 4208882033
+            CS_MAGIC_ENTITLEMENTS = 4208882033,
+            CS_MAGIC_DER_ENTITLEMENTS = 4208882034
         };
 
         cs_blob_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent = 0, mach_o_t* p__root = 0);
@@ -339,30 +342,6 @@ public:
 
     public:
         ~cs_blob_t();
-
-        class entitlement_t : public kaitai::kstruct {
-
-        public:
-
-            entitlement_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent = 0, mach_o_t* p__root = 0);
-
-        private:
-            void _read();
-            void _clean_up();
-
-        public:
-            ~entitlement_t();
-
-        private:
-            std::string m_data;
-            mach_o_t* m__root;
-            mach_o_t::cs_blob_t* m__parent;
-
-        public:
-            std::string data() const { return m_data; }
-            mach_o_t* _root() const { return m__root; }
-            mach_o_t::cs_blob_t* _parent() const { return m__parent; }
-        };
 
         class code_directory_t : public kaitai::kstruct {
 
@@ -842,6 +821,7 @@ public:
                 CSSLOT_TYPE_RESOURCE_DIR = 3,
                 CSSLOT_TYPE_APPLICATION = 4,
                 CSSLOT_TYPE_ENTITLEMENTS = 5,
+                CSSLOT_TYPE_DER_ENTITLEMENTS = 7,
                 CSSLOT_TYPE_ALTERNATE_CODE_DIRECTORIES = 4096,
                 CSSLOT_TYPE_SIGNATURE_SLOT = 65536
             };
@@ -987,6 +967,30 @@ public:
 
         public:
             ~blob_wrapper_t();
+
+        private:
+            std::string m_data;
+            mach_o_t* m__root;
+            mach_o_t::cs_blob_t* m__parent;
+
+        public:
+            std::string data() const { return m_data; }
+            mach_o_t* _root() const { return m__root; }
+            mach_o_t::cs_blob_t* _parent() const { return m__parent; }
+        };
+
+        class entitlements_t : public kaitai::kstruct {
+
+        public:
+
+            entitlements_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent = 0, mach_o_t* p__root = 0);
+
+        private:
+            void _read();
+            void _clean_up();
+
+        public:
+            ~entitlements_t();
 
         private:
             std::string m_data;

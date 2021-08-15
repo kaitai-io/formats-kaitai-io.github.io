@@ -213,7 +213,8 @@ class MachO < Kaitai::Struct::Struct
       4208856066 => :cs_magic_code_directory,
       4208856256 => :cs_magic_embedded_signature,
       4208856257 => :cs_magic_detached_signature,
-      4208882033 => :cs_magic_entitlement,
+      4208882033 => :cs_magic_entitlements,
+      4208882034 => :cs_magic_der_entitlements,
     }
     I__CS_MAGIC = CS_MAGIC.invert
     def initialize(_io, _parent = nil, _root = self)
@@ -233,10 +234,6 @@ class MachO < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((length - 8))
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = CodeDirectory.new(_io__raw_body, self, @_root)
-      when :cs_magic_entitlement
-        @_raw_body = @_io.read_bytes((length - 8))
-        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
-        @body = Entitlement.new(_io__raw_body, self, @_root)
       when :cs_magic_requirements
         @_raw_body = @_io.read_bytes((length - 8))
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
@@ -249,26 +246,22 @@ class MachO < Kaitai::Struct::Struct
         @_raw_body = @_io.read_bytes((length - 8))
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = SuperBlob.new(_io__raw_body, self, @_root)
+      when :cs_magic_entitlements
+        @_raw_body = @_io.read_bytes((length - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Entitlements.new(_io__raw_body, self, @_root)
       when :cs_magic_detached_signature
         @_raw_body = @_io.read_bytes((length - 8))
         _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
         @body = SuperBlob.new(_io__raw_body, self, @_root)
+      when :cs_magic_der_entitlements
+        @_raw_body = @_io.read_bytes((length - 8))
+        _io__raw_body = Kaitai::Struct::Stream.new(@_raw_body)
+        @body = Asn1Der.new(_io__raw_body)
       else
         @body = @_io.read_bytes((length - 8))
       end
       self
-    end
-    class Entitlement < Kaitai::Struct::Struct
-      def initialize(_io, _parent = nil, _root = self)
-        super(_io, _parent, _root)
-        _read
-      end
-
-      def _read
-        @data = @_io.read_bytes_full
-        self
-      end
-      attr_reader :data
     end
     class CodeDirectory < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
@@ -590,6 +583,7 @@ class MachO < Kaitai::Struct::Struct
         3 => :csslot_type_resource_dir,
         4 => :csslot_type_application,
         5 => :csslot_type_entitlements,
+        7 => :csslot_type_der_entitlements,
         4096 => :csslot_type_alternate_code_directories,
         65536 => :csslot_type_signature_slot,
       }
@@ -680,6 +674,18 @@ class MachO < Kaitai::Struct::Struct
       attr_reader :items
     end
     class BlobWrapper < Kaitai::Struct::Struct
+      def initialize(_io, _parent = nil, _root = self)
+        super(_io, _parent, _root)
+        _read
+      end
+
+      def _read
+        @data = @_io.read_bytes_full
+        self
+      end
+      attr_reader :data
+    end
+    class Entitlements < Kaitai::Struct::Struct
       def initialize(_io, _parent = nil, _root = self)
         super(_io, _parent, _root)
         _read

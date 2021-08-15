@@ -331,12 +331,13 @@ public class MachO extends KaitaiStruct {
             CODE_DIRECTORY(4208856066L),
             EMBEDDED_SIGNATURE(4208856256L),
             DETACHED_SIGNATURE(4208856257L),
-            ENTITLEMENT(4208882033L);
+            ENTITLEMENTS(4208882033L),
+            DER_ENTITLEMENTS(4208882034L);
 
             private final long id;
             CsMagic(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, CsMagic> byId = new HashMap<Long, CsMagic>(7);
+            private static final Map<Long, CsMagic> byId = new HashMap<Long, CsMagic>(8);
             static {
                 for (CsMagic e : CsMagic.values())
                     byId.put(e.id(), e);
@@ -377,12 +378,6 @@ public class MachO extends KaitaiStruct {
                         this.body = new CodeDirectory(_io__raw_body, this, _root);
                         break;
                     }
-                    case ENTITLEMENT: {
-                        this._raw_body = this._io.readBytes((length() - 8));
-                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
-                        this.body = new Entitlement(_io__raw_body, this, _root);
-                        break;
-                    }
                     case REQUIREMENTS: {
                         this._raw_body = this._io.readBytes((length() - 8));
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
@@ -401,10 +396,22 @@ public class MachO extends KaitaiStruct {
                         this.body = new SuperBlob(_io__raw_body, this, _root);
                         break;
                     }
+                    case ENTITLEMENTS: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Entitlements(_io__raw_body, this, _root);
+                        break;
+                    }
                     case DETACHED_SIGNATURE: {
                         this._raw_body = this._io.readBytes((length() - 8));
                         KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
                         this.body = new SuperBlob(_io__raw_body, this, _root);
+                        break;
+                    }
+                    case DER_ENTITLEMENTS: {
+                        this._raw_body = this._io.readBytes((length() - 8));
+                        KaitaiStream _io__raw_body = new ByteBufferKaitaiStream(_raw_body);
+                        this.body = new Asn1Der(_io__raw_body);
                         break;
                     }
                     default: {
@@ -416,35 +423,6 @@ public class MachO extends KaitaiStruct {
                     this.body = this._io.readBytes((length() - 8));
                 }
             }
-        }
-        public static class Entitlement extends KaitaiStruct {
-            public static Entitlement fromFile(String fileName) throws IOException {
-                return new Entitlement(new ByteBufferKaitaiStream(fileName));
-            }
-
-            public Entitlement(KaitaiStream _io) {
-                this(_io, null, null);
-            }
-
-            public Entitlement(KaitaiStream _io, MachO.CsBlob _parent) {
-                this(_io, _parent, null);
-            }
-
-            public Entitlement(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
-                super(_io);
-                this._parent = _parent;
-                this._root = _root;
-                _read();
-            }
-            private void _read() {
-                this.data = this._io.readBytesFull();
-            }
-            private byte[] data;
-            private MachO _root;
-            private MachO.CsBlob _parent;
-            public byte[] data() { return data; }
-            public MachO _root() { return _root; }
-            public MachO.CsBlob _parent() { return _parent; }
         }
         public static class CodeDirectory extends KaitaiStruct {
             public static CodeDirectory fromFile(String fileName) throws IOException {
@@ -1089,13 +1067,14 @@ public class MachO extends KaitaiStruct {
                 RESOURCE_DIR(3),
                 APPLICATION(4),
                 ENTITLEMENTS(5),
+                DER_ENTITLEMENTS(7),
                 ALTERNATE_CODE_DIRECTORIES(4096),
                 SIGNATURE_SLOT(65536);
 
                 private final long id;
                 CsslotType(long id) { this.id = id; }
                 public long id() { return id; }
-                private static final Map<Long, CsslotType> byId = new HashMap<Long, CsslotType>(8);
+                private static final Map<Long, CsslotType> byId = new HashMap<Long, CsslotType>(9);
                 static {
                     for (CsslotType e : CsslotType.values())
                         byId.put(e.id(), e);
@@ -1282,6 +1261,35 @@ public class MachO extends KaitaiStruct {
             }
 
             public BlobWrapper(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
+                super(_io);
+                this._parent = _parent;
+                this._root = _root;
+                _read();
+            }
+            private void _read() {
+                this.data = this._io.readBytesFull();
+            }
+            private byte[] data;
+            private MachO _root;
+            private MachO.CsBlob _parent;
+            public byte[] data() { return data; }
+            public MachO _root() { return _root; }
+            public MachO.CsBlob _parent() { return _parent; }
+        }
+        public static class Entitlements extends KaitaiStruct {
+            public static Entitlements fromFile(String fileName) throws IOException {
+                return new Entitlements(new ByteBufferKaitaiStream(fileName));
+            }
+
+            public Entitlements(KaitaiStream _io) {
+                this(_io, null, null);
+            }
+
+            public Entitlements(KaitaiStream _io, MachO.CsBlob _parent) {
+                this(_io, _parent, null);
+            }
+
+            public Entitlements(KaitaiStream _io, MachO.CsBlob _parent, MachO _root) {
                 super(_io);
                 this._parent = _parent;
                 this._root = _root;

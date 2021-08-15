@@ -410,7 +410,8 @@ const (
 	MachO_CsBlob_CsMagic__CodeDirectory MachO_CsBlob_CsMagic = 4208856066
 	MachO_CsBlob_CsMagic__EmbeddedSignature MachO_CsBlob_CsMagic = 4208856256
 	MachO_CsBlob_CsMagic__DetachedSignature MachO_CsBlob_CsMagic = 4208856257
-	MachO_CsBlob_CsMagic__Entitlement MachO_CsBlob_CsMagic = 4208882033
+	MachO_CsBlob_CsMagic__Entitlements MachO_CsBlob_CsMagic = 4208882033
+	MachO_CsBlob_CsMagic__DerEntitlements MachO_CsBlob_CsMagic = 4208882034
 )
 type MachO_CsBlob struct {
 	Magic MachO_CsBlob_CsMagic
@@ -470,7 +471,7 @@ func (this *MachO_CsBlob) Read(io *kaitai.Stream, parent interface{}, root *Mach
 			return err
 		}
 		this.Body = tmp41
-	case MachO_CsBlob_CsMagic__Entitlement:
+	case MachO_CsBlob_CsMagic__Requirements:
 		tmp42, err := this._io.ReadBytes(int((this.Length - 8)))
 		if err != nil {
 			return err
@@ -478,13 +479,13 @@ func (this *MachO_CsBlob) Read(io *kaitai.Stream, parent interface{}, root *Mach
 		tmp42 = tmp42
 		this._raw_Body = tmp42
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp43 := NewMachO_CsBlob_Entitlement()
+		tmp43 := NewMachO_CsBlob_Requirements()
 		err = tmp43.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp43
-	case MachO_CsBlob_CsMagic__Requirements:
+	case MachO_CsBlob_CsMagic__BlobWrapper:
 		tmp44, err := this._io.ReadBytes(int((this.Length - 8)))
 		if err != nil {
 			return err
@@ -492,13 +493,13 @@ func (this *MachO_CsBlob) Read(io *kaitai.Stream, parent interface{}, root *Mach
 		tmp44 = tmp44
 		this._raw_Body = tmp44
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp45 := NewMachO_CsBlob_Requirements()
+		tmp45 := NewMachO_CsBlob_BlobWrapper()
 		err = tmp45.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp45
-	case MachO_CsBlob_CsMagic__BlobWrapper:
+	case MachO_CsBlob_CsMagic__EmbeddedSignature:
 		tmp46, err := this._io.ReadBytes(int((this.Length - 8)))
 		if err != nil {
 			return err
@@ -506,13 +507,13 @@ func (this *MachO_CsBlob) Read(io *kaitai.Stream, parent interface{}, root *Mach
 		tmp46 = tmp46
 		this._raw_Body = tmp46
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp47 := NewMachO_CsBlob_BlobWrapper()
+		tmp47 := NewMachO_CsBlob_SuperBlob()
 		err = tmp47.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp47
-	case MachO_CsBlob_CsMagic__EmbeddedSignature:
+	case MachO_CsBlob_CsMagic__Entitlements:
 		tmp48, err := this._io.ReadBytes(int((this.Length - 8)))
 		if err != nil {
 			return err
@@ -520,7 +521,7 @@ func (this *MachO_CsBlob) Read(io *kaitai.Stream, parent interface{}, root *Mach
 		tmp48 = tmp48
 		this._raw_Body = tmp48
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp49 := NewMachO_CsBlob_SuperBlob()
+		tmp49 := NewMachO_CsBlob_Entitlements()
 		err = tmp49.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
@@ -540,38 +541,28 @@ func (this *MachO_CsBlob) Read(io *kaitai.Stream, parent interface{}, root *Mach
 			return err
 		}
 		this.Body = tmp51
-	default:
+	case MachO_CsBlob_CsMagic__DerEntitlements:
 		tmp52, err := this._io.ReadBytes(int((this.Length - 8)))
 		if err != nil {
 			return err
 		}
 		tmp52 = tmp52
 		this._raw_Body = tmp52
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp53 := NewAsn1Der()
+		err = tmp53.Read(_io__raw_Body, this, nil)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp53
+	default:
+		tmp54, err := this._io.ReadBytes(int((this.Length - 8)))
+		if err != nil {
+			return err
+		}
+		tmp54 = tmp54
+		this._raw_Body = tmp54
 	}
-	return err
-}
-type MachO_CsBlob_Entitlement struct {
-	Data []byte
-	_io *kaitai.Stream
-	_root *MachO
-	_parent *MachO_CsBlob
-}
-func NewMachO_CsBlob_Entitlement() *MachO_CsBlob_Entitlement {
-	return &MachO_CsBlob_Entitlement{
-	}
-}
-
-func (this *MachO_CsBlob_Entitlement) Read(io *kaitai.Stream, parent *MachO_CsBlob, root *MachO) (err error) {
-	this._io = io
-	this._parent = parent
-	this._root = root
-
-	tmp53, err := this._io.ReadBytesFull()
-	if err != nil {
-		return err
-	}
-	tmp53 = tmp53
-	this.Data = tmp53
 	return err
 }
 type MachO_CsBlob_CodeDirectory struct {
@@ -609,79 +600,79 @@ func (this *MachO_CsBlob_CodeDirectory) Read(io *kaitai.Stream, parent *MachO_Cs
 	this._parent = parent
 	this._root = root
 
-	tmp54, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Version = uint32(tmp54)
 	tmp55, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp55)
+	this.Version = uint32(tmp55)
 	tmp56, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.HashOffset = uint32(tmp56)
+	this.Flags = uint32(tmp56)
 	tmp57, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.IdentOffset = uint32(tmp57)
+	this.HashOffset = uint32(tmp57)
 	tmp58, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NSpecialSlots = uint32(tmp58)
+	this.IdentOffset = uint32(tmp58)
 	tmp59, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.NCodeSlots = uint32(tmp59)
+	this.NSpecialSlots = uint32(tmp59)
 	tmp60, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.CodeLimit = uint32(tmp60)
-	tmp61, err := this._io.ReadU1()
+	this.NCodeSlots = uint32(tmp60)
+	tmp61, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.HashSize = tmp61
+	this.CodeLimit = uint32(tmp61)
 	tmp62, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.HashType = tmp62
+	this.HashSize = tmp62
 	tmp63, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Spare1 = tmp63
+	this.HashType = tmp63
 	tmp64, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.PageSize = tmp64
-	tmp65, err := this._io.ReadU4be()
+	this.Spare1 = tmp64
+	tmp65, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Spare2 = uint32(tmp65)
-	if (this.Version >= 131328) {
-		tmp66, err := this._io.ReadU4be()
-		if err != nil {
-			return err
-		}
-		this.ScatterOffset = uint32(tmp66)
+	this.PageSize = tmp65
+	tmp66, err := this._io.ReadU4be()
+	if err != nil {
+		return err
 	}
-	if (this.Version >= 131584) {
+	this.Spare2 = uint32(tmp66)
+	if (this.Version >= 131328) {
 		tmp67, err := this._io.ReadU4be()
 		if err != nil {
 			return err
 		}
-		this.TeamIdOffset = uint32(tmp67)
+		this.ScatterOffset = uint32(tmp67)
+	}
+	if (this.Version >= 131584) {
+		tmp68, err := this._io.ReadU4be()
+		if err != nil {
+			return err
+		}
+		this.TeamIdOffset = uint32(tmp68)
 	}
 	return err
 }
@@ -697,11 +688,11 @@ func (this *MachO_CsBlob_CodeDirectory) Ident() (v string, err error) {
 	if err != nil {
 		return "", err
 	}
-	tmp68, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp69, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return "", err
 	}
-	this.ident = string(tmp68)
+	this.ident = string(tmp69)
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return "", err
@@ -722,11 +713,11 @@ func (this *MachO_CsBlob_CodeDirectory) TeamId() (v string, err error) {
 	if err != nil {
 		return "", err
 	}
-	tmp69, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp70, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return "", err
 	}
-	this.teamId = string(tmp69)
+	this.teamId = string(tmp70)
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return "", err
@@ -749,12 +740,12 @@ func (this *MachO_CsBlob_CodeDirectory) Hashes() (v [][]byte, err error) {
 	}
 	this.hashes = make([][]byte, (this.NSpecialSlots + this.NCodeSlots))
 	for i := range this.hashes {
-		tmp70, err := this._io.ReadBytes(int(this.HashSize))
+		tmp71, err := this._io.ReadBytes(int(this.HashSize))
 		if err != nil {
 			return nil, err
 		}
-		tmp70 = tmp70
-		this.hashes[i] = tmp70
+		tmp71 = tmp71
+		this.hashes[i] = tmp71
 	}
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
@@ -782,23 +773,23 @@ func (this *MachO_CsBlob_Data) Read(io *kaitai.Stream, parent interface{}, root 
 	this._parent = parent
 	this._root = root
 
-	tmp71, err := this._io.ReadU4be()
+	tmp72, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Length = uint32(tmp71)
-	tmp72, err := this._io.ReadBytes(int(this.Length))
-	if err != nil {
-		return err
-	}
-	tmp72 = tmp72
-	this.Value = tmp72
-	tmp73, err := this._io.ReadBytes(int((4 - (this.Length & 3))))
+	this.Length = uint32(tmp72)
+	tmp73, err := this._io.ReadBytes(int(this.Length))
 	if err != nil {
 		return err
 	}
 	tmp73 = tmp73
-	this.Padding = tmp73
+	this.Value = tmp73
+	tmp74, err := this._io.ReadBytes(int((4 - (this.Length & 3))))
+	if err != nil {
+		return err
+	}
+	tmp74 = tmp74
+	this.Padding = tmp74
 	return err
 }
 type MachO_CsBlob_SuperBlob struct {
@@ -818,19 +809,19 @@ func (this *MachO_CsBlob_SuperBlob) Read(io *kaitai.Stream, parent *MachO_CsBlob
 	this._parent = parent
 	this._root = root
 
-	tmp74, err := this._io.ReadU4be()
+	tmp75, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Count = uint32(tmp74)
+	this.Count = uint32(tmp75)
 	this.Blobs = make([]*MachO_CsBlob_BlobIndex, this.Count)
 	for i := range this.Blobs {
-		tmp75 := NewMachO_CsBlob_BlobIndex()
-		err = tmp75.Read(this._io, this, this._root)
+		tmp76 := NewMachO_CsBlob_BlobIndex()
+		err = tmp76.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Blobs[i] = tmp75
+		this.Blobs[i] = tmp76
 	}
 	return err
 }
@@ -878,103 +869,103 @@ func (this *MachO_CsBlob_Expr) Read(io *kaitai.Stream, parent interface{}, root 
 	this._parent = parent
 	this._root = root
 
-	tmp76, err := this._io.ReadU4be()
+	tmp77, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Op = MachO_CsBlob_Expr_OpEnum(tmp76)
+	this.Op = MachO_CsBlob_Expr_OpEnum(tmp77)
 	switch (this.Op) {
 	case MachO_CsBlob_Expr_OpEnum__Ident:
-		tmp77 := NewMachO_CsBlob_Expr_IdentExpr()
-		err = tmp77.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Data = tmp77
-	case MachO_CsBlob_Expr_OpEnum__OrOp:
-		tmp78 := NewMachO_CsBlob_Expr_OrExpr()
+		tmp78 := NewMachO_CsBlob_Expr_IdentExpr()
 		err = tmp78.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp78
-	case MachO_CsBlob_Expr_OpEnum__InfoKeyValue:
-		tmp79 := NewMachO_CsBlob_Data()
+	case MachO_CsBlob_Expr_OpEnum__OrOp:
+		tmp79 := NewMachO_CsBlob_Expr_OrExpr()
 		err = tmp79.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp79
-	case MachO_CsBlob_Expr_OpEnum__AnchorHash:
-		tmp80 := NewMachO_CsBlob_Expr_AnchorHashExpr()
+	case MachO_CsBlob_Expr_OpEnum__InfoKeyValue:
+		tmp80 := NewMachO_CsBlob_Data()
 		err = tmp80.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp80
-	case MachO_CsBlob_Expr_OpEnum__InfoKeyField:
-		tmp81 := NewMachO_CsBlob_Expr_InfoKeyFieldExpr()
+	case MachO_CsBlob_Expr_OpEnum__AnchorHash:
+		tmp81 := NewMachO_CsBlob_Expr_AnchorHashExpr()
 		err = tmp81.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp81
-	case MachO_CsBlob_Expr_OpEnum__NotOp:
-		tmp82 := NewMachO_CsBlob_Expr()
+	case MachO_CsBlob_Expr_OpEnum__InfoKeyField:
+		tmp82 := NewMachO_CsBlob_Expr_InfoKeyFieldExpr()
 		err = tmp82.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp82
-	case MachO_CsBlob_Expr_OpEnum__EntitlementField:
-		tmp83 := NewMachO_CsBlob_Expr_EntitlementFieldExpr()
+	case MachO_CsBlob_Expr_OpEnum__NotOp:
+		tmp83 := NewMachO_CsBlob_Expr()
 		err = tmp83.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp83
-	case MachO_CsBlob_Expr_OpEnum__TrustedCert:
-		tmp84 := NewMachO_CsBlob_Expr_CertSlotExpr()
+	case MachO_CsBlob_Expr_OpEnum__EntitlementField:
+		tmp84 := NewMachO_CsBlob_Expr_EntitlementFieldExpr()
 		err = tmp84.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp84
-	case MachO_CsBlob_Expr_OpEnum__AndOp:
-		tmp85 := NewMachO_CsBlob_Expr_AndExpr()
+	case MachO_CsBlob_Expr_OpEnum__TrustedCert:
+		tmp85 := NewMachO_CsBlob_Expr_CertSlotExpr()
 		err = tmp85.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp85
-	case MachO_CsBlob_Expr_OpEnum__CertGeneric:
-		tmp86 := NewMachO_CsBlob_Expr_CertGenericExpr()
+	case MachO_CsBlob_Expr_OpEnum__AndOp:
+		tmp86 := NewMachO_CsBlob_Expr_AndExpr()
 		err = tmp86.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp86
-	case MachO_CsBlob_Expr_OpEnum__CertField:
-		tmp87 := NewMachO_CsBlob_Expr_CertFieldExpr()
+	case MachO_CsBlob_Expr_OpEnum__CertGeneric:
+		tmp87 := NewMachO_CsBlob_Expr_CertGenericExpr()
 		err = tmp87.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp87
-	case MachO_CsBlob_Expr_OpEnum__CdHash:
-		tmp88 := NewMachO_CsBlob_Data()
+	case MachO_CsBlob_Expr_OpEnum__CertField:
+		tmp88 := NewMachO_CsBlob_Expr_CertFieldExpr()
 		err = tmp88.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp88
-	case MachO_CsBlob_Expr_OpEnum__AppleGenericAnchor:
-		tmp89 := NewMachO_CsBlob_Expr_AppleGenericAnchorExpr()
+	case MachO_CsBlob_Expr_OpEnum__CdHash:
+		tmp89 := NewMachO_CsBlob_Data()
 		err = tmp89.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Data = tmp89
+	case MachO_CsBlob_Expr_OpEnum__AppleGenericAnchor:
+		tmp90 := NewMachO_CsBlob_Expr_AppleGenericAnchorExpr()
+		err = tmp90.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Data = tmp90
 	}
 	return err
 }
@@ -995,18 +986,18 @@ func (this *MachO_CsBlob_Expr_InfoKeyFieldExpr) Read(io *kaitai.Stream, parent *
 	this._parent = parent
 	this._root = root
 
-	tmp90 := NewMachO_CsBlob_Data()
-	err = tmp90.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Data = tmp90
-	tmp91 := NewMachO_CsBlob_Match()
+	tmp91 := NewMachO_CsBlob_Data()
 	err = tmp91.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Match = tmp91
+	this.Data = tmp91
+	tmp92 := NewMachO_CsBlob_Match()
+	err = tmp92.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Match = tmp92
 	return err
 }
 type MachO_CsBlob_Expr_CertSlotExpr struct {
@@ -1025,11 +1016,11 @@ func (this *MachO_CsBlob_Expr_CertSlotExpr) Read(io *kaitai.Stream, parent *Mach
 	this._parent = parent
 	this._root = root
 
-	tmp92, err := this._io.ReadU4be()
+	tmp93, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Value = MachO_CsBlob_Expr_CertSlot(tmp92)
+	this.Value = MachO_CsBlob_Expr_CertSlot(tmp93)
 	return err
 }
 type MachO_CsBlob_Expr_CertGenericExpr struct {
@@ -1050,23 +1041,23 @@ func (this *MachO_CsBlob_Expr_CertGenericExpr) Read(io *kaitai.Stream, parent *M
 	this._parent = parent
 	this._root = root
 
-	tmp93, err := this._io.ReadU4be()
+	tmp94, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.CertSlot = MachO_CsBlob_Expr_CertSlot(tmp93)
-	tmp94 := NewMachO_CsBlob_Data()
-	err = tmp94.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Data = tmp94
-	tmp95 := NewMachO_CsBlob_Match()
+	this.CertSlot = MachO_CsBlob_Expr_CertSlot(tmp94)
+	tmp95 := NewMachO_CsBlob_Data()
 	err = tmp95.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Match = tmp95
+	this.Data = tmp95
+	tmp96 := NewMachO_CsBlob_Match()
+	err = tmp96.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Match = tmp96
 	return err
 }
 type MachO_CsBlob_Expr_IdentExpr struct {
@@ -1085,12 +1076,12 @@ func (this *MachO_CsBlob_Expr_IdentExpr) Read(io *kaitai.Stream, parent *MachO_C
 	this._parent = parent
 	this._root = root
 
-	tmp96 := NewMachO_CsBlob_Data()
-	err = tmp96.Read(this._io, this, this._root)
+	tmp97 := NewMachO_CsBlob_Data()
+	err = tmp97.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Identifier = tmp96
+	this.Identifier = tmp97
 	return err
 }
 type MachO_CsBlob_Expr_CertFieldExpr struct {
@@ -1111,23 +1102,23 @@ func (this *MachO_CsBlob_Expr_CertFieldExpr) Read(io *kaitai.Stream, parent *Mac
 	this._parent = parent
 	this._root = root
 
-	tmp97, err := this._io.ReadU4be()
+	tmp98, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.CertSlot = MachO_CsBlob_Expr_CertSlot(tmp97)
-	tmp98 := NewMachO_CsBlob_Data()
-	err = tmp98.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Data = tmp98
-	tmp99 := NewMachO_CsBlob_Match()
+	this.CertSlot = MachO_CsBlob_Expr_CertSlot(tmp98)
+	tmp99 := NewMachO_CsBlob_Data()
 	err = tmp99.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Match = tmp99
+	this.Data = tmp99
+	tmp100 := NewMachO_CsBlob_Match()
+	err = tmp100.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Match = tmp100
 	return err
 }
 type MachO_CsBlob_Expr_AnchorHashExpr struct {
@@ -1147,17 +1138,17 @@ func (this *MachO_CsBlob_Expr_AnchorHashExpr) Read(io *kaitai.Stream, parent *Ma
 	this._parent = parent
 	this._root = root
 
-	tmp100, err := this._io.ReadU4be()
+	tmp101, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.CertSlot = MachO_CsBlob_Expr_CertSlot(tmp100)
-	tmp101 := NewMachO_CsBlob_Data()
-	err = tmp101.Read(this._io, this, this._root)
+	this.CertSlot = MachO_CsBlob_Expr_CertSlot(tmp101)
+	tmp102 := NewMachO_CsBlob_Data()
+	err = tmp102.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Data = tmp101
+	this.Data = tmp102
 	return err
 }
 type MachO_CsBlob_Expr_AppleGenericAnchorExpr struct {
@@ -1204,18 +1195,18 @@ func (this *MachO_CsBlob_Expr_EntitlementFieldExpr) Read(io *kaitai.Stream, pare
 	this._parent = parent
 	this._root = root
 
-	tmp102 := NewMachO_CsBlob_Data()
-	err = tmp102.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Data = tmp102
-	tmp103 := NewMachO_CsBlob_Match()
+	tmp103 := NewMachO_CsBlob_Data()
 	err = tmp103.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Match = tmp103
+	this.Data = tmp103
+	tmp104 := NewMachO_CsBlob_Match()
+	err = tmp104.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Match = tmp104
 	return err
 }
 type MachO_CsBlob_Expr_AndExpr struct {
@@ -1235,18 +1226,18 @@ func (this *MachO_CsBlob_Expr_AndExpr) Read(io *kaitai.Stream, parent *MachO_CsB
 	this._parent = parent
 	this._root = root
 
-	tmp104 := NewMachO_CsBlob_Expr()
-	err = tmp104.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Left = tmp104
 	tmp105 := NewMachO_CsBlob_Expr()
 	err = tmp105.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Right = tmp105
+	this.Left = tmp105
+	tmp106 := NewMachO_CsBlob_Expr()
+	err = tmp106.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Right = tmp106
 	return err
 }
 type MachO_CsBlob_Expr_OrExpr struct {
@@ -1266,18 +1257,18 @@ func (this *MachO_CsBlob_Expr_OrExpr) Read(io *kaitai.Stream, parent *MachO_CsBl
 	this._parent = parent
 	this._root = root
 
-	tmp106 := NewMachO_CsBlob_Expr()
-	err = tmp106.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.Left = tmp106
 	tmp107 := NewMachO_CsBlob_Expr()
 	err = tmp107.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Right = tmp107
+	this.Left = tmp107
+	tmp108 := NewMachO_CsBlob_Expr()
+	err = tmp108.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.Right = tmp108
 	return err
 }
 
@@ -1289,6 +1280,7 @@ const (
 	MachO_CsBlob_BlobIndex_CsslotType__ResourceDir MachO_CsBlob_BlobIndex_CsslotType = 3
 	MachO_CsBlob_BlobIndex_CsslotType__Application MachO_CsBlob_BlobIndex_CsslotType = 4
 	MachO_CsBlob_BlobIndex_CsslotType__Entitlements MachO_CsBlob_BlobIndex_CsslotType = 5
+	MachO_CsBlob_BlobIndex_CsslotType__DerEntitlements MachO_CsBlob_BlobIndex_CsslotType = 7
 	MachO_CsBlob_BlobIndex_CsslotType__AlternateCodeDirectories MachO_CsBlob_BlobIndex_CsslotType = 4096
 	MachO_CsBlob_BlobIndex_CsslotType__SignatureSlot MachO_CsBlob_BlobIndex_CsslotType = 65536
 )
@@ -1312,16 +1304,16 @@ func (this *MachO_CsBlob_BlobIndex) Read(io *kaitai.Stream, parent *MachO_CsBlob
 	this._parent = parent
 	this._root = root
 
-	tmp108, err := this._io.ReadU4be()
-	if err != nil {
-		return err
-	}
-	this.Type = MachO_CsBlob_BlobIndex_CsslotType(tmp108)
 	tmp109, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp109)
+	this.Type = MachO_CsBlob_BlobIndex_CsslotType(tmp109)
+	tmp110, err := this._io.ReadU4be()
+	if err != nil {
+		return err
+	}
+	this.Offset = uint32(tmp110)
 	return err
 }
 func (this *MachO_CsBlob_BlobIndex) Blob() (v *MachO_CsBlob, err error) {
@@ -1337,19 +1329,19 @@ func (this *MachO_CsBlob_BlobIndex) Blob() (v *MachO_CsBlob, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp110, err := thisIo.ReadBytesFull()
+	tmp111, err := thisIo.ReadBytesFull()
 	if err != nil {
 		return nil, err
 	}
-	tmp110 = tmp110
-	this._raw_blob = tmp110
+	tmp111 = tmp111
+	this._raw_blob = tmp111
 	_io__raw_blob := kaitai.NewStream(bytes.NewReader(this._raw_blob))
-	tmp111 := NewMachO_CsBlob()
-	err = tmp111.Read(_io__raw_blob, this, this._root)
+	tmp112 := NewMachO_CsBlob()
+	err = tmp112.Read(_io__raw_blob, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.blob = tmp111
+	this.blob = tmp112
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -1388,18 +1380,18 @@ func (this *MachO_CsBlob_Match) Read(io *kaitai.Stream, parent interface{}, root
 	this._parent = parent
 	this._root = root
 
-	tmp112, err := this._io.ReadU4be()
+	tmp113, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.MatchOp = MachO_CsBlob_Match_Op(tmp112)
+	this.MatchOp = MachO_CsBlob_Match_Op(tmp113)
 	if (this.MatchOp != MachO_CsBlob_Match_Op__Exists) {
-		tmp113 := NewMachO_CsBlob_Data()
-		err = tmp113.Read(this._io, this, this._root)
+		tmp114 := NewMachO_CsBlob_Data()
+		err = tmp114.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Data = tmp113
+		this.Data = tmp114
 	}
 	return err
 }
@@ -1420,17 +1412,17 @@ func (this *MachO_CsBlob_Requirement) Read(io *kaitai.Stream, parent *MachO_CsBl
 	this._parent = parent
 	this._root = root
 
-	tmp114, err := this._io.ReadU4be()
+	tmp115, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Kind = uint32(tmp114)
-	tmp115 := NewMachO_CsBlob_Expr()
-	err = tmp115.Read(this._io, this, this._root)
+	this.Kind = uint32(tmp115)
+	tmp116 := NewMachO_CsBlob_Expr()
+	err = tmp116.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Expr = tmp115
+	this.Expr = tmp116
 	return err
 }
 type MachO_CsBlob_Requirements struct {
@@ -1450,19 +1442,19 @@ func (this *MachO_CsBlob_Requirements) Read(io *kaitai.Stream, parent *MachO_CsB
 	this._parent = parent
 	this._root = root
 
-	tmp116, err := this._io.ReadU4be()
+	tmp117, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Count = uint32(tmp116)
+	this.Count = uint32(tmp117)
 	this.Items = make([]*MachO_CsBlob_RequirementsBlobIndex, this.Count)
 	for i := range this.Items {
-		tmp117 := NewMachO_CsBlob_RequirementsBlobIndex()
-		err = tmp117.Read(this._io, this, this._root)
+		tmp118 := NewMachO_CsBlob_RequirementsBlobIndex()
+		err = tmp118.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Items[i] = tmp117
+		this.Items[i] = tmp118
 	}
 	return err
 }
@@ -1482,12 +1474,36 @@ func (this *MachO_CsBlob_BlobWrapper) Read(io *kaitai.Stream, parent *MachO_CsBl
 	this._parent = parent
 	this._root = root
 
-	tmp118, err := this._io.ReadBytesFull()
+	tmp119, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp118 = tmp118
-	this.Data = tmp118
+	tmp119 = tmp119
+	this.Data = tmp119
+	return err
+}
+type MachO_CsBlob_Entitlements struct {
+	Data []byte
+	_io *kaitai.Stream
+	_root *MachO
+	_parent *MachO_CsBlob
+}
+func NewMachO_CsBlob_Entitlements() *MachO_CsBlob_Entitlements {
+	return &MachO_CsBlob_Entitlements{
+	}
+}
+
+func (this *MachO_CsBlob_Entitlements) Read(io *kaitai.Stream, parent *MachO_CsBlob, root *MachO) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp120, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp120 = tmp120
+	this.Data = tmp120
 	return err
 }
 
@@ -1517,16 +1533,16 @@ func (this *MachO_CsBlob_RequirementsBlobIndex) Read(io *kaitai.Stream, parent *
 	this._parent = parent
 	this._root = root
 
-	tmp119, err := this._io.ReadU4be()
+	tmp121, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Type = MachO_CsBlob_RequirementsBlobIndex_RequirementType(tmp119)
-	tmp120, err := this._io.ReadU4be()
+	this.Type = MachO_CsBlob_RequirementsBlobIndex_RequirementType(tmp121)
+	tmp122, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp120)
+	this.Offset = uint32(tmp122)
 	return err
 }
 func (this *MachO_CsBlob_RequirementsBlobIndex) Value() (v *MachO_CsBlob, err error) {
@@ -1541,12 +1557,12 @@ func (this *MachO_CsBlob_RequirementsBlobIndex) Value() (v *MachO_CsBlob, err er
 	if err != nil {
 		return nil, err
 	}
-	tmp121 := NewMachO_CsBlob()
-	err = tmp121.Read(this._io, this, this._root)
+	tmp123 := NewMachO_CsBlob()
+	err = tmp123.Read(this._io, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.value = tmp121
+	this.value = tmp123
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -1575,34 +1591,34 @@ func (this *MachO_BuildVersionCommand) Read(io *kaitai.Stream, parent *MachO_Loa
 	this._parent = parent
 	this._root = root
 
-	tmp122, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Platform = uint32(tmp122)
-	tmp123, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Minos = uint32(tmp123)
 	tmp124, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Sdk = uint32(tmp124)
+	this.Platform = uint32(tmp124)
 	tmp125, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Ntools = uint32(tmp125)
+	this.Minos = uint32(tmp125)
+	tmp126, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Sdk = uint32(tmp126)
+	tmp127, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Ntools = uint32(tmp127)
 	this.Tools = make([]*MachO_BuildVersionCommand_BuildToolVersion, this.Ntools)
 	for i := range this.Tools {
-		tmp126 := NewMachO_BuildVersionCommand_BuildToolVersion()
-		err = tmp126.Read(this._io, this, this._root)
+		tmp128 := NewMachO_BuildVersionCommand_BuildToolVersion()
+		err = tmp128.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Tools[i] = tmp126
+		this.Tools[i] = tmp128
 	}
 	return err
 }
@@ -1623,16 +1639,16 @@ func (this *MachO_BuildVersionCommand_BuildToolVersion) Read(io *kaitai.Stream, 
 	this._parent = parent
 	this._root = root
 
-	tmp127, err := this._io.ReadU4le()
+	tmp129, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Tool = uint32(tmp127)
-	tmp128, err := this._io.ReadU4le()
+	this.Tool = uint32(tmp129)
+	tmp130, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Version = uint32(tmp128)
+	this.Version = uint32(tmp130)
 	return err
 }
 type MachO_RoutinesCommand struct {
@@ -1653,22 +1669,22 @@ func (this *MachO_RoutinesCommand) Read(io *kaitai.Stream, parent *MachO_LoadCom
 	this._parent = parent
 	this._root = root
 
-	tmp129, err := this._io.ReadU4le()
+	tmp131, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.InitAddress = uint32(tmp129)
-	tmp130, err := this._io.ReadU4le()
+	this.InitAddress = uint32(tmp131)
+	tmp132, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.InitModule = uint32(tmp130)
-	tmp131, err := this._io.ReadBytes(int(24))
+	this.InitModule = uint32(tmp132)
+	tmp133, err := this._io.ReadBytes(int(24))
 	if err != nil {
 		return err
 	}
-	tmp131 = tmp131
-	this.Reserved = tmp131
+	tmp133 = tmp133
+	this.Reserved = tmp133
 	return err
 }
 type MachO_MachoFlags struct {
@@ -2056,22 +2072,22 @@ func (this *MachO_RoutinesCommand64) Read(io *kaitai.Stream, parent *MachO_LoadC
 	this._parent = parent
 	this._root = root
 
-	tmp132, err := this._io.ReadU8le()
+	tmp134, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.InitAddress = uint64(tmp132)
-	tmp133, err := this._io.ReadU8le()
+	this.InitAddress = uint64(tmp134)
+	tmp135, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.InitModule = uint64(tmp133)
-	tmp134, err := this._io.ReadBytes(int(48))
+	this.InitModule = uint64(tmp135)
+	tmp136, err := this._io.ReadBytes(int(48))
 	if err != nil {
 		return err
 	}
-	tmp134 = tmp134
-	this.Reserved = tmp134
+	tmp136 = tmp136
+	this.Reserved = tmp136
 	return err
 }
 type MachO_LinkerOptionCommand struct {
@@ -2091,18 +2107,18 @@ func (this *MachO_LinkerOptionCommand) Read(io *kaitai.Stream, parent *MachO_Loa
 	this._parent = parent
 	this._root = root
 
-	tmp135, err := this._io.ReadU4le()
+	tmp137, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumStrings = uint32(tmp135)
+	this.NumStrings = uint32(tmp137)
 	this.Strings = make([]string, this.NumStrings)
 	for i := range this.Strings {
-		tmp136, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp138, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Strings[i] = string(tmp136)
+		this.Strings[i] = string(tmp138)
 	}
 	return err
 }
@@ -2131,62 +2147,62 @@ func (this *MachO_SegmentCommand64) Read(io *kaitai.Stream, parent *MachO_LoadCo
 	this._parent = parent
 	this._root = root
 
-	tmp137, err := this._io.ReadBytes(int(16))
+	tmp139, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp137 = kaitai.BytesStripRight(tmp137, 0)
-	this.Segname = string(tmp137)
-	tmp138, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Vmaddr = uint64(tmp138)
-	tmp139, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Vmsize = uint64(tmp139)
+	tmp139 = kaitai.BytesStripRight(tmp139, 0)
+	this.Segname = string(tmp139)
 	tmp140, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Fileoff = uint64(tmp140)
+	this.Vmaddr = uint64(tmp140)
 	tmp141, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Filesize = uint64(tmp141)
-	tmp142 := NewMachO_VmProt()
-	err = tmp142.Read(this._io, this, this._root)
+	this.Vmsize = uint64(tmp141)
+	tmp142, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Maxprot = tmp142
-	tmp143 := NewMachO_VmProt()
-	err = tmp143.Read(this._io, this, this._root)
+	this.Fileoff = uint64(tmp142)
+	tmp143, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Initprot = tmp143
-	tmp144, err := this._io.ReadU4le()
+	this.Filesize = uint64(tmp143)
+	tmp144 := NewMachO_VmProt()
+	err = tmp144.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Nsects = uint32(tmp144)
-	tmp145, err := this._io.ReadU4le()
+	this.Maxprot = tmp144
+	tmp145 := NewMachO_VmProt()
+	err = tmp145.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp145)
+	this.Initprot = tmp145
+	tmp146, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Nsects = uint32(tmp146)
+	tmp147, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint32(tmp147)
 	this.Sections = make([]*MachO_SegmentCommand64_Section64, this.Nsects)
 	for i := range this.Sections {
-		tmp146 := NewMachO_SegmentCommand64_Section64()
-		err = tmp146.Read(this._io, this, this._root)
+		tmp148 := NewMachO_SegmentCommand64_Section64()
+		err = tmp148.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Sections[i] = tmp146
+		this.Sections[i] = tmp148
 	}
 	return err
 }
@@ -2220,68 +2236,68 @@ func (this *MachO_SegmentCommand64_Section64) Read(io *kaitai.Stream, parent *Ma
 	this._parent = parent
 	this._root = root
 
-	tmp147, err := this._io.ReadBytes(int(16))
+	tmp149, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp147 = kaitai.BytesStripRight(tmp147, 0)
-	this.SectName = string(tmp147)
-	tmp148, err := this._io.ReadBytes(int(16))
+	tmp149 = kaitai.BytesStripRight(tmp149, 0)
+	this.SectName = string(tmp149)
+	tmp150, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp148 = kaitai.BytesStripRight(tmp148, 0)
-	this.SegName = string(tmp148)
-	tmp149, err := this._io.ReadU8le()
+	tmp150 = kaitai.BytesStripRight(tmp150, 0)
+	this.SegName = string(tmp150)
+	tmp151, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Addr = uint64(tmp149)
-	tmp150, err := this._io.ReadU8le()
+	this.Addr = uint64(tmp151)
+	tmp152, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Size = uint64(tmp150)
-	tmp151, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Offset = uint32(tmp151)
-	tmp152, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Align = uint32(tmp152)
+	this.Size = uint64(tmp152)
 	tmp153, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reloff = uint32(tmp153)
+	this.Offset = uint32(tmp153)
 	tmp154, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Nreloc = uint32(tmp154)
+	this.Align = uint32(tmp154)
 	tmp155, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp155)
+	this.Reloff = uint32(tmp155)
 	tmp156, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = uint32(tmp156)
+	this.Nreloc = uint32(tmp156)
 	tmp157, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = uint32(tmp157)
+	this.Flags = uint32(tmp157)
 	tmp158, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved3 = uint32(tmp158)
+	this.Reserved1 = uint32(tmp158)
+	tmp159, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = uint32(tmp159)
+	tmp160, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Reserved3 = uint32(tmp160)
 	return err
 }
 func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) {
@@ -2299,20 +2315,6 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 	}
 	switch (this.SectName) {
 	case "__objc_nlclslist":
-		tmp159, err := thisIo.ReadBytes(int(this.Size))
-		if err != nil {
-			return nil, err
-		}
-		tmp159 = tmp159
-		this._raw_data = tmp159
-		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp160 := NewMachO_SegmentCommand64_Section64_PointerList()
-		err = tmp160.Read(_io__raw_data, this, this._root)
-		if err != nil {
-			return nil, err
-		}
-		this.data = tmp160
-	case "__objc_methname":
 		tmp161, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2320,13 +2322,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp161 = tmp161
 		this._raw_data = tmp161
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp162 := NewMachO_SegmentCommand64_Section64_StringList()
+		tmp162 := NewMachO_SegmentCommand64_Section64_PointerList()
 		err = tmp162.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp162
-	case "__nl_symbol_ptr":
+	case "__objc_methname":
 		tmp163, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2334,13 +2336,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp163 = tmp163
 		this._raw_data = tmp163
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp164 := NewMachO_SegmentCommand64_Section64_PointerList()
+		tmp164 := NewMachO_SegmentCommand64_Section64_StringList()
 		err = tmp164.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp164
-	case "__la_symbol_ptr":
+	case "__nl_symbol_ptr":
 		tmp165, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2354,7 +2356,7 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 			return nil, err
 		}
 		this.data = tmp166
-	case "__objc_selrefs":
+	case "__la_symbol_ptr":
 		tmp167, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2368,7 +2370,7 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 			return nil, err
 		}
 		this.data = tmp168
-	case "__cstring":
+	case "__objc_selrefs":
 		tmp169, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2376,13 +2378,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp169 = tmp169
 		this._raw_data = tmp169
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp170 := NewMachO_SegmentCommand64_Section64_StringList()
+		tmp170 := NewMachO_SegmentCommand64_Section64_PointerList()
 		err = tmp170.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp170
-	case "__objc_classlist":
+	case "__cstring":
 		tmp171, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2390,13 +2392,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp171 = tmp171
 		this._raw_data = tmp171
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp172 := NewMachO_SegmentCommand64_Section64_PointerList()
+		tmp172 := NewMachO_SegmentCommand64_Section64_StringList()
 		err = tmp172.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp172
-	case "__objc_protolist":
+	case "__objc_classlist":
 		tmp173, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2410,7 +2412,7 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 			return nil, err
 		}
 		this.data = tmp174
-	case "__objc_imageinfo":
+	case "__objc_protolist":
 		tmp175, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2424,7 +2426,7 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 			return nil, err
 		}
 		this.data = tmp176
-	case "__objc_methtype":
+	case "__objc_imageinfo":
 		tmp177, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2432,13 +2434,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp177 = tmp177
 		this._raw_data = tmp177
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp178 := NewMachO_SegmentCommand64_Section64_StringList()
+		tmp178 := NewMachO_SegmentCommand64_Section64_PointerList()
 		err = tmp178.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp178
-	case "__cfstring":
+	case "__objc_methtype":
 		tmp179, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2446,13 +2448,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp179 = tmp179
 		this._raw_data = tmp179
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp180 := NewMachO_SegmentCommand64_Section64_CfStringList()
+		tmp180 := NewMachO_SegmentCommand64_Section64_StringList()
 		err = tmp180.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp180
-	case "__objc_classrefs":
+	case "__cfstring":
 		tmp181, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2460,13 +2462,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp181 = tmp181
 		this._raw_data = tmp181
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp182 := NewMachO_SegmentCommand64_Section64_PointerList()
+		tmp182 := NewMachO_SegmentCommand64_Section64_CfStringList()
 		err = tmp182.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp182
-	case "__objc_protorefs":
+	case "__objc_classrefs":
 		tmp183, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2480,7 +2482,7 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 			return nil, err
 		}
 		this.data = tmp184
-	case "__objc_classname":
+	case "__objc_protorefs":
 		tmp185, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2488,13 +2490,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp185 = tmp185
 		this._raw_data = tmp185
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp186 := NewMachO_SegmentCommand64_Section64_StringList()
+		tmp186 := NewMachO_SegmentCommand64_Section64_PointerList()
 		err = tmp186.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp186
-	case "__got":
+	case "__objc_classname":
 		tmp187, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2502,13 +2504,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp187 = tmp187
 		this._raw_data = tmp187
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp188 := NewMachO_SegmentCommand64_Section64_PointerList()
+		tmp188 := NewMachO_SegmentCommand64_Section64_StringList()
 		err = tmp188.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp188
-	case "__eh_frame":
+	case "__got":
 		tmp189, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2516,13 +2518,13 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp189 = tmp189
 		this._raw_data = tmp189
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp190 := NewMachO_SegmentCommand64_Section64_EhFrame()
+		tmp190 := NewMachO_SegmentCommand64_Section64_PointerList()
 		err = tmp190.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp190
-	case "__objc_superrefs":
+	case "__eh_frame":
 		tmp191, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
@@ -2530,19 +2532,33 @@ func (this *MachO_SegmentCommand64_Section64) Data() (v interface{}, err error) 
 		tmp191 = tmp191
 		this._raw_data = tmp191
 		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
-		tmp192 := NewMachO_SegmentCommand64_Section64_PointerList()
+		tmp192 := NewMachO_SegmentCommand64_Section64_EhFrame()
 		err = tmp192.Read(_io__raw_data, this, this._root)
 		if err != nil {
 			return nil, err
 		}
 		this.data = tmp192
-	default:
+	case "__objc_superrefs":
 		tmp193, err := thisIo.ReadBytes(int(this.Size))
 		if err != nil {
 			return nil, err
 		}
 		tmp193 = tmp193
 		this._raw_data = tmp193
+		_io__raw_data := kaitai.NewStream(bytes.NewReader(this._raw_data))
+		tmp194 := NewMachO_SegmentCommand64_Section64_PointerList()
+		err = tmp194.Read(_io__raw_data, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.data = tmp194
+	default:
+		tmp195, err := thisIo.ReadBytes(int(this.Size))
+		if err != nil {
+			return nil, err
+		}
+		tmp195 = tmp195
+		this._raw_data = tmp195
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
@@ -2569,19 +2585,19 @@ func (this *MachO_SegmentCommand64_Section64_CfStringList) Read(io *kaitai.Strea
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp194, err := this._io.EOF()
+		tmp196, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp194 {
+		if tmp196 {
 			break
 		}
-		tmp195 := NewMachO_SegmentCommand64_Section64_CfString()
-		err = tmp195.Read(this._io, this, this._root)
+		tmp197 := NewMachO_SegmentCommand64_Section64_CfString()
+		err = tmp197.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Items = append(this.Items, tmp195)
+		this.Items = append(this.Items, tmp197)
 	}
 	return err
 }
@@ -2604,26 +2620,26 @@ func (this *MachO_SegmentCommand64_Section64_CfString) Read(io *kaitai.Stream, p
 	this._parent = parent
 	this._root = root
 
-	tmp196, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Isa = uint64(tmp196)
-	tmp197, err := this._io.ReadU8le()
-	if err != nil {
-		return err
-	}
-	this.Info = uint64(tmp197)
 	tmp198, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Data = uint64(tmp198)
+	this.Isa = uint64(tmp198)
 	tmp199, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Length = uint64(tmp199)
+	this.Info = uint64(tmp199)
+	tmp200, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.Data = uint64(tmp200)
+	tmp201, err := this._io.ReadU8le()
+	if err != nil {
+		return err
+	}
+	this.Length = uint64(tmp201)
 	return err
 }
 type MachO_SegmentCommand64_Section64_EhFrameItem struct {
@@ -2646,46 +2662,46 @@ func (this *MachO_SegmentCommand64_Section64_EhFrameItem) Read(io *kaitai.Stream
 	this._parent = parent
 	this._root = root
 
-	tmp200, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Length = uint32(tmp200)
-	if (this.Length == uint32(4294967295)) {
-		tmp201, err := this._io.ReadU8le()
-		if err != nil {
-			return err
-		}
-		this.Length64 = uint64(tmp201)
-	}
 	tmp202, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Id = uint32(tmp202)
+	this.Length = uint32(tmp202)
+	if (this.Length == uint32(4294967295)) {
+		tmp203, err := this._io.ReadU8le()
+		if err != nil {
+			return err
+		}
+		this.Length64 = uint64(tmp203)
+	}
+	tmp204, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Id = uint32(tmp204)
 	if (this.Length > 0) {
 		switch (this.Id) {
 		case 0:
-			tmp203, err := this._io.ReadBytes(int((this.Length - 4)))
-			if err != nil {
-				return err
-			}
-			tmp203 = tmp203
-			this._raw_Body = tmp203
-			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-			tmp204 := NewMachO_SegmentCommand64_Section64_EhFrameItem_Cie()
-			err = tmp204.Read(_io__raw_Body, this, this._root)
-			if err != nil {
-				return err
-			}
-			this.Body = tmp204
-		default:
 			tmp205, err := this._io.ReadBytes(int((this.Length - 4)))
 			if err != nil {
 				return err
 			}
 			tmp205 = tmp205
 			this._raw_Body = tmp205
+			_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+			tmp206 := NewMachO_SegmentCommand64_Section64_EhFrameItem_Cie()
+			err = tmp206.Read(_io__raw_Body, this, this._root)
+			if err != nil {
+				return err
+			}
+			this.Body = tmp206
+		default:
+			tmp207, err := this._io.ReadBytes(int((this.Length - 4)))
+			if err != nil {
+				return err
+			}
+			tmp207 = tmp207
+			this._raw_Body = tmp207
 		}
 	}
 	return err
@@ -2707,18 +2723,18 @@ func (this *MachO_SegmentCommand64_Section64_EhFrameItem_CharChain) Read(io *kai
 	this._parent = parent
 	this._root = root
 
-	tmp206, err := this._io.ReadU1()
+	tmp208, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Chr = tmp206
+	this.Chr = tmp208
 	if (this.Chr != 0) {
-		tmp207 := NewMachO_SegmentCommand64_Section64_EhFrameItem_CharChain()
-		err = tmp207.Read(this._io, this, this._root)
+		tmp209 := NewMachO_SegmentCommand64_Section64_EhFrameItem_CharChain()
+		err = tmp209.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Next = tmp207
+		this.Next = tmp209
 	}
 	return err
 }
@@ -2743,41 +2759,41 @@ func (this *MachO_SegmentCommand64_Section64_EhFrameItem_Cie) Read(io *kaitai.St
 	this._parent = parent
 	this._root = root
 
-	tmp208, err := this._io.ReadU1()
+	tmp210, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Version = tmp208
-	tmp209 := NewMachO_SegmentCommand64_Section64_EhFrameItem_CharChain()
-	err = tmp209.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.AugStr = tmp209
-	tmp210 := NewMachO_Uleb128()
-	err = tmp210.Read(this._io, this, this._root)
-	if err != nil {
-		return err
-	}
-	this.CodeAlignmentFactor = tmp210
-	tmp211 := NewMachO_Uleb128()
+	this.Version = tmp210
+	tmp211 := NewMachO_SegmentCommand64_Section64_EhFrameItem_CharChain()
 	err = tmp211.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.DataAlignmentFactor = tmp211
-	tmp212, err := this._io.ReadU1()
+	this.AugStr = tmp211
+	tmp212 := NewMachO_Uleb128()
+	err = tmp212.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ReturnAddressRegister = tmp212
+	this.CodeAlignmentFactor = tmp212
+	tmp213 := NewMachO_Uleb128()
+	err = tmp213.Read(this._io, this, this._root)
+	if err != nil {
+		return err
+	}
+	this.DataAlignmentFactor = tmp213
+	tmp214, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.ReturnAddressRegister = tmp214
 	if (this.AugStr.Chr == 122) {
-		tmp213 := NewMachO_SegmentCommand64_Section64_EhFrameItem_AugmentationEntry()
-		err = tmp213.Read(this._io, this, this._root)
+		tmp215 := NewMachO_SegmentCommand64_Section64_EhFrameItem_AugmentationEntry()
+		err = tmp215.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Augmentation = tmp213
+		this.Augmentation = tmp215
 	}
 	return err
 }
@@ -2798,18 +2814,18 @@ func (this *MachO_SegmentCommand64_Section64_EhFrameItem_AugmentationEntry) Read
 	this._parent = parent
 	this._root = root
 
-	tmp214 := NewMachO_Uleb128()
-	err = tmp214.Read(this._io, this, this._root)
+	tmp216 := NewMachO_Uleb128()
+	err = tmp216.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Length = tmp214
+	this.Length = tmp216
 	if (this._parent.AugStr.Next.Chr == 82) {
-		tmp215, err := this._io.ReadU1()
+		tmp217, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
-		this.FdePointerEncoding = tmp215
+		this.FdePointerEncoding = tmp217
 	}
 	return err
 }
@@ -2830,19 +2846,19 @@ func (this *MachO_SegmentCommand64_Section64_EhFrame) Read(io *kaitai.Stream, pa
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp216, err := this._io.EOF()
+		tmp218, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp216 {
+		if tmp218 {
 			break
 		}
-		tmp217 := NewMachO_SegmentCommand64_Section64_EhFrameItem()
-		err = tmp217.Read(this._io, this, this._root)
+		tmp219 := NewMachO_SegmentCommand64_Section64_EhFrameItem()
+		err = tmp219.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Items = append(this.Items, tmp217)
+		this.Items = append(this.Items, tmp219)
 	}
 	return err
 }
@@ -2863,18 +2879,18 @@ func (this *MachO_SegmentCommand64_Section64_PointerList) Read(io *kaitai.Stream
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp218, err := this._io.EOF()
+		tmp220, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp218 {
+		if tmp220 {
 			break
 		}
-		tmp219, err := this._io.ReadU8le()
+		tmp221, err := this._io.ReadU8le()
 		if err != nil {
 			return err
 		}
-		this.Items = append(this.Items, tmp219)
+		this.Items = append(this.Items, tmp221)
 	}
 	return err
 }
@@ -2895,18 +2911,18 @@ func (this *MachO_SegmentCommand64_Section64_StringList) Read(io *kaitai.Stream,
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp220, err := this._io.EOF()
+		tmp222, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp220 {
+		if tmp222 {
 			break
 		}
-		tmp221, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp223, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return err
 		}
-		this.Strings = append(this.Strings, string(tmp221))
+		this.Strings = append(this.Strings, string(tmp223))
 	}
 	return err
 }
@@ -2934,51 +2950,51 @@ func (this *MachO_VmProt) Read(io *kaitai.Stream, parent interface{}, root *Mach
 	this._parent = parent
 	this._root = root
 
-	tmp222, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.StripRead = tmp222 != 0
-	tmp223, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.IsMask = tmp223 != 0
 	tmp224, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Reserved0 = tmp224 != 0
+	this.StripRead = tmp224 != 0
 	tmp225, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Copy = tmp225 != 0
+	this.IsMask = tmp225 != 0
 	tmp226, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.NoChange = tmp226 != 0
+	this.Reserved0 = tmp226 != 0
 	tmp227, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Execute = tmp227 != 0
+	this.Copy = tmp227 != 0
 	tmp228, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Write = tmp228 != 0
+	this.NoChange = tmp228 != 0
 	tmp229, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Read = tmp229 != 0
-	tmp230, err := this._io.ReadBitsIntBe(24)
+	this.Execute = tmp229 != 0
+	tmp230, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = tmp230
+	this.Write = tmp230 != 0
+	tmp231, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.Read = tmp231 != 0
+	tmp232, err := this._io.ReadBitsIntBe(24)
+	if err != nil {
+		return err
+	}
+	this.Reserved1 = tmp232
 	return err
 }
 
@@ -3052,96 +3068,96 @@ func (this *MachO_DysymtabCommand) Read(io *kaitai.Stream, parent *MachO_LoadCom
 	this._parent = parent
 	this._root = root
 
-	tmp231, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.ILocalSym = uint32(tmp231)
-	tmp232, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NLocalSym = uint32(tmp232)
 	tmp233, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.IExtDefSym = uint32(tmp233)
+	this.ILocalSym = uint32(tmp233)
 	tmp234, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NExtDefSym = uint32(tmp234)
+	this.NLocalSym = uint32(tmp234)
 	tmp235, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.IUndefSym = uint32(tmp235)
+	this.IExtDefSym = uint32(tmp235)
 	tmp236, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NUndefSym = uint32(tmp236)
+	this.NExtDefSym = uint32(tmp236)
 	tmp237, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TocOff = uint32(tmp237)
+	this.IUndefSym = uint32(tmp237)
 	tmp238, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NToc = uint32(tmp238)
+	this.NUndefSym = uint32(tmp238)
 	tmp239, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ModTabOff = uint32(tmp239)
+	this.TocOff = uint32(tmp239)
 	tmp240, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NModTab = uint32(tmp240)
+	this.NToc = uint32(tmp240)
 	tmp241, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ExtRefSymOff = uint32(tmp241)
+	this.ModTabOff = uint32(tmp241)
 	tmp242, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NExtRefSyms = uint32(tmp242)
+	this.NModTab = uint32(tmp242)
 	tmp243, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.IndirectSymOff = uint32(tmp243)
+	this.ExtRefSymOff = uint32(tmp243)
 	tmp244, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NIndirectSyms = uint32(tmp244)
+	this.NExtRefSyms = uint32(tmp244)
 	tmp245, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ExtRelOff = uint32(tmp245)
+	this.IndirectSymOff = uint32(tmp245)
 	tmp246, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NExtRel = uint32(tmp246)
+	this.NIndirectSyms = uint32(tmp246)
 	tmp247, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LocRelOff = uint32(tmp247)
+	this.ExtRelOff = uint32(tmp247)
 	tmp248, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NLocRel = uint32(tmp248)
+	this.NExtRel = uint32(tmp248)
+	tmp249, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.LocRelOff = uint32(tmp249)
+	tmp250, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NLocRel = uint32(tmp250)
 	return err
 }
 func (this *MachO_DysymtabCommand) IndirectSymbols() (v []uint32, err error) {
@@ -3159,11 +3175,11 @@ func (this *MachO_DysymtabCommand) IndirectSymbols() (v []uint32, err error) {
 	}
 	this.indirectSymbols = make([]uint32, this.NIndirectSyms)
 	for i := range this.indirectSymbols {
-		tmp249, err := thisIo.ReadU4le()
+		tmp251, err := thisIo.ReadU4le()
 		if err != nil {
 			return nil, err
 		}
-		this.indirectSymbols[i] = tmp249
+		this.indirectSymbols[i] = tmp251
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
@@ -3197,42 +3213,42 @@ func (this *MachO_MachHeader) Read(io *kaitai.Stream, parent *MachO, root *MachO
 	this._parent = parent
 	this._root = root
 
-	tmp250, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Cputype = MachO_CpuType(tmp250)
-	tmp251, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Cpusubtype = uint32(tmp251)
 	tmp252, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Filetype = MachO_FileType(tmp252)
+	this.Cputype = MachO_CpuType(tmp252)
 	tmp253, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Ncmds = uint32(tmp253)
+	this.Cpusubtype = uint32(tmp253)
 	tmp254, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Sizeofcmds = uint32(tmp254)
+	this.Filetype = MachO_FileType(tmp254)
 	tmp255, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp255)
+	this.Ncmds = uint32(tmp255)
+	tmp256, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Sizeofcmds = uint32(tmp256)
+	tmp257, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint32(tmp257)
 	if ( ((this._root.Magic == MachO_MagicType__MachoBeX64) || (this._root.Magic == MachO_MagicType__MachoLeX64)) ) {
-		tmp256, err := this._io.ReadU4le()
+		tmp258, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Reserved = uint32(tmp256)
+		this.Reserved = uint32(tmp258)
 	}
 	return err
 }
@@ -3240,12 +3256,12 @@ func (this *MachO_MachHeader) FlagsObj() (v *MachO_MachoFlags, err error) {
 	if (this._f_flagsObj) {
 		return this.flagsObj, nil
 	}
-	tmp257 := NewMachO_MachoFlags(this.Flags)
-	err = tmp257.Read(this._io, this, this._root)
+	tmp259 := NewMachO_MachoFlags(this.Flags)
+	err = tmp259.Read(this._io, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.flagsObj = tmp257
+	this.flagsObj = tmp259
 	this._f_flagsObj = true
 	this._f_flagsObj = true
 	return this.flagsObj, nil
@@ -3267,16 +3283,16 @@ func (this *MachO_LinkeditDataCommand) Read(io *kaitai.Stream, parent *MachO_Loa
 	this._parent = parent
 	this._root = root
 
-	tmp258, err := this._io.ReadU4le()
+	tmp260, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataOff = uint32(tmp258)
-	tmp259, err := this._io.ReadU4le()
+	this.DataOff = uint32(tmp260)
+	tmp261, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataSize = uint32(tmp259)
+	this.DataSize = uint32(tmp261)
 	return err
 }
 type MachO_SubCommand struct {
@@ -3295,12 +3311,12 @@ func (this *MachO_SubCommand) Read(io *kaitai.Stream, parent *MachO_LoadCommand,
 	this._parent = parent
 	this._root = root
 
-	tmp260 := NewMachO_LcStr()
-	err = tmp260.Read(this._io, this, this._root)
+	tmp262 := NewMachO_LcStr()
+	err = tmp262.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Name = tmp260
+	this.Name = tmp262
 	return err
 }
 type MachO_TwolevelHintsCommand struct {
@@ -3320,16 +3336,16 @@ func (this *MachO_TwolevelHintsCommand) Read(io *kaitai.Stream, parent *MachO_Lo
 	this._parent = parent
 	this._root = root
 
-	tmp261, err := this._io.ReadU4le()
+	tmp263, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp261)
-	tmp262, err := this._io.ReadU4le()
+	this.Offset = uint32(tmp263)
+	tmp264, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.NumHints = uint32(tmp262)
+	this.NumHints = uint32(tmp264)
 	return err
 }
 type MachO_Version struct {
@@ -3351,26 +3367,26 @@ func (this *MachO_Version) Read(io *kaitai.Stream, parent *MachO_VersionMinComma
 	this._parent = parent
 	this._root = root
 
-	tmp263, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.P1 = tmp263
-	tmp264, err := this._io.ReadU1()
-	if err != nil {
-		return err
-	}
-	this.Minor = tmp264
 	tmp265, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Major = tmp265
+	this.P1 = tmp265
 	tmp266, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Release = tmp266
+	this.Minor = tmp266
+	tmp267, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Major = tmp267
+	tmp268, err := this._io.ReadU1()
+	if err != nil {
+		return err
+	}
+	this.Release = tmp268
 	return err
 }
 type MachO_EncryptionInfoCommand struct {
@@ -3392,27 +3408,27 @@ func (this *MachO_EncryptionInfoCommand) Read(io *kaitai.Stream, parent *MachO_L
 	this._parent = parent
 	this._root = root
 
-	tmp267, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Cryptoff = uint32(tmp267)
-	tmp268, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Cryptsize = uint32(tmp268)
 	tmp269, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Cryptid = uint32(tmp269)
+	this.Cryptoff = uint32(tmp269)
+	tmp270, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Cryptsize = uint32(tmp270)
+	tmp271, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Cryptid = uint32(tmp271)
 	if ( ((this._root.Magic == MachO_MagicType__MachoBeX64) || (this._root.Magic == MachO_MagicType__MachoLeX64)) ) {
-		tmp270, err := this._io.ReadU4le()
+		tmp272, err := this._io.ReadU4le()
 		if err != nil {
 			return err
 		}
-		this.Pad = uint32(tmp270)
+		this.Pad = uint32(tmp272)
 	}
 	return err
 }
@@ -3436,16 +3452,16 @@ func (this *MachO_CodeSignatureCommand) Read(io *kaitai.Stream, parent *MachO_Lo
 	this._parent = parent
 	this._root = root
 
-	tmp271, err := this._io.ReadU4le()
+	tmp273, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataOff = uint32(tmp271)
-	tmp272, err := this._io.ReadU4le()
+	this.DataOff = uint32(tmp273)
+	tmp274, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DataSize = uint32(tmp272)
+	this.DataSize = uint32(tmp274)
 	return err
 }
 func (this *MachO_CodeSignatureCommand) CodeSignature() (v *MachO_CsBlob, err error) {
@@ -3461,19 +3477,19 @@ func (this *MachO_CodeSignatureCommand) CodeSignature() (v *MachO_CsBlob, err er
 	if err != nil {
 		return nil, err
 	}
-	tmp273, err := thisIo.ReadBytes(int(this.DataSize))
+	tmp275, err := thisIo.ReadBytes(int(this.DataSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp273 = tmp273
-	this._raw_codeSignature = tmp273
+	tmp275 = tmp275
+	this._raw_codeSignature = tmp275
 	_io__raw_codeSignature := kaitai.NewStream(bytes.NewReader(this._raw_codeSignature))
-	tmp274 := NewMachO_CsBlob()
-	err = tmp274.Read(_io__raw_codeSignature, this, this._root)
+	tmp276 := NewMachO_CsBlob()
+	err = tmp276.Read(_io__raw_codeSignature, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.codeSignature = tmp274
+	this.codeSignature = tmp276
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -3536,56 +3552,56 @@ func (this *MachO_DyldInfoCommand) Read(io *kaitai.Stream, parent *MachO_LoadCom
 	this._parent = parent
 	this._root = root
 
-	tmp275, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.RebaseOff = uint32(tmp275)
-	tmp276, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.RebaseSize = uint32(tmp276)
 	tmp277, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BindOff = uint32(tmp277)
+	this.RebaseOff = uint32(tmp277)
 	tmp278, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.BindSize = uint32(tmp278)
+	this.RebaseSize = uint32(tmp278)
 	tmp279, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.WeakBindOff = uint32(tmp279)
+	this.BindOff = uint32(tmp279)
 	tmp280, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.WeakBindSize = uint32(tmp280)
+	this.BindSize = uint32(tmp280)
 	tmp281, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LazyBindOff = uint32(tmp281)
+	this.WeakBindOff = uint32(tmp281)
 	tmp282, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.LazyBindSize = uint32(tmp282)
+	this.WeakBindSize = uint32(tmp282)
 	tmp283, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ExportOff = uint32(tmp283)
+	this.LazyBindOff = uint32(tmp283)
 	tmp284, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.ExportSize = uint32(tmp284)
+	this.LazyBindSize = uint32(tmp284)
+	tmp285, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ExportOff = uint32(tmp285)
+	tmp286, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.ExportSize = uint32(tmp286)
 	return err
 }
 func (this *MachO_DyldInfoCommand) Rebase() (v *MachO_DyldInfoCommand_RebaseData, err error) {
@@ -3601,19 +3617,19 @@ func (this *MachO_DyldInfoCommand) Rebase() (v *MachO_DyldInfoCommand_RebaseData
 	if err != nil {
 		return nil, err
 	}
-	tmp285, err := thisIo.ReadBytes(int(this.RebaseSize))
+	tmp287, err := thisIo.ReadBytes(int(this.RebaseSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp285 = tmp285
-	this._raw_rebase = tmp285
+	tmp287 = tmp287
+	this._raw_rebase = tmp287
 	_io__raw_rebase := kaitai.NewStream(bytes.NewReader(this._raw_rebase))
-	tmp286 := NewMachO_DyldInfoCommand_RebaseData()
-	err = tmp286.Read(_io__raw_rebase, this, this._root)
+	tmp288 := NewMachO_DyldInfoCommand_RebaseData()
+	err = tmp288.Read(_io__raw_rebase, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.rebase = tmp286
+	this.rebase = tmp288
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -3635,19 +3651,19 @@ func (this *MachO_DyldInfoCommand) Bind() (v *MachO_DyldInfoCommand_BindData, er
 	if err != nil {
 		return nil, err
 	}
-	tmp287, err := thisIo.ReadBytes(int(this.BindSize))
+	tmp289, err := thisIo.ReadBytes(int(this.BindSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp287 = tmp287
-	this._raw_bind = tmp287
+	tmp289 = tmp289
+	this._raw_bind = tmp289
 	_io__raw_bind := kaitai.NewStream(bytes.NewReader(this._raw_bind))
-	tmp288 := NewMachO_DyldInfoCommand_BindData()
-	err = tmp288.Read(_io__raw_bind, this, this._root)
+	tmp290 := NewMachO_DyldInfoCommand_BindData()
+	err = tmp290.Read(_io__raw_bind, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.bind = tmp288
+	this.bind = tmp290
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -3669,19 +3685,19 @@ func (this *MachO_DyldInfoCommand) LazyBind() (v *MachO_DyldInfoCommand_LazyBind
 	if err != nil {
 		return nil, err
 	}
-	tmp289, err := thisIo.ReadBytes(int(this.LazyBindSize))
+	tmp291, err := thisIo.ReadBytes(int(this.LazyBindSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp289 = tmp289
-	this._raw_lazyBind = tmp289
+	tmp291 = tmp291
+	this._raw_lazyBind = tmp291
 	_io__raw_lazyBind := kaitai.NewStream(bytes.NewReader(this._raw_lazyBind))
-	tmp290 := NewMachO_DyldInfoCommand_LazyBindData()
-	err = tmp290.Read(_io__raw_lazyBind, this, this._root)
+	tmp292 := NewMachO_DyldInfoCommand_LazyBindData()
+	err = tmp292.Read(_io__raw_lazyBind, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.lazyBind = tmp290
+	this.lazyBind = tmp292
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -3703,19 +3719,19 @@ func (this *MachO_DyldInfoCommand) Exports() (v *MachO_DyldInfoCommand_ExportNod
 	if err != nil {
 		return nil, err
 	}
-	tmp291, err := thisIo.ReadBytes(int(this.ExportSize))
+	tmp293, err := thisIo.ReadBytes(int(this.ExportSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp291 = tmp291
-	this._raw_exports = tmp291
+	tmp293 = tmp293
+	this._raw_exports = tmp293
 	_io__raw_exports := kaitai.NewStream(bytes.NewReader(this._raw_exports))
-	tmp292 := NewMachO_DyldInfoCommand_ExportNode()
-	err = tmp292.Read(_io__raw_exports, this, this._root)
+	tmp294 := NewMachO_DyldInfoCommand_ExportNode()
+	err = tmp294.Read(_io__raw_exports, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.exports = tmp292
+	this.exports = tmp294
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -3747,19 +3763,11 @@ func (this *MachO_DyldInfoCommand_BindItem) Read(io *kaitai.Stream, parent inter
 	this._parent = parent
 	this._root = root
 
-	tmp293, err := this._io.ReadU1()
+	tmp295, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.OpcodeAndImmediate = tmp293
-	tmp294, err := this.Opcode()
-	if err != nil {
-		return err
-	}
-	tmp295, err := this.Opcode()
-	if err != nil {
-		return err
-	}
+	this.OpcodeAndImmediate = tmp295
 	tmp296, err := this.Opcode()
 	if err != nil {
 		return err
@@ -3776,36 +3784,44 @@ func (this *MachO_DyldInfoCommand_BindItem) Read(io *kaitai.Stream, parent inter
 	if err != nil {
 		return err
 	}
-	if ( ((tmp294 == MachO_DyldInfoCommand_BindOpcode__SetDylibOrdinalUleb) || (tmp295 == MachO_DyldInfoCommand_BindOpcode__SetAppendSleb) || (tmp296 == MachO_DyldInfoCommand_BindOpcode__SetSegmentAndOffsetUleb) || (tmp297 == MachO_DyldInfoCommand_BindOpcode__AddAddressUleb) || (tmp298 == MachO_DyldInfoCommand_BindOpcode__DoBindAddAddressUleb) || (tmp299 == MachO_DyldInfoCommand_BindOpcode__DoBindUlebTimesSkippingUleb)) ) {
-		tmp300 := NewMachO_Uleb128()
-		err = tmp300.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Uleb = tmp300
+	tmp300, err := this.Opcode()
+	if err != nil {
+		return err
 	}
 	tmp301, err := this.Opcode()
 	if err != nil {
 		return err
 	}
-	if (tmp301 == MachO_DyldInfoCommand_BindOpcode__DoBindUlebTimesSkippingUleb) {
+	if ( ((tmp296 == MachO_DyldInfoCommand_BindOpcode__SetDylibOrdinalUleb) || (tmp297 == MachO_DyldInfoCommand_BindOpcode__SetAppendSleb) || (tmp298 == MachO_DyldInfoCommand_BindOpcode__SetSegmentAndOffsetUleb) || (tmp299 == MachO_DyldInfoCommand_BindOpcode__AddAddressUleb) || (tmp300 == MachO_DyldInfoCommand_BindOpcode__DoBindAddAddressUleb) || (tmp301 == MachO_DyldInfoCommand_BindOpcode__DoBindUlebTimesSkippingUleb)) ) {
 		tmp302 := NewMachO_Uleb128()
 		err = tmp302.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Skip = tmp302
+		this.Uleb = tmp302
 	}
 	tmp303, err := this.Opcode()
 	if err != nil {
 		return err
 	}
-	if (tmp303 == MachO_DyldInfoCommand_BindOpcode__SetSymbolTrailingFlagsImmediate) {
-		tmp304, err := this._io.ReadBytesTerm(0, false, true, true)
+	if (tmp303 == MachO_DyldInfoCommand_BindOpcode__DoBindUlebTimesSkippingUleb) {
+		tmp304 := NewMachO_Uleb128()
+		err = tmp304.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Symbol = string(tmp304)
+		this.Skip = tmp304
+	}
+	tmp305, err := this.Opcode()
+	if err != nil {
+		return err
+	}
+	if (tmp305 == MachO_DyldInfoCommand_BindOpcode__SetSymbolTrailingFlagsImmediate) {
+		tmp306, err := this._io.ReadBytesTerm(0, false, true, true)
+		if err != nil {
+			return err
+		}
+		this.Symbol = string(tmp306)
 	}
 	return err
 }
@@ -3855,18 +3871,18 @@ func (this *MachO_DyldInfoCommand_RebaseData) Read(io *kaitai.Stream, parent *Ma
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp305 := NewMachO_DyldInfoCommand_RebaseData_RebaseItem()
-		err = tmp305.Read(this._io, this, this._root)
+		tmp307 := NewMachO_DyldInfoCommand_RebaseData_RebaseItem()
+		err = tmp307.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		_it := tmp305
+		_it := tmp307
 		this.Items = append(this.Items, _it)
-		tmp306, err := _it.Opcode()
+		tmp308, err := _it.Opcode()
 		if err != nil {
 			return err
 		}
-		if tmp306 == MachO_DyldInfoCommand_RebaseData_Opcode__Done {
+		if tmp308 == MachO_DyldInfoCommand_RebaseData_Opcode__Done {
 			break
 		}
 	}
@@ -3894,19 +3910,11 @@ func (this *MachO_DyldInfoCommand_RebaseData_RebaseItem) Read(io *kaitai.Stream,
 	this._parent = parent
 	this._root = root
 
-	tmp307, err := this._io.ReadU1()
+	tmp309, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.OpcodeAndImmediate = tmp307
-	tmp308, err := this.Opcode()
-	if err != nil {
-		return err
-	}
-	tmp309, err := this.Opcode()
-	if err != nil {
-		return err
-	}
+	this.OpcodeAndImmediate = tmp309
 	tmp310, err := this.Opcode()
 	if err != nil {
 		return err
@@ -3919,25 +3927,33 @@ func (this *MachO_DyldInfoCommand_RebaseData_RebaseItem) Read(io *kaitai.Stream,
 	if err != nil {
 		return err
 	}
-	if ( ((tmp308 == MachO_DyldInfoCommand_RebaseData_Opcode__SetSegmentAndOffsetUleb) || (tmp309 == MachO_DyldInfoCommand_RebaseData_Opcode__AddAddressUleb) || (tmp310 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseUlebTimes) || (tmp311 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseAddAddressUleb) || (tmp312 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseUlebTimesSkippingUleb)) ) {
-		tmp313 := NewMachO_Uleb128()
-		err = tmp313.Read(this._io, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Uleb = tmp313
+	tmp313, err := this.Opcode()
+	if err != nil {
+		return err
 	}
 	tmp314, err := this.Opcode()
 	if err != nil {
 		return err
 	}
-	if (tmp314 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseUlebTimesSkippingUleb) {
+	if ( ((tmp310 == MachO_DyldInfoCommand_RebaseData_Opcode__SetSegmentAndOffsetUleb) || (tmp311 == MachO_DyldInfoCommand_RebaseData_Opcode__AddAddressUleb) || (tmp312 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseUlebTimes) || (tmp313 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseAddAddressUleb) || (tmp314 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseUlebTimesSkippingUleb)) ) {
 		tmp315 := NewMachO_Uleb128()
 		err = tmp315.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Skip = tmp315
+		this.Uleb = tmp315
+	}
+	tmp316, err := this.Opcode()
+	if err != nil {
+		return err
+	}
+	if (tmp316 == MachO_DyldInfoCommand_RebaseData_Opcode__DoRebaseUlebTimesSkippingUleb) {
+		tmp317 := NewMachO_Uleb128()
+		err = tmp317.Read(this._io, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Skip = tmp317
 	}
 	return err
 }
@@ -3976,36 +3992,36 @@ func (this *MachO_DyldInfoCommand_ExportNode) Read(io *kaitai.Stream, parent int
 	this._parent = parent
 	this._root = root
 
-	tmp316 := NewMachO_Uleb128()
-	err = tmp316.Read(this._io, this, this._root)
+	tmp318 := NewMachO_Uleb128()
+	err = tmp318.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.TerminalSize = tmp316
-	tmp317, err := this._io.ReadU1()
+	this.TerminalSize = tmp318
+	tmp319, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.ChildrenCount = tmp317
+	this.ChildrenCount = tmp319
 	this.Children = make([]*MachO_DyldInfoCommand_ExportNode_Child, this.ChildrenCount)
 	for i := range this.Children {
-		tmp318 := NewMachO_DyldInfoCommand_ExportNode_Child()
-		err = tmp318.Read(this._io, this, this._root)
+		tmp320 := NewMachO_DyldInfoCommand_ExportNode_Child()
+		err = tmp320.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Children[i] = tmp318
+		this.Children[i] = tmp320
 	}
-	tmp319, err := this.TerminalSize.Value()
+	tmp321, err := this.TerminalSize.Value()
 	if err != nil {
 		return err
 	}
-	tmp320, err := this._io.ReadBytes(int(tmp319))
+	tmp322, err := this._io.ReadBytes(int(tmp321))
 	if err != nil {
 		return err
 	}
-	tmp320 = tmp320
-	this.Terminal = tmp320
+	tmp322 = tmp322
+	this.Terminal = tmp322
 	return err
 }
 type MachO_DyldInfoCommand_ExportNode_Child struct {
@@ -4027,17 +4043,17 @@ func (this *MachO_DyldInfoCommand_ExportNode_Child) Read(io *kaitai.Stream, pare
 	this._parent = parent
 	this._root = root
 
-	tmp321, err := this._io.ReadBytesTerm(0, false, true, true)
+	tmp323, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Name = string(tmp321)
-	tmp322 := NewMachO_Uleb128()
-	err = tmp322.Read(this._io, this, this._root)
+	this.Name = string(tmp323)
+	tmp324 := NewMachO_Uleb128()
+	err = tmp324.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.NodeOffset = tmp322
+	this.NodeOffset = tmp324
 	return err
 }
 func (this *MachO_DyldInfoCommand_ExportNode_Child) Value() (v *MachO_DyldInfoCommand_ExportNode, err error) {
@@ -4048,20 +4064,20 @@ func (this *MachO_DyldInfoCommand_ExportNode_Child) Value() (v *MachO_DyldInfoCo
 	if err != nil {
 		return nil, err
 	}
-	tmp323, err := this.NodeOffset.Value()
+	tmp325, err := this.NodeOffset.Value()
 	if err != nil {
 		return nil, err
 	}
-	_, err = this._io.Seek(int64(tmp323), io.SeekStart)
+	_, err = this._io.Seek(int64(tmp325), io.SeekStart)
 	if err != nil {
 		return nil, err
 	}
-	tmp324 := NewMachO_DyldInfoCommand_ExportNode()
-	err = tmp324.Read(this._io, this, this._root)
+	tmp326 := NewMachO_DyldInfoCommand_ExportNode()
+	err = tmp326.Read(this._io, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.value = tmp324
+	this.value = tmp326
 	_, err = this._io.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -4087,18 +4103,18 @@ func (this *MachO_DyldInfoCommand_BindData) Read(io *kaitai.Stream, parent *Mach
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp325 := NewMachO_DyldInfoCommand_BindItem()
-		err = tmp325.Read(this._io, this, this._root)
+		tmp327 := NewMachO_DyldInfoCommand_BindItem()
+		err = tmp327.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		_it := tmp325
+		_it := tmp327
 		this.Items = append(this.Items, _it)
-		tmp326, err := _it.Opcode()
+		tmp328, err := _it.Opcode()
 		if err != nil {
 			return err
 		}
-		if tmp326 == MachO_DyldInfoCommand_BindOpcode__Done {
+		if tmp328 == MachO_DyldInfoCommand_BindOpcode__Done {
 			break
 		}
 	}
@@ -4121,19 +4137,19 @@ func (this *MachO_DyldInfoCommand_LazyBindData) Read(io *kaitai.Stream, parent *
 	this._root = root
 
 	for i := 1;; i++ {
-		tmp327, err := this._io.EOF()
+		tmp329, err := this._io.EOF()
 		if err != nil {
 			return err
 		}
-		if tmp327 {
+		if tmp329 {
 			break
 		}
-		tmp328 := NewMachO_DyldInfoCommand_BindItem()
-		err = tmp328.Read(this._io, this, this._root)
+		tmp330 := NewMachO_DyldInfoCommand_BindItem()
+		err = tmp330.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Items = append(this.Items, tmp328)
+		this.Items = append(this.Items, tmp330)
 	}
 	return err
 }
@@ -4153,12 +4169,12 @@ func (this *MachO_DylinkerCommand) Read(io *kaitai.Stream, parent *MachO_LoadCom
 	this._parent = parent
 	this._root = root
 
-	tmp329 := NewMachO_LcStr()
-	err = tmp329.Read(this._io, this, this._root)
+	tmp331 := NewMachO_LcStr()
+	err = tmp331.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Name = tmp329
+	this.Name = tmp331
 	return err
 }
 type MachO_DylibCommand struct {
@@ -4181,31 +4197,31 @@ func (this *MachO_DylibCommand) Read(io *kaitai.Stream, parent *MachO_LoadComman
 	this._parent = parent
 	this._root = root
 
-	tmp330, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NameOffset = uint32(tmp330)
-	tmp331, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Timestamp = uint32(tmp331)
 	tmp332, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CurrentVersion = uint32(tmp332)
+	this.NameOffset = uint32(tmp332)
 	tmp333, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.CompatibilityVersion = uint32(tmp333)
-	tmp334, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.Timestamp = uint32(tmp333)
+	tmp334, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Name = string(tmp334)
+	this.CurrentVersion = uint32(tmp334)
+	tmp335, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.CompatibilityVersion = uint32(tmp335)
+	tmp336, err := this._io.ReadBytesTerm(0, false, true, true)
+	if err != nil {
+		return err
+	}
+	this.Name = string(tmp336)
 	return err
 }
 type MachO_SegmentCommand struct {
@@ -4233,62 +4249,62 @@ func (this *MachO_SegmentCommand) Read(io *kaitai.Stream, parent *MachO_LoadComm
 	this._parent = parent
 	this._root = root
 
-	tmp335, err := this._io.ReadBytes(int(16))
+	tmp337, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp335 = kaitai.BytesStripRight(tmp335, 0)
-	this.Segname = string(tmp335)
-	tmp336, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Vmaddr = uint32(tmp336)
-	tmp337, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Vmsize = uint32(tmp337)
+	tmp337 = kaitai.BytesStripRight(tmp337, 0)
+	this.Segname = string(tmp337)
 	tmp338, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Fileoff = uint32(tmp338)
+	this.Vmaddr = uint32(tmp338)
 	tmp339, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Filesize = uint32(tmp339)
-	tmp340 := NewMachO_VmProt()
-	err = tmp340.Read(this._io, this, this._root)
+	this.Vmsize = uint32(tmp339)
+	tmp340, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Maxprot = tmp340
-	tmp341 := NewMachO_VmProt()
-	err = tmp341.Read(this._io, this, this._root)
+	this.Fileoff = uint32(tmp340)
+	tmp341, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Initprot = tmp341
-	tmp342, err := this._io.ReadU4le()
+	this.Filesize = uint32(tmp341)
+	tmp342 := NewMachO_VmProt()
+	err = tmp342.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Nsects = uint32(tmp342)
-	tmp343, err := this._io.ReadU4le()
+	this.Maxprot = tmp342
+	tmp343 := NewMachO_VmProt()
+	err = tmp343.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp343)
+	this.Initprot = tmp343
+	tmp344, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Nsects = uint32(tmp344)
+	tmp345, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Flags = uint32(tmp345)
 	this.Sections = make([]*MachO_SegmentCommand_Section, this.Nsects)
 	for i := range this.Sections {
-		tmp344 := NewMachO_SegmentCommand_Section()
-		err = tmp344.Read(this._io, this, this._root)
+		tmp346 := NewMachO_SegmentCommand_Section()
+		err = tmp346.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.Sections[i] = tmp344
+		this.Sections[i] = tmp346
 	}
 	return err
 }
@@ -4320,63 +4336,63 @@ func (this *MachO_SegmentCommand_Section) Read(io *kaitai.Stream, parent *MachO_
 	this._parent = parent
 	this._root = root
 
-	tmp345, err := this._io.ReadBytes(int(16))
+	tmp347, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp345 = kaitai.BytesStripRight(tmp345, 0)
-	this.SectName = string(tmp345)
-	tmp346, err := this._io.ReadBytes(int(16))
+	tmp347 = kaitai.BytesStripRight(tmp347, 0)
+	this.SectName = string(tmp347)
+	tmp348, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp346 = kaitai.BytesStripRight(tmp346, 0)
-	this.SegName = string(tmp346)
-	tmp347, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Addr = uint32(tmp347)
-	tmp348, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.Size = uint32(tmp348)
+	tmp348 = kaitai.BytesStripRight(tmp348, 0)
+	this.SegName = string(tmp348)
 	tmp349, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Offset = uint32(tmp349)
+	this.Addr = uint32(tmp349)
 	tmp350, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Align = uint32(tmp350)
+	this.Size = uint32(tmp350)
 	tmp351, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reloff = uint32(tmp351)
+	this.Offset = uint32(tmp351)
 	tmp352, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Nreloc = uint32(tmp352)
+	this.Align = uint32(tmp352)
 	tmp353, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Flags = uint32(tmp353)
+	this.Reloff = uint32(tmp353)
 	tmp354, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved1 = uint32(tmp354)
+	this.Nreloc = uint32(tmp354)
 	tmp355, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Reserved2 = uint32(tmp355)
+	this.Flags = uint32(tmp355)
+	tmp356, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Reserved1 = uint32(tmp356)
+	tmp357, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.Reserved2 = uint32(tmp357)
 	return err
 }
 func (this *MachO_SegmentCommand_Section) Data() (v []byte, err error) {
@@ -4392,12 +4408,12 @@ func (this *MachO_SegmentCommand_Section) Data() (v []byte, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp356, err := thisIo.ReadBytes(int(this.Size))
+	tmp358, err := thisIo.ReadBytes(int(this.Size))
 	if err != nil {
 		return nil, err
 	}
-	tmp356 = tmp356
-	this.data = tmp356
+	tmp358 = tmp358
+	this.data = tmp358
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -4423,16 +4439,16 @@ func (this *MachO_LcStr) Read(io *kaitai.Stream, parent interface{}, root *MachO
 	this._parent = parent
 	this._root = root
 
-	tmp357, err := this._io.ReadU4le()
+	tmp359, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Length = uint32(tmp357)
-	tmp358, err := this._io.ReadBytesTerm(0, false, true, true)
+	this.Length = uint32(tmp359)
+	tmp360, err := this._io.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return err
 	}
-	this.Value = string(tmp358)
+	this.Value = string(tmp360)
 	return err
 }
 type MachO_LoadCommand struct {
@@ -4454,32 +4470,18 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 	this._parent = parent
 	this._root = root
 
-	tmp359, err := this._io.ReadU4le()
+	tmp361, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Type = MachO_LoadCommandType(tmp359)
-	tmp360, err := this._io.ReadU4le()
+	this.Type = MachO_LoadCommandType(tmp361)
+	tmp362, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Size = uint32(tmp360)
+	this.Size = uint32(tmp362)
 	switch (this.Type) {
 	case MachO_LoadCommandType__IdDylinker:
-		tmp361, err := this._io.ReadBytes(int((this.Size - 8)))
-		if err != nil {
-			return err
-		}
-		tmp361 = tmp361
-		this._raw_Body = tmp361
-		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp362 := NewMachO_DylinkerCommand()
-		err = tmp362.Read(_io__raw_Body, this, this._root)
-		if err != nil {
-			return err
-		}
-		this.Body = tmp362
-	case MachO_LoadCommandType__ReexportDylib:
 		tmp363, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4487,13 +4489,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp363 = tmp363
 		this._raw_Body = tmp363
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp364 := NewMachO_DylibCommand()
+		tmp364 := NewMachO_DylinkerCommand()
 		err = tmp364.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp364
-	case MachO_LoadCommandType__BuildVersion:
+	case MachO_LoadCommandType__ReexportDylib:
 		tmp365, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4501,13 +4503,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp365 = tmp365
 		this._raw_Body = tmp365
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp366 := NewMachO_BuildVersionCommand()
+		tmp366 := NewMachO_DylibCommand()
 		err = tmp366.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp366
-	case MachO_LoadCommandType__SourceVersion:
+	case MachO_LoadCommandType__BuildVersion:
 		tmp367, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4515,13 +4517,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp367 = tmp367
 		this._raw_Body = tmp367
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp368 := NewMachO_SourceVersionCommand()
+		tmp368 := NewMachO_BuildVersionCommand()
 		err = tmp368.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp368
-	case MachO_LoadCommandType__FunctionStarts:
+	case MachO_LoadCommandType__SourceVersion:
 		tmp369, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4529,13 +4531,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp369 = tmp369
 		this._raw_Body = tmp369
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp370 := NewMachO_LinkeditDataCommand()
+		tmp370 := NewMachO_SourceVersionCommand()
 		err = tmp370.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp370
-	case MachO_LoadCommandType__Rpath:
+	case MachO_LoadCommandType__FunctionStarts:
 		tmp371, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4543,13 +4545,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp371 = tmp371
 		this._raw_Body = tmp371
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp372 := NewMachO_RpathCommand()
+		tmp372 := NewMachO_LinkeditDataCommand()
 		err = tmp372.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp372
-	case MachO_LoadCommandType__SubFramework:
+	case MachO_LoadCommandType__Rpath:
 		tmp373, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4557,13 +4559,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp373 = tmp373
 		this._raw_Body = tmp373
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp374 := NewMachO_SubCommand()
+		tmp374 := NewMachO_RpathCommand()
 		err = tmp374.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp374
-	case MachO_LoadCommandType__Routines:
+	case MachO_LoadCommandType__SubFramework:
 		tmp375, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4571,13 +4573,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp375 = tmp375
 		this._raw_Body = tmp375
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp376 := NewMachO_RoutinesCommand()
+		tmp376 := NewMachO_SubCommand()
 		err = tmp376.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp376
-	case MachO_LoadCommandType__SubLibrary:
+	case MachO_LoadCommandType__Routines:
 		tmp377, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4585,13 +4587,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp377 = tmp377
 		this._raw_Body = tmp377
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp378 := NewMachO_SubCommand()
+		tmp378 := NewMachO_RoutinesCommand()
 		err = tmp378.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp378
-	case MachO_LoadCommandType__DyldInfoOnly:
+	case MachO_LoadCommandType__SubLibrary:
 		tmp379, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4599,13 +4601,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp379 = tmp379
 		this._raw_Body = tmp379
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp380 := NewMachO_DyldInfoCommand()
+		tmp380 := NewMachO_SubCommand()
 		err = tmp380.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp380
-	case MachO_LoadCommandType__DyldEnvironment:
+	case MachO_LoadCommandType__DyldInfoOnly:
 		tmp381, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4613,13 +4615,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp381 = tmp381
 		this._raw_Body = tmp381
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp382 := NewMachO_DylinkerCommand()
+		tmp382 := NewMachO_DyldInfoCommand()
 		err = tmp382.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp382
-	case MachO_LoadCommandType__LoadDylinker:
+	case MachO_LoadCommandType__DyldEnvironment:
 		tmp383, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4633,7 +4635,7 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 			return err
 		}
 		this.Body = tmp384
-	case MachO_LoadCommandType__SegmentSplitInfo:
+	case MachO_LoadCommandType__LoadDylinker:
 		tmp385, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4641,13 +4643,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp385 = tmp385
 		this._raw_Body = tmp385
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp386 := NewMachO_LinkeditDataCommand()
+		tmp386 := NewMachO_DylinkerCommand()
 		err = tmp386.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp386
-	case MachO_LoadCommandType__Main:
+	case MachO_LoadCommandType__SegmentSplitInfo:
 		tmp387, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4655,13 +4657,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp387 = tmp387
 		this._raw_Body = tmp387
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp388 := NewMachO_EntryPointCommand()
+		tmp388 := NewMachO_LinkeditDataCommand()
 		err = tmp388.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp388
-	case MachO_LoadCommandType__LoadDylib:
+	case MachO_LoadCommandType__Main:
 		tmp389, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4669,13 +4671,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp389 = tmp389
 		this._raw_Body = tmp389
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp390 := NewMachO_DylibCommand()
+		tmp390 := NewMachO_EntryPointCommand()
 		err = tmp390.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp390
-	case MachO_LoadCommandType__EncryptionInfo:
+	case MachO_LoadCommandType__LoadDylib:
 		tmp391, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4683,13 +4685,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp391 = tmp391
 		this._raw_Body = tmp391
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp392 := NewMachO_EncryptionInfoCommand()
+		tmp392 := NewMachO_DylibCommand()
 		err = tmp392.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp392
-	case MachO_LoadCommandType__Dysymtab:
+	case MachO_LoadCommandType__EncryptionInfo:
 		tmp393, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4697,13 +4699,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp393 = tmp393
 		this._raw_Body = tmp393
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp394 := NewMachO_DysymtabCommand()
+		tmp394 := NewMachO_EncryptionInfoCommand()
 		err = tmp394.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp394
-	case MachO_LoadCommandType__TwolevelHints:
+	case MachO_LoadCommandType__Dysymtab:
 		tmp395, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4711,13 +4713,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp395 = tmp395
 		this._raw_Body = tmp395
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp396 := NewMachO_TwolevelHintsCommand()
+		tmp396 := NewMachO_DysymtabCommand()
 		err = tmp396.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp396
-	case MachO_LoadCommandType__EncryptionInfo64:
+	case MachO_LoadCommandType__TwolevelHints:
 		tmp397, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4725,13 +4727,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp397 = tmp397
 		this._raw_Body = tmp397
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp398 := NewMachO_EncryptionInfoCommand()
+		tmp398 := NewMachO_TwolevelHintsCommand()
 		err = tmp398.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp398
-	case MachO_LoadCommandType__LinkerOption:
+	case MachO_LoadCommandType__EncryptionInfo64:
 		tmp399, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4739,13 +4741,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp399 = tmp399
 		this._raw_Body = tmp399
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp400 := NewMachO_LinkerOptionCommand()
+		tmp400 := NewMachO_EncryptionInfoCommand()
 		err = tmp400.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp400
-	case MachO_LoadCommandType__DyldInfo:
+	case MachO_LoadCommandType__LinkerOption:
 		tmp401, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4753,13 +4755,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp401 = tmp401
 		this._raw_Body = tmp401
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp402 := NewMachO_DyldInfoCommand()
+		tmp402 := NewMachO_LinkerOptionCommand()
 		err = tmp402.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp402
-	case MachO_LoadCommandType__VersionMinTvos:
+	case MachO_LoadCommandType__DyldInfo:
 		tmp403, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4767,13 +4769,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp403 = tmp403
 		this._raw_Body = tmp403
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp404 := NewMachO_VersionMinCommand()
+		tmp404 := NewMachO_DyldInfoCommand()
 		err = tmp404.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp404
-	case MachO_LoadCommandType__LoadUpwardDylib:
+	case MachO_LoadCommandType__VersionMinTvos:
 		tmp405, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4781,13 +4783,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp405 = tmp405
 		this._raw_Body = tmp405
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp406 := NewMachO_DylibCommand()
+		tmp406 := NewMachO_VersionMinCommand()
 		err = tmp406.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp406
-	case MachO_LoadCommandType__Segment64:
+	case MachO_LoadCommandType__LoadUpwardDylib:
 		tmp407, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4795,13 +4797,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp407 = tmp407
 		this._raw_Body = tmp407
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp408 := NewMachO_SegmentCommand64()
+		tmp408 := NewMachO_DylibCommand()
 		err = tmp408.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp408
-	case MachO_LoadCommandType__Segment:
+	case MachO_LoadCommandType__Segment64:
 		tmp409, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4809,13 +4811,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp409 = tmp409
 		this._raw_Body = tmp409
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp410 := NewMachO_SegmentCommand()
+		tmp410 := NewMachO_SegmentCommand64()
 		err = tmp410.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp410
-	case MachO_LoadCommandType__SubUmbrella:
+	case MachO_LoadCommandType__Segment:
 		tmp411, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4823,13 +4825,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp411 = tmp411
 		this._raw_Body = tmp411
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp412 := NewMachO_SubCommand()
+		tmp412 := NewMachO_SegmentCommand()
 		err = tmp412.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp412
-	case MachO_LoadCommandType__VersionMinWatchos:
+	case MachO_LoadCommandType__SubUmbrella:
 		tmp413, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4837,13 +4839,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp413 = tmp413
 		this._raw_Body = tmp413
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp414 := NewMachO_VersionMinCommand()
+		tmp414 := NewMachO_SubCommand()
 		err = tmp414.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp414
-	case MachO_LoadCommandType__Routines64:
+	case MachO_LoadCommandType__VersionMinWatchos:
 		tmp415, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4851,13 +4853,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp415 = tmp415
 		this._raw_Body = tmp415
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp416 := NewMachO_RoutinesCommand64()
+		tmp416 := NewMachO_VersionMinCommand()
 		err = tmp416.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp416
-	case MachO_LoadCommandType__IdDylib:
+	case MachO_LoadCommandType__Routines64:
 		tmp417, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4865,13 +4867,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp417 = tmp417
 		this._raw_Body = tmp417
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp418 := NewMachO_DylibCommand()
+		tmp418 := NewMachO_RoutinesCommand64()
 		err = tmp418.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp418
-	case MachO_LoadCommandType__SubClient:
+	case MachO_LoadCommandType__IdDylib:
 		tmp419, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4879,13 +4881,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp419 = tmp419
 		this._raw_Body = tmp419
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp420 := NewMachO_SubCommand()
+		tmp420 := NewMachO_DylibCommand()
 		err = tmp420.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp420
-	case MachO_LoadCommandType__DylibCodeSignDrs:
+	case MachO_LoadCommandType__SubClient:
 		tmp421, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4893,13 +4895,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp421 = tmp421
 		this._raw_Body = tmp421
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp422 := NewMachO_LinkeditDataCommand()
+		tmp422 := NewMachO_SubCommand()
 		err = tmp422.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp422
-	case MachO_LoadCommandType__Symtab:
+	case MachO_LoadCommandType__DylibCodeSignDrs:
 		tmp423, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4907,13 +4909,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp423 = tmp423
 		this._raw_Body = tmp423
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp424 := NewMachO_SymtabCommand()
+		tmp424 := NewMachO_LinkeditDataCommand()
 		err = tmp424.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp424
-	case MachO_LoadCommandType__LinkerOptimizationHint:
+	case MachO_LoadCommandType__Symtab:
 		tmp425, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4921,13 +4923,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp425 = tmp425
 		this._raw_Body = tmp425
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp426 := NewMachO_LinkeditDataCommand()
+		tmp426 := NewMachO_SymtabCommand()
 		err = tmp426.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp426
-	case MachO_LoadCommandType__DataInCode:
+	case MachO_LoadCommandType__LinkerOptimizationHint:
 		tmp427, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4941,7 +4943,7 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 			return err
 		}
 		this.Body = tmp428
-	case MachO_LoadCommandType__CodeSignature:
+	case MachO_LoadCommandType__DataInCode:
 		tmp429, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4949,13 +4951,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp429 = tmp429
 		this._raw_Body = tmp429
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp430 := NewMachO_CodeSignatureCommand()
+		tmp430 := NewMachO_LinkeditDataCommand()
 		err = tmp430.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp430
-	case MachO_LoadCommandType__VersionMinIphoneos:
+	case MachO_LoadCommandType__CodeSignature:
 		tmp431, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4963,13 +4965,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp431 = tmp431
 		this._raw_Body = tmp431
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp432 := NewMachO_VersionMinCommand()
+		tmp432 := NewMachO_CodeSignatureCommand()
 		err = tmp432.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp432
-	case MachO_LoadCommandType__LoadWeakDylib:
+	case MachO_LoadCommandType__VersionMinIphoneos:
 		tmp433, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4977,13 +4979,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp433 = tmp433
 		this._raw_Body = tmp433
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp434 := NewMachO_DylibCommand()
+		tmp434 := NewMachO_VersionMinCommand()
 		err = tmp434.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp434
-	case MachO_LoadCommandType__LazyLoadDylib:
+	case MachO_LoadCommandType__LoadWeakDylib:
 		tmp435, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -4997,7 +4999,7 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 			return err
 		}
 		this.Body = tmp436
-	case MachO_LoadCommandType__Uuid:
+	case MachO_LoadCommandType__LazyLoadDylib:
 		tmp437, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -5005,13 +5007,13 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp437 = tmp437
 		this._raw_Body = tmp437
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp438 := NewMachO_UuidCommand()
+		tmp438 := NewMachO_DylibCommand()
 		err = tmp438.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp438
-	case MachO_LoadCommandType__VersionMinMacosx:
+	case MachO_LoadCommandType__Uuid:
 		tmp439, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
@@ -5019,19 +5021,33 @@ func (this *MachO_LoadCommand) Read(io *kaitai.Stream, parent *MachO, root *Mach
 		tmp439 = tmp439
 		this._raw_Body = tmp439
 		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
-		tmp440 := NewMachO_VersionMinCommand()
+		tmp440 := NewMachO_UuidCommand()
 		err = tmp440.Read(_io__raw_Body, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Body = tmp440
-	default:
+	case MachO_LoadCommandType__VersionMinMacosx:
 		tmp441, err := this._io.ReadBytes(int((this.Size - 8)))
 		if err != nil {
 			return err
 		}
 		tmp441 = tmp441
 		this._raw_Body = tmp441
+		_io__raw_Body := kaitai.NewStream(bytes.NewReader(this._raw_Body))
+		tmp442 := NewMachO_VersionMinCommand()
+		err = tmp442.Read(_io__raw_Body, this, this._root)
+		if err != nil {
+			return err
+		}
+		this.Body = tmp442
+	default:
+		tmp443, err := this._io.ReadBytes(int((this.Size - 8)))
+		if err != nil {
+			return err
+		}
+		tmp443 = tmp443
+		this._raw_Body = tmp443
 	}
 	return err
 }
@@ -5051,12 +5067,12 @@ func (this *MachO_UuidCommand) Read(io *kaitai.Stream, parent *MachO_LoadCommand
 	this._parent = parent
 	this._root = root
 
-	tmp442, err := this._io.ReadBytes(int(16))
+	tmp444, err := this._io.ReadBytes(int(16))
 	if err != nil {
 		return err
 	}
-	tmp442 = tmp442
-	this.Uuid = tmp442
+	tmp444 = tmp444
+	this.Uuid = tmp444
 	return err
 }
 type MachO_SymtabCommand struct {
@@ -5083,26 +5099,26 @@ func (this *MachO_SymtabCommand) Read(io *kaitai.Stream, parent *MachO_LoadComma
 	this._parent = parent
 	this._root = root
 
-	tmp443, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.SymOff = uint32(tmp443)
-	tmp444, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.NSyms = uint32(tmp444)
 	tmp445, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.StrOff = uint32(tmp445)
+	this.SymOff = uint32(tmp445)
 	tmp446, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.StrSize = uint32(tmp446)
+	this.NSyms = uint32(tmp446)
+	tmp447, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.StrOff = uint32(tmp447)
+	tmp448, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.StrSize = uint32(tmp448)
 	return err
 }
 func (this *MachO_SymtabCommand) Symbols() (v []interface{}, err error) {
@@ -5122,33 +5138,33 @@ func (this *MachO_SymtabCommand) Symbols() (v []interface{}, err error) {
 	for i := range this.symbols {
 		switch (this._root.Magic) {
 		case MachO_MagicType__MachoLeX64:
-			tmp447 := NewMachO_SymtabCommand_Nlist64()
-			err = tmp447.Read(thisIo, this, this._root)
-			if err != nil {
-				return nil, err
-			}
-			this.symbols[i] = tmp447
-		case MachO_MagicType__MachoBeX64:
-			tmp448 := NewMachO_SymtabCommand_Nlist64()
-			err = tmp448.Read(thisIo, this, this._root)
-			if err != nil {
-				return nil, err
-			}
-			this.symbols[i] = tmp448
-		case MachO_MagicType__MachoLeX86:
-			tmp449 := NewMachO_SymtabCommand_Nlist()
+			tmp449 := NewMachO_SymtabCommand_Nlist64()
 			err = tmp449.Read(thisIo, this, this._root)
 			if err != nil {
 				return nil, err
 			}
 			this.symbols[i] = tmp449
-		case MachO_MagicType__MachoBeX86:
-			tmp450 := NewMachO_SymtabCommand_Nlist()
+		case MachO_MagicType__MachoBeX64:
+			tmp450 := NewMachO_SymtabCommand_Nlist64()
 			err = tmp450.Read(thisIo, this, this._root)
 			if err != nil {
 				return nil, err
 			}
 			this.symbols[i] = tmp450
+		case MachO_MagicType__MachoLeX86:
+			tmp451 := NewMachO_SymtabCommand_Nlist()
+			err = tmp451.Read(thisIo, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.symbols[i] = tmp451
+		case MachO_MagicType__MachoBeX86:
+			tmp452 := NewMachO_SymtabCommand_Nlist()
+			err = tmp452.Read(thisIo, this, this._root)
+			if err != nil {
+				return nil, err
+			}
+			this.symbols[i] = tmp452
 		}
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
@@ -5172,19 +5188,19 @@ func (this *MachO_SymtabCommand) Strs() (v *MachO_SymtabCommand_StrTable, err er
 	if err != nil {
 		return nil, err
 	}
-	tmp451, err := thisIo.ReadBytes(int(this.StrSize))
+	tmp453, err := thisIo.ReadBytes(int(this.StrSize))
 	if err != nil {
 		return nil, err
 	}
-	tmp451 = tmp451
-	this._raw_strs = tmp451
+	tmp453 = tmp453
+	this._raw_strs = tmp453
 	_io__raw_strs := kaitai.NewStream(bytes.NewReader(this._raw_strs))
-	tmp452 := NewMachO_SymtabCommand_StrTable()
-	err = tmp452.Read(_io__raw_strs, this, this._root)
+	tmp454 := NewMachO_SymtabCommand_StrTable()
+	err = tmp454.Read(_io__raw_strs, this, this._root)
 	if err != nil {
 		return nil, err
 	}
-	this.strs = tmp452
+	this.strs = tmp454
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return nil, err
@@ -5210,17 +5226,17 @@ func (this *MachO_SymtabCommand_StrTable) Read(io *kaitai.Stream, parent *MachO_
 	this._parent = parent
 	this._root = root
 
-	tmp453, err := this._io.ReadU4le()
+	tmp455, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Unknown = uint32(tmp453)
+	this.Unknown = uint32(tmp455)
 	for i := 1;; i++ {
-		tmp454, err := this._io.ReadBytesTerm(0, false, true, false)
+		tmp456, err := this._io.ReadBytesTerm(0, false, true, false)
 		if err != nil {
 			return err
 		}
-		_it := string(tmp454)
+		_it := string(tmp456)
 		this.Items = append(this.Items, _it)
 		if _it == "" {
 			break
@@ -5250,31 +5266,31 @@ func (this *MachO_SymtabCommand_Nlist64) Read(io *kaitai.Stream, parent *MachO_S
 	this._parent = parent
 	this._root = root
 
-	tmp455, err := this._io.ReadU4le()
+	tmp457, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Un = uint32(tmp455)
-	tmp456, err := this._io.ReadU1()
+	this.Un = uint32(tmp457)
+	tmp458, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Type = tmp456
-	tmp457, err := this._io.ReadU1()
+	this.Type = tmp458
+	tmp459, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Sect = tmp457
-	tmp458, err := this._io.ReadU2le()
+	this.Sect = tmp459
+	tmp460, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Desc = uint16(tmp458)
-	tmp459, err := this._io.ReadU8le()
+	this.Desc = uint16(tmp460)
+	tmp461, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.Value = uint64(tmp459)
+	this.Value = uint64(tmp461)
 	return err
 }
 func (this *MachO_SymtabCommand_Nlist64) Name() (v string, err error) {
@@ -5290,11 +5306,11 @@ func (this *MachO_SymtabCommand_Nlist64) Name() (v string, err error) {
 		if err != nil {
 			return "", err
 		}
-		tmp460, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp462, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return "", err
 		}
-		this.name = string(tmp460)
+		this.name = string(tmp462)
 		_, err = this._io.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return "", err
@@ -5326,31 +5342,31 @@ func (this *MachO_SymtabCommand_Nlist) Read(io *kaitai.Stream, parent *MachO_Sym
 	this._parent = parent
 	this._root = root
 
-	tmp461, err := this._io.ReadU4le()
+	tmp463, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Un = uint32(tmp461)
-	tmp462, err := this._io.ReadU1()
+	this.Un = uint32(tmp463)
+	tmp464, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Type = tmp462
-	tmp463, err := this._io.ReadU1()
+	this.Type = tmp464
+	tmp465, err := this._io.ReadU1()
 	if err != nil {
 		return err
 	}
-	this.Sect = tmp463
-	tmp464, err := this._io.ReadU2le()
+	this.Sect = tmp465
+	tmp466, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Desc = uint16(tmp464)
-	tmp465, err := this._io.ReadU4le()
+	this.Desc = uint16(tmp466)
+	tmp467, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Value = uint32(tmp465)
+	this.Value = uint32(tmp467)
 	return err
 }
 func (this *MachO_SymtabCommand_Nlist) Name() (v string, err error) {
@@ -5366,11 +5382,11 @@ func (this *MachO_SymtabCommand_Nlist) Name() (v string, err error) {
 		if err != nil {
 			return "", err
 		}
-		tmp466, err := this._io.ReadBytesTerm(0, false, true, true)
+		tmp468, err := this._io.ReadBytesTerm(0, false, true, true)
 		if err != nil {
 			return "", err
 		}
-		this.name = string(tmp466)
+		this.name = string(tmp468)
 		_, err = this._io.Seek(_pos, io.SeekStart)
 		if err != nil {
 			return "", err
@@ -5397,18 +5413,18 @@ func (this *MachO_VersionMinCommand) Read(io *kaitai.Stream, parent *MachO_LoadC
 	this._parent = parent
 	this._root = root
 
-	tmp467 := NewMachO_Version()
-	err = tmp467.Read(this._io, this, this._root)
+	tmp469 := NewMachO_Version()
+	err = tmp469.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Version = tmp467
-	tmp468 := NewMachO_Version()
-	err = tmp468.Read(this._io, this, this._root)
+	this.Version = tmp469
+	tmp470 := NewMachO_Version()
+	err = tmp470.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Sdk = tmp468
+	this.Sdk = tmp470
 	return err
 }
 type MachO_EntryPointCommand struct {
@@ -5428,15 +5444,15 @@ func (this *MachO_EntryPointCommand) Read(io *kaitai.Stream, parent *MachO_LoadC
 	this._parent = parent
 	this._root = root
 
-	tmp469, err := this._io.ReadU8le()
+	tmp471, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.EntryOff = uint64(tmp469)
-	tmp470, err := this._io.ReadU8le()
+	this.EntryOff = uint64(tmp471)
+	tmp472, err := this._io.ReadU8le()
 	if err != nil {
 		return err
 	}
-	this.StackSize = uint64(tmp470)
+	this.StackSize = uint64(tmp472)
 	return err
 }

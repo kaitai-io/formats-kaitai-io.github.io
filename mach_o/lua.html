@@ -271,6 +271,7 @@ section#format-index .row {
 <span class="kd">local</span> <span class="n">utils</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;utils&quot;</span><span class="p">)</span>
 <span class="kd">local</span> <span class="n">stringstream</span> <span class="o">=</span> <span class="nb">require</span><span class="p">(</span><span class="s2">&quot;string_stream&quot;</span><span class="p">)</span>
 
+<span class="nb">require</span><span class="p">(</span><span class="s2">&quot;asn1_der&quot;</span><span class="p">)</span>
 <span class="n">MachO</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="n">MachO</span><span class="p">.</span><span class="n">MagicType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
@@ -479,7 +480,8 @@ section#format-index .row {
   <span class="n">code_directory</span> <span class="o">=</span> <span class="mi">4208856066</span><span class="p">,</span>
   <span class="n">embedded_signature</span> <span class="o">=</span> <span class="mi">4208856256</span><span class="p">,</span>
   <span class="n">detached_signature</span> <span class="o">=</span> <span class="mi">4208856257</span><span class="p">,</span>
-  <span class="n">entitlement</span> <span class="o">=</span> <span class="mi">4208882033</span><span class="p">,</span>
+  <span class="n">entitlements</span> <span class="o">=</span> <span class="mi">4208882033</span><span class="p">,</span>
+  <span class="n">der_entitlements</span> <span class="o">=</span> <span class="mi">4208882034</span><span class="p">,</span>
 <span class="p">}</span>
 
 <span class="kr">function</span> <span class="nc">MachO</span><span class="p">.</span><span class="nc">CsBlob</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
@@ -501,10 +503,6 @@ section#format-index .row {
     <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
     <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">CodeDirectory</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
-  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">CsMagic</span><span class="p">.</span><span class="n">entitlement</span> <span class="kr">then</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
-    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
-    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">Entitlement</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">CsMagic</span><span class="p">.</span><span class="n">requirements</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
@@ -517,27 +515,21 @@ section#format-index .row {
     <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
     <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">SuperBlob</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">CsMagic</span><span class="p">.</span><span class="n">entitlements</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">Entitlements</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
   <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">CsMagic</span><span class="p">.</span><span class="n">detached_signature</span> <span class="kr">then</span>
     <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
     <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
     <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">SuperBlob</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+  <span class="kr">elseif</span> <span class="n">_on</span> <span class="o">==</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">CsMagic</span><span class="p">.</span><span class="n">der_entitlements</span> <span class="kr">then</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">stringstream</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_raw_body</span><span class="p">))</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">Asn1Der</span><span class="p">(</span><span class="n">_io</span><span class="p">)</span>
   <span class="kr">else</span>
     <span class="n">self</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
   <span class="kr">end</span>
-<span class="kr">end</span>
-
-
-<span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">Entitlement</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">MachO</span><span class="p">.</span><span class="nc">CsBlob</span><span class="p">.</span><span class="nc">Entitlement</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">MachO</span><span class="p">.</span><span class="nc">CsBlob</span><span class="p">.</span><span class="nc">Entitlement</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
 <span class="kr">end</span>
 
 
@@ -882,6 +874,7 @@ section#format-index .row {
   <span class="n">resource_dir</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
   <span class="n">application</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
   <span class="n">entitlements</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="n">der_entitlements</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
   <span class="n">alternate_code_directories</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span>
   <span class="n">signature_slot</span> <span class="o">=</span> <span class="mi">65536</span><span class="p">,</span>
 <span class="p">}</span>
@@ -987,6 +980,20 @@ section#format-index .row {
 <span class="kr">end</span>
 
 <span class="kr">function</span> <span class="nc">MachO</span><span class="p">.</span><span class="nc">CsBlob</span><span class="p">.</span><span class="nc">BlobWrapper</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
+<span class="kr">end</span>
+
+
+<span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span><span class="p">.</span><span class="n">Entitlements</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">MachO</span><span class="p">.</span><span class="nc">CsBlob</span><span class="p">.</span><span class="nc">Entitlements</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">MachO</span><span class="p">.</span><span class="nc">CsBlob</span><span class="p">.</span><span class="nc">Entitlements</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_full</span><span class="p">()</span>
 <span class="kr">end</span>
 

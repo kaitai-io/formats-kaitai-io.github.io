@@ -346,11 +346,13 @@ and build them along with your project.</p>
 
 <span class="cp">#include</span> <span class="cpf">&quot;kaitai/kaitaistruct.h&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;stdint.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;asn1_der.h&quot;</span><span class="cp"></span>
 <span class="cp">#include</span> <span class="cpf">&lt;vector&gt;</span><span class="cp"></span>
 
 <span class="cp">#if KAITAI_STRUCT_VERSION &lt; 9000L</span>
 <span class="cp">#error &quot;Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required&quot;</span>
 <span class="cp">#endif</span>
+<span class="k">class</span> <span class="nc">asn1_der_t</span><span class="p">;</span>
 
 <span class="k">class</span> <span class="nc">mach_o_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
@@ -650,7 +652,6 @@ and build them along with your project.</p>
     <span class="k">class</span> <span class="nc">cs_blob_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
     <span class="k">public</span><span class="o">:</span>
-        <span class="k">class</span> <span class="nc">entitlement_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">code_directory_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">data_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">super_blob_t</span><span class="p">;</span>
@@ -660,6 +661,7 @@ and build them along with your project.</p>
         <span class="k">class</span> <span class="nc">requirement_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">requirements_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">blob_wrapper_t</span><span class="p">;</span>
+        <span class="k">class</span> <span class="nc">entitlements_t</span><span class="p">;</span>
         <span class="k">class</span> <span class="nc">requirements_blob_index_t</span><span class="p">;</span>
 
         <span class="k">enum</span> <span class="nc">cs_magic_t</span> <span class="p">{</span>
@@ -669,7 +671,8 @@ and build them along with your project.</p>
             <span class="n">CS_MAGIC_CODE_DIRECTORY</span> <span class="o">=</span> <span class="mi">4208856066</span><span class="p">,</span>
             <span class="n">CS_MAGIC_EMBEDDED_SIGNATURE</span> <span class="o">=</span> <span class="mi">4208856256</span><span class="p">,</span>
             <span class="n">CS_MAGIC_DETACHED_SIGNATURE</span> <span class="o">=</span> <span class="mi">4208856257</span><span class="p">,</span>
-            <span class="n">CS_MAGIC_ENTITLEMENT</span> <span class="o">=</span> <span class="mi">4208882033</span>
+            <span class="n">CS_MAGIC_ENTITLEMENTS</span> <span class="o">=</span> <span class="mi">4208882033</span><span class="p">,</span>
+            <span class="n">CS_MAGIC_DER_ENTITLEMENTS</span> <span class="o">=</span> <span class="mi">4208882034</span>
         <span class="p">};</span>
 
         <span class="n">cs_blob_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
@@ -680,30 +683,6 @@ and build them along with your project.</p>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="o">~</span><span class="n">cs_blob_t</span><span class="p">();</span>
-
-        <span class="k">class</span> <span class="nc">entitlement_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
-
-        <span class="k">public</span><span class="o">:</span>
-
-            <span class="n">entitlement_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
-
-        <span class="k">private</span><span class="o">:</span>
-            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
-            <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
-
-        <span class="k">public</span><span class="o">:</span>
-            <span class="o">~</span><span class="n">entitlement_t</span><span class="p">();</span>
-
-        <span class="k">private</span><span class="o">:</span>
-            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
-            <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
-            <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
-
-        <span class="k">public</span><span class="o">:</span>
-            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
-            <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
-            <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
-        <span class="p">};</span>
 
         <span class="k">class</span> <span class="nc">code_directory_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
 
@@ -1183,6 +1162,7 @@ and build them along with your project.</p>
                 <span class="n">CSSLOT_TYPE_RESOURCE_DIR</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
                 <span class="n">CSSLOT_TYPE_APPLICATION</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
                 <span class="n">CSSLOT_TYPE_ENTITLEMENTS</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
+                <span class="n">CSSLOT_TYPE_DER_ENTITLEMENTS</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
                 <span class="n">CSSLOT_TYPE_ALTERNATE_CODE_DIRECTORIES</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">,</span>
                 <span class="n">CSSLOT_TYPE_SIGNATURE_SLOT</span> <span class="o">=</span> <span class="mi">65536</span>
             <span class="p">};</span>
@@ -1328,6 +1308,30 @@ and build them along with your project.</p>
 
         <span class="k">public</span><span class="o">:</span>
             <span class="o">~</span><span class="n">blob_wrapper_t</span><span class="p">();</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
+            <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
+            <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">data</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_data</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">};</span>
+
+        <span class="k">class</span> <span class="nc">entitlements_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
+
+        <span class="k">public</span><span class="o">:</span>
+
+            <span class="n">entitlements_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
+
+        <span class="k">private</span><span class="o">:</span>
+            <span class="kt">void</span> <span class="n">_read</span><span class="p">();</span>
+            <span class="kt">void</span> <span class="nf">_clean_up</span><span class="p">();</span>
+
+        <span class="k">public</span><span class="o">:</span>
+            <span class="o">~</span><span class="n">entitlements_t</span><span class="p">();</span>
 
         <span class="k">private</span><span class="o">:</span>
             <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_data</span><span class="p">;</span>
@@ -3686,13 +3690,6 @@ and build them along with your project.</p>
         <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">code_directory_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
-    <span class="k">case</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="nl">CS_MAGIC_ENTITLEMENT</span><span class="p">:</span> <span class="p">{</span>
-        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
-        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
-        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
-        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">entitlement_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
-    <span class="p">}</span>
     <span class="k">case</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="nl">CS_MAGIC_REQUIREMENTS</span><span class="p">:</span> <span class="p">{</span>
         <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
         <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
@@ -3714,11 +3711,25 @@ and build them along with your project.</p>
         <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">super_blob_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
+    <span class="k">case</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="nl">CS_MAGIC_ENTITLEMENTS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">entitlements_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
     <span class="k">case</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="nl">CS_MAGIC_DETACHED_SIGNATURE</span><span class="p">:</span> <span class="p">{</span>
         <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
         <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
         <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
         <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">super_blob_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m__root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">case</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="nl">CS_MAGIC_DER_ENTITLEMENTS</span><span class="p">:</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">m__raw_body</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+        <span class="n">m__io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="p">(</span><span class="n">m__raw_body</span><span class="p">);</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">asn1_der_t</span><span class="p">(</span><span class="n">m__io__raw_body</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
     <span class="p">}</span>
     <span class="k">default</span><span class="o">:</span> <span class="p">{</span>
@@ -3741,29 +3752,6 @@ and build them along with your project.</p>
             <span class="k">delete</span> <span class="n">m_body</span><span class="p">;</span> <span class="n">m_body</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlement_t</span><span class="o">::</span><span class="n">entitlement_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
-    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
-
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="n">_read</span><span class="p">();</span>
-    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
-        <span class="n">_clean_up</span><span class="p">();</span>
-        <span class="k">throw</span><span class="p">;</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlement_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlement_t</span><span class="o">::~</span><span class="n">entitlement_t</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">_clean_up</span><span class="p">();</span>
-<span class="p">}</span>
-
-<span class="kt">void</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlement_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">code_directory_t</span><span class="o">::</span><span class="n">code_directory_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
@@ -4493,6 +4481,29 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">blob_wrapper_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlements_t</span><span class="o">::</span><span class="n">entitlements_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
+    <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">_read</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">catch</span><span class="p">(...)</span> <span class="p">{</span>
+        <span class="n">_clean_up</span><span class="p">();</span>
+        <span class="k">throw</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlements_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">m_data</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes_full</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlements_t</span><span class="o">::~</span><span class="n">entitlements_t</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">_clean_up</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">entitlements_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
 <span class="p">}</span>
 
 <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">requirements_blob_index_t</span><span class="o">::</span><span class="n">requirements_blob_index_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">::</span><span class="n">cs_blob_t</span><span class="o">::</span><span class="n">requirements_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">mach_o_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>

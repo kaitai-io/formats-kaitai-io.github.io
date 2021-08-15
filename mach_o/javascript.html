@@ -303,13 +303,13 @@ section#format-index .row {
 
 <span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
   <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
+    <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">,</span> <span class="s1">&#39;./Asn1Der&#39;</span><span class="p">],</span> <span class="nx">factory</span><span class="p">);</span>
   <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">module</span> <span class="o">===</span> <span class="s1">&#39;object&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">));</span>
+    <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">require</span><span class="p">(</span><span class="s1">&#39;kaitai-struct/KaitaiStream&#39;</span><span class="p">),</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./Asn1Der&#39;</span><span class="p">));</span>
   <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-    <span class="nx">root</span><span class="p">.</span><span class="nx">MachO</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">);</span>
+    <span class="nx">root</span><span class="p">.</span><span class="nx">MachO</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">.</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">Asn1Der</span><span class="p">);</span>
   <span class="p">}</span>
-<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">)</span> <span class="p">{</span>
+<span class="p">}(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">KaitaiStream</span><span class="p">,</span> <span class="nx">Asn1Der</span><span class="p">)</span> <span class="p">{</span>
 <span class="kd">var</span> <span class="nx">MachO</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
   <span class="nx">MachO</span><span class="p">.</span><span class="nx">MagicType</span> <span class="o">=</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">freeze</span><span class="p">({</span>
     <span class="nx">FAT_LE</span><span class="o">:</span> <span class="mf">3199925962</span><span class="p">,</span>
@@ -608,7 +608,8 @@ section#format-index .row {
       <span class="nx">CODE_DIRECTORY</span><span class="o">:</span> <span class="mf">4208856066</span><span class="p">,</span>
       <span class="nx">EMBEDDED_SIGNATURE</span><span class="o">:</span> <span class="mf">4208856256</span><span class="p">,</span>
       <span class="nx">DETACHED_SIGNATURE</span><span class="o">:</span> <span class="mf">4208856257</span><span class="p">,</span>
-      <span class="nx">ENTITLEMENT</span><span class="o">:</span> <span class="mf">4208882033</span><span class="p">,</span>
+      <span class="nx">ENTITLEMENTS</span><span class="o">:</span> <span class="mf">4208882033</span><span class="p">,</span>
+      <span class="nx">DER_ENTITLEMENTS</span><span class="o">:</span> <span class="mf">4208882034</span><span class="p">,</span>
 
       <span class="mf">4208855809</span><span class="o">:</span> <span class="s2">&quot;BLOB_WRAPPER&quot;</span><span class="p">,</span>
       <span class="mf">4208856064</span><span class="o">:</span> <span class="s2">&quot;REQUIREMENT&quot;</span><span class="p">,</span>
@@ -616,7 +617,8 @@ section#format-index .row {
       <span class="mf">4208856066</span><span class="o">:</span> <span class="s2">&quot;CODE_DIRECTORY&quot;</span><span class="p">,</span>
       <span class="mf">4208856256</span><span class="o">:</span> <span class="s2">&quot;EMBEDDED_SIGNATURE&quot;</span><span class="p">,</span>
       <span class="mf">4208856257</span><span class="o">:</span> <span class="s2">&quot;DETACHED_SIGNATURE&quot;</span><span class="p">,</span>
-      <span class="mf">4208882033</span><span class="o">:</span> <span class="s2">&quot;ENTITLEMENT&quot;</span><span class="p">,</span>
+      <span class="mf">4208882033</span><span class="o">:</span> <span class="s2">&quot;ENTITLEMENTS&quot;</span><span class="p">,</span>
+      <span class="mf">4208882034</span><span class="o">:</span> <span class="s2">&quot;DER_ENTITLEMENTS&quot;</span><span class="p">,</span>
     <span class="p">});</span>
 
     <span class="kd">function</span> <span class="nx">CsBlob</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -640,11 +642,6 @@ section#format-index .row {
         <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">CodeDirectory</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">CsBlob</span><span class="p">.</span><span class="nx">CsMagic</span><span class="p">.</span><span class="nx">ENTITLEMENT</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
-        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Entitlement</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
-        <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">CsBlob</span><span class="p">.</span><span class="nx">CsMagic</span><span class="p">.</span><span class="nx">REQUIREMENTS</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
         <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
@@ -660,31 +657,26 @@ section#format-index .row {
         <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SuperBlob</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">CsBlob</span><span class="p">.</span><span class="nx">CsMagic</span><span class="p">.</span><span class="nx">ENTITLEMENTS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Entitlements</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">CsBlob</span><span class="p">.</span><span class="nx">CsMagic</span><span class="p">.</span><span class="nx">DETACHED_SIGNATURE</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
         <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">SuperBlob</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">MachO</span><span class="p">.</span><span class="nx">CsBlob</span><span class="p">.</span><span class="nx">CsMagic</span><span class="p">.</span><span class="nx">DER_ENTITLEMENTS</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
+        <span class="kd">var</span> <span class="nx">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">KaitaiStream</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_raw_body</span><span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Asn1Der</span><span class="p">(</span><span class="nx">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">default</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytes</span><span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">8</span><span class="p">));</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="p">}</span>
     <span class="p">}</span>
-
-    <span class="kd">var</span> <span class="nx">Entitlement</span> <span class="o">=</span> <span class="nx">CsBlob</span><span class="p">.</span><span class="nx">Entitlement</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">function</span> <span class="nx">Entitlement</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-
-        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-      <span class="p">}</span>
-      <span class="nx">Entitlement</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
-      <span class="p">}</span>
-
-      <span class="k">return</span> <span class="nx">Entitlement</span><span class="p">;</span>
-    <span class="p">})();</span>
 
     <span class="kd">var</span> <span class="nx">CodeDirectory</span> <span class="o">=</span> <span class="nx">CsBlob</span><span class="p">.</span><span class="nx">CodeDirectory</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="kd">function</span> <span class="nx">CodeDirectory</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
@@ -1066,6 +1058,7 @@ section#format-index .row {
         <span class="nx">RESOURCE_DIR</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span>
         <span class="nx">APPLICATION</span><span class="o">:</span> <span class="mf">4</span><span class="p">,</span>
         <span class="nx">ENTITLEMENTS</span><span class="o">:</span> <span class="mf">5</span><span class="p">,</span>
+        <span class="nx">DER_ENTITLEMENTS</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
         <span class="nx">ALTERNATE_CODE_DIRECTORIES</span><span class="o">:</span> <span class="mf">4096</span><span class="p">,</span>
         <span class="nx">SIGNATURE_SLOT</span><span class="o">:</span> <span class="mf">65536</span><span class="p">,</span>
 
@@ -1075,6 +1068,7 @@ section#format-index .row {
         <span class="mf">3</span><span class="o">:</span> <span class="s2">&quot;RESOURCE_DIR&quot;</span><span class="p">,</span>
         <span class="mf">4</span><span class="o">:</span> <span class="s2">&quot;APPLICATION&quot;</span><span class="p">,</span>
         <span class="mf">5</span><span class="o">:</span> <span class="s2">&quot;ENTITLEMENTS&quot;</span><span class="p">,</span>
+        <span class="mf">7</span><span class="o">:</span> <span class="s2">&quot;DER_ENTITLEMENTS&quot;</span><span class="p">,</span>
         <span class="mf">4096</span><span class="o">:</span> <span class="s2">&quot;ALTERNATE_CODE_DIRECTORIES&quot;</span><span class="p">,</span>
         <span class="mf">65536</span><span class="o">:</span> <span class="s2">&quot;SIGNATURE_SLOT&quot;</span><span class="p">,</span>
       <span class="p">});</span>
@@ -1196,6 +1190,21 @@ section#format-index .row {
       <span class="p">}</span>
 
       <span class="k">return</span> <span class="nx">BlobWrapper</span><span class="p">;</span>
+    <span class="p">})();</span>
+
+    <span class="kd">var</span> <span class="nx">Entitlements</span> <span class="o">=</span> <span class="nx">CsBlob</span><span class="p">.</span><span class="nx">Entitlements</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">function</span> <span class="nx">Entitlements</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+      <span class="p">}</span>
+      <span class="nx">Entitlements</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readBytesFull</span><span class="p">();</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">Entitlements</span><span class="p">;</span>
     <span class="p">})();</span>
 
     <span class="kd">var</span> <span class="nx">RequirementsBlobIndex</span> <span class="o">=</span> <span class="nx">CsBlob</span><span class="p">.</span><span class="nx">RequirementsBlobIndex</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>

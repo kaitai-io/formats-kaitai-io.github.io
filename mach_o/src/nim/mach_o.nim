@@ -1,6 +1,8 @@
 import kaitai_struct_nim_runtime
 import options
+import /serialization/asn1/asn1_der
 
+import "asn1_der"
 type
   MachO* = ref object of KaitaiStruct
     `magic`*: MachO_MagicType
@@ -132,10 +134,8 @@ type
     code_directory = 4208856066
     embedded_signature = 4208856256
     detached_signature = 4208856257
-    entitlement = 4208882033
-  MachO_CsBlob_Entitlement* = ref object of KaitaiStruct
-    `data`*: seq[byte]
-    `parent`*: MachO_CsBlob
+    entitlements = 4208882033
+    der_entitlements = 4208882034
   MachO_CsBlob_CodeDirectory* = ref object of KaitaiStruct
     `version`*: uint32
     `flags`*: uint32
@@ -241,6 +241,7 @@ type
     resource_dir = 3
     application = 4
     entitlements = 5
+    der_entitlements = 7
     alternate_code_directories = 4096
     signature_slot = 65536
   MachO_CsBlob_Match* = ref object of KaitaiStruct
@@ -266,6 +267,9 @@ type
     `items`*: seq[MachO_CsBlob_RequirementsBlobIndex]
     `parent`*: MachO_CsBlob
   MachO_CsBlob_BlobWrapper* = ref object of KaitaiStruct
+    `data`*: seq[byte]
+    `parent`*: MachO_CsBlob
+  MachO_CsBlob_Entitlements* = ref object of KaitaiStruct
     `data`*: seq[byte]
     `parent`*: MachO_CsBlob
   MachO_CsBlob_RequirementsBlobIndex* = ref object of KaitaiStruct
@@ -643,7 +647,6 @@ proc read*(_: typedesc[MachO_RpathCommand], io: KaitaiStream, root: KaitaiStruct
 proc read*(_: typedesc[MachO_Uleb128], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_Uleb128
 proc read*(_: typedesc[MachO_SourceVersionCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_SourceVersionCommand
 proc read*(_: typedesc[MachO_CsBlob], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_CsBlob
-proc read*(_: typedesc[MachO_CsBlob_Entitlement], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_Entitlement
 proc read*(_: typedesc[MachO_CsBlob_CodeDirectory], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_CodeDirectory
 proc read*(_: typedesc[MachO_CsBlob_Data], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): MachO_CsBlob_Data
 proc read*(_: typedesc[MachO_CsBlob_SuperBlob], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_SuperBlob
@@ -663,6 +666,7 @@ proc read*(_: typedesc[MachO_CsBlob_Match], io: KaitaiStream, root: KaitaiStruct
 proc read*(_: typedesc[MachO_CsBlob_Requirement], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_Requirement
 proc read*(_: typedesc[MachO_CsBlob_Requirements], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_Requirements
 proc read*(_: typedesc[MachO_CsBlob_BlobWrapper], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_BlobWrapper
+proc read*(_: typedesc[MachO_CsBlob_Entitlements], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_Entitlements
 proc read*(_: typedesc[MachO_CsBlob_RequirementsBlobIndex], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob_Requirements): MachO_CsBlob_RequirementsBlobIndex
 proc read*(_: typedesc[MachO_BuildVersionCommand], io: KaitaiStream, root: KaitaiStruct, parent: MachO_LoadCommand): MachO_BuildVersionCommand
 proc read*(_: typedesc[MachO_BuildVersionCommand_BuildToolVersion], io: KaitaiStream, root: KaitaiStruct, parent: MachO_BuildVersionCommand): MachO_BuildVersionCommand_BuildToolVersion
@@ -888,12 +892,6 @@ proc read*(_: typedesc[MachO_CsBlob], io: KaitaiStream, root: KaitaiStruct, pare
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = MachO_CsBlob_CodeDirectory.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
-    elif on == mach_o.entitlement:
-      let rawBodyExpr = this.io.readBytes(int((this.length - 8)))
-      this.rawBody = rawBodyExpr
-      let rawBodyIo = newKaitaiStream(rawBodyExpr)
-      let bodyExpr = MachO_CsBlob_Entitlement.read(rawBodyIo, this.root, this)
-      this.body = bodyExpr
     elif on == mach_o.requirements:
       let rawBodyExpr = this.io.readBytes(int((this.length - 8)))
       this.rawBody = rawBodyExpr
@@ -912,11 +910,23 @@ proc read*(_: typedesc[MachO_CsBlob], io: KaitaiStream, root: KaitaiStruct, pare
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = MachO_CsBlob_SuperBlob.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
+    elif on == mach_o.entitlements:
+      let rawBodyExpr = this.io.readBytes(int((this.length - 8)))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = MachO_CsBlob_Entitlements.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
     elif on == mach_o.detached_signature:
       let rawBodyExpr = this.io.readBytes(int((this.length - 8)))
       this.rawBody = rawBodyExpr
       let rawBodyIo = newKaitaiStream(rawBodyExpr)
       let bodyExpr = MachO_CsBlob_SuperBlob.read(rawBodyIo, this.root, this)
+      this.body = bodyExpr
+    elif on == mach_o.der_entitlements:
+      let rawBodyExpr = this.io.readBytes(int((this.length - 8)))
+      this.rawBody = rawBodyExpr
+      let rawBodyIo = newKaitaiStream(rawBodyExpr)
+      let bodyExpr = Asn1Der.read(rawBodyIo, this.root, this)
       this.body = bodyExpr
     else:
       let bodyExpr = this.io.readBytes(int((this.length - 8)))
@@ -924,20 +934,6 @@ proc read*(_: typedesc[MachO_CsBlob], io: KaitaiStream, root: KaitaiStruct, pare
 
 proc fromFile*(_: typedesc[MachO_CsBlob], filename: string): MachO_CsBlob =
   MachO_CsBlob.read(newKaitaiFileStream(filename), nil, nil)
-
-proc read*(_: typedesc[MachO_CsBlob_Entitlement], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_Entitlement =
-  template this: untyped = result
-  this = new(MachO_CsBlob_Entitlement)
-  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
-  this.io = io
-  this.root = root
-  this.parent = parent
-
-  let dataExpr = this.io.readBytesFull()
-  this.data = dataExpr
-
-proc fromFile*(_: typedesc[MachO_CsBlob_Entitlement], filename: string): MachO_CsBlob_Entitlement =
-  MachO_CsBlob_Entitlement.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MachO_CsBlob_CodeDirectory], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_CodeDirectory =
   template this: untyped = result
@@ -1363,6 +1359,20 @@ proc read*(_: typedesc[MachO_CsBlob_BlobWrapper], io: KaitaiStream, root: Kaitai
 
 proc fromFile*(_: typedesc[MachO_CsBlob_BlobWrapper], filename: string): MachO_CsBlob_BlobWrapper =
   MachO_CsBlob_BlobWrapper.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[MachO_CsBlob_Entitlements], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob): MachO_CsBlob_Entitlements =
+  template this: untyped = result
+  this = new(MachO_CsBlob_Entitlements)
+  let root = if root == nil: cast[MachO](this) else: cast[MachO](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
+  let dataExpr = this.io.readBytesFull()
+  this.data = dataExpr
+
+proc fromFile*(_: typedesc[MachO_CsBlob_Entitlements], filename: string): MachO_CsBlob_Entitlements =
+  MachO_CsBlob_Entitlements.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[MachO_CsBlob_RequirementsBlobIndex], io: KaitaiStream, root: KaitaiStruct, parent: MachO_CsBlob_Requirements): MachO_CsBlob_RequirementsBlobIndex =
   template this: untyped = result

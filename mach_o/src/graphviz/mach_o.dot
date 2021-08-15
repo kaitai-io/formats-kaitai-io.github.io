@@ -67,21 +67,13 @@ cs_blob__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0
 	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
 	<TR><TD>:cs_magic_requirement</TD><TD PORT="case0">Requirement</TD></TR>
 	<TR><TD>:cs_magic_code_directory</TD><TD PORT="case1">CodeDirectory</TD></TR>
-	<TR><TD>:cs_magic_entitlement</TD><TD PORT="case2">Entitlement</TD></TR>
-	<TR><TD>:cs_magic_requirements</TD><TD PORT="case3">Requirements</TD></TR>
-	<TR><TD>:cs_magic_blob_wrapper</TD><TD PORT="case4">BlobWrapper</TD></TR>
-	<TR><TD>:cs_magic_embedded_signature</TD><TD PORT="case5">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_requirements</TD><TD PORT="case2">Requirements</TD></TR>
+	<TR><TD>:cs_magic_blob_wrapper</TD><TD PORT="case3">BlobWrapper</TD></TR>
+	<TR><TD>:cs_magic_embedded_signature</TD><TD PORT="case4">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_entitlements</TD><TD PORT="case5">Entitlements</TD></TR>
 	<TR><TD>:cs_magic_detached_signature</TD><TD PORT="case6">SuperBlob</TD></TR>
+	<TR><TD>:cs_magic_der_entitlements</TD><TD PORT="case7">Asn1Der</TD></TR>
 </TABLE>>];
-			subgraph cluster__entitlement {
-				label="MachO::CsBlob::Entitlement";
-				graph[style=dotted];
-
-				entitlement__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
-					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
-					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
-				</TABLE>>];
-			}
 			subgraph cluster__code_directory {
 				label="MachO::CsBlob::CodeDirectory";
 				graph[style=dotted];
@@ -317,6 +309,15 @@ expr__seq_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 				graph[style=dotted];
 
 				blob_wrapper__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
+				</TABLE>>];
+			}
+			subgraph cluster__entitlements {
+				label="MachO::CsBlob::Entitlements";
+				graph[style=dotted];
+
+				entitlements__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 					<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 					<TR><TD PORT="data_pos">0</TD><TD PORT="data_size">⇲</TD><TD></TD><TD PORT="data_type">data</TD></TR>
 				</TABLE>>];
@@ -1190,11 +1191,12 @@ symtab_command__inst__symbols_symbols_switch [label=<<TABLE BORDER="0" CELLBORDE
 	cs_blob__seq:body_type -> cs_blob__seq_body_switch [style=bold];
 	cs_blob__seq_body_switch:case0 -> requirement__seq [style=bold];
 	cs_blob__seq_body_switch:case1 -> code_directory__seq [style=bold];
-	cs_blob__seq_body_switch:case2 -> entitlement__seq [style=bold];
-	cs_blob__seq_body_switch:case3 -> requirements__seq [style=bold];
-	cs_blob__seq_body_switch:case4 -> blob_wrapper__seq [style=bold];
-	cs_blob__seq_body_switch:case5 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case2 -> requirements__seq [style=bold];
+	cs_blob__seq_body_switch:case3 -> blob_wrapper__seq [style=bold];
+	cs_blob__seq_body_switch:case4 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case5 -> entitlements__seq [style=bold];
 	cs_blob__seq_body_switch:case6 -> super_blob__seq [style=bold];
+	cs_blob__seq_body_switch:case7 -> asn1_der__seq [style=bold];
 	cs_blob__seq:magic_type -> cs_blob__seq:body_type [color="#404040"];
 	code_directory__seq:ident_offset_type -> code_directory__inst__ident:ident_pos [color="#404040"];
 	code_directory__seq:team_id_offset_type -> code_directory__inst__team_id:team_id_pos [color="#404040"];

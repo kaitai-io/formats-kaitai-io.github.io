@@ -263,6 +263,8 @@ section#format-index .row {
       <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">fmt/693</span> <span class="c1"># Mach-O 64bit</span>
     <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q2627217</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MIT</span>
+  <span class="nt">imports</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">/serialization/asn1/asn1_der</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
@@ -1260,7 +1262,8 @@ section#format-index .row {
             <span class="s">&#39;cs_magic::requirement&#39;</span>       <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">requirement</span>
             <span class="s">&#39;cs_magic::requirements&#39;</span>      <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">requirements</span>
             <span class="s">&#39;cs_magic::code_directory&#39;</span>    <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">code_directory</span>
-            <span class="s">&#39;cs_magic::entitlement&#39;</span>       <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">entitlement</span>
+            <span class="s">&#39;cs_magic::entitlements&#39;</span>      <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">entitlements</span>
+            <span class="s">&#39;cs_magic::der_entitlements&#39;</span>  <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">asn1_der</span>
             <span class="s">&#39;cs_magic::blob_wrapper&#39;</span>      <span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">blob_wrapper</span>
             <span class="s">&#39;cs_magic::embedded_signature&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">super_blob</span>
             <span class="s">&#39;cs_magic::detached_signature&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">super_blob</span>
@@ -1269,7 +1272,8 @@ section#format-index .row {
         <span class="nt">0xfade0c00</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">requirement</span>        <span class="c1"># CSMAGIC_REQUIREMENT</span>
         <span class="nt">0xfade0c01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">requirements</span>       <span class="c1"># CSMAGIC_REQUIREMENTS</span>
         <span class="nt">0xfade0c02</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">code_directory</span>     <span class="c1"># CSMAGIC_CODEDIRECTORY</span>
-        <span class="nt">0xfade7171</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entitlement</span>        <span class="c1"># CSMAGIC_ENTITLEMENT</span>
+        <span class="nt">0xfade7171</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entitlements</span>       <span class="c1"># CSMAGIC_EMBEDDED_ENTITLEMENTS</span>
+        <span class="nt">0xfade7172</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">der_entitlements</span>   <span class="c1"># CSMAGIC_EMBEDDED_DER_ENTITLEMENTS</span>
         <span class="nt">0xfade0b01</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blob_wrapper</span>       <span class="c1"># CSMAGIC_BLOBWRAPPER</span>
         <span class="nt">0xfade0cc0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">embedded_signature</span> <span class="c1"># CSMAGIC_EMBEDDED_SIGNATURE</span>
         <span class="nt">0xfade0cc1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">detached_signature</span> <span class="c1"># CSMAGIC_DETACHED_SIGNATURE</span>
@@ -1343,6 +1347,7 @@ section#format-index .row {
             <span class="nt">3</span><span class="p">:</span>       <span class="l l-Scalar l-Scalar-Plain">resource_dir</span>               <span class="c1"># CSSLOT_RESOURCEDIR</span>
             <span class="nt">4</span><span class="p">:</span>       <span class="l l-Scalar l-Scalar-Plain">application</span>                <span class="c1"># CSSLOT_APPLICATION</span>
             <span class="nt">5</span><span class="p">:</span>       <span class="l l-Scalar l-Scalar-Plain">entitlements</span>               <span class="c1"># CSSLOT_ENTITLEMENTS</span>
+            <span class="nt">7</span><span class="p">:</span>       <span class="l l-Scalar l-Scalar-Plain">der_entitlements</span>           <span class="c1"># CSSLOT_DER_ENTITLEMENTS</span>
             <span class="nt">0x1000</span><span class="p">:</span>  <span class="l l-Scalar l-Scalar-Plain">alternate_code_directories</span> <span class="c1"># CSSLOT_ALTERNATE_CODEDIRECTORIES</span>
             <span class="nt">0x10000</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_slot</span>             <span class="c1"># CSSLOT_SIGNATURESLOT</span>
       <span class="nt">data</span><span class="p">:</span>
@@ -1498,7 +1503,7 @@ section#format-index .row {
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4be</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-      <span class="nt">entitlement</span><span class="p">:</span>
+      <span class="nt">entitlements</span><span class="p">:</span>
         <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&quot;{data:str}&quot;</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">data</span>

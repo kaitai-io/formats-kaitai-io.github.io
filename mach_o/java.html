@@ -637,12 +637,13 @@ for instructions how to add it into your project with the build tool that you us
             <span class="n">CODE_DIRECTORY</span><span class="p">(</span><span class="mi">4208856066L</span><span class="p">),</span>
             <span class="n">EMBEDDED_SIGNATURE</span><span class="p">(</span><span class="mi">4208856256L</span><span class="p">),</span>
             <span class="n">DETACHED_SIGNATURE</span><span class="p">(</span><span class="mi">4208856257L</span><span class="p">),</span>
-            <span class="n">ENTITLEMENT</span><span class="p">(</span><span class="mi">4208882033L</span><span class="p">);</span>
+            <span class="n">ENTITLEMENTS</span><span class="p">(</span><span class="mi">4208882033L</span><span class="p">),</span>
+            <span class="n">DER_ENTITLEMENTS</span><span class="p">(</span><span class="mi">4208882034L</span><span class="p">);</span>
 
             <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
             <span class="n">CsMagic</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
             <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsMagic</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsMagic</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
+            <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsMagic</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsMagic</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
             <span class="kd">static</span> <span class="p">{</span>
                 <span class="k">for</span> <span class="p">(</span><span class="n">CsMagic</span> <span class="n">e</span> <span class="p">:</span> <span class="n">CsMagic</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                     <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -683,12 +684,6 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CodeDirectory</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">ENTITLEMENT</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
-                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Entitlement</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">REQUIREMENTS</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
                         <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
@@ -707,10 +702,22 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">ENTITLEMENTS</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Entitlements</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">DETACHED_SIGNATURE</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
                         <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">DER_ENTITLEMENTS</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">_raw_body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
+                        <span class="n">KaitaiStream</span> <span class="n">_io__raw_body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">_raw_body</span><span class="p">);</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Asn1Der</span><span class="p">(</span><span class="n">_io__raw_body</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -722,35 +729,6 @@ for instructions how to add it into your project with the build tool that you us
                     <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Entitlement</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
-            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Entitlement</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
-                <span class="k">return</span> <span class="k">new</span> <span class="n">Entitlement</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-            <span class="p">}</span>
-
-            <span class="kd">public</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
-            <span class="p">}</span>
-
-            <span class="kd">public</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
-            <span class="p">}</span>
-
-            <span class="kd">public</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
-                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
-            <span class="kd">private</span> <span class="n">MachO</span> <span class="n">_root</span><span class="p">;</span>
-            <span class="kd">private</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">;</span>
-            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kd">public</span> <span class="n">MachO</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
-            <span class="kd">public</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">CodeDirectory</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
             <span class="kd">public</span> <span class="kd">static</span> <span class="n">CodeDirectory</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -1395,13 +1373,14 @@ for instructions how to add it into your project with the build tool that you us
                 <span class="n">RESOURCE_DIR</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>
                 <span class="n">APPLICATION</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
                 <span class="n">ENTITLEMENTS</span><span class="p">(</span><span class="mi">5</span><span class="p">),</span>
+                <span class="n">DER_ENTITLEMENTS</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span>
                 <span class="n">ALTERNATE_CODE_DIRECTORIES</span><span class="p">(</span><span class="mi">4096</span><span class="p">),</span>
                 <span class="n">SIGNATURE_SLOT</span><span class="p">(</span><span class="mi">65536</span><span class="p">);</span>
 
                 <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
                 <span class="n">CsslotType</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
                 <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-                <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsslotType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsslotType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+                <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsslotType</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">CsslotType</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">9</span><span class="p">);</span>
                 <span class="kd">static</span> <span class="p">{</span>
                     <span class="k">for</span> <span class="p">(</span><span class="n">CsslotType</span> <span class="n">e</span> <span class="p">:</span> <span class="n">CsslotType</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                         <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -1588,6 +1567,35 @@ for instructions how to add it into your project with the build tool that you us
             <span class="p">}</span>
 
             <span class="kd">public</span> <span class="nf">BlobWrapper</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">data</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">MachO</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="kd">private</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">MachO</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+            <span class="kd">public</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">Entitlements</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+            <span class="kd">public</span> <span class="kd">static</span> <span class="n">Entitlements</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="n">Entitlements</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">Entitlements</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">Entitlements</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="kd">public</span> <span class="nf">Entitlements</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="na">CsBlob</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
                 <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
                 <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>

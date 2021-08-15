@@ -585,7 +585,8 @@ can also be found there.</p>
                 <span class="n">CodeDirectory</span> <span class="p">=</span> <span class="m">4208856066</span><span class="p">,</span>
                 <span class="n">EmbeddedSignature</span> <span class="p">=</span> <span class="m">4208856256</span><span class="p">,</span>
                 <span class="n">DetachedSignature</span> <span class="p">=</span> <span class="m">4208856257</span><span class="p">,</span>
-                <span class="n">Entitlement</span> <span class="p">=</span> <span class="m">4208882033</span><span class="p">,</span>
+                <span class="n">Entitlements</span> <span class="p">=</span> <span class="m">4208882033</span><span class="p">,</span>
+                <span class="n">DerEntitlements</span> <span class="p">=</span> <span class="m">4208882034</span><span class="p">,</span>
             <span class="p">}</span>
             <span class="k">public</span> <span class="nf">CsBlob</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">KaitaiStruct</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
             <span class="p">{</span>
@@ -610,12 +611,6 @@ can also be found there.</p>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">CodeDirectory</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
-                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Entitlement</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
-                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Entitlement</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Requirements</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
@@ -634,10 +629,22 @@ can also be found there.</p>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">Entitlements</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Entitlements</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">DetachedSignature</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
                     <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
                     <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SuperBlob</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+                <span class="k">case</span> <span class="n">CsMagic</span><span class="p">.</span><span class="n">DerEntitlements</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">__raw_body</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">((</span><span class="n">Length</span> <span class="p">-</span> <span class="m">8</span><span class="p">));</span>
+                    <span class="kt">var</span> <span class="n">io___raw_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">__raw_body</span><span class="p">);</span>
+                    <span class="n">_body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Asn1Der</span><span class="p">(</span><span class="n">io___raw_body</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">default</span><span class="p">:</span> <span class="p">{</span>
@@ -645,30 +652,6 @@ can also be found there.</p>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Entitlement</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-            <span class="p">{</span>
-                <span class="k">public</span> <span class="k">static</span> <span class="n">Entitlement</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
-                <span class="p">}</span>
-
-                <span class="k">public</span> <span class="nf">Entitlement</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-                <span class="p">{</span>
-                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                    <span class="n">_read</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-                <span class="p">{</span>
-                    <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
-                <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">MachO</span> <span class="n">m_root</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">m_parent</span><span class="p">;</span>
-                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">MachO</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-                <span class="k">public</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="p">}</span>
             <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">CodeDirectory</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
             <span class="p">{</span>
@@ -1254,6 +1237,7 @@ can also be found there.</p>
                     <span class="n">ResourceDir</span> <span class="p">=</span> <span class="m">3</span><span class="p">,</span>
                     <span class="n">Application</span> <span class="p">=</span> <span class="m">4</span><span class="p">,</span>
                     <span class="n">Entitlements</span> <span class="p">=</span> <span class="m">5</span><span class="p">,</span>
+                    <span class="n">DerEntitlements</span> <span class="p">=</span> <span class="m">7</span><span class="p">,</span>
                     <span class="n">AlternateCodeDirectories</span> <span class="p">=</span> <span class="m">4096</span><span class="p">,</span>
                     <span class="n">SignatureSlot</span> <span class="p">=</span> <span class="m">65536</span><span class="p">,</span>
                 <span class="p">}</span>
@@ -1407,6 +1391,30 @@ can also be found there.</p>
                 <span class="p">}</span>
 
                 <span class="k">public</span> <span class="nf">BlobWrapper</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                    <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                    <span class="n">_read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+                <span class="p">{</span>
+                    <span class="n">_data</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytesFull</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_data</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">MachO</span> <span class="n">m_root</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">m_parent</span><span class="p">;</span>
+                <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_data</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">MachO</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+                <span class="k">public</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Entitlements</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+            <span class="p">{</span>
+                <span class="k">public</span> <span class="k">static</span> <span class="n">Entitlements</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Entitlements</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+                <span class="p">}</span>
+
+                <span class="k">public</span> <span class="nf">Entitlements</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">MachO</span><span class="p">.</span><span class="n">CsBlob</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">MachO</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
                 <span class="p">{</span>
                     <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                     <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>

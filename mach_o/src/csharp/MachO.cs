@@ -281,7 +281,8 @@ namespace Kaitai
                 CodeDirectory = 4208856066,
                 EmbeddedSignature = 4208856256,
                 DetachedSignature = 4208856257,
-                Entitlement = 4208882033,
+                Entitlements = 4208882033,
+                DerEntitlements = 4208882034,
             }
             public CsBlob(KaitaiStream p__io, KaitaiStruct p__parent = null, MachO p__root = null) : base(p__io)
             {
@@ -306,12 +307,6 @@ namespace Kaitai
                     _body = new CodeDirectory(io___raw_body, this, m_root);
                     break;
                 }
-                case CsMagic.Entitlement: {
-                    __raw_body = m_io.ReadBytes((Length - 8));
-                    var io___raw_body = new KaitaiStream(__raw_body);
-                    _body = new Entitlement(io___raw_body, this, m_root);
-                    break;
-                }
                 case CsMagic.Requirements: {
                     __raw_body = m_io.ReadBytes((Length - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
@@ -330,10 +325,22 @@ namespace Kaitai
                     _body = new SuperBlob(io___raw_body, this, m_root);
                     break;
                 }
+                case CsMagic.Entitlements: {
+                    __raw_body = m_io.ReadBytes((Length - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Entitlements(io___raw_body, this, m_root);
+                    break;
+                }
                 case CsMagic.DetachedSignature: {
                     __raw_body = m_io.ReadBytes((Length - 8));
                     var io___raw_body = new KaitaiStream(__raw_body);
                     _body = new SuperBlob(io___raw_body, this, m_root);
+                    break;
+                }
+                case CsMagic.DerEntitlements: {
+                    __raw_body = m_io.ReadBytes((Length - 8));
+                    var io___raw_body = new KaitaiStream(__raw_body);
+                    _body = new Asn1Der(io___raw_body);
                     break;
                 }
                 default: {
@@ -341,30 +348,6 @@ namespace Kaitai
                     break;
                 }
                 }
-            }
-            public partial class Entitlement : KaitaiStruct
-            {
-                public static Entitlement FromFile(string fileName)
-                {
-                    return new Entitlement(new KaitaiStream(fileName));
-                }
-
-                public Entitlement(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
-                {
-                    m_parent = p__parent;
-                    m_root = p__root;
-                    _read();
-                }
-                private void _read()
-                {
-                    _data = m_io.ReadBytesFull();
-                }
-                private byte[] _data;
-                private MachO m_root;
-                private MachO.CsBlob m_parent;
-                public byte[] Data { get { return _data; } }
-                public MachO M_Root { get { return m_root; } }
-                public MachO.CsBlob M_Parent { get { return m_parent; } }
             }
             public partial class CodeDirectory : KaitaiStruct
             {
@@ -950,6 +933,7 @@ namespace Kaitai
                     ResourceDir = 3,
                     Application = 4,
                     Entitlements = 5,
+                    DerEntitlements = 7,
                     AlternateCodeDirectories = 4096,
                     SignatureSlot = 65536,
                 }
@@ -1103,6 +1087,30 @@ namespace Kaitai
                 }
 
                 public BlobWrapper(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
+                {
+                    m_parent = p__parent;
+                    m_root = p__root;
+                    _read();
+                }
+                private void _read()
+                {
+                    _data = m_io.ReadBytesFull();
+                }
+                private byte[] _data;
+                private MachO m_root;
+                private MachO.CsBlob m_parent;
+                public byte[] Data { get { return _data; } }
+                public MachO M_Root { get { return m_root; } }
+                public MachO.CsBlob M_Parent { get { return m_parent; } }
+            }
+            public partial class Entitlements : KaitaiStruct
+            {
+                public static Entitlements FromFile(string fileName)
+                {
+                    return new Entitlements(new KaitaiStream(fileName));
+                }
+
+                public Entitlements(KaitaiStream p__io, MachO.CsBlob p__parent = null, MachO p__root = null) : base(p__io)
                 {
                     m_parent = p__parent;
                     m_root = p__root;

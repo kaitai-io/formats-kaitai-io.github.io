@@ -2,13 +2,13 @@
 
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
-    define(['kaitai-struct/KaitaiStream'], factory);
+    define(['kaitai-struct/KaitaiStream', './Asn1Der'], factory);
   } else if (typeof module === 'object' && module.exports) {
-    module.exports = factory(require('kaitai-struct/KaitaiStream'));
+    module.exports = factory(require('kaitai-struct/KaitaiStream'), require('./Asn1Der'));
   } else {
-    root.MachO = factory(root.KaitaiStream);
+    root.MachO = factory(root.KaitaiStream, root.Asn1Der);
   }
-}(this, function (KaitaiStream) {
+}(this, function (KaitaiStream, Asn1Der) {
 var MachO = (function() {
   MachO.MagicType = Object.freeze({
     FAT_LE: 3199925962,
@@ -307,7 +307,8 @@ var MachO = (function() {
       CODE_DIRECTORY: 4208856066,
       EMBEDDED_SIGNATURE: 4208856256,
       DETACHED_SIGNATURE: 4208856257,
-      ENTITLEMENT: 4208882033,
+      ENTITLEMENTS: 4208882033,
+      DER_ENTITLEMENTS: 4208882034,
 
       4208855809: "BLOB_WRAPPER",
       4208856064: "REQUIREMENT",
@@ -315,7 +316,8 @@ var MachO = (function() {
       4208856066: "CODE_DIRECTORY",
       4208856256: "EMBEDDED_SIGNATURE",
       4208856257: "DETACHED_SIGNATURE",
-      4208882033: "ENTITLEMENT",
+      4208882033: "ENTITLEMENTS",
+      4208882034: "DER_ENTITLEMENTS",
     });
 
     function CsBlob(_io, _parent, _root) {
@@ -339,11 +341,6 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new CodeDirectory(_io__raw_body, this, this._root);
         break;
-      case MachO.CsBlob.CsMagic.ENTITLEMENT:
-        this._raw_body = this._io.readBytes((this.length - 8));
-        var _io__raw_body = new KaitaiStream(this._raw_body);
-        this.body = new Entitlement(_io__raw_body, this, this._root);
-        break;
       case MachO.CsBlob.CsMagic.REQUIREMENTS:
         this._raw_body = this._io.readBytes((this.length - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
@@ -359,31 +356,26 @@ var MachO = (function() {
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SuperBlob(_io__raw_body, this, this._root);
         break;
+      case MachO.CsBlob.CsMagic.ENTITLEMENTS:
+        this._raw_body = this._io.readBytes((this.length - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Entitlements(_io__raw_body, this, this._root);
+        break;
       case MachO.CsBlob.CsMagic.DETACHED_SIGNATURE:
         this._raw_body = this._io.readBytes((this.length - 8));
         var _io__raw_body = new KaitaiStream(this._raw_body);
         this.body = new SuperBlob(_io__raw_body, this, this._root);
+        break;
+      case MachO.CsBlob.CsMagic.DER_ENTITLEMENTS:
+        this._raw_body = this._io.readBytes((this.length - 8));
+        var _io__raw_body = new KaitaiStream(this._raw_body);
+        this.body = new Asn1Der(_io__raw_body, this, null);
         break;
       default:
         this.body = this._io.readBytes((this.length - 8));
         break;
       }
     }
-
-    var Entitlement = CsBlob.Entitlement = (function() {
-      function Entitlement(_io, _parent, _root) {
-        this._io = _io;
-        this._parent = _parent;
-        this._root = _root || this;
-
-        this._read();
-      }
-      Entitlement.prototype._read = function() {
-        this.data = this._io.readBytesFull();
-      }
-
-      return Entitlement;
-    })();
 
     var CodeDirectory = CsBlob.CodeDirectory = (function() {
       function CodeDirectory(_io, _parent, _root) {
@@ -765,6 +757,7 @@ var MachO = (function() {
         RESOURCE_DIR: 3,
         APPLICATION: 4,
         ENTITLEMENTS: 5,
+        DER_ENTITLEMENTS: 7,
         ALTERNATE_CODE_DIRECTORIES: 4096,
         SIGNATURE_SLOT: 65536,
 
@@ -774,6 +767,7 @@ var MachO = (function() {
         3: "RESOURCE_DIR",
         4: "APPLICATION",
         5: "ENTITLEMENTS",
+        7: "DER_ENTITLEMENTS",
         4096: "ALTERNATE_CODE_DIRECTORIES",
         65536: "SIGNATURE_SLOT",
       });
@@ -895,6 +889,21 @@ var MachO = (function() {
       }
 
       return BlobWrapper;
+    })();
+
+    var Entitlements = CsBlob.Entitlements = (function() {
+      function Entitlements(_io, _parent, _root) {
+        this._io = _io;
+        this._parent = _parent;
+        this._root = _root || this;
+
+        this._read();
+      }
+      Entitlements.prototype._read = function() {
+        this.data = this._io.readBytesFull();
+      }
+
+      return Entitlements;
     })();
 
     var RequirementsBlobIndex = CsBlob.RequirementsBlobIndex = (function() {

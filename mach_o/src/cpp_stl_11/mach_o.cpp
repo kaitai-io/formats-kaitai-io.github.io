@@ -178,13 +178,6 @@ void mach_o_t::cs_blob_t::_read() {
         m_body = std::unique_ptr<code_directory_t>(new code_directory_t(m__io__raw_body.get(), this, m__root));
         break;
     }
-    case mach_o_t::cs_blob_t::CS_MAGIC_ENTITLEMENT: {
-        n_body = false;
-        m__raw_body = m__io->read_bytes((length() - 8));
-        m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
-        m_body = std::unique_ptr<entitlement_t>(new entitlement_t(m__io__raw_body.get(), this, m__root));
-        break;
-    }
     case mach_o_t::cs_blob_t::CS_MAGIC_REQUIREMENTS: {
         n_body = false;
         m__raw_body = m__io->read_bytes((length() - 8));
@@ -206,11 +199,25 @@ void mach_o_t::cs_blob_t::_read() {
         m_body = std::unique_ptr<super_blob_t>(new super_blob_t(m__io__raw_body.get(), this, m__root));
         break;
     }
+    case mach_o_t::cs_blob_t::CS_MAGIC_ENTITLEMENTS: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes((length() - 8));
+        m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+        m_body = std::unique_ptr<entitlements_t>(new entitlements_t(m__io__raw_body.get(), this, m__root));
+        break;
+    }
     case mach_o_t::cs_blob_t::CS_MAGIC_DETACHED_SIGNATURE: {
         n_body = false;
         m__raw_body = m__io->read_bytes((length() - 8));
         m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
         m_body = std::unique_ptr<super_blob_t>(new super_blob_t(m__io__raw_body.get(), this, m__root));
+        break;
+    }
+    case mach_o_t::cs_blob_t::CS_MAGIC_DER_ENTITLEMENTS: {
+        n_body = false;
+        m__raw_body = m__io->read_bytes((length() - 8));
+        m__io__raw_body = std::unique_ptr<kaitai::kstream>(new kaitai::kstream(m__raw_body));
+        m_body = std::unique_ptr<asn1_der_t>(new asn1_der_t(m__io__raw_body.get()));
         break;
     }
     default: {
@@ -227,23 +234,6 @@ mach_o_t::cs_blob_t::~cs_blob_t() {
 void mach_o_t::cs_blob_t::_clean_up() {
     if (!n_body) {
     }
-}
-
-mach_o_t::cs_blob_t::entitlement_t::entitlement_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    _read();
-}
-
-void mach_o_t::cs_blob_t::entitlement_t::_read() {
-    m_data = m__io->read_bytes_full();
-}
-
-mach_o_t::cs_blob_t::entitlement_t::~entitlement_t() {
-    _clean_up();
-}
-
-void mach_o_t::cs_blob_t::entitlement_t::_clean_up() {
 }
 
 mach_o_t::cs_blob_t::code_directory_t::code_directory_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
@@ -787,6 +777,23 @@ mach_o_t::cs_blob_t::blob_wrapper_t::~blob_wrapper_t() {
 }
 
 void mach_o_t::cs_blob_t::blob_wrapper_t::_clean_up() {
+}
+
+mach_o_t::cs_blob_t::entitlements_t::entitlements_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void mach_o_t::cs_blob_t::entitlements_t::_read() {
+    m_data = m__io->read_bytes_full();
+}
+
+mach_o_t::cs_blob_t::entitlements_t::~entitlements_t() {
+    _clean_up();
+}
+
+void mach_o_t::cs_blob_t::entitlements_t::_clean_up() {
 }
 
 mach_o_t::cs_blob_t::requirements_blob_index_t::requirements_blob_index_t(kaitai::kstream* p__io, mach_o_t::cs_blob_t::requirements_t* p__parent, mach_o_t* p__root) : kaitai::kstruct(p__io) {

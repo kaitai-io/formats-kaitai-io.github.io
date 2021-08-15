@@ -147,11 +147,6 @@ namespace MachO {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \MachO\CsBlob\CodeDirectory($_io__raw_body, $this, $this->_root);
                     break;
-                case \MachO\CsBlob\CsMagic::ENTITLEMENT:
-                    $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
-                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
-                    $this->_m_body = new \MachO\CsBlob\Entitlement($_io__raw_body, $this, $this->_root);
-                    break;
                 case \MachO\CsBlob\CsMagic::REQUIREMENTS:
                     $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
@@ -167,10 +162,20 @@ namespace MachO {
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \MachO\CsBlob\SuperBlob($_io__raw_body, $this, $this->_root);
                     break;
+                case \MachO\CsBlob\CsMagic::ENTITLEMENTS:
+                    $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \MachO\CsBlob\Entitlements($_io__raw_body, $this, $this->_root);
+                    break;
                 case \MachO\CsBlob\CsMagic::DETACHED_SIGNATURE:
                     $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
                     $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
                     $this->_m_body = new \MachO\CsBlob\SuperBlob($_io__raw_body, $this, $this->_root);
+                    break;
+                case \MachO\CsBlob\CsMagic::DER_ENTITLEMENTS:
+                    $this->_m__raw_body = $this->_io->readBytes(($this->length() - 8));
+                    $_io__raw_body = new \Kaitai\Struct\Stream($this->_m__raw_body);
+                    $this->_m_body = new \Asn1Der($_io__raw_body);
                     break;
                 default:
                     $this->_m_body = $this->_io->readBytes(($this->length() - 8));
@@ -185,21 +190,6 @@ namespace MachO {
         public function length() { return $this->_m_length; }
         public function body() { return $this->_m_body; }
         public function _raw_body() { return $this->_m__raw_body; }
-    }
-}
-
-namespace MachO\CsBlob {
-    class Entitlement extends \Kaitai\Struct\Struct {
-        public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_read();
-        }
-
-        private function _read() {
-            $this->_m_data = $this->_io->readBytesFull();
-        }
-        protected $_m_data;
-        public function data() { return $this->_m_data; }
     }
 }
 
@@ -647,6 +637,7 @@ namespace MachO\CsBlob\BlobIndex {
         const RESOURCE_DIR = 3;
         const APPLICATION = 4;
         const ENTITLEMENTS = 5;
+        const DER_ENTITLEMENTS = 7;
         const ALTERNATE_CODE_DIRECTORIES = 4096;
         const SIGNATURE_SLOT = 65536;
     }
@@ -742,6 +733,21 @@ namespace MachO\CsBlob {
 }
 
 namespace MachO\CsBlob {
+    class Entitlements extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob $_parent = null, \MachO $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = $this->_io->readBytesFull();
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace MachO\CsBlob {
     class RequirementsBlobIndex extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \MachO\CsBlob\Requirements $_parent = null, \MachO $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -786,7 +792,8 @@ namespace MachO\CsBlob {
         const CODE_DIRECTORY = 4208856066;
         const EMBEDDED_SIGNATURE = 4208856256;
         const DETACHED_SIGNATURE = 4208856257;
-        const ENTITLEMENT = 4208882033;
+        const ENTITLEMENTS = 4208882033;
+        const DER_ENTITLEMENTS = 4208882034;
     }
 }
 
