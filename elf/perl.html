@@ -831,439 +831,6 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Elf::PhdrTypeFlags</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">write</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">execute</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">mask_proc</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Elf::SectionHeaderFlags</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">merge</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">mask_os</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">exclude</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">mask_proc</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">strings</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">os_non_conforming</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">alloc</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">exec_instr</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">info_link</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">write</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">link_order</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">ordered</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">tls</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">group</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
-<span class="k">package</span> <span class="nn">Elf::DtFlag1Values</span><span class="p">;</span>
-
-<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
-
-<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
-
-    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
-    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
-    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
-
-    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
-
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
-
-    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">singleton</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">ignmuldef</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">loadfltr</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">initfirst</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">symintpose</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">noreloc</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">confalt</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">dispreldne</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">rtld_global</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">nodelete</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">trans</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">origin</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">now</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">nohdr</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">endfiltee</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">nodirect</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">globaudit</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">noksyms</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">interpose</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">nodump</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">disprelpnd</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">noopen</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">stub</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">direct</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">edited</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">group</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">pie</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">nodeflib</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
-<span class="p">}</span>
-
-<span class="c1">########################################################################</span>
 <span class="k">package</span> <span class="nn">Elf::EndianElf</span><span class="p">;</span>
 
 <span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
@@ -1894,13 +1461,6 @@ section#format-index .row {
     <span class="p">}</span>
 <span class="p">}</span>
 
-<span class="k">sub</span> <span class="nf">tag_enum</span> <span class="p">{</span>
-    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">});</span>
-    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">();</span>
-    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">};</span>
-<span class="p">}</span>
-
 <span class="k">sub</span> <span class="nf">flag_1_values</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_1_values</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_1_values</span><span class="p">});</span>
@@ -1929,6 +1489,26 @@ section#format-index .row {
         <span class="nv">$io</span><span class="o">-&gt;</span><span class="nb">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
     <span class="p">}</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value_str</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">tag_enum</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">tag</span><span class="p">();</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tag_enum</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">flag_values</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_values</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_values</span><span class="p">});</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">tag_enum</span><span class="p">()</span> <span class="o">==</span> <span class="nv">$</span><span class="nn">Elf::</span><span class="nv">DYNAMIC_ARRAY_TAGS_FLAGS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_is_le</span><span class="p">})</span> <span class="p">{</span>
+            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_values</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Elf::DtFlagValues</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_values</span><span class="p">}</span> <span class="o">=</span> <span class="nn">Elf::DtFlagValues</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_io</span><span class="p">},</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">flag_values</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="k">sub</span> <span class="nf">is_value_str</span> <span class="p">{</span>
@@ -2949,6 +2529,511 @@ section#format-index .row {
 <span class="k">sub</span> <span class="nf">entries</span> <span class="p">{</span>
     <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
     <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">entries</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Elf::DtFlag1Values</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">singleton</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">singleton</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">ignmuldef</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ignmuldef</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">loadfltr</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">loadfltr</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">initfirst</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">initfirst</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">symintpose</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symintpose</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">noreloc</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noreloc</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">confalt</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">confalt</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">dispreldne</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">dispreldne</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">rtld_global</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">rtld_global</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">nodelete</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodelete</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">trans</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">trans</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">origin</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">now</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">now</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">nohdr</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nohdr</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">endfiltee</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">endfiltee</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">nodirect</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodirect</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">globaudit</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">globaudit</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">noksyms</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noksyms</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">interpose</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">interpose</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">nodump</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodump</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">disprelpnd</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">disprelpnd</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">noopen</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">noopen</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">stub</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">stub</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">direct</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">direct</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">edited</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">edited</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">group</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">pie</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">pie</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">nodeflib</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">nodeflib</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Elf::SectionHeaderFlags</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">merge</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">merge</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">mask_os</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_os</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">exclude</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exclude</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">mask_proc</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">strings</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">strings</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">os_non_conforming</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">os_non_conforming</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">alloc</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">alloc</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">exec_instr</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">exec_instr</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">info_link</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">info_link</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">write</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">link_order</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">link_order</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">ordered</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">ordered</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">tls</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">tls</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">group</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">group</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Elf::PhdrTypeFlags</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">read</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">write</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="nb">write</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">execute</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">execute</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">mask_proc</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">mask_proc</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="c1">########################################################################</span>
+<span class="k">package</span> <span class="nn">Elf::DtFlagValues</span><span class="p">;</span>
+
+<span class="k">our</span> <span class="nv">@ISA</span> <span class="o">=</span> <span class="s">&#39;IO::KaitaiStruct::Struct&#39;</span><span class="p">;</span>
+
+<span class="k">sub</span> <span class="nf">from_file</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$fd</span><span class="p">;</span>
+
+    <span class="nb">open</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s">&#39;&lt;&#39;</span><span class="p">,</span> <span class="nv">$filename</span><span class="p">)</span> <span class="ow">or</span> <span class="k">return</span> <span class="nb">undef</span><span class="p">;</span>
+    <span class="nb">binmode</span><span class="p">(</span><span class="nv">$fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">new</span><span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nn">IO::KaitaiStruct::Stream</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$fd</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">new</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$class</span><span class="p">,</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">my</span> <span class="nv">$self</span> <span class="o">=</span> <span class="nn">IO::KaitaiStruct::Struct</span><span class="o">-&gt;</span><span class="k">new</span><span class="p">(</span><span class="nv">$_io</span><span class="p">);</span>
+
+    <span class="nb">bless</span> <span class="nv">$self</span><span class="p">,</span> <span class="nv">$class</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_parent</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_parent</span><span class="p">;</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">_root</span><span class="p">}</span> <span class="o">=</span> <span class="nv">$_root</span> <span class="o">||</span> <span class="nv">$self</span><span class="p">;;</span>
+
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="n">_read</span><span class="p">();</span>
+
+    <span class="k">return</span> <span class="nv">$self</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">_read</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">bind_now</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bind_now</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bind_now</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bind_now</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">bind_now</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">origin</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">origin</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">textrel</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">textrel</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">textrel</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">textrel</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">textrel</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">static_tls</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">static_tls</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">static_tls</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">static_tls</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">static_tls</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">symbolic</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symbolic</span><span class="p">}</span> <span class="k">if</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symbolic</span><span class="p">});</span>
+    <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symbolic</span><span class="p">}</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">symbolic</span><span class="p">};</span>
+<span class="p">}</span>
+
+<span class="k">sub</span> <span class="nf">value</span> <span class="p">{</span>
+    <span class="k">my</span> <span class="p">(</span><span class="nv">$self</span><span class="p">)</span> <span class="o">=</span> <span class="nv">@_</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nv">$self</span><span class="o">-&gt;</span><span class="p">{</span><span class="n">value</span><span class="p">};</span>
 <span class="p">}</span>
 
 <span class="mi">1</span><span class="p">;</span>

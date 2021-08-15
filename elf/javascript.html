@@ -1239,559 +1239,6 @@ section#format-index .row {
     <span class="k">this</span><span class="p">.</span><span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">EndianElf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
   <span class="p">}</span>
 
-  <span class="kd">var</span> <span class="nx">PhdrTypeFlags</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">PhdrTypeFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">function</span> <span class="nx">PhdrTypeFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-
-      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="p">}</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;maskProc&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="k">return</span> <span class="nx">PhdrTypeFlags</span><span class="p">;</span>
-  <span class="p">})();</span>
-
-  <span class="kd">var</span> <span class="nx">SectionHeaderFlags</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">SectionHeaderFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">function</span> <span class="nx">SectionHeaderFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-
-      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="p">}</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * might be merged</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;merge&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * OS-specific</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;maskOs&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * section is excluded unless referenced or allocated (Solaris)</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;exclude&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Processor-specific</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;maskProc&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * contains nul-terminated strings</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;strings&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * non-standard OS specific handling required</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;osNonConforming&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * occupies memory during execution</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;alloc&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * executable</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;execInstr&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * &#39;sh_info&#39; contains SHT index</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;infoLink&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * writable</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * preserve order after combining</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;linkOrder&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * special ordering requirement (Solaris)</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;ordered&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * section hold thread-local data</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;tls&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * section is member of a group</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="k">return</span> <span class="nx">SectionHeaderFlags</span><span class="p">;</span>
-  <span class="p">})();</span>
-
-  <span class="kd">var</span> <span class="nx">DtFlag1Values</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">DtFlag1Values</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="kd">function</span> <span class="nx">DtFlag1Values</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
-
-      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="p">}</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Singleton symbols are used.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;singleton&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;ignmuldef&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Trigger filtee loading at runtime.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;loadfltr&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Set RTLD_INITFIRST for this object</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;initfirst&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Object has individual interposers.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;symintpose&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;noreloc&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Configuration alternative created.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;confalt&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Disp reloc applied at build time.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;dispreldne&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Set RTLD_GLOBAL for this object.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;rtldGlobal&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Set RTLD_NODELETE for this object.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodelete&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;trans&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * $ORIGIN must be handled.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Set RTLD_NOW for this object.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nohdr&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Filtee terminates filters search.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;endfiltee&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Object has no-direct binding.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodirect&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Global auditing required.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;globaudit&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;noksyms&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Object is used to interpose.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;interpose&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Object can&#39;t be dldump&#39;ed.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodump&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Disp reloc applied at run-time.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;disprelpnd&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Set RTLD_NOOPEN for this object.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;noopen&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;stub&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Direct binding enabled.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Object is modified after built.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;edited&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Set RTLD_GROUP for this object.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;pie&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * Ignore default lib search path.</span>
-<span class="cm">     */</span>
-    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodeflib&#39;</span><span class="p">,</span> <span class="p">{</span>
-      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span><span class="p">;</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
-        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span><span class="p">;</span>
-      <span class="p">}</span>
-    <span class="p">});</span>
-
-    <span class="k">return</span> <span class="nx">DtFlag1Values</span><span class="p">;</span>
-  <span class="p">})();</span>
-
   <span class="kd">var</span> <span class="nx">EndianElf</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">EndianElf</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="kd">function</span> <span class="nx">EndianElf</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
@@ -2153,14 +1600,6 @@ section#format-index .row {
           <span class="k">break</span><span class="p">;</span>
         <span class="p">}</span>
       <span class="p">}</span>
-      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynamicSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;tagEnum&#39;</span><span class="p">,</span> <span class="p">{</span>
-        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span><span class="p">;</span>
-          <span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">;</span>
-          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span><span class="p">;</span>
-        <span class="p">}</span>
-      <span class="p">});</span>
       <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynamicSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;flag1Values&#39;</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
           <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_flag1Values</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
@@ -2191,6 +1630,28 @@ section#format-index .row {
             <span class="nx">io</span><span class="p">.</span><span class="nx">seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">);</span>
           <span class="p">}</span>
           <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_valueStr</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynamicSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;tagEnum&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span><span class="p">;</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">tag</span><span class="p">;</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tagEnum</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">});</span>
+      <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynamicSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;flagValues&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_flagValues</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_flagValues</span><span class="p">;</span>
+          <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tagEnum</span> <span class="o">==</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">DynamicArrayTags</span><span class="p">.</span><span class="nx">FLAGS</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_is_le</span><span class="p">)</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_flagValues</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DtFlagValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">valueOrPtr</span><span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+              <span class="k">this</span><span class="p">.</span><span class="nx">_m_flagValues</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">DtFlagValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">valueOrPtr</span><span class="p">);</span>
+            <span class="p">}</span>
+          <span class="p">}</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_flagValues</span><span class="p">;</span>
         <span class="p">}</span>
       <span class="p">});</span>
       <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DynamicSectionEntry</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isValueStr&#39;</span><span class="p">,</span> <span class="p">{</span>
@@ -3011,6 +2472,641 @@ section#format-index .row {
     <span class="p">});</span>
 
     <span class="k">return</span> <span class="nx">EndianElf</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">DtFlag1Values</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">DtFlag1Values</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">DtFlag1Values</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Singleton symbols are used.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;singleton&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_singleton</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;ignmuldef&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ignmuldef</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Trigger filtee loading at runtime.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;loadfltr&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_loadfltr</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set RTLD_INITFIRST for this object</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;initfirst&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_initfirst</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Object has individual interposers.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;symintpose&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_symintpose</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;noreloc&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noreloc</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Configuration alternative created.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;confalt&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_confalt</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Disp reloc applied at build time.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;dispreldne&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_dispreldne</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set RTLD_GLOBAL for this object.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;rtldGlobal&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_rtldGlobal</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set RTLD_NODELETE for this object.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodelete&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodelete</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;trans&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_trans</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * $ORIGIN must be handled.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set RTLD_NOW for this object.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;now&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_now</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nohdr&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nohdr</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Filtee terminates filters search.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;endfiltee&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_endfiltee</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Object has no-direct binding.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodirect&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodirect</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Global auditing required.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;globaudit&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_globaudit</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;noksyms&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noksyms</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Object is used to interpose.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;interpose&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_interpose</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Object can&#39;t be dldump&#39;ed.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodump&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodump</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Disp reloc applied at run-time.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;disprelpnd&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_disprelpnd</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set RTLD_NOOPEN for this object.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;noopen&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_noopen</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;stub&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_stub</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Direct binding enabled.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;direct&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_direct</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Object is modified after built.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;edited&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_edited</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Set RTLD_GROUP for this object.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;pie&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_pie</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Ignore default lib search path.</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlag1Values</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;nodeflib&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_nodeflib</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">DtFlag1Values</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">SectionHeaderFlags</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">SectionHeaderFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">SectionHeaderFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * might be merged</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;merge&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_merge</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * OS-specific</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;maskOs&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskOs</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * section is excluded unless referenced or allocated (Solaris)</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;exclude&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_exclude</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Processor-specific</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;maskProc&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * contains nul-terminated strings</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;strings&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_strings</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * non-standard OS specific handling required</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;osNonConforming&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_osNonConforming</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * occupies memory during execution</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;alloc&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_alloc</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * executable</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;execInstr&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execInstr</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * &#39;sh_info&#39; contains SHT index</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;infoLink&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_infoLink</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * writable</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * preserve order after combining</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;linkOrder&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_linkOrder</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * special ordering requirement (Solaris)</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;ordered&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_ordered</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * section hold thread-local data</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;tls&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_tls</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * section is member of a group</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">SectionHeaderFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;group&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_group</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">SectionHeaderFlags</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">PhdrTypeFlags</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">PhdrTypeFlags</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">PhdrTypeFlags</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;read&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_read</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;write&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_write</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;execute&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_execute</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">PhdrTypeFlags</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;maskProc&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_maskProc</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">PhdrTypeFlags</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="cm">/**</span>
+<span class="cm">   * @see {@link https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html|Figure 5-11: DT_FLAGS values}</span>
+<span class="cm">   * @see {@link https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095|Source}</span>
+<span class="cm">   * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5|Source}</span>
+<span class="cm">   */</span>
+
+  <span class="kd">var</span> <span class="nx">DtFlagValues</span> <span class="o">=</span> <span class="nx">Elf</span><span class="p">.</span><span class="nx">DtFlagValues</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">DtFlagValues</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">,</span> <span class="nx">value</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="nx">value</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">DtFlagValues</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * all relocations for this object must be processed before returning</span>
+<span class="cm">     * control to the program</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlagValues</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;bindNow&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_bindNow</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bindNow</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_bindNow</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_bindNow</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * object may reference the $ORIGIN substitution string</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlagValues</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;origin&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_origin</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * relocation entries might request modifications to a non-writable segment</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlagValues</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;textrel&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_textrel</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_textrel</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_textrel</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_textrel</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * object uses static thread-local storage scheme</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlagValues</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;staticTls&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_staticTls</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_staticTls</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_staticTls</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_staticTls</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * symbolic linking</span>
+<span class="cm">     */</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">DtFlagValues</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;symbolic&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_symbolic</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_symbolic</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_symbolic</span> <span class="o">=</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span> <span class="o">&amp;</span> <span class="mf">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_symbolic</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="k">return</span> <span class="nx">DtFlagValues</span><span class="p">;</span>
   <span class="p">})();</span>
   <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Elf</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;shIdxLoOs&#39;</span><span class="p">,</span> <span class="p">{</span>
     <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>

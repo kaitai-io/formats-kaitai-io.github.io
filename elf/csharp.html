@@ -834,847 +834,6 @@ can also be found there.</p>
             <span class="n">_pad</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="m">7</span><span class="p">);</span>
             <span class="n">_header</span> <span class="p">=</span> <span class="k">new</span> <span class="n">EndianElf</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
         <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PhdrTypeFlags</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
-                <span class="n">f_read</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_write</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_execute</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_read</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_read</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Read</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_read</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_read</span><span class="p">;</span>
-                    <span class="n">_read</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_read</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_read</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_write</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_write</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Write</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_write</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
-                    <span class="n">_write</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_write</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_execute</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_execute</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Execute</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_execute</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_execute</span><span class="p">;</span>
-                    <span class="n">_execute</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_execute</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_execute</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_maskProc</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_maskProc</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">MaskProc</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_maskProc</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
-                    <span class="n">_maskProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4026531840</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SectionHeaderFlags</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
-                <span class="n">f_merge</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_maskOs</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_exclude</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_strings</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_osNonConforming</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_alloc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_execInstr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_infoLink</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_write</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_linkOrder</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_ordered</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_tls</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_group</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_merge</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_merge</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// might be merged</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Merge</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_merge</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_merge</span><span class="p">;</span>
-                    <span class="n">_merge</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_merge</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_merge</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_maskOs</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_maskOs</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// OS-specific</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">MaskOs</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_maskOs</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_maskOs</span><span class="p">;</span>
-                    <span class="n">_maskOs</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">267386880</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_maskOs</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_maskOs</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_exclude</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_exclude</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// section is excluded unless referenced or allocated (Solaris)</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Exclude</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_exclude</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_exclude</span><span class="p">;</span>
-                    <span class="n">_exclude</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">134217728</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_exclude</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_exclude</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_maskProc</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_maskProc</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Processor-specific</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">MaskProc</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_maskProc</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
-                    <span class="n">_maskProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4026531840</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_strings</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_strings</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// contains nul-terminated strings</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Strings</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_strings</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span>
-                    <span class="n">_strings</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">32</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_strings</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_osNonConforming</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_osNonConforming</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// non-standard OS specific handling required</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">OsNonConforming</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_osNonConforming</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_osNonConforming</span><span class="p">;</span>
-                    <span class="n">_osNonConforming</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">256</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_osNonConforming</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_osNonConforming</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_alloc</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_alloc</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// occupies memory during execution</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Alloc</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_alloc</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_alloc</span><span class="p">;</span>
-                    <span class="n">_alloc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_alloc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_alloc</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_execInstr</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_execInstr</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// executable</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">ExecInstr</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_execInstr</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_execInstr</span><span class="p">;</span>
-                    <span class="n">_execInstr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_execInstr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_execInstr</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_infoLink</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_infoLink</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// &#39;sh_info&#39; contains SHT index</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">InfoLink</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_infoLink</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_infoLink</span><span class="p">;</span>
-                    <span class="n">_infoLink</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">64</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_infoLink</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_infoLink</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_write</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_write</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// writable</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Write</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_write</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
-                    <span class="n">_write</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_write</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_linkOrder</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_linkOrder</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// preserve order after combining</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">LinkOrder</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_linkOrder</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_linkOrder</span><span class="p">;</span>
-                    <span class="n">_linkOrder</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_linkOrder</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_linkOrder</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_ordered</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_ordered</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// special ordering requirement (Solaris)</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Ordered</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_ordered</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_ordered</span><span class="p">;</span>
-                    <span class="n">_ordered</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">67108864</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_ordered</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_ordered</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tls</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_tls</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// section hold thread-local data</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Tls</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_tls</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_tls</span><span class="p">;</span>
-                    <span class="n">_tls</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1024</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_tls</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_tls</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_group</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_group</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// section is member of a group</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Group</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_group</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
-                    <span class="n">_group</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">512</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_group</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
-        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DtFlag1Values</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
-        <span class="p">{</span>
-            <span class="k">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
-            <span class="p">{</span>
-                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
-                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
-                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
-                <span class="n">f_singleton</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_ignmuldef</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_loadfltr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_initfirst</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_symintpose</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_noreloc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_confalt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_dispreldne</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_rtldGlobal</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_nodelete</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_trans</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_origin</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_now</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_nohdr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_endfiltee</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_nodirect</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_globaudit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_noksyms</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_interpose</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_nodump</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_disprelpnd</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_noopen</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_stub</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_direct</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_edited</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_group</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_pie</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">f_nodeflib</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
-                <span class="n">_read</span><span class="p">();</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
-            <span class="p">{</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_singleton</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_singleton</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Singleton symbols are used.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Singleton</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_singleton</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_singleton</span><span class="p">;</span>
-                    <span class="n">_singleton</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">33554432</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_singleton</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_singleton</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_ignmuldef</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_ignmuldef</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Ignmuldef</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_ignmuldef</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_ignmuldef</span><span class="p">;</span>
-                    <span class="n">_ignmuldef</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">262144</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_ignmuldef</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_ignmuldef</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_loadfltr</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_loadfltr</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Trigger filtee loading at runtime.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Loadfltr</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_loadfltr</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_loadfltr</span><span class="p">;</span>
-                    <span class="n">_loadfltr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_loadfltr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_loadfltr</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_initfirst</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_initfirst</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Set RTLD_INITFIRST for this object</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Initfirst</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_initfirst</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_initfirst</span><span class="p">;</span>
-                    <span class="n">_initfirst</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">32</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_initfirst</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_initfirst</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_symintpose</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_symintpose</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Object has individual interposers.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Symintpose</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_symintpose</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_symintpose</span><span class="p">;</span>
-                    <span class="n">_symintpose</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8388608</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_symintpose</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_symintpose</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_noreloc</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_noreloc</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Noreloc</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_noreloc</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_noreloc</span><span class="p">;</span>
-                    <span class="n">_noreloc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4194304</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_noreloc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_noreloc</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_confalt</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_confalt</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Configuration alternative created.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Confalt</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_confalt</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_confalt</span><span class="p">;</span>
-                    <span class="n">_confalt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8192</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_confalt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_confalt</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_dispreldne</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_dispreldne</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Disp reloc applied at build time.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Dispreldne</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_dispreldne</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_dispreldne</span><span class="p">;</span>
-                    <span class="n">_dispreldne</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">32768</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_dispreldne</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_dispreldne</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_rtldGlobal</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_rtldGlobal</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Set RTLD_GLOBAL for this object.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">RtldGlobal</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_rtldGlobal</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_rtldGlobal</span><span class="p">;</span>
-                    <span class="n">_rtldGlobal</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_rtldGlobal</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_rtldGlobal</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodelete</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodelete</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Set RTLD_NODELETE for this object.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodelete</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodelete</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_nodelete</span><span class="p">;</span>
-                    <span class="n">_nodelete</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_nodelete</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_nodelete</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_trans</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_trans</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Trans</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_trans</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_trans</span><span class="p">;</span>
-                    <span class="n">_trans</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">512</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_trans</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_trans</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_origin</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_origin</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// $ORIGIN must be handled.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Origin</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_origin</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_origin</span><span class="p">;</span>
-                    <span class="n">_origin</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_origin</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_origin</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_now</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_now</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Set RTLD_NOW for this object.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Now</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_now</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_now</span><span class="p">;</span>
-                    <span class="n">_now</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_now</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_now</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nohdr</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nohdr</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nohdr</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nohdr</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_nohdr</span><span class="p">;</span>
-                    <span class="n">_nohdr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1048576</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_nohdr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_nohdr</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_endfiltee</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_endfiltee</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Filtee terminates filters search.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Endfiltee</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_endfiltee</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_endfiltee</span><span class="p">;</span>
-                    <span class="n">_endfiltee</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16384</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_endfiltee</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_endfiltee</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodirect</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodirect</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Object has no-direct binding.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodirect</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodirect</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_nodirect</span><span class="p">;</span>
-                    <span class="n">_nodirect</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">131072</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_nodirect</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_nodirect</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_globaudit</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_globaudit</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Global auditing required.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Globaudit</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_globaudit</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_globaudit</span><span class="p">;</span>
-                    <span class="n">_globaudit</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16777216</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_globaudit</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_globaudit</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_noksyms</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_noksyms</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Noksyms</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_noksyms</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_noksyms</span><span class="p">;</span>
-                    <span class="n">_noksyms</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">524288</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_noksyms</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_noksyms</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_interpose</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_interpose</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Object is used to interpose.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Interpose</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_interpose</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_interpose</span><span class="p">;</span>
-                    <span class="n">_interpose</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1024</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_interpose</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_interpose</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodump</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodump</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Object can&#39;t be dldump&#39;ed.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodump</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodump</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_nodump</span><span class="p">;</span>
-                    <span class="n">_nodump</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4096</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_nodump</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_nodump</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_disprelpnd</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_disprelpnd</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Disp reloc applied at run-time.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Disprelpnd</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_disprelpnd</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_disprelpnd</span><span class="p">;</span>
-                    <span class="n">_disprelpnd</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">65536</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_disprelpnd</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_disprelpnd</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_noopen</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_noopen</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Set RTLD_NOOPEN for this object.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Noopen</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_noopen</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_noopen</span><span class="p">;</span>
-                    <span class="n">_noopen</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">64</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_noopen</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_noopen</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_stub</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_stub</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Stub</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_stub</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_stub</span><span class="p">;</span>
-                    <span class="n">_stub</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">67108864</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_stub</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_stub</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_direct</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_direct</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Direct binding enabled.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Direct</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_direct</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_direct</span><span class="p">;</span>
-                    <span class="n">_direct</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">256</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_direct</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_direct</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_edited</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_edited</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Object is modified after built.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Edited</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_edited</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_edited</span><span class="p">;</span>
-                    <span class="n">_edited</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2097152</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_edited</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_edited</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_group</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_group</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Set RTLD_GROUP for this object.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Group</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_group</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
-                    <span class="n">_group</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_group</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_pie</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_pie</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Pie</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_pie</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_pie</span><span class="p">;</span>
-                    <span class="n">_pie</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">134217728</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_pie</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_pie</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodeflib</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodeflib</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// Ignore default lib search path.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodeflib</span>
-            <span class="p">{</span>
-                <span class="k">get</span>
-                <span class="p">{</span>
-                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodeflib</span><span class="p">)</span>
-                        <span class="k">return</span> <span class="n">_nodeflib</span><span class="p">;</span>
-                    <span class="n">_nodeflib</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2048</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
-                    <span class="n">f_nodeflib</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                    <span class="k">return</span> <span class="n">_nodeflib</span><span class="p">;</span>
-                <span class="p">}</span>
-            <span class="p">}</span>
-            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">m_parent</span><span class="p">;</span>
-            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-        <span class="p">}</span>
         <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">EndianElf</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
         <span class="p">{</span>
             <span class="k">public</span> <span class="k">static</span> <span class="n">EndianElf</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
@@ -2099,9 +1258,10 @@ can also be found there.</p>
                     <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                     <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
                     <span class="n">m_isLe</span> <span class="p">=</span> <span class="n">isLe</span><span class="p">;</span>
-                    <span class="n">f_tagEnum</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">f_flag1Values</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">f_valueStr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_tagEnum</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                    <span class="n">f_flagValues</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">f_isValueStr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                     <span class="n">_read</span><span class="p">();</span>
                 <span class="p">}</span>
@@ -2162,19 +1322,6 @@ can also be found there.</p>
                     <span class="p">}</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
-                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tagEnum</span><span class="p">;</span>
-                <span class="k">private</span> <span class="n">DynamicArrayTags</span> <span class="n">_tagEnum</span><span class="p">;</span>
-                <span class="k">public</span> <span class="n">DynamicArrayTags</span> <span class="n">TagEnum</span>
-                <span class="p">{</span>
-                    <span class="k">get</span>
-                    <span class="p">{</span>
-                        <span class="k">if</span> <span class="p">(</span><span class="n">f_tagEnum</span><span class="p">)</span>
-                            <span class="k">return</span> <span class="n">_tagEnum</span><span class="p">;</span>
-                        <span class="n">_tagEnum</span> <span class="p">=</span> <span class="p">(</span><span class="n">DynamicArrayTags</span><span class="p">)</span> <span class="p">(((</span><span class="n">Elf</span><span class="p">.</span><span class="n">DynamicArrayTags</span><span class="p">)</span> <span class="n">Tag</span><span class="p">));</span>
-                        <span class="n">f_tagEnum</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
-                        <span class="k">return</span> <span class="n">_tagEnum</span><span class="p">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
                 <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_flag1Values</span><span class="p">;</span>
                 <span class="k">private</span> <span class="n">DtFlag1Values</span> <span class="n">_flag1Values</span><span class="p">;</span>
                 <span class="k">public</span> <span class="n">DtFlag1Values</span> <span class="n">Flag1Values</span>
@@ -2215,6 +1362,38 @@ can also be found there.</p>
                             <span class="n">f_valueStr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
                         <span class="p">}</span>
                         <span class="k">return</span> <span class="n">_valueStr</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tagEnum</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">DynamicArrayTags</span> <span class="n">_tagEnum</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">DynamicArrayTags</span> <span class="n">TagEnum</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_tagEnum</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_tagEnum</span><span class="p">;</span>
+                        <span class="n">_tagEnum</span> <span class="p">=</span> <span class="p">(</span><span class="n">DynamicArrayTags</span><span class="p">)</span> <span class="p">(((</span><span class="n">Elf</span><span class="p">.</span><span class="n">DynamicArrayTags</span><span class="p">)</span> <span class="n">Tag</span><span class="p">));</span>
+                        <span class="n">f_tagEnum</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="k">return</span> <span class="n">_tagEnum</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_flagValues</span><span class="p">;</span>
+                <span class="k">private</span> <span class="n">DtFlagValues</span> <span class="n">_flagValues</span><span class="p">;</span>
+                <span class="k">public</span> <span class="n">DtFlagValues</span> <span class="n">FlagValues</span>
+                <span class="p">{</span>
+                    <span class="k">get</span>
+                    <span class="p">{</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">f_flagValues</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="n">_flagValues</span><span class="p">;</span>
+                        <span class="k">if</span> <span class="p">(</span><span class="n">TagEnum</span> <span class="p">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">DynamicArrayTags</span><span class="p">.</span><span class="n">Flags</span><span class="p">)</span> <span class="p">{</span>
+                            <span class="k">if</span> <span class="p">(</span><span class="n">m_isLe</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span> <span class="p">{</span>
+                                <span class="n">_flagValues</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DtFlagValues</span><span class="p">(</span><span class="n">ValueOrPtr</span><span class="p">,</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                                <span class="n">_flagValues</span> <span class="p">=</span> <span class="k">new</span> <span class="n">DtFlagValues</span><span class="p">(</span><span class="n">ValueOrPtr</span><span class="p">,</span> <span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                            <span class="p">}</span>
+                            <span class="n">f_flagValues</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                        <span class="p">}</span>
+                        <span class="k">return</span> <span class="n">_flagValues</span><span class="p">;</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isValueStr</span><span class="p">;</span>
@@ -3406,6 +2585,967 @@ can also be found there.</p>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">M_RawProgramHeaders</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_programHeaders</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">byte</span><span class="p">[]&gt;</span> <span class="n">M_RawSectionHeaders</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_sectionHeaders</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">M_RawSectionNames</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">__raw_sectionNames</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DtFlag1Values</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
+                <span class="n">f_singleton</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_ignmuldef</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_loadfltr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_initfirst</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_symintpose</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_noreloc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_confalt</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_dispreldne</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_rtldGlobal</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_nodelete</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_trans</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_origin</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_now</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_nohdr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_endfiltee</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_nodirect</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_globaudit</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_noksyms</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_interpose</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_nodump</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_disprelpnd</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_noopen</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_stub</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_direct</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_edited</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_group</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_pie</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_nodeflib</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_singleton</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_singleton</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Singleton symbols are used.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Singleton</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_singleton</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_singleton</span><span class="p">;</span>
+                    <span class="n">_singleton</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">33554432</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_singleton</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_singleton</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_ignmuldef</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_ignmuldef</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Ignmuldef</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_ignmuldef</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_ignmuldef</span><span class="p">;</span>
+                    <span class="n">_ignmuldef</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">262144</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_ignmuldef</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_ignmuldef</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_loadfltr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_loadfltr</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Trigger filtee loading at runtime.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Loadfltr</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_loadfltr</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_loadfltr</span><span class="p">;</span>
+                    <span class="n">_loadfltr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_loadfltr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_loadfltr</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_initfirst</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_initfirst</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Set RTLD_INITFIRST for this object</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Initfirst</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_initfirst</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_initfirst</span><span class="p">;</span>
+                    <span class="n">_initfirst</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">32</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_initfirst</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_initfirst</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_symintpose</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_symintpose</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Object has individual interposers.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Symintpose</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_symintpose</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_symintpose</span><span class="p">;</span>
+                    <span class="n">_symintpose</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8388608</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_symintpose</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_symintpose</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_noreloc</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_noreloc</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Noreloc</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_noreloc</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_noreloc</span><span class="p">;</span>
+                    <span class="n">_noreloc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4194304</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_noreloc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_noreloc</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_confalt</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_confalt</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Configuration alternative created.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Confalt</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_confalt</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_confalt</span><span class="p">;</span>
+                    <span class="n">_confalt</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8192</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_confalt</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_confalt</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_dispreldne</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_dispreldne</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Disp reloc applied at build time.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Dispreldne</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_dispreldne</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_dispreldne</span><span class="p">;</span>
+                    <span class="n">_dispreldne</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">32768</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_dispreldne</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_dispreldne</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_rtldGlobal</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_rtldGlobal</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Set RTLD_GLOBAL for this object.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">RtldGlobal</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_rtldGlobal</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_rtldGlobal</span><span class="p">;</span>
+                    <span class="n">_rtldGlobal</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_rtldGlobal</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_rtldGlobal</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodelete</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodelete</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Set RTLD_NODELETE for this object.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodelete</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodelete</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_nodelete</span><span class="p">;</span>
+                    <span class="n">_nodelete</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_nodelete</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_nodelete</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_trans</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_trans</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Trans</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_trans</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_trans</span><span class="p">;</span>
+                    <span class="n">_trans</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">512</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_trans</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_trans</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_origin</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_origin</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// $ORIGIN must be handled.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Origin</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_origin</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_origin</span><span class="p">;</span>
+                    <span class="n">_origin</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_origin</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_origin</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_now</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_now</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Set RTLD_NOW for this object.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Now</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_now</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_now</span><span class="p">;</span>
+                    <span class="n">_now</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_now</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_now</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nohdr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nohdr</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nohdr</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nohdr</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_nohdr</span><span class="p">;</span>
+                    <span class="n">_nohdr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1048576</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_nohdr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_nohdr</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_endfiltee</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_endfiltee</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Filtee terminates filters search.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Endfiltee</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_endfiltee</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_endfiltee</span><span class="p">;</span>
+                    <span class="n">_endfiltee</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16384</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_endfiltee</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_endfiltee</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodirect</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodirect</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Object has no-direct binding.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodirect</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodirect</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_nodirect</span><span class="p">;</span>
+                    <span class="n">_nodirect</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">131072</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_nodirect</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_nodirect</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_globaudit</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_globaudit</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Global auditing required.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Globaudit</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_globaudit</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_globaudit</span><span class="p">;</span>
+                    <span class="n">_globaudit</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16777216</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_globaudit</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_globaudit</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_noksyms</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_noksyms</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Noksyms</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_noksyms</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_noksyms</span><span class="p">;</span>
+                    <span class="n">_noksyms</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">524288</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_noksyms</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_noksyms</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_interpose</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_interpose</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Object is used to interpose.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Interpose</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_interpose</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_interpose</span><span class="p">;</span>
+                    <span class="n">_interpose</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1024</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_interpose</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_interpose</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodump</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodump</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Object can&#39;t be dldump&#39;ed.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodump</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodump</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_nodump</span><span class="p">;</span>
+                    <span class="n">_nodump</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4096</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_nodump</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_nodump</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_disprelpnd</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_disprelpnd</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Disp reloc applied at run-time.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Disprelpnd</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_disprelpnd</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_disprelpnd</span><span class="p">;</span>
+                    <span class="n">_disprelpnd</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">65536</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_disprelpnd</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_disprelpnd</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_noopen</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_noopen</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Set RTLD_NOOPEN for this object.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Noopen</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_noopen</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_noopen</span><span class="p">;</span>
+                    <span class="n">_noopen</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">64</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_noopen</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_noopen</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_stub</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_stub</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Stub</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_stub</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_stub</span><span class="p">;</span>
+                    <span class="n">_stub</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">67108864</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_stub</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_stub</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_direct</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_direct</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Direct binding enabled.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Direct</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_direct</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_direct</span><span class="p">;</span>
+                    <span class="n">_direct</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">256</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_direct</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_direct</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_edited</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_edited</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Object is modified after built.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Edited</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_edited</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_edited</span><span class="p">;</span>
+                    <span class="n">_edited</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2097152</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_edited</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_edited</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_group</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_group</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Set RTLD_GROUP for this object.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Group</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_group</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
+                    <span class="n">_group</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_group</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_pie</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_pie</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Pie</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_pie</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_pie</span><span class="p">;</span>
+                    <span class="n">_pie</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">134217728</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_pie</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_pie</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_nodeflib</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_nodeflib</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Ignore default lib search path.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Nodeflib</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_nodeflib</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_nodeflib</span><span class="p">;</span>
+                    <span class="n">_nodeflib</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2048</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_nodeflib</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_nodeflib</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">SectionHeaderFlags</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
+                <span class="n">f_merge</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_maskOs</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_exclude</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_strings</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_osNonConforming</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_alloc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_execInstr</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_infoLink</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_write</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_linkOrder</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_ordered</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_tls</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_group</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_merge</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_merge</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// might be merged</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Merge</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_merge</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_merge</span><span class="p">;</span>
+                    <span class="n">_merge</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_merge</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_merge</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_maskOs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_maskOs</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// OS-specific</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">MaskOs</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_maskOs</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_maskOs</span><span class="p">;</span>
+                    <span class="n">_maskOs</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">267386880</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_maskOs</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_maskOs</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_exclude</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_exclude</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// section is excluded unless referenced or allocated (Solaris)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Exclude</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_exclude</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_exclude</span><span class="p">;</span>
+                    <span class="n">_exclude</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">134217728</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_exclude</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_exclude</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_maskProc</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_maskProc</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// Processor-specific</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">MaskProc</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_maskProc</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
+                    <span class="n">_maskProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4026531840</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_strings</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_strings</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// contains nul-terminated strings</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Strings</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_strings</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span>
+                    <span class="n">_strings</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">32</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_strings</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_strings</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_osNonConforming</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_osNonConforming</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// non-standard OS specific handling required</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">OsNonConforming</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_osNonConforming</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_osNonConforming</span><span class="p">;</span>
+                    <span class="n">_osNonConforming</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">256</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_osNonConforming</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_osNonConforming</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_alloc</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_alloc</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// occupies memory during execution</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Alloc</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_alloc</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_alloc</span><span class="p">;</span>
+                    <span class="n">_alloc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_alloc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_alloc</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_execInstr</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_execInstr</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// executable</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">ExecInstr</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_execInstr</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_execInstr</span><span class="p">;</span>
+                    <span class="n">_execInstr</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_execInstr</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_execInstr</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_infoLink</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_infoLink</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// &#39;sh_info&#39; contains SHT index</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">InfoLink</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_infoLink</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_infoLink</span><span class="p">;</span>
+                    <span class="n">_infoLink</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">64</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_infoLink</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_infoLink</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_write</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_write</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// writable</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Write</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_write</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
+                    <span class="n">_write</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_write</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_linkOrder</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_linkOrder</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// preserve order after combining</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">LinkOrder</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_linkOrder</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_linkOrder</span><span class="p">;</span>
+                    <span class="n">_linkOrder</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">128</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_linkOrder</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_linkOrder</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_ordered</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_ordered</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// special ordering requirement (Solaris)</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Ordered</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_ordered</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_ordered</span><span class="p">;</span>
+                    <span class="n">_ordered</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">67108864</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_ordered</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_ordered</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_tls</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_tls</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// section hold thread-local data</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Tls</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_tls</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_tls</span><span class="p">;</span>
+                    <span class="n">_tls</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1024</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_tls</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_tls</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_group</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_group</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// section is member of a group</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Group</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_group</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
+                    <span class="n">_group</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">512</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_group</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_group</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">SectionHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PhdrTypeFlags</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
+                <span class="n">f_read</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_write</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_execute</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_read</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_read</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Read</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_read</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_read</span><span class="p">;</span>
+                    <span class="n">_read</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_read</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_read</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_write</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_write</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Write</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_write</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
+                    <span class="n">_write</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_write</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_write</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_execute</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_execute</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Execute</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_execute</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_execute</span><span class="p">;</span>
+                    <span class="n">_execute</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_execute</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_execute</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_maskProc</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_maskProc</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">MaskProc</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_maskProc</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
+                    <span class="n">_maskProc</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4026531840</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_maskProc</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_maskProc</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">ProgramHeader</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html&quot;&gt;Figure 5-11: DT_FLAGS values&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="c1">/// &lt;remarks&gt;</span>
+        <span class="c1">/// Reference: &lt;a href=&quot;https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5&quot;&gt;Source&lt;/a&gt;</span>
+        <span class="c1">/// &lt;/remarks&gt;</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">DtFlagValues</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="nf">DtFlagValues</span><span class="p">(</span><span class="kt">uint</span> <span class="n">p_value</span><span class="p">,</span> <span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_value</span> <span class="p">=</span> <span class="n">p_value</span><span class="p">;</span>
+                <span class="n">f_bindNow</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_origin</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_textrel</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_staticTls</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">f_symbolic</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_bindNow</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_bindNow</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// all relocations for this object must be processed before returning</span>
+            <span class="c1">/// control to the program</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">BindNow</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_bindNow</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_bindNow</span><span class="p">;</span>
+                    <span class="n">_bindNow</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">8</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_bindNow</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_bindNow</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_origin</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_origin</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// object may reference the $ORIGIN substitution string</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Origin</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_origin</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_origin</span><span class="p">;</span>
+                    <span class="n">_origin</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">1</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_origin</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_origin</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_textrel</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_textrel</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// relocation entries might request modifications to a non-writable segment</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Textrel</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_textrel</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_textrel</span><span class="p">;</span>
+                    <span class="n">_textrel</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">4</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_textrel</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_textrel</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_staticTls</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_staticTls</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// object uses static thread-local storage scheme</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">StaticTls</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_staticTls</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_staticTls</span><span class="p">;</span>
+                    <span class="n">_staticTls</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">16</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_staticTls</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_staticTls</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_symbolic</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_symbolic</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// symbolic linking</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">Symbolic</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_symbolic</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_symbolic</span><span class="p">;</span>
+                    <span class="n">_symbolic</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">((</span><span class="n">Value</span> <span class="p">&amp;</span> <span class="m">2</span><span class="p">)</span> <span class="p">!=</span> <span class="m">0</span><span class="p">);</span>
+                    <span class="n">f_symbolic</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_symbolic</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">uint</span> <span class="n">_value</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">m_parent</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">uint</span> <span class="n">Value</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_value</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_shIdxLoOs</span><span class="p">;</span>
         <span class="k">private</span> <span class="kt">int</span> <span class="n">_shIdxLoOs</span><span class="p">;</span>

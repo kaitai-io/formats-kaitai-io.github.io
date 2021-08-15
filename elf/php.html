@@ -384,513 +384,6 @@ section#format-index .row {
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">PhdrTypeFlags</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\ProgramHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_read</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_write</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_execute</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">execute</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_maskProc</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">SectionHeaderFlags</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\SectionHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_merge</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * might be merged</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">merge</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_maskOs</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * OS-specific</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">maskOs</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_exclude</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * section is excluded unless referenced or allocated (Solaris)</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">exclude</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_maskProc</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Processor-specific</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_strings</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * contains nul-terminated strings</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">strings</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_osNonConforming</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * non-standard OS specific handling required</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">osNonConforming</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_alloc</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * occupies memory during execution</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">alloc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_execInstr</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * executable</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">execInstr</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_infoLink</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * &#39;sh_info&#39; contains SHT index</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">infoLink</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_write</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * writable</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_linkOrder</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * preserve order after combining</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">linkOrder</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_ordered</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * special ordering requirement (Solaris)</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ordered</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_tls</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * section hold thread-local data</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tls</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_group</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * section is member of a group</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
-    <span class="k">class</span> <span class="nc">DtFlag1Values</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\DynamicSectionEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-
-        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_singleton</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Singleton symbols are used.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">singleton</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_ignmuldef</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">ignmuldef</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_loadfltr</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Trigger filtee loading at runtime.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">loadfltr</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_initfirst</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Set RTLD_INITFIRST for this object</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">initfirst</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_symintpose</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Object has individual interposers.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">symintpose</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_noreloc</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">noreloc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_confalt</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Configuration alternative created.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">confalt</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_dispreldne</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Disp reloc applied at build time.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">dispreldne</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_rtldGlobal</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Set RTLD_GLOBAL for this object.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">rtldGlobal</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nodelete</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Set RTLD_NODELETE for this object.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodelete</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_trans</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">trans</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_origin</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * $ORIGIN must be handled.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">origin</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_now</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Set RTLD_NOW for this object.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">now</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nohdr</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nohdr</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_endfiltee</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Filtee terminates filters search.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">endfiltee</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nodirect</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Object has no-direct binding.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodirect</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_globaudit</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Global auditing required.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">globaudit</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_noksyms</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">noksyms</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_interpose</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Object is used to interpose.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">interpose</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nodump</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Object can&#39;t be dldump&#39;ed.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodump</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_disprelpnd</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Disp reloc applied at run-time.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">disprelpnd</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_noopen</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Set RTLD_NOOPEN for this object.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">noopen</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_stub</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_direct</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Direct binding enabled.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">direct</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_edited</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Object is modified after built.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">edited</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_group</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Set RTLD_GROUP for this object.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_pie</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">pie</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_nodeflib</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * Ignore default lib search path.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodeflib</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">EndianElf</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
         <span class="k">protected</span> <span class="nv">$_m__is_le</span><span class="p">;</span>
 
@@ -1385,13 +878,6 @@ section#format-index .row {
                     <span class="k">break</span><span class="p">;</span>
             <span class="p">}</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_tagEnum</span><span class="p">;</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tagEnum</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span><span class="p">;</span>
-            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">();</span>
-            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span><span class="p">;</span>
-        <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_flag1Values</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">flag1Values</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flag1Values</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
@@ -1421,6 +907,26 @@ section#format-index .row {
                 <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="nv">$_pos</span><span class="p">);</span>
             <span class="p">}</span>
             <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_valueStr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tagEnum</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tagEnum</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tag</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tagEnum</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_flagValues</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">flagValues</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagValues</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagValues</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tagEnum</span><span class="p">()</span> <span class="o">==</span> <span class="nx">\Elf\DynamicArrayTags</span><span class="o">::</span><span class="na">FLAGS</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m__is_le</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagValues</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\DtFlagValues</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valueOrPtr</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagValues</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Elf\DtFlagValues</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">valueOrPtr</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_flagValues</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_isValueStr</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">isValueStr</span><span class="p">()</span> <span class="p">{</span>
@@ -2218,6 +1724,584 @@ section#format-index .row {
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_entries</span><span class="p">;</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_entries</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">DtFlag1Values</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\DynamicSectionEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_singleton</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Singleton symbols are used.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">singleton</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_singleton</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_ignmuldef</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ignmuldef</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ignmuldef</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_loadfltr</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Trigger filtee loading at runtime.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">loadfltr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_loadfltr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_initfirst</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Set RTLD_INITFIRST for this object</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">initfirst</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_initfirst</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_symintpose</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Object has individual interposers.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">symintpose</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symintpose</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_noreloc</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">noreloc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noreloc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_confalt</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Configuration alternative created.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">confalt</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_confalt</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_dispreldne</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Disp reloc applied at build time.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">dispreldne</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_dispreldne</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_rtldGlobal</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Set RTLD_GLOBAL for this object.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">rtldGlobal</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_rtldGlobal</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nodelete</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Set RTLD_NODELETE for this object.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodelete</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodelete</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_trans</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">trans</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_trans</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_origin</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * $ORIGIN must be handled.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">origin</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_now</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Set RTLD_NOW for this object.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">now</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_now</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nohdr</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nohdr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nohdr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_endfiltee</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Filtee terminates filters search.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">endfiltee</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_endfiltee</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nodirect</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Object has no-direct binding.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodirect</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodirect</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_globaudit</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Global auditing required.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">globaudit</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_globaudit</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_noksyms</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">noksyms</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noksyms</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_interpose</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Object is used to interpose.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">interpose</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_interpose</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nodump</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Object can&#39;t be dldump&#39;ed.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodump</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodump</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_disprelpnd</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Disp reloc applied at run-time.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">disprelpnd</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_disprelpnd</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_noopen</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Set RTLD_NOOPEN for this object.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">noopen</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_noopen</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_stub</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_stub</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_direct</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Direct binding enabled.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">direct</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_direct</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_edited</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Object is modified after built.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">edited</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_edited</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_group</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Set RTLD_GROUP for this object.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_pie</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">pie</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_pie</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_nodeflib</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Ignore default lib search path.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">nodeflib</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_nodeflib</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">SectionHeaderFlags</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\SectionHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_merge</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * might be merged</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">merge</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_merge</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maskOs</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * OS-specific</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maskOs</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskOs</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_exclude</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * section is excluded unless referenced or allocated (Solaris)</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">exclude</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_exclude</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maskProc</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Processor-specific</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_strings</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * contains nul-terminated strings</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">strings</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_strings</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_osNonConforming</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * non-standard OS specific handling required</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">osNonConforming</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_osNonConforming</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_alloc</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * occupies memory during execution</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">alloc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_alloc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_execInstr</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * executable</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">execInstr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execInstr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_infoLink</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * &#39;sh_info&#39; contains SHT index</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">infoLink</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoLink</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_write</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * writable</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_linkOrder</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * preserve order after combining</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">linkOrder</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_linkOrder</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_ordered</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * special ordering requirement (Solaris)</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">ordered</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_ordered</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tls</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * section hold thread-local data</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tls</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tls</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_group</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * section is member of a group</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_group</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">PhdrTypeFlags</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\ProgramHeader</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_read</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_read</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_write</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_write</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_execute</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">execute</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_execute</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_maskProc</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maskProc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Elf</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">DtFlagValues</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">int</span> <span class="nv">$value</span><span class="p">,</span> <span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Elf\EndianElf\DynamicSectionEntry</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Elf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_bindNow</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * all relocations for this object must be processed before returning</span>
+<span class="sd">         * control to the program</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">bindNow</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bindNow</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bindNow</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bindNow</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_bindNow</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_origin</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * object may reference the $ORIGIN substitution string</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">origin</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_origin</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_textrel</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * relocation entries might request modifications to a non-writable segment</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">textrel</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textrel</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textrel</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textrel</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_textrel</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_staticTls</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * object uses static thread-local storage scheme</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">staticTls</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_staticTls</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_staticTls</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_staticTls</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_staticTls</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_symbolic</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * symbolic linking</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">symbolic</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbolic</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbolic</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbolic</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_symbolic</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_value</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_value</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 

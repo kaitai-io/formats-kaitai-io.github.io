@@ -801,445 +801,6 @@ section#format-index .row {
         <span class="bp">self</span><span class="o">.</span><span class="n">pad</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">EndianElf</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
 
-    <span class="k">class</span> <span class="nc">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">pass</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_read&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_read</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_read&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_read</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_read&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_execute&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_execute</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_execute&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_execute</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_execute&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">mask_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-
-    <span class="k">class</span> <span class="nc">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">pass</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;might be merged.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_merge&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_merge</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_merge&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_merge</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_merge&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">mask_os</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;OS-specific.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_os&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_os</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;section is excluded unless referenced or allocated (Solaris).&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exclude&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exclude</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exclude&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exclude</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exclude&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">mask_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Processor-specific.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">strings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;contains nul-terminated strings.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">os_non_conforming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;non-standard OS specific handling required.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_os_non_conforming&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_os_non_conforming</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_os_non_conforming&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_os_non_conforming</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_os_non_conforming</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_os_non_conforming&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">alloc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;occupies memory during execution.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_alloc&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_alloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_alloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_alloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_alloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">exec_instr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;executable.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exec_instr&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exec_instr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exec_instr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_exec_instr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exec_instr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exec_instr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">info_link</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;&#39;sh_info&#39; contains SHT index.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_info_link&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_info_link</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_info_link&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_info_link</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_info_link</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_info_link&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;writable.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">link_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;preserve order after combining.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_link_order&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_link_order</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_link_order&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_link_order</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_link_order</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_link_order&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">ordered</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;special ordering requirement (Solaris).&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ordered&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ordered</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ordered&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ordered</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ordered&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">tls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;section hold thread-local data.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tls&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tls&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tls&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;section is member of a group.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-
-    <span class="k">class</span> <span class="nc">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
-        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
-
-        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">pass</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Singleton symbols are used.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_singleton&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_singleton</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_singleton&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_singleton</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_singleton&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">ignmuldef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ignmuldef&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ignmuldef</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ignmuldef&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ignmuldef</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ignmuldef&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">loadfltr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Trigger filtee loading at runtime.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_loadfltr&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_loadfltr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_loadfltr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_loadfltr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_loadfltr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">initfirst</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Set RTLD_INITFIRST for this object.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_initfirst&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_initfirst</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_initfirst&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_initfirst</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_initfirst&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">symintpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Object has individual interposers.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symintpose&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_symintpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symintpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_symintpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symintpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">noreloc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noreloc&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noreloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noreloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noreloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noreloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">confalt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Configuration alternative created.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_confalt&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_confalt</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_confalt&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_confalt</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_confalt&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">dispreldne</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Disp reloc applied at build time.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dispreldne&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_dispreldne</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dispreldne&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_dispreldne</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dispreldne&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">rtld_global</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Set RTLD_GLOBAL for this object.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_rtld_global&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_rtld_global</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_rtld_global&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_rtld_global</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_rtld_global</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_rtld_global&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">nodelete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Set RTLD_NODELETE for this object.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodelete&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodelete</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodelete&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodelete</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodelete&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">trans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_trans&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_trans</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_trans&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_trans</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_trans&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;$ORIGIN must be handled.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Set RTLD_NOW for this object.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_now&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_now</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_now&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_now</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_now&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">nohdr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nohdr&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nohdr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nohdr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nohdr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nohdr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">endfiltee</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Filtee terminates filters search.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_endfiltee&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_endfiltee</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_endfiltee&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_endfiltee</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_endfiltee&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">nodirect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Object has no-direct binding.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodirect&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodirect</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodirect&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodirect</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodirect&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">globaudit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Global auditing required.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_globaudit&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_globaudit</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_globaudit&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_globaudit</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_globaudit&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">noksyms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noksyms&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noksyms</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noksyms&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noksyms</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noksyms&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">interpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Object is used to interpose.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_interpose&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_interpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_interpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_interpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_interpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">nodump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Object can&#39;t be dldump&#39;ed.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodump&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodump</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodump&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodump</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodump&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">disprelpnd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Disp reloc applied at run-time.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_disprelpnd&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_disprelpnd</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_disprelpnd&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_disprelpnd</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_disprelpnd&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">noopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Set RTLD_NOOPEN for this object.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noopen&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noopen</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noopen&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noopen</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noopen&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">stub</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_stub&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_stub</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_stub&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_stub</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_stub&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">direct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Direct binding enabled.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_direct&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_direct</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_direct&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_direct</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_direct&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">edited</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Object is modified after built.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_edited&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_edited</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_edited&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_edited</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_edited&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Set RTLD_GROUP for this object.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">pie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_pie&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_pie</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_pie&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_pie</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_pie&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-        <span class="nd">@property</span>
-        <span class="k">def</span> <span class="nf">nodeflib</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-            <span class="sd">&quot;&quot;&quot;Ignore default lib search path.&quot;&quot;&quot;</span>
-            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodeflib&#39;</span><span class="p">):</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodeflib</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodeflib&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodeflib</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodeflib&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-
     <span class="k">class</span> <span class="nc">EndianElf</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
         <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
@@ -1510,14 +1071,6 @@ section#format-index .row {
                     <span class="bp">self</span><span class="o">.</span><span class="n">value_or_ptr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">read_u8be</span><span class="p">()</span>
 
             <span class="nd">@property</span>
-            <span class="k">def</span> <span class="nf">tag_enum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tag_enum&#39;</span><span class="p">):</span>
-                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tag_enum</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tag_enum&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-                <span class="bp">self</span><span class="o">.</span><span class="n">_m_tag_enum</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">DynamicArrayTags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
-                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tag_enum</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tag_enum&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
-
-            <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">flag_1_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
                 <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_flag_1_values&#39;</span><span class="p">):</span>
                     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_flag_1_values</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_flag_1_values&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
@@ -1546,6 +1099,27 @@ section#format-index .row {
                     <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_value_str</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_value_str&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">tag_enum</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tag_enum&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tag_enum</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tag_enum&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">_m_tag_enum</span> <span class="o">=</span> <span class="n">KaitaiStream</span><span class="o">.</span><span class="n">resolve_enum</span><span class="p">(</span><span class="n">Elf</span><span class="o">.</span><span class="n">DynamicArrayTags</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tag_enum</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tag_enum&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="nd">@property</span>
+            <span class="k">def</span> <span class="nf">flag_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_flag_values&#39;</span><span class="p">):</span>
+                    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_flag_values</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_flag_values&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="n">Elf</span><span class="o">.</span><span class="n">DynamicArrayTags</span><span class="o">.</span><span class="n">flags</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_is_le</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_m_flag_values</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">DtFlagValues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_or_ptr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_m_flag_values</span> <span class="o">=</span> <span class="n">Elf</span><span class="o">.</span><span class="n">DtFlagValues</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value_or_ptr</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="p">)</span>
+
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_flag_values</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_flag_values&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
             <span class="nd">@property</span>
             <span class="k">def</span> <span class="nf">is_value_str</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -2227,6 +1801,516 @@ section#format-index .row {
                 <span class="bp">self</span><span class="o">.</span><span class="n">_io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
 
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_section_names</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_section_names&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">singleton</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Singleton symbols are used.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_singleton&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_singleton</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_singleton&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_singleton</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_singleton&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">ignmuldef</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ignmuldef&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ignmuldef</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ignmuldef&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ignmuldef</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ignmuldef&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">loadfltr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Trigger filtee loading at runtime.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_loadfltr&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_loadfltr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_loadfltr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_loadfltr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_loadfltr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">initfirst</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set RTLD_INITFIRST for this object.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_initfirst&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_initfirst</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_initfirst&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_initfirst</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_initfirst&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">symintpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Object has individual interposers.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symintpose&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_symintpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symintpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_symintpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symintpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">noreloc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noreloc&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noreloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noreloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noreloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noreloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">confalt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Configuration alternative created.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_confalt&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_confalt</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_confalt&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_confalt</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_confalt&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">dispreldne</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Disp reloc applied at build time.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dispreldne&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_dispreldne</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dispreldne&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_dispreldne</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_dispreldne&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">rtld_global</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set RTLD_GLOBAL for this object.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_rtld_global&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_rtld_global</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_rtld_global&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_rtld_global</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_rtld_global</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_rtld_global&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">nodelete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set RTLD_NODELETE for this object.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodelete&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodelete</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodelete&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodelete</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodelete&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">trans</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_trans&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_trans</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_trans&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_trans</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_trans&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;$ORIGIN must be handled.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set RTLD_NOW for this object.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_now&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_now</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_now&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_now</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_now&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">nohdr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nohdr&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nohdr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nohdr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nohdr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nohdr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">endfiltee</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Filtee terminates filters search.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_endfiltee&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_endfiltee</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_endfiltee&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_endfiltee</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_endfiltee&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">nodirect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Object has no-direct binding.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodirect&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodirect</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodirect&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodirect</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodirect&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">globaudit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Global auditing required.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_globaudit&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_globaudit</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_globaudit&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_globaudit</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_globaudit&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">noksyms</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noksyms&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noksyms</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noksyms&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noksyms</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noksyms&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">interpose</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Object is used to interpose.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_interpose&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_interpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_interpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_interpose</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_interpose&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">nodump</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Object can&#39;t be dldump&#39;ed.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodump&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodump</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodump&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodump</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodump&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">disprelpnd</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Disp reloc applied at run-time.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_disprelpnd&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_disprelpnd</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_disprelpnd&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_disprelpnd</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_disprelpnd&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">noopen</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set RTLD_NOOPEN for this object.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noopen&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noopen</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noopen&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_noopen</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_noopen&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">stub</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_stub&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_stub</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_stub&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_stub</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_stub&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">direct</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Direct binding enabled.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_direct&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_direct</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_direct&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_direct</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_direct&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">edited</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Object is modified after built.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_edited&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_edited</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_edited&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_edited</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_edited&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Set RTLD_GROUP for this object.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">pie</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_pie&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_pie</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_pie&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_pie</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_pie&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">nodeflib</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Ignore default lib search path.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodeflib&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodeflib</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodeflib&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_nodeflib</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_nodeflib&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">merge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;might be merged.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_merge&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_merge</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_merge&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_merge</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_merge&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">mask_os</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;OS-specific.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_os&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_os</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_os</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_os&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">exclude</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;section is excluded unless referenced or allocated (Solaris).&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exclude&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exclude</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exclude&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exclude</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exclude&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">mask_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;Processor-specific.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">strings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;contains nul-terminated strings.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_strings</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_strings&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">os_non_conforming</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;non-standard OS specific handling required.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_os_non_conforming&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_os_non_conforming</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_os_non_conforming&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_os_non_conforming</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_os_non_conforming</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_os_non_conforming&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">alloc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;occupies memory during execution.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_alloc&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_alloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_alloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_alloc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_alloc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">exec_instr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;executable.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exec_instr&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exec_instr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exec_instr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_exec_instr</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_exec_instr</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_exec_instr&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">info_link</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;&#39;sh_info&#39; contains SHT index.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_info_link&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_info_link</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_info_link&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_info_link</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_info_link</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_info_link&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;writable.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">link_order</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;preserve order after combining.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_link_order&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_link_order</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_link_order&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_link_order</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_link_order</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_link_order&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">ordered</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;special ordering requirement (Solaris).&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ordered&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ordered</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ordered&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_ordered</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_ordered&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">tls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;section hold thread-local data.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tls&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tls&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_tls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_tls&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">group</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;section is member of a group.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_group</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_group&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_read&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_read</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_read&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_read</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_read&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_write</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_write&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_execute&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_execute</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_execute&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_execute</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_execute&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">mask_proc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_mask_proc</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_mask_proc&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+
+    <span class="k">class</span> <span class="nc">DtFlagValues</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Figure 5-11: DT_FLAGS values - https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095</span>
+<span class="sd">        </span>
+<span class="sd">        </span>
+<span class="sd">        .. seealso::</span>
+<span class="sd">           Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">_root</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_io</span> <span class="o">=</span> <span class="n">_io</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">_parent</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">_root</span> <span class="k">if</span> <span class="n">_root</span> <span class="k">else</span> <span class="bp">self</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_read</span><span class="p">()</span>
+
+        <span class="k">def</span> <span class="nf">_read</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">bind_now</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;all relocations for this object must be processed before returning</span>
+<span class="sd">            control to the program</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bind_now&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_bind_now</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bind_now&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_bind_now</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_bind_now</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_bind_now&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;object may reference the $ORIGIN substitution string.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_origin</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_origin&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">textrel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;relocation entries might request modifications to a non-writable segment.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_textrel&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_textrel</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_textrel&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_textrel</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_textrel</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_textrel&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">static_tls</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;object uses static thread-local storage scheme.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_static_tls&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_static_tls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_static_tls&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_static_tls</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_static_tls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_static_tls&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+        <span class="nd">@property</span>
+        <span class="k">def</span> <span class="nf">symbolic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;symbolic linking.&quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symbolic&#39;</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_symbolic</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symbolic&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_m_symbolic</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_m_symbolic</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s1">&#39;_m_symbolic&#39;</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span>
 
 
     <span class="nd">@property</span>

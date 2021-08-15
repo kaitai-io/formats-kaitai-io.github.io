@@ -522,847 +522,6 @@ namespace Kaitai
             _pad = m_io.ReadBytes(7);
             _header = new EndianElf(m_io, this, m_root);
         }
-        public partial class PhdrTypeFlags : KaitaiStruct
-        {
-            public PhdrTypeFlags(uint p_value, KaitaiStream p__io, Elf.EndianElf.ProgramHeader p__parent = null, Elf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _value = p_value;
-                f_read = false;
-                f_write = false;
-                f_execute = false;
-                f_maskProc = false;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private bool f_read;
-            private bool _read;
-            public bool Read
-            {
-                get
-                {
-                    if (f_read)
-                        return _read;
-                    _read = (bool) ((Value & 4) != 0);
-                    f_read = true;
-                    return _read;
-                }
-            }
-            private bool f_write;
-            private bool _write;
-            public bool Write
-            {
-                get
-                {
-                    if (f_write)
-                        return _write;
-                    _write = (bool) ((Value & 2) != 0);
-                    f_write = true;
-                    return _write;
-                }
-            }
-            private bool f_execute;
-            private bool _execute;
-            public bool Execute
-            {
-                get
-                {
-                    if (f_execute)
-                        return _execute;
-                    _execute = (bool) ((Value & 1) != 0);
-                    f_execute = true;
-                    return _execute;
-                }
-            }
-            private bool f_maskProc;
-            private bool _maskProc;
-            public bool MaskProc
-            {
-                get
-                {
-                    if (f_maskProc)
-                        return _maskProc;
-                    _maskProc = (bool) ((Value & 4026531840) != 0);
-                    f_maskProc = true;
-                    return _maskProc;
-                }
-            }
-            private uint _value;
-            private Elf m_root;
-            private Elf.EndianElf.ProgramHeader m_parent;
-            public uint Value { get { return _value; } }
-            public Elf M_Root { get { return m_root; } }
-            public Elf.EndianElf.ProgramHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class SectionHeaderFlags : KaitaiStruct
-        {
-            public SectionHeaderFlags(uint p_value, KaitaiStream p__io, Elf.EndianElf.SectionHeader p__parent = null, Elf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _value = p_value;
-                f_merge = false;
-                f_maskOs = false;
-                f_exclude = false;
-                f_maskProc = false;
-                f_strings = false;
-                f_osNonConforming = false;
-                f_alloc = false;
-                f_execInstr = false;
-                f_infoLink = false;
-                f_write = false;
-                f_linkOrder = false;
-                f_ordered = false;
-                f_tls = false;
-                f_group = false;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private bool f_merge;
-            private bool _merge;
-
-            /// <summary>
-            /// might be merged
-            /// </summary>
-            public bool Merge
-            {
-                get
-                {
-                    if (f_merge)
-                        return _merge;
-                    _merge = (bool) ((Value & 16) != 0);
-                    f_merge = true;
-                    return _merge;
-                }
-            }
-            private bool f_maskOs;
-            private bool _maskOs;
-
-            /// <summary>
-            /// OS-specific
-            /// </summary>
-            public bool MaskOs
-            {
-                get
-                {
-                    if (f_maskOs)
-                        return _maskOs;
-                    _maskOs = (bool) ((Value & 267386880) != 0);
-                    f_maskOs = true;
-                    return _maskOs;
-                }
-            }
-            private bool f_exclude;
-            private bool _exclude;
-
-            /// <summary>
-            /// section is excluded unless referenced or allocated (Solaris)
-            /// </summary>
-            public bool Exclude
-            {
-                get
-                {
-                    if (f_exclude)
-                        return _exclude;
-                    _exclude = (bool) ((Value & 134217728) != 0);
-                    f_exclude = true;
-                    return _exclude;
-                }
-            }
-            private bool f_maskProc;
-            private bool _maskProc;
-
-            /// <summary>
-            /// Processor-specific
-            /// </summary>
-            public bool MaskProc
-            {
-                get
-                {
-                    if (f_maskProc)
-                        return _maskProc;
-                    _maskProc = (bool) ((Value & 4026531840) != 0);
-                    f_maskProc = true;
-                    return _maskProc;
-                }
-            }
-            private bool f_strings;
-            private bool _strings;
-
-            /// <summary>
-            /// contains nul-terminated strings
-            /// </summary>
-            public bool Strings
-            {
-                get
-                {
-                    if (f_strings)
-                        return _strings;
-                    _strings = (bool) ((Value & 32) != 0);
-                    f_strings = true;
-                    return _strings;
-                }
-            }
-            private bool f_osNonConforming;
-            private bool _osNonConforming;
-
-            /// <summary>
-            /// non-standard OS specific handling required
-            /// </summary>
-            public bool OsNonConforming
-            {
-                get
-                {
-                    if (f_osNonConforming)
-                        return _osNonConforming;
-                    _osNonConforming = (bool) ((Value & 256) != 0);
-                    f_osNonConforming = true;
-                    return _osNonConforming;
-                }
-            }
-            private bool f_alloc;
-            private bool _alloc;
-
-            /// <summary>
-            /// occupies memory during execution
-            /// </summary>
-            public bool Alloc
-            {
-                get
-                {
-                    if (f_alloc)
-                        return _alloc;
-                    _alloc = (bool) ((Value & 2) != 0);
-                    f_alloc = true;
-                    return _alloc;
-                }
-            }
-            private bool f_execInstr;
-            private bool _execInstr;
-
-            /// <summary>
-            /// executable
-            /// </summary>
-            public bool ExecInstr
-            {
-                get
-                {
-                    if (f_execInstr)
-                        return _execInstr;
-                    _execInstr = (bool) ((Value & 4) != 0);
-                    f_execInstr = true;
-                    return _execInstr;
-                }
-            }
-            private bool f_infoLink;
-            private bool _infoLink;
-
-            /// <summary>
-            /// 'sh_info' contains SHT index
-            /// </summary>
-            public bool InfoLink
-            {
-                get
-                {
-                    if (f_infoLink)
-                        return _infoLink;
-                    _infoLink = (bool) ((Value & 64) != 0);
-                    f_infoLink = true;
-                    return _infoLink;
-                }
-            }
-            private bool f_write;
-            private bool _write;
-
-            /// <summary>
-            /// writable
-            /// </summary>
-            public bool Write
-            {
-                get
-                {
-                    if (f_write)
-                        return _write;
-                    _write = (bool) ((Value & 1) != 0);
-                    f_write = true;
-                    return _write;
-                }
-            }
-            private bool f_linkOrder;
-            private bool _linkOrder;
-
-            /// <summary>
-            /// preserve order after combining
-            /// </summary>
-            public bool LinkOrder
-            {
-                get
-                {
-                    if (f_linkOrder)
-                        return _linkOrder;
-                    _linkOrder = (bool) ((Value & 128) != 0);
-                    f_linkOrder = true;
-                    return _linkOrder;
-                }
-            }
-            private bool f_ordered;
-            private bool _ordered;
-
-            /// <summary>
-            /// special ordering requirement (Solaris)
-            /// </summary>
-            public bool Ordered
-            {
-                get
-                {
-                    if (f_ordered)
-                        return _ordered;
-                    _ordered = (bool) ((Value & 67108864) != 0);
-                    f_ordered = true;
-                    return _ordered;
-                }
-            }
-            private bool f_tls;
-            private bool _tls;
-
-            /// <summary>
-            /// section hold thread-local data
-            /// </summary>
-            public bool Tls
-            {
-                get
-                {
-                    if (f_tls)
-                        return _tls;
-                    _tls = (bool) ((Value & 1024) != 0);
-                    f_tls = true;
-                    return _tls;
-                }
-            }
-            private bool f_group;
-            private bool _group;
-
-            /// <summary>
-            /// section is member of a group
-            /// </summary>
-            public bool Group
-            {
-                get
-                {
-                    if (f_group)
-                        return _group;
-                    _group = (bool) ((Value & 512) != 0);
-                    f_group = true;
-                    return _group;
-                }
-            }
-            private uint _value;
-            private Elf m_root;
-            private Elf.EndianElf.SectionHeader m_parent;
-            public uint Value { get { return _value; } }
-            public Elf M_Root { get { return m_root; } }
-            public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
-        }
-        public partial class DtFlag1Values : KaitaiStruct
-        {
-            public DtFlag1Values(uint p_value, KaitaiStream p__io, Elf.EndianElf.DynamicSectionEntry p__parent = null, Elf p__root = null) : base(p__io)
-            {
-                m_parent = p__parent;
-                m_root = p__root;
-                _value = p_value;
-                f_singleton = false;
-                f_ignmuldef = false;
-                f_loadfltr = false;
-                f_initfirst = false;
-                f_symintpose = false;
-                f_noreloc = false;
-                f_confalt = false;
-                f_dispreldne = false;
-                f_rtldGlobal = false;
-                f_nodelete = false;
-                f_trans = false;
-                f_origin = false;
-                f_now = false;
-                f_nohdr = false;
-                f_endfiltee = false;
-                f_nodirect = false;
-                f_globaudit = false;
-                f_noksyms = false;
-                f_interpose = false;
-                f_nodump = false;
-                f_disprelpnd = false;
-                f_noopen = false;
-                f_stub = false;
-                f_direct = false;
-                f_edited = false;
-                f_group = false;
-                f_pie = false;
-                f_nodeflib = false;
-                _read();
-            }
-            private void _read()
-            {
-            }
-            private bool f_singleton;
-            private bool _singleton;
-
-            /// <summary>
-            /// Singleton symbols are used.
-            /// </summary>
-            public bool Singleton
-            {
-                get
-                {
-                    if (f_singleton)
-                        return _singleton;
-                    _singleton = (bool) ((Value & 33554432) != 0);
-                    f_singleton = true;
-                    return _singleton;
-                }
-            }
-            private bool f_ignmuldef;
-            private bool _ignmuldef;
-            public bool Ignmuldef
-            {
-                get
-                {
-                    if (f_ignmuldef)
-                        return _ignmuldef;
-                    _ignmuldef = (bool) ((Value & 262144) != 0);
-                    f_ignmuldef = true;
-                    return _ignmuldef;
-                }
-            }
-            private bool f_loadfltr;
-            private bool _loadfltr;
-
-            /// <summary>
-            /// Trigger filtee loading at runtime.
-            /// </summary>
-            public bool Loadfltr
-            {
-                get
-                {
-                    if (f_loadfltr)
-                        return _loadfltr;
-                    _loadfltr = (bool) ((Value & 16) != 0);
-                    f_loadfltr = true;
-                    return _loadfltr;
-                }
-            }
-            private bool f_initfirst;
-            private bool _initfirst;
-
-            /// <summary>
-            /// Set RTLD_INITFIRST for this object
-            /// </summary>
-            public bool Initfirst
-            {
-                get
-                {
-                    if (f_initfirst)
-                        return _initfirst;
-                    _initfirst = (bool) ((Value & 32) != 0);
-                    f_initfirst = true;
-                    return _initfirst;
-                }
-            }
-            private bool f_symintpose;
-            private bool _symintpose;
-
-            /// <summary>
-            /// Object has individual interposers.
-            /// </summary>
-            public bool Symintpose
-            {
-                get
-                {
-                    if (f_symintpose)
-                        return _symintpose;
-                    _symintpose = (bool) ((Value & 8388608) != 0);
-                    f_symintpose = true;
-                    return _symintpose;
-                }
-            }
-            private bool f_noreloc;
-            private bool _noreloc;
-            public bool Noreloc
-            {
-                get
-                {
-                    if (f_noreloc)
-                        return _noreloc;
-                    _noreloc = (bool) ((Value & 4194304) != 0);
-                    f_noreloc = true;
-                    return _noreloc;
-                }
-            }
-            private bool f_confalt;
-            private bool _confalt;
-
-            /// <summary>
-            /// Configuration alternative created.
-            /// </summary>
-            public bool Confalt
-            {
-                get
-                {
-                    if (f_confalt)
-                        return _confalt;
-                    _confalt = (bool) ((Value & 8192) != 0);
-                    f_confalt = true;
-                    return _confalt;
-                }
-            }
-            private bool f_dispreldne;
-            private bool _dispreldne;
-
-            /// <summary>
-            /// Disp reloc applied at build time.
-            /// </summary>
-            public bool Dispreldne
-            {
-                get
-                {
-                    if (f_dispreldne)
-                        return _dispreldne;
-                    _dispreldne = (bool) ((Value & 32768) != 0);
-                    f_dispreldne = true;
-                    return _dispreldne;
-                }
-            }
-            private bool f_rtldGlobal;
-            private bool _rtldGlobal;
-
-            /// <summary>
-            /// Set RTLD_GLOBAL for this object.
-            /// </summary>
-            public bool RtldGlobal
-            {
-                get
-                {
-                    if (f_rtldGlobal)
-                        return _rtldGlobal;
-                    _rtldGlobal = (bool) ((Value & 2) != 0);
-                    f_rtldGlobal = true;
-                    return _rtldGlobal;
-                }
-            }
-            private bool f_nodelete;
-            private bool _nodelete;
-
-            /// <summary>
-            /// Set RTLD_NODELETE for this object.
-            /// </summary>
-            public bool Nodelete
-            {
-                get
-                {
-                    if (f_nodelete)
-                        return _nodelete;
-                    _nodelete = (bool) ((Value & 8) != 0);
-                    f_nodelete = true;
-                    return _nodelete;
-                }
-            }
-            private bool f_trans;
-            private bool _trans;
-            public bool Trans
-            {
-                get
-                {
-                    if (f_trans)
-                        return _trans;
-                    _trans = (bool) ((Value & 512) != 0);
-                    f_trans = true;
-                    return _trans;
-                }
-            }
-            private bool f_origin;
-            private bool _origin;
-
-            /// <summary>
-            /// $ORIGIN must be handled.
-            /// </summary>
-            public bool Origin
-            {
-                get
-                {
-                    if (f_origin)
-                        return _origin;
-                    _origin = (bool) ((Value & 128) != 0);
-                    f_origin = true;
-                    return _origin;
-                }
-            }
-            private bool f_now;
-            private bool _now;
-
-            /// <summary>
-            /// Set RTLD_NOW for this object.
-            /// </summary>
-            public bool Now
-            {
-                get
-                {
-                    if (f_now)
-                        return _now;
-                    _now = (bool) ((Value & 1) != 0);
-                    f_now = true;
-                    return _now;
-                }
-            }
-            private bool f_nohdr;
-            private bool _nohdr;
-            public bool Nohdr
-            {
-                get
-                {
-                    if (f_nohdr)
-                        return _nohdr;
-                    _nohdr = (bool) ((Value & 1048576) != 0);
-                    f_nohdr = true;
-                    return _nohdr;
-                }
-            }
-            private bool f_endfiltee;
-            private bool _endfiltee;
-
-            /// <summary>
-            /// Filtee terminates filters search.
-            /// </summary>
-            public bool Endfiltee
-            {
-                get
-                {
-                    if (f_endfiltee)
-                        return _endfiltee;
-                    _endfiltee = (bool) ((Value & 16384) != 0);
-                    f_endfiltee = true;
-                    return _endfiltee;
-                }
-            }
-            private bool f_nodirect;
-            private bool _nodirect;
-
-            /// <summary>
-            /// Object has no-direct binding.
-            /// </summary>
-            public bool Nodirect
-            {
-                get
-                {
-                    if (f_nodirect)
-                        return _nodirect;
-                    _nodirect = (bool) ((Value & 131072) != 0);
-                    f_nodirect = true;
-                    return _nodirect;
-                }
-            }
-            private bool f_globaudit;
-            private bool _globaudit;
-
-            /// <summary>
-            /// Global auditing required.
-            /// </summary>
-            public bool Globaudit
-            {
-                get
-                {
-                    if (f_globaudit)
-                        return _globaudit;
-                    _globaudit = (bool) ((Value & 16777216) != 0);
-                    f_globaudit = true;
-                    return _globaudit;
-                }
-            }
-            private bool f_noksyms;
-            private bool _noksyms;
-            public bool Noksyms
-            {
-                get
-                {
-                    if (f_noksyms)
-                        return _noksyms;
-                    _noksyms = (bool) ((Value & 524288) != 0);
-                    f_noksyms = true;
-                    return _noksyms;
-                }
-            }
-            private bool f_interpose;
-            private bool _interpose;
-
-            /// <summary>
-            /// Object is used to interpose.
-            /// </summary>
-            public bool Interpose
-            {
-                get
-                {
-                    if (f_interpose)
-                        return _interpose;
-                    _interpose = (bool) ((Value & 1024) != 0);
-                    f_interpose = true;
-                    return _interpose;
-                }
-            }
-            private bool f_nodump;
-            private bool _nodump;
-
-            /// <summary>
-            /// Object can't be dldump'ed.
-            /// </summary>
-            public bool Nodump
-            {
-                get
-                {
-                    if (f_nodump)
-                        return _nodump;
-                    _nodump = (bool) ((Value & 4096) != 0);
-                    f_nodump = true;
-                    return _nodump;
-                }
-            }
-            private bool f_disprelpnd;
-            private bool _disprelpnd;
-
-            /// <summary>
-            /// Disp reloc applied at run-time.
-            /// </summary>
-            public bool Disprelpnd
-            {
-                get
-                {
-                    if (f_disprelpnd)
-                        return _disprelpnd;
-                    _disprelpnd = (bool) ((Value & 65536) != 0);
-                    f_disprelpnd = true;
-                    return _disprelpnd;
-                }
-            }
-            private bool f_noopen;
-            private bool _noopen;
-
-            /// <summary>
-            /// Set RTLD_NOOPEN for this object.
-            /// </summary>
-            public bool Noopen
-            {
-                get
-                {
-                    if (f_noopen)
-                        return _noopen;
-                    _noopen = (bool) ((Value & 64) != 0);
-                    f_noopen = true;
-                    return _noopen;
-                }
-            }
-            private bool f_stub;
-            private bool _stub;
-            public bool Stub
-            {
-                get
-                {
-                    if (f_stub)
-                        return _stub;
-                    _stub = (bool) ((Value & 67108864) != 0);
-                    f_stub = true;
-                    return _stub;
-                }
-            }
-            private bool f_direct;
-            private bool _direct;
-
-            /// <summary>
-            /// Direct binding enabled.
-            /// </summary>
-            public bool Direct
-            {
-                get
-                {
-                    if (f_direct)
-                        return _direct;
-                    _direct = (bool) ((Value & 256) != 0);
-                    f_direct = true;
-                    return _direct;
-                }
-            }
-            private bool f_edited;
-            private bool _edited;
-
-            /// <summary>
-            /// Object is modified after built.
-            /// </summary>
-            public bool Edited
-            {
-                get
-                {
-                    if (f_edited)
-                        return _edited;
-                    _edited = (bool) ((Value & 2097152) != 0);
-                    f_edited = true;
-                    return _edited;
-                }
-            }
-            private bool f_group;
-            private bool _group;
-
-            /// <summary>
-            /// Set RTLD_GROUP for this object.
-            /// </summary>
-            public bool Group
-            {
-                get
-                {
-                    if (f_group)
-                        return _group;
-                    _group = (bool) ((Value & 4) != 0);
-                    f_group = true;
-                    return _group;
-                }
-            }
-            private bool f_pie;
-            private bool _pie;
-            public bool Pie
-            {
-                get
-                {
-                    if (f_pie)
-                        return _pie;
-                    _pie = (bool) ((Value & 134217728) != 0);
-                    f_pie = true;
-                    return _pie;
-                }
-            }
-            private bool f_nodeflib;
-            private bool _nodeflib;
-
-            /// <summary>
-            /// Ignore default lib search path.
-            /// </summary>
-            public bool Nodeflib
-            {
-                get
-                {
-                    if (f_nodeflib)
-                        return _nodeflib;
-                    _nodeflib = (bool) ((Value & 2048) != 0);
-                    f_nodeflib = true;
-                    return _nodeflib;
-                }
-            }
-            private uint _value;
-            private Elf m_root;
-            private Elf.EndianElf.DynamicSectionEntry m_parent;
-            public uint Value { get { return _value; } }
-            public Elf M_Root { get { return m_root; } }
-            public Elf.EndianElf.DynamicSectionEntry M_Parent { get { return m_parent; } }
-        }
         public partial class EndianElf : KaitaiStruct
         {
             public static EndianElf FromFile(string fileName)
@@ -1787,9 +946,10 @@ namespace Kaitai
                     m_parent = p__parent;
                     m_root = p__root;
                     m_isLe = isLe;
-                    f_tagEnum = false;
                     f_flag1Values = false;
                     f_valueStr = false;
+                    f_tagEnum = false;
+                    f_flagValues = false;
                     f_isValueStr = false;
                     _read();
                 }
@@ -1850,19 +1010,6 @@ namespace Kaitai
                     }
                     }
                 }
-                private bool f_tagEnum;
-                private DynamicArrayTags _tagEnum;
-                public DynamicArrayTags TagEnum
-                {
-                    get
-                    {
-                        if (f_tagEnum)
-                            return _tagEnum;
-                        _tagEnum = (DynamicArrayTags) (((Elf.DynamicArrayTags) Tag));
-                        f_tagEnum = true;
-                        return _tagEnum;
-                    }
-                }
                 private bool f_flag1Values;
                 private DtFlag1Values _flag1Values;
                 public DtFlag1Values Flag1Values
@@ -1903,6 +1050,38 @@ namespace Kaitai
                             f_valueStr = true;
                         }
                         return _valueStr;
+                    }
+                }
+                private bool f_tagEnum;
+                private DynamicArrayTags _tagEnum;
+                public DynamicArrayTags TagEnum
+                {
+                    get
+                    {
+                        if (f_tagEnum)
+                            return _tagEnum;
+                        _tagEnum = (DynamicArrayTags) (((Elf.DynamicArrayTags) Tag));
+                        f_tagEnum = true;
+                        return _tagEnum;
+                    }
+                }
+                private bool f_flagValues;
+                private DtFlagValues _flagValues;
+                public DtFlagValues FlagValues
+                {
+                    get
+                    {
+                        if (f_flagValues)
+                            return _flagValues;
+                        if (TagEnum == Elf.DynamicArrayTags.Flags) {
+                            if (m_isLe == true) {
+                                _flagValues = new DtFlagValues(ValueOrPtr, m_io, this, m_root);
+                            } else {
+                                _flagValues = new DtFlagValues(ValueOrPtr, m_io, this, m_root);
+                            }
+                            f_flagValues = true;
+                        }
+                        return _flagValues;
                     }
                 }
                 private bool f_isValueStr;
@@ -3094,6 +2273,967 @@ namespace Kaitai
             public List<byte[]> M_RawProgramHeaders { get { return __raw_programHeaders; } }
             public List<byte[]> M_RawSectionHeaders { get { return __raw_sectionHeaders; } }
             public byte[] M_RawSectionNames { get { return __raw_sectionNames; } }
+        }
+        public partial class DtFlag1Values : KaitaiStruct
+        {
+            public DtFlag1Values(uint p_value, KaitaiStream p__io, Elf.EndianElf.DynamicSectionEntry p__parent = null, Elf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _value = p_value;
+                f_singleton = false;
+                f_ignmuldef = false;
+                f_loadfltr = false;
+                f_initfirst = false;
+                f_symintpose = false;
+                f_noreloc = false;
+                f_confalt = false;
+                f_dispreldne = false;
+                f_rtldGlobal = false;
+                f_nodelete = false;
+                f_trans = false;
+                f_origin = false;
+                f_now = false;
+                f_nohdr = false;
+                f_endfiltee = false;
+                f_nodirect = false;
+                f_globaudit = false;
+                f_noksyms = false;
+                f_interpose = false;
+                f_nodump = false;
+                f_disprelpnd = false;
+                f_noopen = false;
+                f_stub = false;
+                f_direct = false;
+                f_edited = false;
+                f_group = false;
+                f_pie = false;
+                f_nodeflib = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_singleton;
+            private bool _singleton;
+
+            /// <summary>
+            /// Singleton symbols are used.
+            /// </summary>
+            public bool Singleton
+            {
+                get
+                {
+                    if (f_singleton)
+                        return _singleton;
+                    _singleton = (bool) ((Value & 33554432) != 0);
+                    f_singleton = true;
+                    return _singleton;
+                }
+            }
+            private bool f_ignmuldef;
+            private bool _ignmuldef;
+            public bool Ignmuldef
+            {
+                get
+                {
+                    if (f_ignmuldef)
+                        return _ignmuldef;
+                    _ignmuldef = (bool) ((Value & 262144) != 0);
+                    f_ignmuldef = true;
+                    return _ignmuldef;
+                }
+            }
+            private bool f_loadfltr;
+            private bool _loadfltr;
+
+            /// <summary>
+            /// Trigger filtee loading at runtime.
+            /// </summary>
+            public bool Loadfltr
+            {
+                get
+                {
+                    if (f_loadfltr)
+                        return _loadfltr;
+                    _loadfltr = (bool) ((Value & 16) != 0);
+                    f_loadfltr = true;
+                    return _loadfltr;
+                }
+            }
+            private bool f_initfirst;
+            private bool _initfirst;
+
+            /// <summary>
+            /// Set RTLD_INITFIRST for this object
+            /// </summary>
+            public bool Initfirst
+            {
+                get
+                {
+                    if (f_initfirst)
+                        return _initfirst;
+                    _initfirst = (bool) ((Value & 32) != 0);
+                    f_initfirst = true;
+                    return _initfirst;
+                }
+            }
+            private bool f_symintpose;
+            private bool _symintpose;
+
+            /// <summary>
+            /// Object has individual interposers.
+            /// </summary>
+            public bool Symintpose
+            {
+                get
+                {
+                    if (f_symintpose)
+                        return _symintpose;
+                    _symintpose = (bool) ((Value & 8388608) != 0);
+                    f_symintpose = true;
+                    return _symintpose;
+                }
+            }
+            private bool f_noreloc;
+            private bool _noreloc;
+            public bool Noreloc
+            {
+                get
+                {
+                    if (f_noreloc)
+                        return _noreloc;
+                    _noreloc = (bool) ((Value & 4194304) != 0);
+                    f_noreloc = true;
+                    return _noreloc;
+                }
+            }
+            private bool f_confalt;
+            private bool _confalt;
+
+            /// <summary>
+            /// Configuration alternative created.
+            /// </summary>
+            public bool Confalt
+            {
+                get
+                {
+                    if (f_confalt)
+                        return _confalt;
+                    _confalt = (bool) ((Value & 8192) != 0);
+                    f_confalt = true;
+                    return _confalt;
+                }
+            }
+            private bool f_dispreldne;
+            private bool _dispreldne;
+
+            /// <summary>
+            /// Disp reloc applied at build time.
+            /// </summary>
+            public bool Dispreldne
+            {
+                get
+                {
+                    if (f_dispreldne)
+                        return _dispreldne;
+                    _dispreldne = (bool) ((Value & 32768) != 0);
+                    f_dispreldne = true;
+                    return _dispreldne;
+                }
+            }
+            private bool f_rtldGlobal;
+            private bool _rtldGlobal;
+
+            /// <summary>
+            /// Set RTLD_GLOBAL for this object.
+            /// </summary>
+            public bool RtldGlobal
+            {
+                get
+                {
+                    if (f_rtldGlobal)
+                        return _rtldGlobal;
+                    _rtldGlobal = (bool) ((Value & 2) != 0);
+                    f_rtldGlobal = true;
+                    return _rtldGlobal;
+                }
+            }
+            private bool f_nodelete;
+            private bool _nodelete;
+
+            /// <summary>
+            /// Set RTLD_NODELETE for this object.
+            /// </summary>
+            public bool Nodelete
+            {
+                get
+                {
+                    if (f_nodelete)
+                        return _nodelete;
+                    _nodelete = (bool) ((Value & 8) != 0);
+                    f_nodelete = true;
+                    return _nodelete;
+                }
+            }
+            private bool f_trans;
+            private bool _trans;
+            public bool Trans
+            {
+                get
+                {
+                    if (f_trans)
+                        return _trans;
+                    _trans = (bool) ((Value & 512) != 0);
+                    f_trans = true;
+                    return _trans;
+                }
+            }
+            private bool f_origin;
+            private bool _origin;
+
+            /// <summary>
+            /// $ORIGIN must be handled.
+            /// </summary>
+            public bool Origin
+            {
+                get
+                {
+                    if (f_origin)
+                        return _origin;
+                    _origin = (bool) ((Value & 128) != 0);
+                    f_origin = true;
+                    return _origin;
+                }
+            }
+            private bool f_now;
+            private bool _now;
+
+            /// <summary>
+            /// Set RTLD_NOW for this object.
+            /// </summary>
+            public bool Now
+            {
+                get
+                {
+                    if (f_now)
+                        return _now;
+                    _now = (bool) ((Value & 1) != 0);
+                    f_now = true;
+                    return _now;
+                }
+            }
+            private bool f_nohdr;
+            private bool _nohdr;
+            public bool Nohdr
+            {
+                get
+                {
+                    if (f_nohdr)
+                        return _nohdr;
+                    _nohdr = (bool) ((Value & 1048576) != 0);
+                    f_nohdr = true;
+                    return _nohdr;
+                }
+            }
+            private bool f_endfiltee;
+            private bool _endfiltee;
+
+            /// <summary>
+            /// Filtee terminates filters search.
+            /// </summary>
+            public bool Endfiltee
+            {
+                get
+                {
+                    if (f_endfiltee)
+                        return _endfiltee;
+                    _endfiltee = (bool) ((Value & 16384) != 0);
+                    f_endfiltee = true;
+                    return _endfiltee;
+                }
+            }
+            private bool f_nodirect;
+            private bool _nodirect;
+
+            /// <summary>
+            /// Object has no-direct binding.
+            /// </summary>
+            public bool Nodirect
+            {
+                get
+                {
+                    if (f_nodirect)
+                        return _nodirect;
+                    _nodirect = (bool) ((Value & 131072) != 0);
+                    f_nodirect = true;
+                    return _nodirect;
+                }
+            }
+            private bool f_globaudit;
+            private bool _globaudit;
+
+            /// <summary>
+            /// Global auditing required.
+            /// </summary>
+            public bool Globaudit
+            {
+                get
+                {
+                    if (f_globaudit)
+                        return _globaudit;
+                    _globaudit = (bool) ((Value & 16777216) != 0);
+                    f_globaudit = true;
+                    return _globaudit;
+                }
+            }
+            private bool f_noksyms;
+            private bool _noksyms;
+            public bool Noksyms
+            {
+                get
+                {
+                    if (f_noksyms)
+                        return _noksyms;
+                    _noksyms = (bool) ((Value & 524288) != 0);
+                    f_noksyms = true;
+                    return _noksyms;
+                }
+            }
+            private bool f_interpose;
+            private bool _interpose;
+
+            /// <summary>
+            /// Object is used to interpose.
+            /// </summary>
+            public bool Interpose
+            {
+                get
+                {
+                    if (f_interpose)
+                        return _interpose;
+                    _interpose = (bool) ((Value & 1024) != 0);
+                    f_interpose = true;
+                    return _interpose;
+                }
+            }
+            private bool f_nodump;
+            private bool _nodump;
+
+            /// <summary>
+            /// Object can't be dldump'ed.
+            /// </summary>
+            public bool Nodump
+            {
+                get
+                {
+                    if (f_nodump)
+                        return _nodump;
+                    _nodump = (bool) ((Value & 4096) != 0);
+                    f_nodump = true;
+                    return _nodump;
+                }
+            }
+            private bool f_disprelpnd;
+            private bool _disprelpnd;
+
+            /// <summary>
+            /// Disp reloc applied at run-time.
+            /// </summary>
+            public bool Disprelpnd
+            {
+                get
+                {
+                    if (f_disprelpnd)
+                        return _disprelpnd;
+                    _disprelpnd = (bool) ((Value & 65536) != 0);
+                    f_disprelpnd = true;
+                    return _disprelpnd;
+                }
+            }
+            private bool f_noopen;
+            private bool _noopen;
+
+            /// <summary>
+            /// Set RTLD_NOOPEN for this object.
+            /// </summary>
+            public bool Noopen
+            {
+                get
+                {
+                    if (f_noopen)
+                        return _noopen;
+                    _noopen = (bool) ((Value & 64) != 0);
+                    f_noopen = true;
+                    return _noopen;
+                }
+            }
+            private bool f_stub;
+            private bool _stub;
+            public bool Stub
+            {
+                get
+                {
+                    if (f_stub)
+                        return _stub;
+                    _stub = (bool) ((Value & 67108864) != 0);
+                    f_stub = true;
+                    return _stub;
+                }
+            }
+            private bool f_direct;
+            private bool _direct;
+
+            /// <summary>
+            /// Direct binding enabled.
+            /// </summary>
+            public bool Direct
+            {
+                get
+                {
+                    if (f_direct)
+                        return _direct;
+                    _direct = (bool) ((Value & 256) != 0);
+                    f_direct = true;
+                    return _direct;
+                }
+            }
+            private bool f_edited;
+            private bool _edited;
+
+            /// <summary>
+            /// Object is modified after built.
+            /// </summary>
+            public bool Edited
+            {
+                get
+                {
+                    if (f_edited)
+                        return _edited;
+                    _edited = (bool) ((Value & 2097152) != 0);
+                    f_edited = true;
+                    return _edited;
+                }
+            }
+            private bool f_group;
+            private bool _group;
+
+            /// <summary>
+            /// Set RTLD_GROUP for this object.
+            /// </summary>
+            public bool Group
+            {
+                get
+                {
+                    if (f_group)
+                        return _group;
+                    _group = (bool) ((Value & 4) != 0);
+                    f_group = true;
+                    return _group;
+                }
+            }
+            private bool f_pie;
+            private bool _pie;
+            public bool Pie
+            {
+                get
+                {
+                    if (f_pie)
+                        return _pie;
+                    _pie = (bool) ((Value & 134217728) != 0);
+                    f_pie = true;
+                    return _pie;
+                }
+            }
+            private bool f_nodeflib;
+            private bool _nodeflib;
+
+            /// <summary>
+            /// Ignore default lib search path.
+            /// </summary>
+            public bool Nodeflib
+            {
+                get
+                {
+                    if (f_nodeflib)
+                        return _nodeflib;
+                    _nodeflib = (bool) ((Value & 2048) != 0);
+                    f_nodeflib = true;
+                    return _nodeflib;
+                }
+            }
+            private uint _value;
+            private Elf m_root;
+            private Elf.EndianElf.DynamicSectionEntry m_parent;
+            public uint Value { get { return _value; } }
+            public Elf M_Root { get { return m_root; } }
+            public Elf.EndianElf.DynamicSectionEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class SectionHeaderFlags : KaitaiStruct
+        {
+            public SectionHeaderFlags(uint p_value, KaitaiStream p__io, Elf.EndianElf.SectionHeader p__parent = null, Elf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _value = p_value;
+                f_merge = false;
+                f_maskOs = false;
+                f_exclude = false;
+                f_maskProc = false;
+                f_strings = false;
+                f_osNonConforming = false;
+                f_alloc = false;
+                f_execInstr = false;
+                f_infoLink = false;
+                f_write = false;
+                f_linkOrder = false;
+                f_ordered = false;
+                f_tls = false;
+                f_group = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_merge;
+            private bool _merge;
+
+            /// <summary>
+            /// might be merged
+            /// </summary>
+            public bool Merge
+            {
+                get
+                {
+                    if (f_merge)
+                        return _merge;
+                    _merge = (bool) ((Value & 16) != 0);
+                    f_merge = true;
+                    return _merge;
+                }
+            }
+            private bool f_maskOs;
+            private bool _maskOs;
+
+            /// <summary>
+            /// OS-specific
+            /// </summary>
+            public bool MaskOs
+            {
+                get
+                {
+                    if (f_maskOs)
+                        return _maskOs;
+                    _maskOs = (bool) ((Value & 267386880) != 0);
+                    f_maskOs = true;
+                    return _maskOs;
+                }
+            }
+            private bool f_exclude;
+            private bool _exclude;
+
+            /// <summary>
+            /// section is excluded unless referenced or allocated (Solaris)
+            /// </summary>
+            public bool Exclude
+            {
+                get
+                {
+                    if (f_exclude)
+                        return _exclude;
+                    _exclude = (bool) ((Value & 134217728) != 0);
+                    f_exclude = true;
+                    return _exclude;
+                }
+            }
+            private bool f_maskProc;
+            private bool _maskProc;
+
+            /// <summary>
+            /// Processor-specific
+            /// </summary>
+            public bool MaskProc
+            {
+                get
+                {
+                    if (f_maskProc)
+                        return _maskProc;
+                    _maskProc = (bool) ((Value & 4026531840) != 0);
+                    f_maskProc = true;
+                    return _maskProc;
+                }
+            }
+            private bool f_strings;
+            private bool _strings;
+
+            /// <summary>
+            /// contains nul-terminated strings
+            /// </summary>
+            public bool Strings
+            {
+                get
+                {
+                    if (f_strings)
+                        return _strings;
+                    _strings = (bool) ((Value & 32) != 0);
+                    f_strings = true;
+                    return _strings;
+                }
+            }
+            private bool f_osNonConforming;
+            private bool _osNonConforming;
+
+            /// <summary>
+            /// non-standard OS specific handling required
+            /// </summary>
+            public bool OsNonConforming
+            {
+                get
+                {
+                    if (f_osNonConforming)
+                        return _osNonConforming;
+                    _osNonConforming = (bool) ((Value & 256) != 0);
+                    f_osNonConforming = true;
+                    return _osNonConforming;
+                }
+            }
+            private bool f_alloc;
+            private bool _alloc;
+
+            /// <summary>
+            /// occupies memory during execution
+            /// </summary>
+            public bool Alloc
+            {
+                get
+                {
+                    if (f_alloc)
+                        return _alloc;
+                    _alloc = (bool) ((Value & 2) != 0);
+                    f_alloc = true;
+                    return _alloc;
+                }
+            }
+            private bool f_execInstr;
+            private bool _execInstr;
+
+            /// <summary>
+            /// executable
+            /// </summary>
+            public bool ExecInstr
+            {
+                get
+                {
+                    if (f_execInstr)
+                        return _execInstr;
+                    _execInstr = (bool) ((Value & 4) != 0);
+                    f_execInstr = true;
+                    return _execInstr;
+                }
+            }
+            private bool f_infoLink;
+            private bool _infoLink;
+
+            /// <summary>
+            /// 'sh_info' contains SHT index
+            /// </summary>
+            public bool InfoLink
+            {
+                get
+                {
+                    if (f_infoLink)
+                        return _infoLink;
+                    _infoLink = (bool) ((Value & 64) != 0);
+                    f_infoLink = true;
+                    return _infoLink;
+                }
+            }
+            private bool f_write;
+            private bool _write;
+
+            /// <summary>
+            /// writable
+            /// </summary>
+            public bool Write
+            {
+                get
+                {
+                    if (f_write)
+                        return _write;
+                    _write = (bool) ((Value & 1) != 0);
+                    f_write = true;
+                    return _write;
+                }
+            }
+            private bool f_linkOrder;
+            private bool _linkOrder;
+
+            /// <summary>
+            /// preserve order after combining
+            /// </summary>
+            public bool LinkOrder
+            {
+                get
+                {
+                    if (f_linkOrder)
+                        return _linkOrder;
+                    _linkOrder = (bool) ((Value & 128) != 0);
+                    f_linkOrder = true;
+                    return _linkOrder;
+                }
+            }
+            private bool f_ordered;
+            private bool _ordered;
+
+            /// <summary>
+            /// special ordering requirement (Solaris)
+            /// </summary>
+            public bool Ordered
+            {
+                get
+                {
+                    if (f_ordered)
+                        return _ordered;
+                    _ordered = (bool) ((Value & 67108864) != 0);
+                    f_ordered = true;
+                    return _ordered;
+                }
+            }
+            private bool f_tls;
+            private bool _tls;
+
+            /// <summary>
+            /// section hold thread-local data
+            /// </summary>
+            public bool Tls
+            {
+                get
+                {
+                    if (f_tls)
+                        return _tls;
+                    _tls = (bool) ((Value & 1024) != 0);
+                    f_tls = true;
+                    return _tls;
+                }
+            }
+            private bool f_group;
+            private bool _group;
+
+            /// <summary>
+            /// section is member of a group
+            /// </summary>
+            public bool Group
+            {
+                get
+                {
+                    if (f_group)
+                        return _group;
+                    _group = (bool) ((Value & 512) != 0);
+                    f_group = true;
+                    return _group;
+                }
+            }
+            private uint _value;
+            private Elf m_root;
+            private Elf.EndianElf.SectionHeader m_parent;
+            public uint Value { get { return _value; } }
+            public Elf M_Root { get { return m_root; } }
+            public Elf.EndianElf.SectionHeader M_Parent { get { return m_parent; } }
+        }
+        public partial class PhdrTypeFlags : KaitaiStruct
+        {
+            public PhdrTypeFlags(uint p_value, KaitaiStream p__io, Elf.EndianElf.ProgramHeader p__parent = null, Elf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _value = p_value;
+                f_read = false;
+                f_write = false;
+                f_execute = false;
+                f_maskProc = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_read;
+            private bool _read;
+            public bool Read
+            {
+                get
+                {
+                    if (f_read)
+                        return _read;
+                    _read = (bool) ((Value & 4) != 0);
+                    f_read = true;
+                    return _read;
+                }
+            }
+            private bool f_write;
+            private bool _write;
+            public bool Write
+            {
+                get
+                {
+                    if (f_write)
+                        return _write;
+                    _write = (bool) ((Value & 2) != 0);
+                    f_write = true;
+                    return _write;
+                }
+            }
+            private bool f_execute;
+            private bool _execute;
+            public bool Execute
+            {
+                get
+                {
+                    if (f_execute)
+                        return _execute;
+                    _execute = (bool) ((Value & 1) != 0);
+                    f_execute = true;
+                    return _execute;
+                }
+            }
+            private bool f_maskProc;
+            private bool _maskProc;
+            public bool MaskProc
+            {
+                get
+                {
+                    if (f_maskProc)
+                        return _maskProc;
+                    _maskProc = (bool) ((Value & 4026531840) != 0);
+                    f_maskProc = true;
+                    return _maskProc;
+                }
+            }
+            private uint _value;
+            private Elf m_root;
+            private Elf.EndianElf.ProgramHeader m_parent;
+            public uint Value { get { return _value; } }
+            public Elf M_Root { get { return m_root; } }
+            public Elf.EndianElf.ProgramHeader M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html">Figure 5-11: DT_FLAGS values</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095">Source</a>
+        /// </remarks>
+        /// <remarks>
+        /// Reference: <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5">Source</a>
+        /// </remarks>
+        public partial class DtFlagValues : KaitaiStruct
+        {
+            public DtFlagValues(uint p_value, KaitaiStream p__io, Elf.EndianElf.DynamicSectionEntry p__parent = null, Elf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _value = p_value;
+                f_bindNow = false;
+                f_origin = false;
+                f_textrel = false;
+                f_staticTls = false;
+                f_symbolic = false;
+                _read();
+            }
+            private void _read()
+            {
+            }
+            private bool f_bindNow;
+            private bool _bindNow;
+
+            /// <summary>
+            /// all relocations for this object must be processed before returning
+            /// control to the program
+            /// </summary>
+            public bool BindNow
+            {
+                get
+                {
+                    if (f_bindNow)
+                        return _bindNow;
+                    _bindNow = (bool) ((Value & 8) != 0);
+                    f_bindNow = true;
+                    return _bindNow;
+                }
+            }
+            private bool f_origin;
+            private bool _origin;
+
+            /// <summary>
+            /// object may reference the $ORIGIN substitution string
+            /// </summary>
+            public bool Origin
+            {
+                get
+                {
+                    if (f_origin)
+                        return _origin;
+                    _origin = (bool) ((Value & 1) != 0);
+                    f_origin = true;
+                    return _origin;
+                }
+            }
+            private bool f_textrel;
+            private bool _textrel;
+
+            /// <summary>
+            /// relocation entries might request modifications to a non-writable segment
+            /// </summary>
+            public bool Textrel
+            {
+                get
+                {
+                    if (f_textrel)
+                        return _textrel;
+                    _textrel = (bool) ((Value & 4) != 0);
+                    f_textrel = true;
+                    return _textrel;
+                }
+            }
+            private bool f_staticTls;
+            private bool _staticTls;
+
+            /// <summary>
+            /// object uses static thread-local storage scheme
+            /// </summary>
+            public bool StaticTls
+            {
+                get
+                {
+                    if (f_staticTls)
+                        return _staticTls;
+                    _staticTls = (bool) ((Value & 16) != 0);
+                    f_staticTls = true;
+                    return _staticTls;
+                }
+            }
+            private bool f_symbolic;
+            private bool _symbolic;
+
+            /// <summary>
+            /// symbolic linking
+            /// </summary>
+            public bool Symbolic
+            {
+                get
+                {
+                    if (f_symbolic)
+                        return _symbolic;
+                    _symbolic = (bool) ((Value & 2) != 0);
+                    f_symbolic = true;
+                    return _symbolic;
+                }
+            }
+            private uint _value;
+            private Elf m_root;
+            private Elf.EndianElf.DynamicSectionEntry m_parent;
+            public uint Value { get { return _value; } }
+            public Elf M_Root { get { return m_root; } }
+            public Elf.EndianElf.DynamicSectionEntry M_Parent { get { return m_parent; } }
         }
         private bool f_shIdxLoOs;
         private int _shIdxLoOs;

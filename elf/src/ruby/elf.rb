@@ -499,377 +499,6 @@ class Elf < Kaitai::Struct::Struct
     @header = EndianElf.new(@_io, self, @_root)
     self
   end
-  class PhdrTypeFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
-      super(_io, _parent, _root)
-      @value = value
-      _read
-    end
-
-    def _read
-      self
-    end
-    def read
-      return @read unless @read.nil?
-      @read = (value & 4) != 0
-      @read
-    end
-    def write
-      return @write unless @write.nil?
-      @write = (value & 2) != 0
-      @write
-    end
-    def execute
-      return @execute unless @execute.nil?
-      @execute = (value & 1) != 0
-      @execute
-    end
-    def mask_proc
-      return @mask_proc unless @mask_proc.nil?
-      @mask_proc = (value & 4026531840) != 0
-      @mask_proc
-    end
-    attr_reader :value
-  end
-  class SectionHeaderFlags < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
-      super(_io, _parent, _root)
-      @value = value
-      _read
-    end
-
-    def _read
-      self
-    end
-
-    ##
-    # might be merged
-    def merge
-      return @merge unless @merge.nil?
-      @merge = (value & 16) != 0
-      @merge
-    end
-
-    ##
-    # OS-specific
-    def mask_os
-      return @mask_os unless @mask_os.nil?
-      @mask_os = (value & 267386880) != 0
-      @mask_os
-    end
-
-    ##
-    # section is excluded unless referenced or allocated (Solaris)
-    def exclude
-      return @exclude unless @exclude.nil?
-      @exclude = (value & 134217728) != 0
-      @exclude
-    end
-
-    ##
-    # Processor-specific
-    def mask_proc
-      return @mask_proc unless @mask_proc.nil?
-      @mask_proc = (value & 4026531840) != 0
-      @mask_proc
-    end
-
-    ##
-    # contains nul-terminated strings
-    def strings
-      return @strings unless @strings.nil?
-      @strings = (value & 32) != 0
-      @strings
-    end
-
-    ##
-    # non-standard OS specific handling required
-    def os_non_conforming
-      return @os_non_conforming unless @os_non_conforming.nil?
-      @os_non_conforming = (value & 256) != 0
-      @os_non_conforming
-    end
-
-    ##
-    # occupies memory during execution
-    def alloc
-      return @alloc unless @alloc.nil?
-      @alloc = (value & 2) != 0
-      @alloc
-    end
-
-    ##
-    # executable
-    def exec_instr
-      return @exec_instr unless @exec_instr.nil?
-      @exec_instr = (value & 4) != 0
-      @exec_instr
-    end
-
-    ##
-    # 'sh_info' contains SHT index
-    def info_link
-      return @info_link unless @info_link.nil?
-      @info_link = (value & 64) != 0
-      @info_link
-    end
-
-    ##
-    # writable
-    def write
-      return @write unless @write.nil?
-      @write = (value & 1) != 0
-      @write
-    end
-
-    ##
-    # preserve order after combining
-    def link_order
-      return @link_order unless @link_order.nil?
-      @link_order = (value & 128) != 0
-      @link_order
-    end
-
-    ##
-    # special ordering requirement (Solaris)
-    def ordered
-      return @ordered unless @ordered.nil?
-      @ordered = (value & 67108864) != 0
-      @ordered
-    end
-
-    ##
-    # section hold thread-local data
-    def tls
-      return @tls unless @tls.nil?
-      @tls = (value & 1024) != 0
-      @tls
-    end
-
-    ##
-    # section is member of a group
-    def group
-      return @group unless @group.nil?
-      @group = (value & 512) != 0
-      @group
-    end
-    attr_reader :value
-  end
-  class DtFlag1Values < Kaitai::Struct::Struct
-    def initialize(_io, _parent = nil, _root = self, value)
-      super(_io, _parent, _root)
-      @value = value
-      _read
-    end
-
-    def _read
-      self
-    end
-
-    ##
-    # Singleton symbols are used.
-    def singleton
-      return @singleton unless @singleton.nil?
-      @singleton = (value & 33554432) != 0
-      @singleton
-    end
-    def ignmuldef
-      return @ignmuldef unless @ignmuldef.nil?
-      @ignmuldef = (value & 262144) != 0
-      @ignmuldef
-    end
-
-    ##
-    # Trigger filtee loading at runtime.
-    def loadfltr
-      return @loadfltr unless @loadfltr.nil?
-      @loadfltr = (value & 16) != 0
-      @loadfltr
-    end
-
-    ##
-    # Set RTLD_INITFIRST for this object
-    def initfirst
-      return @initfirst unless @initfirst.nil?
-      @initfirst = (value & 32) != 0
-      @initfirst
-    end
-
-    ##
-    # Object has individual interposers.
-    def symintpose
-      return @symintpose unless @symintpose.nil?
-      @symintpose = (value & 8388608) != 0
-      @symintpose
-    end
-    def noreloc
-      return @noreloc unless @noreloc.nil?
-      @noreloc = (value & 4194304) != 0
-      @noreloc
-    end
-
-    ##
-    # Configuration alternative created.
-    def confalt
-      return @confalt unless @confalt.nil?
-      @confalt = (value & 8192) != 0
-      @confalt
-    end
-
-    ##
-    # Disp reloc applied at build time.
-    def dispreldne
-      return @dispreldne unless @dispreldne.nil?
-      @dispreldne = (value & 32768) != 0
-      @dispreldne
-    end
-
-    ##
-    # Set RTLD_GLOBAL for this object.
-    def rtld_global
-      return @rtld_global unless @rtld_global.nil?
-      @rtld_global = (value & 2) != 0
-      @rtld_global
-    end
-
-    ##
-    # Set RTLD_NODELETE for this object.
-    def nodelete
-      return @nodelete unless @nodelete.nil?
-      @nodelete = (value & 8) != 0
-      @nodelete
-    end
-    def trans
-      return @trans unless @trans.nil?
-      @trans = (value & 512) != 0
-      @trans
-    end
-
-    ##
-    # $ORIGIN must be handled.
-    def origin
-      return @origin unless @origin.nil?
-      @origin = (value & 128) != 0
-      @origin
-    end
-
-    ##
-    # Set RTLD_NOW for this object.
-    def now
-      return @now unless @now.nil?
-      @now = (value & 1) != 0
-      @now
-    end
-    def nohdr
-      return @nohdr unless @nohdr.nil?
-      @nohdr = (value & 1048576) != 0
-      @nohdr
-    end
-
-    ##
-    # Filtee terminates filters search.
-    def endfiltee
-      return @endfiltee unless @endfiltee.nil?
-      @endfiltee = (value & 16384) != 0
-      @endfiltee
-    end
-
-    ##
-    # Object has no-direct binding.
-    def nodirect
-      return @nodirect unless @nodirect.nil?
-      @nodirect = (value & 131072) != 0
-      @nodirect
-    end
-
-    ##
-    # Global auditing required.
-    def globaudit
-      return @globaudit unless @globaudit.nil?
-      @globaudit = (value & 16777216) != 0
-      @globaudit
-    end
-    def noksyms
-      return @noksyms unless @noksyms.nil?
-      @noksyms = (value & 524288) != 0
-      @noksyms
-    end
-
-    ##
-    # Object is used to interpose.
-    def interpose
-      return @interpose unless @interpose.nil?
-      @interpose = (value & 1024) != 0
-      @interpose
-    end
-
-    ##
-    # Object can't be dldump'ed.
-    def nodump
-      return @nodump unless @nodump.nil?
-      @nodump = (value & 4096) != 0
-      @nodump
-    end
-
-    ##
-    # Disp reloc applied at run-time.
-    def disprelpnd
-      return @disprelpnd unless @disprelpnd.nil?
-      @disprelpnd = (value & 65536) != 0
-      @disprelpnd
-    end
-
-    ##
-    # Set RTLD_NOOPEN for this object.
-    def noopen
-      return @noopen unless @noopen.nil?
-      @noopen = (value & 64) != 0
-      @noopen
-    end
-    def stub
-      return @stub unless @stub.nil?
-      @stub = (value & 67108864) != 0
-      @stub
-    end
-
-    ##
-    # Direct binding enabled.
-    def direct
-      return @direct unless @direct.nil?
-      @direct = (value & 256) != 0
-      @direct
-    end
-
-    ##
-    # Object is modified after built.
-    def edited
-      return @edited unless @edited.nil?
-      @edited = (value & 2097152) != 0
-      @edited
-    end
-
-    ##
-    # Set RTLD_GROUP for this object.
-    def group
-      return @group unless @group.nil?
-      @group = (value & 4) != 0
-      @group
-    end
-    def pie
-      return @pie unless @pie.nil?
-      @pie = (value & 134217728) != 0
-      @pie
-    end
-
-    ##
-    # Ignore default lib search path.
-    def nodeflib
-      return @nodeflib unless @nodeflib.nil?
-      @nodeflib = (value & 2048) != 0
-      @nodeflib
-    end
-    attr_reader :value
-  end
   class EndianElf < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -1192,11 +821,6 @@ class Elf < Kaitai::Struct::Struct
         end
         self
       end
-      def tag_enum
-        return @tag_enum unless @tag_enum.nil?
-        @tag_enum = Kaitai::Struct::Stream::resolve_enum(Elf::DYNAMIC_ARRAY_TAGS, tag)
-        @tag_enum
-      end
       def flag_1_values
         return @flag_1_values unless @flag_1_values.nil?
         if tag_enum == :dynamic_array_tags_flags_1
@@ -1222,6 +846,22 @@ class Elf < Kaitai::Struct::Struct
           io.seek(_pos)
         end
         @value_str
+      end
+      def tag_enum
+        return @tag_enum unless @tag_enum.nil?
+        @tag_enum = Kaitai::Struct::Stream::resolve_enum(Elf::DYNAMIC_ARRAY_TAGS, tag)
+        @tag_enum
+      end
+      def flag_values
+        return @flag_values unless @flag_values.nil?
+        if tag_enum == :dynamic_array_tags_flags
+          if @_is_le
+            @flag_values = DtFlagValues.new(@_io, self, @_root, value_or_ptr)
+          else
+            @flag_values = DtFlagValues.new(@_io, self, @_root, value_or_ptr)
+          end
+        end
+        @flag_values
       end
       def is_value_str
         return @is_value_str unless @is_value_str.nil?
@@ -1977,6 +1617,435 @@ class Elf < Kaitai::Struct::Struct
     attr_reader :_raw_program_headers
     attr_reader :_raw_section_headers
     attr_reader :_raw_section_names
+  end
+  class DtFlag1Values < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+
+    ##
+    # Singleton symbols are used.
+    def singleton
+      return @singleton unless @singleton.nil?
+      @singleton = (value & 33554432) != 0
+      @singleton
+    end
+    def ignmuldef
+      return @ignmuldef unless @ignmuldef.nil?
+      @ignmuldef = (value & 262144) != 0
+      @ignmuldef
+    end
+
+    ##
+    # Trigger filtee loading at runtime.
+    def loadfltr
+      return @loadfltr unless @loadfltr.nil?
+      @loadfltr = (value & 16) != 0
+      @loadfltr
+    end
+
+    ##
+    # Set RTLD_INITFIRST for this object
+    def initfirst
+      return @initfirst unless @initfirst.nil?
+      @initfirst = (value & 32) != 0
+      @initfirst
+    end
+
+    ##
+    # Object has individual interposers.
+    def symintpose
+      return @symintpose unless @symintpose.nil?
+      @symintpose = (value & 8388608) != 0
+      @symintpose
+    end
+    def noreloc
+      return @noreloc unless @noreloc.nil?
+      @noreloc = (value & 4194304) != 0
+      @noreloc
+    end
+
+    ##
+    # Configuration alternative created.
+    def confalt
+      return @confalt unless @confalt.nil?
+      @confalt = (value & 8192) != 0
+      @confalt
+    end
+
+    ##
+    # Disp reloc applied at build time.
+    def dispreldne
+      return @dispreldne unless @dispreldne.nil?
+      @dispreldne = (value & 32768) != 0
+      @dispreldne
+    end
+
+    ##
+    # Set RTLD_GLOBAL for this object.
+    def rtld_global
+      return @rtld_global unless @rtld_global.nil?
+      @rtld_global = (value & 2) != 0
+      @rtld_global
+    end
+
+    ##
+    # Set RTLD_NODELETE for this object.
+    def nodelete
+      return @nodelete unless @nodelete.nil?
+      @nodelete = (value & 8) != 0
+      @nodelete
+    end
+    def trans
+      return @trans unless @trans.nil?
+      @trans = (value & 512) != 0
+      @trans
+    end
+
+    ##
+    # $ORIGIN must be handled.
+    def origin
+      return @origin unless @origin.nil?
+      @origin = (value & 128) != 0
+      @origin
+    end
+
+    ##
+    # Set RTLD_NOW for this object.
+    def now
+      return @now unless @now.nil?
+      @now = (value & 1) != 0
+      @now
+    end
+    def nohdr
+      return @nohdr unless @nohdr.nil?
+      @nohdr = (value & 1048576) != 0
+      @nohdr
+    end
+
+    ##
+    # Filtee terminates filters search.
+    def endfiltee
+      return @endfiltee unless @endfiltee.nil?
+      @endfiltee = (value & 16384) != 0
+      @endfiltee
+    end
+
+    ##
+    # Object has no-direct binding.
+    def nodirect
+      return @nodirect unless @nodirect.nil?
+      @nodirect = (value & 131072) != 0
+      @nodirect
+    end
+
+    ##
+    # Global auditing required.
+    def globaudit
+      return @globaudit unless @globaudit.nil?
+      @globaudit = (value & 16777216) != 0
+      @globaudit
+    end
+    def noksyms
+      return @noksyms unless @noksyms.nil?
+      @noksyms = (value & 524288) != 0
+      @noksyms
+    end
+
+    ##
+    # Object is used to interpose.
+    def interpose
+      return @interpose unless @interpose.nil?
+      @interpose = (value & 1024) != 0
+      @interpose
+    end
+
+    ##
+    # Object can't be dldump'ed.
+    def nodump
+      return @nodump unless @nodump.nil?
+      @nodump = (value & 4096) != 0
+      @nodump
+    end
+
+    ##
+    # Disp reloc applied at run-time.
+    def disprelpnd
+      return @disprelpnd unless @disprelpnd.nil?
+      @disprelpnd = (value & 65536) != 0
+      @disprelpnd
+    end
+
+    ##
+    # Set RTLD_NOOPEN for this object.
+    def noopen
+      return @noopen unless @noopen.nil?
+      @noopen = (value & 64) != 0
+      @noopen
+    end
+    def stub
+      return @stub unless @stub.nil?
+      @stub = (value & 67108864) != 0
+      @stub
+    end
+
+    ##
+    # Direct binding enabled.
+    def direct
+      return @direct unless @direct.nil?
+      @direct = (value & 256) != 0
+      @direct
+    end
+
+    ##
+    # Object is modified after built.
+    def edited
+      return @edited unless @edited.nil?
+      @edited = (value & 2097152) != 0
+      @edited
+    end
+
+    ##
+    # Set RTLD_GROUP for this object.
+    def group
+      return @group unless @group.nil?
+      @group = (value & 4) != 0
+      @group
+    end
+    def pie
+      return @pie unless @pie.nil?
+      @pie = (value & 134217728) != 0
+      @pie
+    end
+
+    ##
+    # Ignore default lib search path.
+    def nodeflib
+      return @nodeflib unless @nodeflib.nil?
+      @nodeflib = (value & 2048) != 0
+      @nodeflib
+    end
+    attr_reader :value
+  end
+  class SectionHeaderFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+
+    ##
+    # might be merged
+    def merge
+      return @merge unless @merge.nil?
+      @merge = (value & 16) != 0
+      @merge
+    end
+
+    ##
+    # OS-specific
+    def mask_os
+      return @mask_os unless @mask_os.nil?
+      @mask_os = (value & 267386880) != 0
+      @mask_os
+    end
+
+    ##
+    # section is excluded unless referenced or allocated (Solaris)
+    def exclude
+      return @exclude unless @exclude.nil?
+      @exclude = (value & 134217728) != 0
+      @exclude
+    end
+
+    ##
+    # Processor-specific
+    def mask_proc
+      return @mask_proc unless @mask_proc.nil?
+      @mask_proc = (value & 4026531840) != 0
+      @mask_proc
+    end
+
+    ##
+    # contains nul-terminated strings
+    def strings
+      return @strings unless @strings.nil?
+      @strings = (value & 32) != 0
+      @strings
+    end
+
+    ##
+    # non-standard OS specific handling required
+    def os_non_conforming
+      return @os_non_conforming unless @os_non_conforming.nil?
+      @os_non_conforming = (value & 256) != 0
+      @os_non_conforming
+    end
+
+    ##
+    # occupies memory during execution
+    def alloc
+      return @alloc unless @alloc.nil?
+      @alloc = (value & 2) != 0
+      @alloc
+    end
+
+    ##
+    # executable
+    def exec_instr
+      return @exec_instr unless @exec_instr.nil?
+      @exec_instr = (value & 4) != 0
+      @exec_instr
+    end
+
+    ##
+    # 'sh_info' contains SHT index
+    def info_link
+      return @info_link unless @info_link.nil?
+      @info_link = (value & 64) != 0
+      @info_link
+    end
+
+    ##
+    # writable
+    def write
+      return @write unless @write.nil?
+      @write = (value & 1) != 0
+      @write
+    end
+
+    ##
+    # preserve order after combining
+    def link_order
+      return @link_order unless @link_order.nil?
+      @link_order = (value & 128) != 0
+      @link_order
+    end
+
+    ##
+    # special ordering requirement (Solaris)
+    def ordered
+      return @ordered unless @ordered.nil?
+      @ordered = (value & 67108864) != 0
+      @ordered
+    end
+
+    ##
+    # section hold thread-local data
+    def tls
+      return @tls unless @tls.nil?
+      @tls = (value & 1024) != 0
+      @tls
+    end
+
+    ##
+    # section is member of a group
+    def group
+      return @group unless @group.nil?
+      @group = (value & 512) != 0
+      @group
+    end
+    attr_reader :value
+  end
+  class PhdrTypeFlags < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+    def read
+      return @read unless @read.nil?
+      @read = (value & 4) != 0
+      @read
+    end
+    def write
+      return @write unless @write.nil?
+      @write = (value & 2) != 0
+      @write
+    end
+    def execute
+      return @execute unless @execute.nil?
+      @execute = (value & 1) != 0
+      @execute
+    end
+    def mask_proc
+      return @mask_proc unless @mask_proc.nil?
+      @mask_proc = (value & 4026531840) != 0
+      @mask_proc
+    end
+    attr_reader :value
+  end
+
+  ##
+  # @see https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html Figure 5-11: DT_FLAGS values
+  # @see https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095 Source
+  # @see https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5 Source
+  class DtFlagValues < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self, value)
+      super(_io, _parent, _root)
+      @value = value
+      _read
+    end
+
+    def _read
+      self
+    end
+
+    ##
+    # all relocations for this object must be processed before returning
+    # control to the program
+    def bind_now
+      return @bind_now unless @bind_now.nil?
+      @bind_now = (value & 8) != 0
+      @bind_now
+    end
+
+    ##
+    # object may reference the $ORIGIN substitution string
+    def origin
+      return @origin unless @origin.nil?
+      @origin = (value & 1) != 0
+      @origin
+    end
+
+    ##
+    # relocation entries might request modifications to a non-writable segment
+    def textrel
+      return @textrel unless @textrel.nil?
+      @textrel = (value & 4) != 0
+      @textrel
+    end
+
+    ##
+    # object uses static thread-local storage scheme
+    def static_tls
+      return @static_tls unless @static_tls.nil?
+      @static_tls = (value & 16) != 0
+      @static_tls
+    end
+
+    ##
+    # symbolic linking
+    def symbolic
+      return @symbolic unless @symbolic.nil?
+      @symbolic = (value & 2) != 0
+      @symbolic
+    end
+    attr_reader :value
   end
   def sh_idx_lo_os
     return @sh_idx_lo_os unless @sh_idx_lo_os.nil?

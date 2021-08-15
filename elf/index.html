@@ -405,6 +405,32 @@ section#format-index .row {
       <span class="nt">mask_proc</span><span class="p">:</span>
         <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0xf0000000 != 0</span>
         <span class="nt">doc</span><span class="p">:</span> <span class="s">&quot;Processor-specific&quot;</span>
+  <span class="nt">dt_flag_values</span><span class="p">:</span>
+    <span class="nt">doc-ref</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="s">&#39;https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html</span><span class="nv"> </span><span class="s">Figure</span><span class="nv"> </span><span class="s">5-11:</span><span class="nv"> </span><span class="s">DT_FLAGS</span><span class="nv"> </span><span class="s">values&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095</span>
+      <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">origin</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000001 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object may reference the $ORIGIN substitution string</span>
+      <span class="nt">symbolic</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000002 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">symbolic linking</span>
+      <span class="nt">textrel</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000004 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relocation entries might request modifications to a non-writable segment</span>
+      <span class="nt">bind_now</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000008 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">all relocations for this object must be processed before returning</span>
+          <span class="no">control to the program</span>
+      <span class="nt">static_tls</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value &amp; 0x00000010 != 0</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">object uses static thread-local storage scheme</span>
   <span class="nt">dt_flag_1_values</span><span class="p">:</span>
     <span class="nt">params</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">value</span>
@@ -739,6 +765,10 @@ section#format-index .row {
           <span class="nt">tag_enum</span><span class="p">:</span>
             <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag</span>
             <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dynamic_array_tags</span>
+          <span class="nt">flag_values</span><span class="p">:</span>
+            <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dt_flag_values(value_or_ptr)</span>
+            <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;tag_enum</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">dynamic_array_tags::flags&quot;</span>
+            <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
           <span class="nt">flag_1_values</span><span class="p">:</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dt_flag_1_values(value_or_ptr)</span>
             <span class="nt">if</span><span class="p">:</span> <span class="s">&quot;tag_enum</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">dynamic_array_tags::flags_1&quot;</span>

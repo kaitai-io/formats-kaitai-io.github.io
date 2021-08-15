@@ -114,513 +114,6 @@ namespace {
 }
 
 namespace Elf {
-    class PhdrTypeFlags extends \Kaitai\Struct\Struct {
-        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\ProgramHeader $_parent = null, \Elf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_value = $value;
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-        protected $_m_read;
-        public function read() {
-            if ($this->_m_read !== null)
-                return $this->_m_read;
-            $this->_m_read = ($this->value() & 4) != 0;
-            return $this->_m_read;
-        }
-        protected $_m_write;
-        public function write() {
-            if ($this->_m_write !== null)
-                return $this->_m_write;
-            $this->_m_write = ($this->value() & 2) != 0;
-            return $this->_m_write;
-        }
-        protected $_m_execute;
-        public function execute() {
-            if ($this->_m_execute !== null)
-                return $this->_m_execute;
-            $this->_m_execute = ($this->value() & 1) != 0;
-            return $this->_m_execute;
-        }
-        protected $_m_maskProc;
-        public function maskProc() {
-            if ($this->_m_maskProc !== null)
-                return $this->_m_maskProc;
-            $this->_m_maskProc = ($this->value() & 4026531840) != 0;
-            return $this->_m_maskProc;
-        }
-        protected $_m_value;
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Elf {
-    class SectionHeaderFlags extends \Kaitai\Struct\Struct {
-        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\SectionHeader $_parent = null, \Elf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_value = $value;
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-        protected $_m_merge;
-
-        /**
-         * might be merged
-         */
-        public function merge() {
-            if ($this->_m_merge !== null)
-                return $this->_m_merge;
-            $this->_m_merge = ($this->value() & 16) != 0;
-            return $this->_m_merge;
-        }
-        protected $_m_maskOs;
-
-        /**
-         * OS-specific
-         */
-        public function maskOs() {
-            if ($this->_m_maskOs !== null)
-                return $this->_m_maskOs;
-            $this->_m_maskOs = ($this->value() & 267386880) != 0;
-            return $this->_m_maskOs;
-        }
-        protected $_m_exclude;
-
-        /**
-         * section is excluded unless referenced or allocated (Solaris)
-         */
-        public function exclude() {
-            if ($this->_m_exclude !== null)
-                return $this->_m_exclude;
-            $this->_m_exclude = ($this->value() & 134217728) != 0;
-            return $this->_m_exclude;
-        }
-        protected $_m_maskProc;
-
-        /**
-         * Processor-specific
-         */
-        public function maskProc() {
-            if ($this->_m_maskProc !== null)
-                return $this->_m_maskProc;
-            $this->_m_maskProc = ($this->value() & 4026531840) != 0;
-            return $this->_m_maskProc;
-        }
-        protected $_m_strings;
-
-        /**
-         * contains nul-terminated strings
-         */
-        public function strings() {
-            if ($this->_m_strings !== null)
-                return $this->_m_strings;
-            $this->_m_strings = ($this->value() & 32) != 0;
-            return $this->_m_strings;
-        }
-        protected $_m_osNonConforming;
-
-        /**
-         * non-standard OS specific handling required
-         */
-        public function osNonConforming() {
-            if ($this->_m_osNonConforming !== null)
-                return $this->_m_osNonConforming;
-            $this->_m_osNonConforming = ($this->value() & 256) != 0;
-            return $this->_m_osNonConforming;
-        }
-        protected $_m_alloc;
-
-        /**
-         * occupies memory during execution
-         */
-        public function alloc() {
-            if ($this->_m_alloc !== null)
-                return $this->_m_alloc;
-            $this->_m_alloc = ($this->value() & 2) != 0;
-            return $this->_m_alloc;
-        }
-        protected $_m_execInstr;
-
-        /**
-         * executable
-         */
-        public function execInstr() {
-            if ($this->_m_execInstr !== null)
-                return $this->_m_execInstr;
-            $this->_m_execInstr = ($this->value() & 4) != 0;
-            return $this->_m_execInstr;
-        }
-        protected $_m_infoLink;
-
-        /**
-         * 'sh_info' contains SHT index
-         */
-        public function infoLink() {
-            if ($this->_m_infoLink !== null)
-                return $this->_m_infoLink;
-            $this->_m_infoLink = ($this->value() & 64) != 0;
-            return $this->_m_infoLink;
-        }
-        protected $_m_write;
-
-        /**
-         * writable
-         */
-        public function write() {
-            if ($this->_m_write !== null)
-                return $this->_m_write;
-            $this->_m_write = ($this->value() & 1) != 0;
-            return $this->_m_write;
-        }
-        protected $_m_linkOrder;
-
-        /**
-         * preserve order after combining
-         */
-        public function linkOrder() {
-            if ($this->_m_linkOrder !== null)
-                return $this->_m_linkOrder;
-            $this->_m_linkOrder = ($this->value() & 128) != 0;
-            return $this->_m_linkOrder;
-        }
-        protected $_m_ordered;
-
-        /**
-         * special ordering requirement (Solaris)
-         */
-        public function ordered() {
-            if ($this->_m_ordered !== null)
-                return $this->_m_ordered;
-            $this->_m_ordered = ($this->value() & 67108864) != 0;
-            return $this->_m_ordered;
-        }
-        protected $_m_tls;
-
-        /**
-         * section hold thread-local data
-         */
-        public function tls() {
-            if ($this->_m_tls !== null)
-                return $this->_m_tls;
-            $this->_m_tls = ($this->value() & 1024) != 0;
-            return $this->_m_tls;
-        }
-        protected $_m_group;
-
-        /**
-         * section is member of a group
-         */
-        public function group() {
-            if ($this->_m_group !== null)
-                return $this->_m_group;
-            $this->_m_group = ($this->value() & 512) != 0;
-            return $this->_m_group;
-        }
-        protected $_m_value;
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Elf {
-    class DtFlag1Values extends \Kaitai\Struct\Struct {
-        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynamicSectionEntry $_parent = null, \Elf $_root = null) {
-            parent::__construct($_io, $_parent, $_root);
-            $this->_m_value = $value;
-            $this->_read();
-        }
-
-        private function _read() {
-        }
-        protected $_m_singleton;
-
-        /**
-         * Singleton symbols are used.
-         */
-        public function singleton() {
-            if ($this->_m_singleton !== null)
-                return $this->_m_singleton;
-            $this->_m_singleton = ($this->value() & 33554432) != 0;
-            return $this->_m_singleton;
-        }
-        protected $_m_ignmuldef;
-        public function ignmuldef() {
-            if ($this->_m_ignmuldef !== null)
-                return $this->_m_ignmuldef;
-            $this->_m_ignmuldef = ($this->value() & 262144) != 0;
-            return $this->_m_ignmuldef;
-        }
-        protected $_m_loadfltr;
-
-        /**
-         * Trigger filtee loading at runtime.
-         */
-        public function loadfltr() {
-            if ($this->_m_loadfltr !== null)
-                return $this->_m_loadfltr;
-            $this->_m_loadfltr = ($this->value() & 16) != 0;
-            return $this->_m_loadfltr;
-        }
-        protected $_m_initfirst;
-
-        /**
-         * Set RTLD_INITFIRST for this object
-         */
-        public function initfirst() {
-            if ($this->_m_initfirst !== null)
-                return $this->_m_initfirst;
-            $this->_m_initfirst = ($this->value() & 32) != 0;
-            return $this->_m_initfirst;
-        }
-        protected $_m_symintpose;
-
-        /**
-         * Object has individual interposers.
-         */
-        public function symintpose() {
-            if ($this->_m_symintpose !== null)
-                return $this->_m_symintpose;
-            $this->_m_symintpose = ($this->value() & 8388608) != 0;
-            return $this->_m_symintpose;
-        }
-        protected $_m_noreloc;
-        public function noreloc() {
-            if ($this->_m_noreloc !== null)
-                return $this->_m_noreloc;
-            $this->_m_noreloc = ($this->value() & 4194304) != 0;
-            return $this->_m_noreloc;
-        }
-        protected $_m_confalt;
-
-        /**
-         * Configuration alternative created.
-         */
-        public function confalt() {
-            if ($this->_m_confalt !== null)
-                return $this->_m_confalt;
-            $this->_m_confalt = ($this->value() & 8192) != 0;
-            return $this->_m_confalt;
-        }
-        protected $_m_dispreldne;
-
-        /**
-         * Disp reloc applied at build time.
-         */
-        public function dispreldne() {
-            if ($this->_m_dispreldne !== null)
-                return $this->_m_dispreldne;
-            $this->_m_dispreldne = ($this->value() & 32768) != 0;
-            return $this->_m_dispreldne;
-        }
-        protected $_m_rtldGlobal;
-
-        /**
-         * Set RTLD_GLOBAL for this object.
-         */
-        public function rtldGlobal() {
-            if ($this->_m_rtldGlobal !== null)
-                return $this->_m_rtldGlobal;
-            $this->_m_rtldGlobal = ($this->value() & 2) != 0;
-            return $this->_m_rtldGlobal;
-        }
-        protected $_m_nodelete;
-
-        /**
-         * Set RTLD_NODELETE for this object.
-         */
-        public function nodelete() {
-            if ($this->_m_nodelete !== null)
-                return $this->_m_nodelete;
-            $this->_m_nodelete = ($this->value() & 8) != 0;
-            return $this->_m_nodelete;
-        }
-        protected $_m_trans;
-        public function trans() {
-            if ($this->_m_trans !== null)
-                return $this->_m_trans;
-            $this->_m_trans = ($this->value() & 512) != 0;
-            return $this->_m_trans;
-        }
-        protected $_m_origin;
-
-        /**
-         * $ORIGIN must be handled.
-         */
-        public function origin() {
-            if ($this->_m_origin !== null)
-                return $this->_m_origin;
-            $this->_m_origin = ($this->value() & 128) != 0;
-            return $this->_m_origin;
-        }
-        protected $_m_now;
-
-        /**
-         * Set RTLD_NOW for this object.
-         */
-        public function now() {
-            if ($this->_m_now !== null)
-                return $this->_m_now;
-            $this->_m_now = ($this->value() & 1) != 0;
-            return $this->_m_now;
-        }
-        protected $_m_nohdr;
-        public function nohdr() {
-            if ($this->_m_nohdr !== null)
-                return $this->_m_nohdr;
-            $this->_m_nohdr = ($this->value() & 1048576) != 0;
-            return $this->_m_nohdr;
-        }
-        protected $_m_endfiltee;
-
-        /**
-         * Filtee terminates filters search.
-         */
-        public function endfiltee() {
-            if ($this->_m_endfiltee !== null)
-                return $this->_m_endfiltee;
-            $this->_m_endfiltee = ($this->value() & 16384) != 0;
-            return $this->_m_endfiltee;
-        }
-        protected $_m_nodirect;
-
-        /**
-         * Object has no-direct binding.
-         */
-        public function nodirect() {
-            if ($this->_m_nodirect !== null)
-                return $this->_m_nodirect;
-            $this->_m_nodirect = ($this->value() & 131072) != 0;
-            return $this->_m_nodirect;
-        }
-        protected $_m_globaudit;
-
-        /**
-         * Global auditing required.
-         */
-        public function globaudit() {
-            if ($this->_m_globaudit !== null)
-                return $this->_m_globaudit;
-            $this->_m_globaudit = ($this->value() & 16777216) != 0;
-            return $this->_m_globaudit;
-        }
-        protected $_m_noksyms;
-        public function noksyms() {
-            if ($this->_m_noksyms !== null)
-                return $this->_m_noksyms;
-            $this->_m_noksyms = ($this->value() & 524288) != 0;
-            return $this->_m_noksyms;
-        }
-        protected $_m_interpose;
-
-        /**
-         * Object is used to interpose.
-         */
-        public function interpose() {
-            if ($this->_m_interpose !== null)
-                return $this->_m_interpose;
-            $this->_m_interpose = ($this->value() & 1024) != 0;
-            return $this->_m_interpose;
-        }
-        protected $_m_nodump;
-
-        /**
-         * Object can't be dldump'ed.
-         */
-        public function nodump() {
-            if ($this->_m_nodump !== null)
-                return $this->_m_nodump;
-            $this->_m_nodump = ($this->value() & 4096) != 0;
-            return $this->_m_nodump;
-        }
-        protected $_m_disprelpnd;
-
-        /**
-         * Disp reloc applied at run-time.
-         */
-        public function disprelpnd() {
-            if ($this->_m_disprelpnd !== null)
-                return $this->_m_disprelpnd;
-            $this->_m_disprelpnd = ($this->value() & 65536) != 0;
-            return $this->_m_disprelpnd;
-        }
-        protected $_m_noopen;
-
-        /**
-         * Set RTLD_NOOPEN for this object.
-         */
-        public function noopen() {
-            if ($this->_m_noopen !== null)
-                return $this->_m_noopen;
-            $this->_m_noopen = ($this->value() & 64) != 0;
-            return $this->_m_noopen;
-        }
-        protected $_m_stub;
-        public function stub() {
-            if ($this->_m_stub !== null)
-                return $this->_m_stub;
-            $this->_m_stub = ($this->value() & 67108864) != 0;
-            return $this->_m_stub;
-        }
-        protected $_m_direct;
-
-        /**
-         * Direct binding enabled.
-         */
-        public function direct() {
-            if ($this->_m_direct !== null)
-                return $this->_m_direct;
-            $this->_m_direct = ($this->value() & 256) != 0;
-            return $this->_m_direct;
-        }
-        protected $_m_edited;
-
-        /**
-         * Object is modified after built.
-         */
-        public function edited() {
-            if ($this->_m_edited !== null)
-                return $this->_m_edited;
-            $this->_m_edited = ($this->value() & 2097152) != 0;
-            return $this->_m_edited;
-        }
-        protected $_m_group;
-
-        /**
-         * Set RTLD_GROUP for this object.
-         */
-        public function group() {
-            if ($this->_m_group !== null)
-                return $this->_m_group;
-            $this->_m_group = ($this->value() & 4) != 0;
-            return $this->_m_group;
-        }
-        protected $_m_pie;
-        public function pie() {
-            if ($this->_m_pie !== null)
-                return $this->_m_pie;
-            $this->_m_pie = ($this->value() & 134217728) != 0;
-            return $this->_m_pie;
-        }
-        protected $_m_nodeflib;
-
-        /**
-         * Ignore default lib search path.
-         */
-        public function nodeflib() {
-            if ($this->_m_nodeflib !== null)
-                return $this->_m_nodeflib;
-            $this->_m_nodeflib = ($this->value() & 2048) != 0;
-            return $this->_m_nodeflib;
-        }
-        protected $_m_value;
-        public function value() { return $this->_m_value; }
-    }
-}
-
-namespace Elf {
     class EndianElf extends \Kaitai\Struct\Struct {
         protected $_m__is_le;
 
@@ -1115,13 +608,6 @@ namespace Elf\EndianElf {
                     break;
             }
         }
-        protected $_m_tagEnum;
-        public function tagEnum() {
-            if ($this->_m_tagEnum !== null)
-                return $this->_m_tagEnum;
-            $this->_m_tagEnum = $this->tag();
-            return $this->_m_tagEnum;
-        }
         protected $_m_flag1Values;
         public function flag1Values() {
             if ($this->_m_flag1Values !== null)
@@ -1151,6 +637,26 @@ namespace Elf\EndianElf {
                 $io->seek($_pos);
             }
             return $this->_m_valueStr;
+        }
+        protected $_m_tagEnum;
+        public function tagEnum() {
+            if ($this->_m_tagEnum !== null)
+                return $this->_m_tagEnum;
+            $this->_m_tagEnum = $this->tag();
+            return $this->_m_tagEnum;
+        }
+        protected $_m_flagValues;
+        public function flagValues() {
+            if ($this->_m_flagValues !== null)
+                return $this->_m_flagValues;
+            if ($this->tagEnum() == \Elf\DynamicArrayTags::FLAGS) {
+                if ($this->_m__is_le) {
+                    $this->_m_flagValues = new \Elf\DtFlagValues($this->valueOrPtr(), $this->_io, $this, $this->_root);
+                } else {
+                    $this->_m_flagValues = new \Elf\DtFlagValues($this->valueOrPtr(), $this->_io, $this, $this->_root);
+                }
+            }
+            return $this->_m_flagValues;
         }
         protected $_m_isValueStr;
         public function isValueStr() {
@@ -1948,6 +1454,584 @@ namespace Elf\EndianElf {
         }
         protected $_m_entries;
         public function entries() { return $this->_m_entries; }
+    }
+}
+
+namespace Elf {
+    class DtFlag1Values extends \Kaitai\Struct\Struct {
+        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynamicSectionEntry $_parent = null, \Elf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_value = $value;
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+        protected $_m_singleton;
+
+        /**
+         * Singleton symbols are used.
+         */
+        public function singleton() {
+            if ($this->_m_singleton !== null)
+                return $this->_m_singleton;
+            $this->_m_singleton = ($this->value() & 33554432) != 0;
+            return $this->_m_singleton;
+        }
+        protected $_m_ignmuldef;
+        public function ignmuldef() {
+            if ($this->_m_ignmuldef !== null)
+                return $this->_m_ignmuldef;
+            $this->_m_ignmuldef = ($this->value() & 262144) != 0;
+            return $this->_m_ignmuldef;
+        }
+        protected $_m_loadfltr;
+
+        /**
+         * Trigger filtee loading at runtime.
+         */
+        public function loadfltr() {
+            if ($this->_m_loadfltr !== null)
+                return $this->_m_loadfltr;
+            $this->_m_loadfltr = ($this->value() & 16) != 0;
+            return $this->_m_loadfltr;
+        }
+        protected $_m_initfirst;
+
+        /**
+         * Set RTLD_INITFIRST for this object
+         */
+        public function initfirst() {
+            if ($this->_m_initfirst !== null)
+                return $this->_m_initfirst;
+            $this->_m_initfirst = ($this->value() & 32) != 0;
+            return $this->_m_initfirst;
+        }
+        protected $_m_symintpose;
+
+        /**
+         * Object has individual interposers.
+         */
+        public function symintpose() {
+            if ($this->_m_symintpose !== null)
+                return $this->_m_symintpose;
+            $this->_m_symintpose = ($this->value() & 8388608) != 0;
+            return $this->_m_symintpose;
+        }
+        protected $_m_noreloc;
+        public function noreloc() {
+            if ($this->_m_noreloc !== null)
+                return $this->_m_noreloc;
+            $this->_m_noreloc = ($this->value() & 4194304) != 0;
+            return $this->_m_noreloc;
+        }
+        protected $_m_confalt;
+
+        /**
+         * Configuration alternative created.
+         */
+        public function confalt() {
+            if ($this->_m_confalt !== null)
+                return $this->_m_confalt;
+            $this->_m_confalt = ($this->value() & 8192) != 0;
+            return $this->_m_confalt;
+        }
+        protected $_m_dispreldne;
+
+        /**
+         * Disp reloc applied at build time.
+         */
+        public function dispreldne() {
+            if ($this->_m_dispreldne !== null)
+                return $this->_m_dispreldne;
+            $this->_m_dispreldne = ($this->value() & 32768) != 0;
+            return $this->_m_dispreldne;
+        }
+        protected $_m_rtldGlobal;
+
+        /**
+         * Set RTLD_GLOBAL for this object.
+         */
+        public function rtldGlobal() {
+            if ($this->_m_rtldGlobal !== null)
+                return $this->_m_rtldGlobal;
+            $this->_m_rtldGlobal = ($this->value() & 2) != 0;
+            return $this->_m_rtldGlobal;
+        }
+        protected $_m_nodelete;
+
+        /**
+         * Set RTLD_NODELETE for this object.
+         */
+        public function nodelete() {
+            if ($this->_m_nodelete !== null)
+                return $this->_m_nodelete;
+            $this->_m_nodelete = ($this->value() & 8) != 0;
+            return $this->_m_nodelete;
+        }
+        protected $_m_trans;
+        public function trans() {
+            if ($this->_m_trans !== null)
+                return $this->_m_trans;
+            $this->_m_trans = ($this->value() & 512) != 0;
+            return $this->_m_trans;
+        }
+        protected $_m_origin;
+
+        /**
+         * $ORIGIN must be handled.
+         */
+        public function origin() {
+            if ($this->_m_origin !== null)
+                return $this->_m_origin;
+            $this->_m_origin = ($this->value() & 128) != 0;
+            return $this->_m_origin;
+        }
+        protected $_m_now;
+
+        /**
+         * Set RTLD_NOW for this object.
+         */
+        public function now() {
+            if ($this->_m_now !== null)
+                return $this->_m_now;
+            $this->_m_now = ($this->value() & 1) != 0;
+            return $this->_m_now;
+        }
+        protected $_m_nohdr;
+        public function nohdr() {
+            if ($this->_m_nohdr !== null)
+                return $this->_m_nohdr;
+            $this->_m_nohdr = ($this->value() & 1048576) != 0;
+            return $this->_m_nohdr;
+        }
+        protected $_m_endfiltee;
+
+        /**
+         * Filtee terminates filters search.
+         */
+        public function endfiltee() {
+            if ($this->_m_endfiltee !== null)
+                return $this->_m_endfiltee;
+            $this->_m_endfiltee = ($this->value() & 16384) != 0;
+            return $this->_m_endfiltee;
+        }
+        protected $_m_nodirect;
+
+        /**
+         * Object has no-direct binding.
+         */
+        public function nodirect() {
+            if ($this->_m_nodirect !== null)
+                return $this->_m_nodirect;
+            $this->_m_nodirect = ($this->value() & 131072) != 0;
+            return $this->_m_nodirect;
+        }
+        protected $_m_globaudit;
+
+        /**
+         * Global auditing required.
+         */
+        public function globaudit() {
+            if ($this->_m_globaudit !== null)
+                return $this->_m_globaudit;
+            $this->_m_globaudit = ($this->value() & 16777216) != 0;
+            return $this->_m_globaudit;
+        }
+        protected $_m_noksyms;
+        public function noksyms() {
+            if ($this->_m_noksyms !== null)
+                return $this->_m_noksyms;
+            $this->_m_noksyms = ($this->value() & 524288) != 0;
+            return $this->_m_noksyms;
+        }
+        protected $_m_interpose;
+
+        /**
+         * Object is used to interpose.
+         */
+        public function interpose() {
+            if ($this->_m_interpose !== null)
+                return $this->_m_interpose;
+            $this->_m_interpose = ($this->value() & 1024) != 0;
+            return $this->_m_interpose;
+        }
+        protected $_m_nodump;
+
+        /**
+         * Object can't be dldump'ed.
+         */
+        public function nodump() {
+            if ($this->_m_nodump !== null)
+                return $this->_m_nodump;
+            $this->_m_nodump = ($this->value() & 4096) != 0;
+            return $this->_m_nodump;
+        }
+        protected $_m_disprelpnd;
+
+        /**
+         * Disp reloc applied at run-time.
+         */
+        public function disprelpnd() {
+            if ($this->_m_disprelpnd !== null)
+                return $this->_m_disprelpnd;
+            $this->_m_disprelpnd = ($this->value() & 65536) != 0;
+            return $this->_m_disprelpnd;
+        }
+        protected $_m_noopen;
+
+        /**
+         * Set RTLD_NOOPEN for this object.
+         */
+        public function noopen() {
+            if ($this->_m_noopen !== null)
+                return $this->_m_noopen;
+            $this->_m_noopen = ($this->value() & 64) != 0;
+            return $this->_m_noopen;
+        }
+        protected $_m_stub;
+        public function stub() {
+            if ($this->_m_stub !== null)
+                return $this->_m_stub;
+            $this->_m_stub = ($this->value() & 67108864) != 0;
+            return $this->_m_stub;
+        }
+        protected $_m_direct;
+
+        /**
+         * Direct binding enabled.
+         */
+        public function direct() {
+            if ($this->_m_direct !== null)
+                return $this->_m_direct;
+            $this->_m_direct = ($this->value() & 256) != 0;
+            return $this->_m_direct;
+        }
+        protected $_m_edited;
+
+        /**
+         * Object is modified after built.
+         */
+        public function edited() {
+            if ($this->_m_edited !== null)
+                return $this->_m_edited;
+            $this->_m_edited = ($this->value() & 2097152) != 0;
+            return $this->_m_edited;
+        }
+        protected $_m_group;
+
+        /**
+         * Set RTLD_GROUP for this object.
+         */
+        public function group() {
+            if ($this->_m_group !== null)
+                return $this->_m_group;
+            $this->_m_group = ($this->value() & 4) != 0;
+            return $this->_m_group;
+        }
+        protected $_m_pie;
+        public function pie() {
+            if ($this->_m_pie !== null)
+                return $this->_m_pie;
+            $this->_m_pie = ($this->value() & 134217728) != 0;
+            return $this->_m_pie;
+        }
+        protected $_m_nodeflib;
+
+        /**
+         * Ignore default lib search path.
+         */
+        public function nodeflib() {
+            if ($this->_m_nodeflib !== null)
+                return $this->_m_nodeflib;
+            $this->_m_nodeflib = ($this->value() & 2048) != 0;
+            return $this->_m_nodeflib;
+        }
+        protected $_m_value;
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Elf {
+    class SectionHeaderFlags extends \Kaitai\Struct\Struct {
+        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\SectionHeader $_parent = null, \Elf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_value = $value;
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+        protected $_m_merge;
+
+        /**
+         * might be merged
+         */
+        public function merge() {
+            if ($this->_m_merge !== null)
+                return $this->_m_merge;
+            $this->_m_merge = ($this->value() & 16) != 0;
+            return $this->_m_merge;
+        }
+        protected $_m_maskOs;
+
+        /**
+         * OS-specific
+         */
+        public function maskOs() {
+            if ($this->_m_maskOs !== null)
+                return $this->_m_maskOs;
+            $this->_m_maskOs = ($this->value() & 267386880) != 0;
+            return $this->_m_maskOs;
+        }
+        protected $_m_exclude;
+
+        /**
+         * section is excluded unless referenced or allocated (Solaris)
+         */
+        public function exclude() {
+            if ($this->_m_exclude !== null)
+                return $this->_m_exclude;
+            $this->_m_exclude = ($this->value() & 134217728) != 0;
+            return $this->_m_exclude;
+        }
+        protected $_m_maskProc;
+
+        /**
+         * Processor-specific
+         */
+        public function maskProc() {
+            if ($this->_m_maskProc !== null)
+                return $this->_m_maskProc;
+            $this->_m_maskProc = ($this->value() & 4026531840) != 0;
+            return $this->_m_maskProc;
+        }
+        protected $_m_strings;
+
+        /**
+         * contains nul-terminated strings
+         */
+        public function strings() {
+            if ($this->_m_strings !== null)
+                return $this->_m_strings;
+            $this->_m_strings = ($this->value() & 32) != 0;
+            return $this->_m_strings;
+        }
+        protected $_m_osNonConforming;
+
+        /**
+         * non-standard OS specific handling required
+         */
+        public function osNonConforming() {
+            if ($this->_m_osNonConforming !== null)
+                return $this->_m_osNonConforming;
+            $this->_m_osNonConforming = ($this->value() & 256) != 0;
+            return $this->_m_osNonConforming;
+        }
+        protected $_m_alloc;
+
+        /**
+         * occupies memory during execution
+         */
+        public function alloc() {
+            if ($this->_m_alloc !== null)
+                return $this->_m_alloc;
+            $this->_m_alloc = ($this->value() & 2) != 0;
+            return $this->_m_alloc;
+        }
+        protected $_m_execInstr;
+
+        /**
+         * executable
+         */
+        public function execInstr() {
+            if ($this->_m_execInstr !== null)
+                return $this->_m_execInstr;
+            $this->_m_execInstr = ($this->value() & 4) != 0;
+            return $this->_m_execInstr;
+        }
+        protected $_m_infoLink;
+
+        /**
+         * 'sh_info' contains SHT index
+         */
+        public function infoLink() {
+            if ($this->_m_infoLink !== null)
+                return $this->_m_infoLink;
+            $this->_m_infoLink = ($this->value() & 64) != 0;
+            return $this->_m_infoLink;
+        }
+        protected $_m_write;
+
+        /**
+         * writable
+         */
+        public function write() {
+            if ($this->_m_write !== null)
+                return $this->_m_write;
+            $this->_m_write = ($this->value() & 1) != 0;
+            return $this->_m_write;
+        }
+        protected $_m_linkOrder;
+
+        /**
+         * preserve order after combining
+         */
+        public function linkOrder() {
+            if ($this->_m_linkOrder !== null)
+                return $this->_m_linkOrder;
+            $this->_m_linkOrder = ($this->value() & 128) != 0;
+            return $this->_m_linkOrder;
+        }
+        protected $_m_ordered;
+
+        /**
+         * special ordering requirement (Solaris)
+         */
+        public function ordered() {
+            if ($this->_m_ordered !== null)
+                return $this->_m_ordered;
+            $this->_m_ordered = ($this->value() & 67108864) != 0;
+            return $this->_m_ordered;
+        }
+        protected $_m_tls;
+
+        /**
+         * section hold thread-local data
+         */
+        public function tls() {
+            if ($this->_m_tls !== null)
+                return $this->_m_tls;
+            $this->_m_tls = ($this->value() & 1024) != 0;
+            return $this->_m_tls;
+        }
+        protected $_m_group;
+
+        /**
+         * section is member of a group
+         */
+        public function group() {
+            if ($this->_m_group !== null)
+                return $this->_m_group;
+            $this->_m_group = ($this->value() & 512) != 0;
+            return $this->_m_group;
+        }
+        protected $_m_value;
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Elf {
+    class PhdrTypeFlags extends \Kaitai\Struct\Struct {
+        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\ProgramHeader $_parent = null, \Elf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_value = $value;
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+        protected $_m_read;
+        public function read() {
+            if ($this->_m_read !== null)
+                return $this->_m_read;
+            $this->_m_read = ($this->value() & 4) != 0;
+            return $this->_m_read;
+        }
+        protected $_m_write;
+        public function write() {
+            if ($this->_m_write !== null)
+                return $this->_m_write;
+            $this->_m_write = ($this->value() & 2) != 0;
+            return $this->_m_write;
+        }
+        protected $_m_execute;
+        public function execute() {
+            if ($this->_m_execute !== null)
+                return $this->_m_execute;
+            $this->_m_execute = ($this->value() & 1) != 0;
+            return $this->_m_execute;
+        }
+        protected $_m_maskProc;
+        public function maskProc() {
+            if ($this->_m_maskProc !== null)
+                return $this->_m_maskProc;
+            $this->_m_maskProc = ($this->value() & 4026531840) != 0;
+            return $this->_m_maskProc;
+        }
+        protected $_m_value;
+        public function value() { return $this->_m_value; }
+    }
+}
+
+namespace Elf {
+    class DtFlagValues extends \Kaitai\Struct\Struct {
+        public function __construct(int $value, \Kaitai\Struct\Stream $_io, \Elf\EndianElf\DynamicSectionEntry $_parent = null, \Elf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_m_value = $value;
+            $this->_read();
+        }
+
+        private function _read() {
+        }
+        protected $_m_bindNow;
+
+        /**
+         * all relocations for this object must be processed before returning
+         * control to the program
+         */
+        public function bindNow() {
+            if ($this->_m_bindNow !== null)
+                return $this->_m_bindNow;
+            $this->_m_bindNow = ($this->value() & 8) != 0;
+            return $this->_m_bindNow;
+        }
+        protected $_m_origin;
+
+        /**
+         * object may reference the $ORIGIN substitution string
+         */
+        public function origin() {
+            if ($this->_m_origin !== null)
+                return $this->_m_origin;
+            $this->_m_origin = ($this->value() & 1) != 0;
+            return $this->_m_origin;
+        }
+        protected $_m_textrel;
+
+        /**
+         * relocation entries might request modifications to a non-writable segment
+         */
+        public function textrel() {
+            if ($this->_m_textrel !== null)
+                return $this->_m_textrel;
+            $this->_m_textrel = ($this->value() & 4) != 0;
+            return $this->_m_textrel;
+        }
+        protected $_m_staticTls;
+
+        /**
+         * object uses static thread-local storage scheme
+         */
+        public function staticTls() {
+            if ($this->_m_staticTls !== null)
+                return $this->_m_staticTls;
+            $this->_m_staticTls = ($this->value() & 16) != 0;
+            return $this->_m_staticTls;
+        }
+        protected $_m_symbolic;
+
+        /**
+         * symbolic linking
+         */
+        public function symbolic() {
+            if ($this->_m_symbolic !== null)
+                return $this->_m_symbolic;
+            $this->_m_symbolic = ($this->value() & 2) != 0;
+            return $this->_m_symbolic;
+        }
+        protected $_m_value;
+        public function value() { return $this->_m_value; }
     }
 }
 

@@ -487,445 +487,6 @@ class Elf(KaitaiStruct):
         self.pad = self._io.read_bytes(7)
         self.header = Elf.EndianElf(self._io, self, self._root)
 
-    class PhdrTypeFlags(KaitaiStruct):
-        def __init__(self, value, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.value = value
-            self._read()
-
-        def _read(self):
-            pass
-
-        @property
-        def read(self):
-            if hasattr(self, '_m_read'):
-                return self._m_read if hasattr(self, '_m_read') else None
-
-            self._m_read = (self.value & 4) != 0
-            return self._m_read if hasattr(self, '_m_read') else None
-
-        @property
-        def write(self):
-            if hasattr(self, '_m_write'):
-                return self._m_write if hasattr(self, '_m_write') else None
-
-            self._m_write = (self.value & 2) != 0
-            return self._m_write if hasattr(self, '_m_write') else None
-
-        @property
-        def execute(self):
-            if hasattr(self, '_m_execute'):
-                return self._m_execute if hasattr(self, '_m_execute') else None
-
-            self._m_execute = (self.value & 1) != 0
-            return self._m_execute if hasattr(self, '_m_execute') else None
-
-        @property
-        def mask_proc(self):
-            if hasattr(self, '_m_mask_proc'):
-                return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
-
-            self._m_mask_proc = (self.value & 4026531840) != 0
-            return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
-
-
-    class SectionHeaderFlags(KaitaiStruct):
-        def __init__(self, value, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.value = value
-            self._read()
-
-        def _read(self):
-            pass
-
-        @property
-        def merge(self):
-            """might be merged."""
-            if hasattr(self, '_m_merge'):
-                return self._m_merge if hasattr(self, '_m_merge') else None
-
-            self._m_merge = (self.value & 16) != 0
-            return self._m_merge if hasattr(self, '_m_merge') else None
-
-        @property
-        def mask_os(self):
-            """OS-specific."""
-            if hasattr(self, '_m_mask_os'):
-                return self._m_mask_os if hasattr(self, '_m_mask_os') else None
-
-            self._m_mask_os = (self.value & 267386880) != 0
-            return self._m_mask_os if hasattr(self, '_m_mask_os') else None
-
-        @property
-        def exclude(self):
-            """section is excluded unless referenced or allocated (Solaris)."""
-            if hasattr(self, '_m_exclude'):
-                return self._m_exclude if hasattr(self, '_m_exclude') else None
-
-            self._m_exclude = (self.value & 134217728) != 0
-            return self._m_exclude if hasattr(self, '_m_exclude') else None
-
-        @property
-        def mask_proc(self):
-            """Processor-specific."""
-            if hasattr(self, '_m_mask_proc'):
-                return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
-
-            self._m_mask_proc = (self.value & 4026531840) != 0
-            return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
-
-        @property
-        def strings(self):
-            """contains nul-terminated strings."""
-            if hasattr(self, '_m_strings'):
-                return self._m_strings if hasattr(self, '_m_strings') else None
-
-            self._m_strings = (self.value & 32) != 0
-            return self._m_strings if hasattr(self, '_m_strings') else None
-
-        @property
-        def os_non_conforming(self):
-            """non-standard OS specific handling required."""
-            if hasattr(self, '_m_os_non_conforming'):
-                return self._m_os_non_conforming if hasattr(self, '_m_os_non_conforming') else None
-
-            self._m_os_non_conforming = (self.value & 256) != 0
-            return self._m_os_non_conforming if hasattr(self, '_m_os_non_conforming') else None
-
-        @property
-        def alloc(self):
-            """occupies memory during execution."""
-            if hasattr(self, '_m_alloc'):
-                return self._m_alloc if hasattr(self, '_m_alloc') else None
-
-            self._m_alloc = (self.value & 2) != 0
-            return self._m_alloc if hasattr(self, '_m_alloc') else None
-
-        @property
-        def exec_instr(self):
-            """executable."""
-            if hasattr(self, '_m_exec_instr'):
-                return self._m_exec_instr if hasattr(self, '_m_exec_instr') else None
-
-            self._m_exec_instr = (self.value & 4) != 0
-            return self._m_exec_instr if hasattr(self, '_m_exec_instr') else None
-
-        @property
-        def info_link(self):
-            """'sh_info' contains SHT index."""
-            if hasattr(self, '_m_info_link'):
-                return self._m_info_link if hasattr(self, '_m_info_link') else None
-
-            self._m_info_link = (self.value & 64) != 0
-            return self._m_info_link if hasattr(self, '_m_info_link') else None
-
-        @property
-        def write(self):
-            """writable."""
-            if hasattr(self, '_m_write'):
-                return self._m_write if hasattr(self, '_m_write') else None
-
-            self._m_write = (self.value & 1) != 0
-            return self._m_write if hasattr(self, '_m_write') else None
-
-        @property
-        def link_order(self):
-            """preserve order after combining."""
-            if hasattr(self, '_m_link_order'):
-                return self._m_link_order if hasattr(self, '_m_link_order') else None
-
-            self._m_link_order = (self.value & 128) != 0
-            return self._m_link_order if hasattr(self, '_m_link_order') else None
-
-        @property
-        def ordered(self):
-            """special ordering requirement (Solaris)."""
-            if hasattr(self, '_m_ordered'):
-                return self._m_ordered if hasattr(self, '_m_ordered') else None
-
-            self._m_ordered = (self.value & 67108864) != 0
-            return self._m_ordered if hasattr(self, '_m_ordered') else None
-
-        @property
-        def tls(self):
-            """section hold thread-local data."""
-            if hasattr(self, '_m_tls'):
-                return self._m_tls if hasattr(self, '_m_tls') else None
-
-            self._m_tls = (self.value & 1024) != 0
-            return self._m_tls if hasattr(self, '_m_tls') else None
-
-        @property
-        def group(self):
-            """section is member of a group."""
-            if hasattr(self, '_m_group'):
-                return self._m_group if hasattr(self, '_m_group') else None
-
-            self._m_group = (self.value & 512) != 0
-            return self._m_group if hasattr(self, '_m_group') else None
-
-
-    class DtFlag1Values(KaitaiStruct):
-        def __init__(self, value, _io, _parent=None, _root=None):
-            self._io = _io
-            self._parent = _parent
-            self._root = _root if _root else self
-            self.value = value
-            self._read()
-
-        def _read(self):
-            pass
-
-        @property
-        def singleton(self):
-            """Singleton symbols are used."""
-            if hasattr(self, '_m_singleton'):
-                return self._m_singleton if hasattr(self, '_m_singleton') else None
-
-            self._m_singleton = (self.value & 33554432) != 0
-            return self._m_singleton if hasattr(self, '_m_singleton') else None
-
-        @property
-        def ignmuldef(self):
-            if hasattr(self, '_m_ignmuldef'):
-                return self._m_ignmuldef if hasattr(self, '_m_ignmuldef') else None
-
-            self._m_ignmuldef = (self.value & 262144) != 0
-            return self._m_ignmuldef if hasattr(self, '_m_ignmuldef') else None
-
-        @property
-        def loadfltr(self):
-            """Trigger filtee loading at runtime."""
-            if hasattr(self, '_m_loadfltr'):
-                return self._m_loadfltr if hasattr(self, '_m_loadfltr') else None
-
-            self._m_loadfltr = (self.value & 16) != 0
-            return self._m_loadfltr if hasattr(self, '_m_loadfltr') else None
-
-        @property
-        def initfirst(self):
-            """Set RTLD_INITFIRST for this object."""
-            if hasattr(self, '_m_initfirst'):
-                return self._m_initfirst if hasattr(self, '_m_initfirst') else None
-
-            self._m_initfirst = (self.value & 32) != 0
-            return self._m_initfirst if hasattr(self, '_m_initfirst') else None
-
-        @property
-        def symintpose(self):
-            """Object has individual interposers."""
-            if hasattr(self, '_m_symintpose'):
-                return self._m_symintpose if hasattr(self, '_m_symintpose') else None
-
-            self._m_symintpose = (self.value & 8388608) != 0
-            return self._m_symintpose if hasattr(self, '_m_symintpose') else None
-
-        @property
-        def noreloc(self):
-            if hasattr(self, '_m_noreloc'):
-                return self._m_noreloc if hasattr(self, '_m_noreloc') else None
-
-            self._m_noreloc = (self.value & 4194304) != 0
-            return self._m_noreloc if hasattr(self, '_m_noreloc') else None
-
-        @property
-        def confalt(self):
-            """Configuration alternative created."""
-            if hasattr(self, '_m_confalt'):
-                return self._m_confalt if hasattr(self, '_m_confalt') else None
-
-            self._m_confalt = (self.value & 8192) != 0
-            return self._m_confalt if hasattr(self, '_m_confalt') else None
-
-        @property
-        def dispreldne(self):
-            """Disp reloc applied at build time."""
-            if hasattr(self, '_m_dispreldne'):
-                return self._m_dispreldne if hasattr(self, '_m_dispreldne') else None
-
-            self._m_dispreldne = (self.value & 32768) != 0
-            return self._m_dispreldne if hasattr(self, '_m_dispreldne') else None
-
-        @property
-        def rtld_global(self):
-            """Set RTLD_GLOBAL for this object."""
-            if hasattr(self, '_m_rtld_global'):
-                return self._m_rtld_global if hasattr(self, '_m_rtld_global') else None
-
-            self._m_rtld_global = (self.value & 2) != 0
-            return self._m_rtld_global if hasattr(self, '_m_rtld_global') else None
-
-        @property
-        def nodelete(self):
-            """Set RTLD_NODELETE for this object."""
-            if hasattr(self, '_m_nodelete'):
-                return self._m_nodelete if hasattr(self, '_m_nodelete') else None
-
-            self._m_nodelete = (self.value & 8) != 0
-            return self._m_nodelete if hasattr(self, '_m_nodelete') else None
-
-        @property
-        def trans(self):
-            if hasattr(self, '_m_trans'):
-                return self._m_trans if hasattr(self, '_m_trans') else None
-
-            self._m_trans = (self.value & 512) != 0
-            return self._m_trans if hasattr(self, '_m_trans') else None
-
-        @property
-        def origin(self):
-            """$ORIGIN must be handled."""
-            if hasattr(self, '_m_origin'):
-                return self._m_origin if hasattr(self, '_m_origin') else None
-
-            self._m_origin = (self.value & 128) != 0
-            return self._m_origin if hasattr(self, '_m_origin') else None
-
-        @property
-        def now(self):
-            """Set RTLD_NOW for this object."""
-            if hasattr(self, '_m_now'):
-                return self._m_now if hasattr(self, '_m_now') else None
-
-            self._m_now = (self.value & 1) != 0
-            return self._m_now if hasattr(self, '_m_now') else None
-
-        @property
-        def nohdr(self):
-            if hasattr(self, '_m_nohdr'):
-                return self._m_nohdr if hasattr(self, '_m_nohdr') else None
-
-            self._m_nohdr = (self.value & 1048576) != 0
-            return self._m_nohdr if hasattr(self, '_m_nohdr') else None
-
-        @property
-        def endfiltee(self):
-            """Filtee terminates filters search."""
-            if hasattr(self, '_m_endfiltee'):
-                return self._m_endfiltee if hasattr(self, '_m_endfiltee') else None
-
-            self._m_endfiltee = (self.value & 16384) != 0
-            return self._m_endfiltee if hasattr(self, '_m_endfiltee') else None
-
-        @property
-        def nodirect(self):
-            """Object has no-direct binding."""
-            if hasattr(self, '_m_nodirect'):
-                return self._m_nodirect if hasattr(self, '_m_nodirect') else None
-
-            self._m_nodirect = (self.value & 131072) != 0
-            return self._m_nodirect if hasattr(self, '_m_nodirect') else None
-
-        @property
-        def globaudit(self):
-            """Global auditing required."""
-            if hasattr(self, '_m_globaudit'):
-                return self._m_globaudit if hasattr(self, '_m_globaudit') else None
-
-            self._m_globaudit = (self.value & 16777216) != 0
-            return self._m_globaudit if hasattr(self, '_m_globaudit') else None
-
-        @property
-        def noksyms(self):
-            if hasattr(self, '_m_noksyms'):
-                return self._m_noksyms if hasattr(self, '_m_noksyms') else None
-
-            self._m_noksyms = (self.value & 524288) != 0
-            return self._m_noksyms if hasattr(self, '_m_noksyms') else None
-
-        @property
-        def interpose(self):
-            """Object is used to interpose."""
-            if hasattr(self, '_m_interpose'):
-                return self._m_interpose if hasattr(self, '_m_interpose') else None
-
-            self._m_interpose = (self.value & 1024) != 0
-            return self._m_interpose if hasattr(self, '_m_interpose') else None
-
-        @property
-        def nodump(self):
-            """Object can't be dldump'ed."""
-            if hasattr(self, '_m_nodump'):
-                return self._m_nodump if hasattr(self, '_m_nodump') else None
-
-            self._m_nodump = (self.value & 4096) != 0
-            return self._m_nodump if hasattr(self, '_m_nodump') else None
-
-        @property
-        def disprelpnd(self):
-            """Disp reloc applied at run-time."""
-            if hasattr(self, '_m_disprelpnd'):
-                return self._m_disprelpnd if hasattr(self, '_m_disprelpnd') else None
-
-            self._m_disprelpnd = (self.value & 65536) != 0
-            return self._m_disprelpnd if hasattr(self, '_m_disprelpnd') else None
-
-        @property
-        def noopen(self):
-            """Set RTLD_NOOPEN for this object."""
-            if hasattr(self, '_m_noopen'):
-                return self._m_noopen if hasattr(self, '_m_noopen') else None
-
-            self._m_noopen = (self.value & 64) != 0
-            return self._m_noopen if hasattr(self, '_m_noopen') else None
-
-        @property
-        def stub(self):
-            if hasattr(self, '_m_stub'):
-                return self._m_stub if hasattr(self, '_m_stub') else None
-
-            self._m_stub = (self.value & 67108864) != 0
-            return self._m_stub if hasattr(self, '_m_stub') else None
-
-        @property
-        def direct(self):
-            """Direct binding enabled."""
-            if hasattr(self, '_m_direct'):
-                return self._m_direct if hasattr(self, '_m_direct') else None
-
-            self._m_direct = (self.value & 256) != 0
-            return self._m_direct if hasattr(self, '_m_direct') else None
-
-        @property
-        def edited(self):
-            """Object is modified after built."""
-            if hasattr(self, '_m_edited'):
-                return self._m_edited if hasattr(self, '_m_edited') else None
-
-            self._m_edited = (self.value & 2097152) != 0
-            return self._m_edited if hasattr(self, '_m_edited') else None
-
-        @property
-        def group(self):
-            """Set RTLD_GROUP for this object."""
-            if hasattr(self, '_m_group'):
-                return self._m_group if hasattr(self, '_m_group') else None
-
-            self._m_group = (self.value & 4) != 0
-            return self._m_group if hasattr(self, '_m_group') else None
-
-        @property
-        def pie(self):
-            if hasattr(self, '_m_pie'):
-                return self._m_pie if hasattr(self, '_m_pie') else None
-
-            self._m_pie = (self.value & 134217728) != 0
-            return self._m_pie if hasattr(self, '_m_pie') else None
-
-        @property
-        def nodeflib(self):
-            """Ignore default lib search path."""
-            if hasattr(self, '_m_nodeflib'):
-                return self._m_nodeflib if hasattr(self, '_m_nodeflib') else None
-
-            self._m_nodeflib = (self.value & 2048) != 0
-            return self._m_nodeflib if hasattr(self, '_m_nodeflib') else None
-
-
     class EndianElf(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -1196,14 +757,6 @@ class Elf(KaitaiStruct):
                     self.value_or_ptr = self._io.read_u8be()
 
             @property
-            def tag_enum(self):
-                if hasattr(self, '_m_tag_enum'):
-                    return self._m_tag_enum if hasattr(self, '_m_tag_enum') else None
-
-                self._m_tag_enum = KaitaiStream.resolve_enum(Elf.DynamicArrayTags, self.tag)
-                return self._m_tag_enum if hasattr(self, '_m_tag_enum') else None
-
-            @property
             def flag_1_values(self):
                 if hasattr(self, '_m_flag_1_values'):
                     return self._m_flag_1_values if hasattr(self, '_m_flag_1_values') else None
@@ -1232,6 +785,27 @@ class Elf(KaitaiStruct):
                     io.seek(_pos)
 
                 return self._m_value_str if hasattr(self, '_m_value_str') else None
+
+            @property
+            def tag_enum(self):
+                if hasattr(self, '_m_tag_enum'):
+                    return self._m_tag_enum if hasattr(self, '_m_tag_enum') else None
+
+                self._m_tag_enum = KaitaiStream.resolve_enum(Elf.DynamicArrayTags, self.tag)
+                return self._m_tag_enum if hasattr(self, '_m_tag_enum') else None
+
+            @property
+            def flag_values(self):
+                if hasattr(self, '_m_flag_values'):
+                    return self._m_flag_values if hasattr(self, '_m_flag_values') else None
+
+                if self.tag_enum == Elf.DynamicArrayTags.flags:
+                    if self._is_le:
+                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+                    else:
+                        self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+
+                return self._m_flag_values if hasattr(self, '_m_flag_values') else None
 
             @property
             def is_value_str(self):
@@ -1913,6 +1487,516 @@ class Elf(KaitaiStruct):
                 self._io.seek(_pos)
 
             return self._m_section_names if hasattr(self, '_m_section_names') else None
+
+
+    class DtFlag1Values(KaitaiStruct):
+        def __init__(self, value, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self.value = value
+            self._read()
+
+        def _read(self):
+            pass
+
+        @property
+        def singleton(self):
+            """Singleton symbols are used."""
+            if hasattr(self, '_m_singleton'):
+                return self._m_singleton if hasattr(self, '_m_singleton') else None
+
+            self._m_singleton = (self.value & 33554432) != 0
+            return self._m_singleton if hasattr(self, '_m_singleton') else None
+
+        @property
+        def ignmuldef(self):
+            if hasattr(self, '_m_ignmuldef'):
+                return self._m_ignmuldef if hasattr(self, '_m_ignmuldef') else None
+
+            self._m_ignmuldef = (self.value & 262144) != 0
+            return self._m_ignmuldef if hasattr(self, '_m_ignmuldef') else None
+
+        @property
+        def loadfltr(self):
+            """Trigger filtee loading at runtime."""
+            if hasattr(self, '_m_loadfltr'):
+                return self._m_loadfltr if hasattr(self, '_m_loadfltr') else None
+
+            self._m_loadfltr = (self.value & 16) != 0
+            return self._m_loadfltr if hasattr(self, '_m_loadfltr') else None
+
+        @property
+        def initfirst(self):
+            """Set RTLD_INITFIRST for this object."""
+            if hasattr(self, '_m_initfirst'):
+                return self._m_initfirst if hasattr(self, '_m_initfirst') else None
+
+            self._m_initfirst = (self.value & 32) != 0
+            return self._m_initfirst if hasattr(self, '_m_initfirst') else None
+
+        @property
+        def symintpose(self):
+            """Object has individual interposers."""
+            if hasattr(self, '_m_symintpose'):
+                return self._m_symintpose if hasattr(self, '_m_symintpose') else None
+
+            self._m_symintpose = (self.value & 8388608) != 0
+            return self._m_symintpose if hasattr(self, '_m_symintpose') else None
+
+        @property
+        def noreloc(self):
+            if hasattr(self, '_m_noreloc'):
+                return self._m_noreloc if hasattr(self, '_m_noreloc') else None
+
+            self._m_noreloc = (self.value & 4194304) != 0
+            return self._m_noreloc if hasattr(self, '_m_noreloc') else None
+
+        @property
+        def confalt(self):
+            """Configuration alternative created."""
+            if hasattr(self, '_m_confalt'):
+                return self._m_confalt if hasattr(self, '_m_confalt') else None
+
+            self._m_confalt = (self.value & 8192) != 0
+            return self._m_confalt if hasattr(self, '_m_confalt') else None
+
+        @property
+        def dispreldne(self):
+            """Disp reloc applied at build time."""
+            if hasattr(self, '_m_dispreldne'):
+                return self._m_dispreldne if hasattr(self, '_m_dispreldne') else None
+
+            self._m_dispreldne = (self.value & 32768) != 0
+            return self._m_dispreldne if hasattr(self, '_m_dispreldne') else None
+
+        @property
+        def rtld_global(self):
+            """Set RTLD_GLOBAL for this object."""
+            if hasattr(self, '_m_rtld_global'):
+                return self._m_rtld_global if hasattr(self, '_m_rtld_global') else None
+
+            self._m_rtld_global = (self.value & 2) != 0
+            return self._m_rtld_global if hasattr(self, '_m_rtld_global') else None
+
+        @property
+        def nodelete(self):
+            """Set RTLD_NODELETE for this object."""
+            if hasattr(self, '_m_nodelete'):
+                return self._m_nodelete if hasattr(self, '_m_nodelete') else None
+
+            self._m_nodelete = (self.value & 8) != 0
+            return self._m_nodelete if hasattr(self, '_m_nodelete') else None
+
+        @property
+        def trans(self):
+            if hasattr(self, '_m_trans'):
+                return self._m_trans if hasattr(self, '_m_trans') else None
+
+            self._m_trans = (self.value & 512) != 0
+            return self._m_trans if hasattr(self, '_m_trans') else None
+
+        @property
+        def origin(self):
+            """$ORIGIN must be handled."""
+            if hasattr(self, '_m_origin'):
+                return self._m_origin if hasattr(self, '_m_origin') else None
+
+            self._m_origin = (self.value & 128) != 0
+            return self._m_origin if hasattr(self, '_m_origin') else None
+
+        @property
+        def now(self):
+            """Set RTLD_NOW for this object."""
+            if hasattr(self, '_m_now'):
+                return self._m_now if hasattr(self, '_m_now') else None
+
+            self._m_now = (self.value & 1) != 0
+            return self._m_now if hasattr(self, '_m_now') else None
+
+        @property
+        def nohdr(self):
+            if hasattr(self, '_m_nohdr'):
+                return self._m_nohdr if hasattr(self, '_m_nohdr') else None
+
+            self._m_nohdr = (self.value & 1048576) != 0
+            return self._m_nohdr if hasattr(self, '_m_nohdr') else None
+
+        @property
+        def endfiltee(self):
+            """Filtee terminates filters search."""
+            if hasattr(self, '_m_endfiltee'):
+                return self._m_endfiltee if hasattr(self, '_m_endfiltee') else None
+
+            self._m_endfiltee = (self.value & 16384) != 0
+            return self._m_endfiltee if hasattr(self, '_m_endfiltee') else None
+
+        @property
+        def nodirect(self):
+            """Object has no-direct binding."""
+            if hasattr(self, '_m_nodirect'):
+                return self._m_nodirect if hasattr(self, '_m_nodirect') else None
+
+            self._m_nodirect = (self.value & 131072) != 0
+            return self._m_nodirect if hasattr(self, '_m_nodirect') else None
+
+        @property
+        def globaudit(self):
+            """Global auditing required."""
+            if hasattr(self, '_m_globaudit'):
+                return self._m_globaudit if hasattr(self, '_m_globaudit') else None
+
+            self._m_globaudit = (self.value & 16777216) != 0
+            return self._m_globaudit if hasattr(self, '_m_globaudit') else None
+
+        @property
+        def noksyms(self):
+            if hasattr(self, '_m_noksyms'):
+                return self._m_noksyms if hasattr(self, '_m_noksyms') else None
+
+            self._m_noksyms = (self.value & 524288) != 0
+            return self._m_noksyms if hasattr(self, '_m_noksyms') else None
+
+        @property
+        def interpose(self):
+            """Object is used to interpose."""
+            if hasattr(self, '_m_interpose'):
+                return self._m_interpose if hasattr(self, '_m_interpose') else None
+
+            self._m_interpose = (self.value & 1024) != 0
+            return self._m_interpose if hasattr(self, '_m_interpose') else None
+
+        @property
+        def nodump(self):
+            """Object can't be dldump'ed."""
+            if hasattr(self, '_m_nodump'):
+                return self._m_nodump if hasattr(self, '_m_nodump') else None
+
+            self._m_nodump = (self.value & 4096) != 0
+            return self._m_nodump if hasattr(self, '_m_nodump') else None
+
+        @property
+        def disprelpnd(self):
+            """Disp reloc applied at run-time."""
+            if hasattr(self, '_m_disprelpnd'):
+                return self._m_disprelpnd if hasattr(self, '_m_disprelpnd') else None
+
+            self._m_disprelpnd = (self.value & 65536) != 0
+            return self._m_disprelpnd if hasattr(self, '_m_disprelpnd') else None
+
+        @property
+        def noopen(self):
+            """Set RTLD_NOOPEN for this object."""
+            if hasattr(self, '_m_noopen'):
+                return self._m_noopen if hasattr(self, '_m_noopen') else None
+
+            self._m_noopen = (self.value & 64) != 0
+            return self._m_noopen if hasattr(self, '_m_noopen') else None
+
+        @property
+        def stub(self):
+            if hasattr(self, '_m_stub'):
+                return self._m_stub if hasattr(self, '_m_stub') else None
+
+            self._m_stub = (self.value & 67108864) != 0
+            return self._m_stub if hasattr(self, '_m_stub') else None
+
+        @property
+        def direct(self):
+            """Direct binding enabled."""
+            if hasattr(self, '_m_direct'):
+                return self._m_direct if hasattr(self, '_m_direct') else None
+
+            self._m_direct = (self.value & 256) != 0
+            return self._m_direct if hasattr(self, '_m_direct') else None
+
+        @property
+        def edited(self):
+            """Object is modified after built."""
+            if hasattr(self, '_m_edited'):
+                return self._m_edited if hasattr(self, '_m_edited') else None
+
+            self._m_edited = (self.value & 2097152) != 0
+            return self._m_edited if hasattr(self, '_m_edited') else None
+
+        @property
+        def group(self):
+            """Set RTLD_GROUP for this object."""
+            if hasattr(self, '_m_group'):
+                return self._m_group if hasattr(self, '_m_group') else None
+
+            self._m_group = (self.value & 4) != 0
+            return self._m_group if hasattr(self, '_m_group') else None
+
+        @property
+        def pie(self):
+            if hasattr(self, '_m_pie'):
+                return self._m_pie if hasattr(self, '_m_pie') else None
+
+            self._m_pie = (self.value & 134217728) != 0
+            return self._m_pie if hasattr(self, '_m_pie') else None
+
+        @property
+        def nodeflib(self):
+            """Ignore default lib search path."""
+            if hasattr(self, '_m_nodeflib'):
+                return self._m_nodeflib if hasattr(self, '_m_nodeflib') else None
+
+            self._m_nodeflib = (self.value & 2048) != 0
+            return self._m_nodeflib if hasattr(self, '_m_nodeflib') else None
+
+
+    class SectionHeaderFlags(KaitaiStruct):
+        def __init__(self, value, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self.value = value
+            self._read()
+
+        def _read(self):
+            pass
+
+        @property
+        def merge(self):
+            """might be merged."""
+            if hasattr(self, '_m_merge'):
+                return self._m_merge if hasattr(self, '_m_merge') else None
+
+            self._m_merge = (self.value & 16) != 0
+            return self._m_merge if hasattr(self, '_m_merge') else None
+
+        @property
+        def mask_os(self):
+            """OS-specific."""
+            if hasattr(self, '_m_mask_os'):
+                return self._m_mask_os if hasattr(self, '_m_mask_os') else None
+
+            self._m_mask_os = (self.value & 267386880) != 0
+            return self._m_mask_os if hasattr(self, '_m_mask_os') else None
+
+        @property
+        def exclude(self):
+            """section is excluded unless referenced or allocated (Solaris)."""
+            if hasattr(self, '_m_exclude'):
+                return self._m_exclude if hasattr(self, '_m_exclude') else None
+
+            self._m_exclude = (self.value & 134217728) != 0
+            return self._m_exclude if hasattr(self, '_m_exclude') else None
+
+        @property
+        def mask_proc(self):
+            """Processor-specific."""
+            if hasattr(self, '_m_mask_proc'):
+                return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
+
+            self._m_mask_proc = (self.value & 4026531840) != 0
+            return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
+
+        @property
+        def strings(self):
+            """contains nul-terminated strings."""
+            if hasattr(self, '_m_strings'):
+                return self._m_strings if hasattr(self, '_m_strings') else None
+
+            self._m_strings = (self.value & 32) != 0
+            return self._m_strings if hasattr(self, '_m_strings') else None
+
+        @property
+        def os_non_conforming(self):
+            """non-standard OS specific handling required."""
+            if hasattr(self, '_m_os_non_conforming'):
+                return self._m_os_non_conforming if hasattr(self, '_m_os_non_conforming') else None
+
+            self._m_os_non_conforming = (self.value & 256) != 0
+            return self._m_os_non_conforming if hasattr(self, '_m_os_non_conforming') else None
+
+        @property
+        def alloc(self):
+            """occupies memory during execution."""
+            if hasattr(self, '_m_alloc'):
+                return self._m_alloc if hasattr(self, '_m_alloc') else None
+
+            self._m_alloc = (self.value & 2) != 0
+            return self._m_alloc if hasattr(self, '_m_alloc') else None
+
+        @property
+        def exec_instr(self):
+            """executable."""
+            if hasattr(self, '_m_exec_instr'):
+                return self._m_exec_instr if hasattr(self, '_m_exec_instr') else None
+
+            self._m_exec_instr = (self.value & 4) != 0
+            return self._m_exec_instr if hasattr(self, '_m_exec_instr') else None
+
+        @property
+        def info_link(self):
+            """'sh_info' contains SHT index."""
+            if hasattr(self, '_m_info_link'):
+                return self._m_info_link if hasattr(self, '_m_info_link') else None
+
+            self._m_info_link = (self.value & 64) != 0
+            return self._m_info_link if hasattr(self, '_m_info_link') else None
+
+        @property
+        def write(self):
+            """writable."""
+            if hasattr(self, '_m_write'):
+                return self._m_write if hasattr(self, '_m_write') else None
+
+            self._m_write = (self.value & 1) != 0
+            return self._m_write if hasattr(self, '_m_write') else None
+
+        @property
+        def link_order(self):
+            """preserve order after combining."""
+            if hasattr(self, '_m_link_order'):
+                return self._m_link_order if hasattr(self, '_m_link_order') else None
+
+            self._m_link_order = (self.value & 128) != 0
+            return self._m_link_order if hasattr(self, '_m_link_order') else None
+
+        @property
+        def ordered(self):
+            """special ordering requirement (Solaris)."""
+            if hasattr(self, '_m_ordered'):
+                return self._m_ordered if hasattr(self, '_m_ordered') else None
+
+            self._m_ordered = (self.value & 67108864) != 0
+            return self._m_ordered if hasattr(self, '_m_ordered') else None
+
+        @property
+        def tls(self):
+            """section hold thread-local data."""
+            if hasattr(self, '_m_tls'):
+                return self._m_tls if hasattr(self, '_m_tls') else None
+
+            self._m_tls = (self.value & 1024) != 0
+            return self._m_tls if hasattr(self, '_m_tls') else None
+
+        @property
+        def group(self):
+            """section is member of a group."""
+            if hasattr(self, '_m_group'):
+                return self._m_group if hasattr(self, '_m_group') else None
+
+            self._m_group = (self.value & 512) != 0
+            return self._m_group if hasattr(self, '_m_group') else None
+
+
+    class PhdrTypeFlags(KaitaiStruct):
+        def __init__(self, value, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self.value = value
+            self._read()
+
+        def _read(self):
+            pass
+
+        @property
+        def read(self):
+            if hasattr(self, '_m_read'):
+                return self._m_read if hasattr(self, '_m_read') else None
+
+            self._m_read = (self.value & 4) != 0
+            return self._m_read if hasattr(self, '_m_read') else None
+
+        @property
+        def write(self):
+            if hasattr(self, '_m_write'):
+                return self._m_write if hasattr(self, '_m_write') else None
+
+            self._m_write = (self.value & 2) != 0
+            return self._m_write if hasattr(self, '_m_write') else None
+
+        @property
+        def execute(self):
+            if hasattr(self, '_m_execute'):
+                return self._m_execute if hasattr(self, '_m_execute') else None
+
+            self._m_execute = (self.value & 1) != 0
+            return self._m_execute if hasattr(self, '_m_execute') else None
+
+        @property
+        def mask_proc(self):
+            if hasattr(self, '_m_mask_proc'):
+                return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
+
+            self._m_mask_proc = (self.value & 4026531840) != 0
+            return self._m_mask_proc if hasattr(self, '_m_mask_proc') else None
+
+
+    class DtFlagValues(KaitaiStruct):
+        """
+        .. seealso::
+           Figure 5-11: DT_FLAGS values - https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html
+        
+        
+        .. seealso::
+           Source - https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095
+        
+        
+        .. seealso::
+           Source - https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5
+        """
+        def __init__(self, value, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self.value = value
+            self._read()
+
+        def _read(self):
+            pass
+
+        @property
+        def bind_now(self):
+            """all relocations for this object must be processed before returning
+            control to the program
+            """
+            if hasattr(self, '_m_bind_now'):
+                return self._m_bind_now if hasattr(self, '_m_bind_now') else None
+
+            self._m_bind_now = (self.value & 8) != 0
+            return self._m_bind_now if hasattr(self, '_m_bind_now') else None
+
+        @property
+        def origin(self):
+            """object may reference the $ORIGIN substitution string."""
+            if hasattr(self, '_m_origin'):
+                return self._m_origin if hasattr(self, '_m_origin') else None
+
+            self._m_origin = (self.value & 1) != 0
+            return self._m_origin if hasattr(self, '_m_origin') else None
+
+        @property
+        def textrel(self):
+            """relocation entries might request modifications to a non-writable segment."""
+            if hasattr(self, '_m_textrel'):
+                return self._m_textrel if hasattr(self, '_m_textrel') else None
+
+            self._m_textrel = (self.value & 4) != 0
+            return self._m_textrel if hasattr(self, '_m_textrel') else None
+
+        @property
+        def static_tls(self):
+            """object uses static thread-local storage scheme."""
+            if hasattr(self, '_m_static_tls'):
+                return self._m_static_tls if hasattr(self, '_m_static_tls') else None
+
+            self._m_static_tls = (self.value & 16) != 0
+            return self._m_static_tls if hasattr(self, '_m_static_tls') else None
+
+        @property
+        def symbolic(self):
+            """symbolic linking."""
+            if hasattr(self, '_m_symbolic'):
+                return self._m_symbolic if hasattr(self, '_m_symbolic') else None
+
+            self._m_symbolic = (self.value & 2) != 0
+            return self._m_symbolic if hasattr(self, '_m_symbolic') else None
 
 
     @property

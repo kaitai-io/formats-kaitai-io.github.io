@@ -843,578 +843,6 @@ section#format-index .row {
 <span class="c1">-- Version of ABI targeted by this ELF file. Interpretation</span>
 <span class="c1">-- depends on `abi` attribute.</span>
 
-<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">read</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">read</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">write</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">write</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">execute</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">execute</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask_proc</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask_proc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
-<span class="kr">end</span>
-
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- might be merged.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">merge</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">merge</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- OS-specific.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask_os</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask_os</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- section is excluded unless referenced or allocated (Solaris).</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">exclude</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">exclude</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Processor-specific.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask_proc</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask_proc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- contains nul-terminated strings.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">strings</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">strings</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- non-standard OS specific handling required.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">os_non_conforming</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">os_non_conforming</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- occupies memory during execution.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">alloc</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">alloc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- executable.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">exec_instr</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">exec_instr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- &#39;sh_info&#39; contains SHT index.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">info_link</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">info_link</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- writable.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">write</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">write</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- preserve order after combining.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">link_order</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">link_order</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- special ordering requirement (Solaris).</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ordered</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ordered</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- section hold thread-local data.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tls</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tls</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- section is member of a group.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">group</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">group</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
-<span class="kr">end</span>
-
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
-
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
-  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
-  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Singleton symbols are used.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">singleton</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">singleton</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ignmuldef</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ignmuldef</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Trigger filtee loading at runtime.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">loadfltr</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">loadfltr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Set RTLD_INITFIRST for this object.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">initfirst</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">initfirst</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Object has individual interposers.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symintpose</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symintpose</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">noreloc</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">noreloc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Configuration alternative created.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">confalt</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">confalt</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Disp reloc applied at build time.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">dispreldne</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">dispreldne</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Set RTLD_GLOBAL for this object.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">rtld_global</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">rtld_global</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Set RTLD_NODELETE for this object.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodelete</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodelete</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">trans</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">trans</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- $ORIGIN must be handled.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">origin</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">origin</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Set RTLD_NOW for this object.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">now</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">now</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nohdr</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nohdr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Filtee terminates filters search.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">endfiltee</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">endfiltee</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Object has no-direct binding.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodirect</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodirect</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Global auditing required.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">globaudit</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">globaudit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">noksyms</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">noksyms</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Object is used to interpose.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">interpose</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">interpose</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Object can&#39;t be dldump&#39;ed.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodump</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodump</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Disp reloc applied at run-time.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">disprelpnd</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">disprelpnd</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Set RTLD_NOOPEN for this object.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">noopen</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">noopen</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">stub</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">stub</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Direct binding enabled.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">direct</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">direct</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Object is modified after built.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">edited</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">edited</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Set RTLD_GROUP for this object.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">group</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">group</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
-<span class="kr">end</span>
-
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">pie</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">pie</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span>
-<span class="kr">end</span>
-
-<span class="c1">-- </span>
-<span class="c1">-- Ignore default lib search path.</span>
-<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodeflib</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodeflib</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span>
-<span class="kr">end</span>
-
-
 <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
@@ -1817,16 +1245,6 @@ section#format-index .row {
   <span class="kr">end</span>
 <span class="kr">end</span>
 
-<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tag_enum</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">DynamicSectionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tag_enum</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
-  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
-    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span>
-  <span class="kr">end</span>
-
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">DynamicArrayTags</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">tag</span><span class="p">)</span>
-  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span>
-<span class="kr">end</span>
-
 <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_1_values</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">DynamicSectionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_1_values</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_1_values</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
@@ -1861,6 +1279,32 @@ section#format-index .row {
     <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
   <span class="kr">end</span>
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_value_str</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tag_enum</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">DynamicSectionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tag_enum</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">DynamicArrayTags</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">tag</span><span class="p">)</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tag_enum</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">flag_values</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">EndianElf</span><span class="p">.</span><span class="nc">DynamicSectionEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">flag_values</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_values</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_values</span>
+  <span class="kr">end</span>
+
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">tag_enum</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="n">DynamicArrayTags</span><span class="p">.</span><span class="n">flags</span> <span class="kr">then</span>
+    <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_is_le</span> <span class="kr">then</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_values</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_or_ptr</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">else</span>
+      <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_values</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value_or_ptr</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+    <span class="kr">end</span>
+  <span class="kr">end</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_flag_values</span>
 <span class="kr">end</span>
 
 <span class="n">Elf</span><span class="p">.</span><span class="n">EndianElf</span><span class="p">.</span><span class="n">DynamicSectionEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_value_str</span> <span class="o">=</span> <span class="p">{}</span>
@@ -2571,6 +2015,657 @@ section#format-index .row {
     <span class="n">self</span><span class="p">.</span><span class="n">entries</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">str_decode</span><span class="p">.</span><span class="n">decode</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
   <span class="kr">end</span>
+<span class="kr">end</span>
+
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Singleton symbols are used.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">singleton</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">singleton</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_singleton</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ignmuldef</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ignmuldef</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ignmuldef</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Trigger filtee loading at runtime.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">loadfltr</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">loadfltr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_loadfltr</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Set RTLD_INITFIRST for this object.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">initfirst</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">initfirst</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_initfirst</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Object has individual interposers.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symintpose</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symintpose</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symintpose</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">noreloc</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">noreloc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noreloc</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Configuration alternative created.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">confalt</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">confalt</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_confalt</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Disp reloc applied at build time.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">dispreldne</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">dispreldne</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_dispreldne</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Set RTLD_GLOBAL for this object.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">rtld_global</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">rtld_global</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_rtld_global</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Set RTLD_NODELETE for this object.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodelete</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodelete</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodelete</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">trans</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">trans</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_trans</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- $ORIGIN must be handled.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">origin</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">origin</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Set RTLD_NOW for this object.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">now</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">now</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_now</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nohdr</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nohdr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nohdr</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Filtee terminates filters search.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">endfiltee</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">endfiltee</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_endfiltee</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Object has no-direct binding.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodirect</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodirect</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodirect</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Global auditing required.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">globaudit</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">globaudit</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_globaudit</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">noksyms</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">noksyms</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noksyms</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Object is used to interpose.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">interpose</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">interpose</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_interpose</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Object can&#39;t be dldump&#39;ed.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodump</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodump</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodump</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Disp reloc applied at run-time.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">disprelpnd</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">disprelpnd</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_disprelpnd</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Set RTLD_NOOPEN for this object.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">noopen</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">noopen</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_noopen</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">stub</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">stub</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_stub</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Direct binding enabled.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">direct</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">direct</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_direct</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Object is modified after built.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">edited</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">edited</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_edited</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Set RTLD_GROUP for this object.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">group</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">group</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">pie</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">pie</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_pie</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Ignore default lib search path.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlag1Values</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">nodeflib</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlag1Values</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">nodeflib</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_nodeflib</span>
+<span class="kr">end</span>
+
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- might be merged.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">merge</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">merge</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_merge</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- OS-specific.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask_os</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask_os</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_os</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- section is excluded unless referenced or allocated (Solaris).</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">exclude</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">exclude</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exclude</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- Processor-specific.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask_proc</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask_proc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- contains nul-terminated strings.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">strings</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">strings</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_strings</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- non-standard OS specific handling required.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">os_non_conforming</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">os_non_conforming</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_os_non_conforming</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- occupies memory during execution.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">alloc</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">alloc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_alloc</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- executable.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">exec_instr</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">exec_instr</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_exec_instr</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- &#39;sh_info&#39; contains SHT index.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">info_link</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">info_link</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_info_link</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- writable.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">write</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">write</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- preserve order after combining.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">link_order</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">link_order</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_link_order</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- special ordering requirement (Solaris).</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">ordered</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">ordered</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_ordered</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- section hold thread-local data.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">tls</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">tls</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_tls</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- section is member of a group.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">SectionHeaderFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">group</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">SectionHeaderFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">group</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_group</span>
+<span class="kr">end</span>
+
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">read</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">read</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_read</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">write</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">write</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_write</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">execute</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">execute</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_execute</span>
+<span class="kr">end</span>
+
+<span class="n">Elf</span><span class="p">.</span><span class="n">PhdrTypeFlags</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">mask_proc</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">PhdrTypeFlags</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">mask_proc</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4026531840</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_mask_proc</span>
+<span class="kr">end</span>
+
+
+<span class="c1">-- </span>
+<span class="c1">-- See also: Figure 5-11: DT_FLAGS values (https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html)</span>
+<span class="c1">-- See also: Source (https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095)</span>
+<span class="c1">-- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5)</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+  <span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+  <span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- all relocations for this object must be processed before returning</span>
+<span class="c1">-- control to the program</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">bind_now</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">bind_now</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_bind_now</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_bind_now</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_bind_now</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_bind_now</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- object may reference the $ORIGIN substitution string.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">origin</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">origin</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_origin</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- relocation entries might request modifications to a non-writable segment.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">textrel</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">textrel</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_textrel</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_textrel</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_textrel</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_textrel</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- object uses static thread-local storage scheme.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">static_tls</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">static_tls</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_static_tls</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_static_tls</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_static_tls</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_static_tls</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- symbolic linking.</span>
+<span class="n">Elf</span><span class="p">.</span><span class="n">DtFlagValues</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">symbolic</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Elf</span><span class="p">.</span><span class="nc">DtFlagValues</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">symbolic</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbolic</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbolic</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_symbolic</span> <span class="o">=</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">value</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">~=</span> <span class="mi">0</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_symbolic</span>
 <span class="kr">end</span>
 </pre></div>
 

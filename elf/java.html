@@ -942,592 +942,6 @@ for instructions how to add it into your project with the build tool that you us
         <span class="k">this</span><span class="p">.</span><span class="na">pad</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="na">header</span> <span class="o">=</span> <span class="k">new</span> <span class="n">EndianElf</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
     <span class="p">}</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PhdrTypeFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
-
-        <span class="kd">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">read</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">read</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">read</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">read</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">read</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">read</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">write</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">execute</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">execute</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">execute</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execute</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">execute</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execute</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">maskProc</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840L</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="n">_parent</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SectionHeaderFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
-
-        <span class="kd">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">merge</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * might be merged</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">merge</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">merge</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">merge</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">merge</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">merge</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">maskOs</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * OS-specific</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">maskOs</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">maskOs</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskOs</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">maskOs</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskOs</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">exclude</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * section is excluded unless referenced or allocated (Solaris)</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">exclude</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">exclude</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">exclude</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">exclude</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">exclude</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">maskProc</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Processor-specific</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840L</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">strings</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * contains nul-terminated strings</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">strings</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">strings</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">strings</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">strings</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">strings</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">osNonConforming</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * non-standard OS specific handling required</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">osNonConforming</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">alloc</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * occupies memory during execution</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">alloc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">alloc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">alloc</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">alloc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">alloc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">execInstr</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * executable</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">execInstr</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">execInstr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execInstr</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">execInstr</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execInstr</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">infoLink</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * &#39;sh_info&#39; contains SHT index</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">infoLink</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">infoLink</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">infoLink</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">infoLink</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">infoLink</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">write</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * writable</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">linkOrder</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * preserve order after combining</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">linkOrder</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">ordered</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * special ordering requirement (Solaris)</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">ordered</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">ordered</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ordered</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">ordered</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ordered</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">tls</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * section hold thread-local data</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">tls</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">tls</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tls</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">tls</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tls</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">group</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * section is member of a group</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="n">_parent</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DtFlag1Values</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
-
-        <span class="kd">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
-        <span class="p">}</span>
-
-        <span class="kd">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
-            <span class="n">_read</span><span class="p">();</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">singleton</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Singleton symbols are used.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">singleton</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">singleton</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">singleton</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">singleton</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">singleton</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">ignmuldef</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">ignmuldef</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">loadfltr</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Trigger filtee loading at runtime.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">loadfltr</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">initfirst</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set RTLD_INITFIRST for this object</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">initfirst</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">initfirst</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">initfirst</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">initfirst</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">initfirst</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">symintpose</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Object has individual interposers.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">symintpose</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">symintpose</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">symintpose</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">symintpose</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">symintpose</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">noreloc</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">noreloc</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">noreloc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noreloc</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">noreloc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noreloc</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">confalt</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Configuration alternative created.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">confalt</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">confalt</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">confalt</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">confalt</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">confalt</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">dispreldne</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Disp reloc applied at build time.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">dispreldne</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">rtldGlobal</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set RTLD_GLOBAL for this object.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">rtldGlobal</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodelete</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set RTLD_NODELETE for this object.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodelete</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodelete</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodelete</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">nodelete</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodelete</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">trans</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">trans</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">trans</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">trans</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">trans</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">trans</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">origin</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * $ORIGIN must be handled.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">origin</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">origin</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">origin</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">origin</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">origin</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">now</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set RTLD_NOW for this object.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">now</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">now</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">now</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">now</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">now</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nohdr</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nohdr</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nohdr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nohdr</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">nohdr</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nohdr</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">endfiltee</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Filtee terminates filters search.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">endfiltee</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodirect</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Object has no-direct binding.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodirect</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodirect</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodirect</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">nodirect</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodirect</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">globaudit</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Global auditing required.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">globaudit</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">globaudit</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">globaudit</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">globaudit</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">globaudit</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">noksyms</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">noksyms</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">noksyms</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noksyms</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">noksyms</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noksyms</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">interpose</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Object is used to interpose.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">interpose</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">interpose</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">interpose</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">interpose</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">interpose</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodump</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Object can&#39;t be dldump&#39;ed.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodump</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodump</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodump</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">nodump</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodump</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">disprelpnd</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Disp reloc applied at run-time.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">disprelpnd</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">noopen</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set RTLD_NOOPEN for this object.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">noopen</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">noopen</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noopen</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">noopen</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noopen</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">stub</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">stub</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">stub</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">stub</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">stub</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">direct</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Direct binding enabled.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">direct</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">direct</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">direct</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">direct</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">direct</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">edited</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Object is modified after built.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">edited</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">edited</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">edited</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">edited</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">edited</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">group</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Set RTLD_GROUP for this object.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">pie</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">pie</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">pie</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">pie</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">pie</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">pie</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodeflib</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * Ignore default lib search path.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodeflib</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span><span class="p">;</span>
-            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span><span class="p">;</span>
-        <span class="p">}</span>
-        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">;</span>
-        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
-    <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">EndianElf</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">EndianElf</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
             <span class="k">return</span> <span class="k">new</span> <span class="n">EndianElf</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -2105,13 +1519,6 @@ for instructions how to add it into your project with the build tool that you us
                     <span class="p">}</span>
                 <span class="p">}</span>
             <span class="p">}</span>
-            <span class="kd">private</span> <span class="n">DynamicArrayTags</span> <span class="n">tagEnum</span><span class="p">;</span>
-            <span class="kd">public</span> <span class="n">DynamicArrayTags</span> <span class="nf">tagEnum</span><span class="p">()</span> <span class="p">{</span>
-                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span><span class="p">;</span>
-                <span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">DynamicArrayTags</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="n">tag</span><span class="p">());</span>
-                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span><span class="p">;</span>
-            <span class="p">}</span>
             <span class="kd">private</span> <span class="n">DtFlag1Values</span> <span class="n">flag1Values</span><span class="p">;</span>
             <span class="kd">public</span> <span class="n">DtFlag1Values</span> <span class="nf">flag1Values</span><span class="p">()</span> <span class="p">{</span>
                 <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">flag1Values</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
@@ -2141,6 +1548,26 @@ for instructions how to add it into your project with the build tool that you us
                     <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
                 <span class="p">}</span>
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">valueStr</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">DynamicArrayTags</span> <span class="n">tagEnum</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">DynamicArrayTags</span> <span class="nf">tagEnum</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span> <span class="o">=</span> <span class="n">Elf</span><span class="p">.</span><span class="na">DynamicArrayTags</span><span class="p">.</span><span class="na">byId</span><span class="p">(</span><span class="n">tag</span><span class="p">());</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tagEnum</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="kd">private</span> <span class="n">DtFlagValues</span> <span class="n">flagValues</span><span class="p">;</span>
+            <span class="kd">public</span> <span class="n">DtFlagValues</span> <span class="nf">flagValues</span><span class="p">()</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">flagValues</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">flagValues</span><span class="p">;</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">tagEnum</span><span class="p">()</span> <span class="o">==</span> <span class="n">Elf</span><span class="p">.</span><span class="na">DynamicArrayTags</span><span class="p">.</span><span class="na">FLAGS</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">_is_le</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">flagValues</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DtFlagValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">valueOrPtr</span><span class="p">());</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">flagValues</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DtFlagValues</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">,</span> <span class="n">valueOrPtr</span><span class="p">());</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">flagValues</span><span class="p">;</span>
             <span class="p">}</span>
             <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isValueStr</span><span class="p">;</span>
             <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isValueStr</span><span class="p">()</span> <span class="p">{</span>
@@ -3248,6 +2675,685 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="nf">_raw_programHeaders</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_programHeaders</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="kt">byte</span><span class="o">[]&gt;</span> <span class="nf">_raw_sectionHeaders</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_sectionHeaders</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">_raw_sectionNames</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_raw_sectionNames</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DtFlag1Values</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+        <span class="kd">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DtFlag1Values</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">singleton</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Singleton symbols are used.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">singleton</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">singleton</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">singleton</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">33554432</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">singleton</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">singleton</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">ignmuldef</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">ignmuldef</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">262144</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ignmuldef</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">loadfltr</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Trigger filtee loading at runtime.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">loadfltr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">loadfltr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">initfirst</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set RTLD_INITFIRST for this object</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">initfirst</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">initfirst</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">initfirst</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">initfirst</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">initfirst</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">symintpose</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Object has individual interposers.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">symintpose</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">symintpose</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">symintpose</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8388608</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">symintpose</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">symintpose</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">noreloc</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">noreloc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">noreloc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noreloc</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4194304</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">noreloc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noreloc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">confalt</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Configuration alternative created.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">confalt</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">confalt</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">confalt</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8192</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">confalt</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">confalt</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">dispreldne</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Disp reloc applied at build time.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">dispreldne</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32768</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">dispreldne</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">rtldGlobal</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set RTLD_GLOBAL for this object.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">rtldGlobal</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">rtldGlobal</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodelete</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set RTLD_NODELETE for this object.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodelete</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodelete</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodelete</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nodelete</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodelete</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">trans</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">trans</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">trans</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">trans</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">trans</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">trans</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">origin</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * $ORIGIN must be handled.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">origin</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">origin</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">origin</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">origin</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">origin</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">now</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set RTLD_NOW for this object.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">now</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">now</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">now</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">now</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">now</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nohdr</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nohdr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nohdr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nohdr</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1048576</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nohdr</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nohdr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">endfiltee</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Filtee terminates filters search.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">endfiltee</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16384</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">endfiltee</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodirect</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Object has no-direct binding.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodirect</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodirect</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodirect</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">131072</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nodirect</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodirect</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">globaudit</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Global auditing required.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">globaudit</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">globaudit</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">globaudit</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16777216</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">globaudit</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">globaudit</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">noksyms</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">noksyms</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">noksyms</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noksyms</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">524288</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">noksyms</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noksyms</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">interpose</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Object is used to interpose.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">interpose</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">interpose</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">interpose</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">interpose</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">interpose</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodump</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Object can&#39;t be dldump&#39;ed.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodump</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodump</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodump</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4096</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nodump</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodump</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">disprelpnd</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Disp reloc applied at run-time.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">disprelpnd</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">65536</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">disprelpnd</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">noopen</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set RTLD_NOOPEN for this object.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">noopen</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">noopen</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noopen</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">noopen</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">noopen</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">stub</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">stub</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">stub</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">stub</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">stub</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">stub</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">direct</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Direct binding enabled.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">direct</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">direct</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">direct</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">direct</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">direct</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">edited</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Object is modified after built.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">edited</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">edited</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">edited</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2097152</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">edited</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">edited</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">group</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Set RTLD_GROUP for this object.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">pie</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">pie</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">pie</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">pie</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">pie</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">pie</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">nodeflib</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Ignore default lib search path.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">nodeflib</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2048</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">nodeflib</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">SectionHeaderFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+        <span class="kd">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">SectionHeaderFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">merge</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * might be merged</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">merge</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">merge</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">merge</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">merge</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">merge</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">maskOs</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * OS-specific</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">maskOs</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">maskOs</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskOs</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">267386880</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">maskOs</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskOs</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">exclude</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * section is excluded unless referenced or allocated (Solaris)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">exclude</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">exclude</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">exclude</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">134217728</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">exclude</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">exclude</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">maskProc</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Processor-specific</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840L</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">strings</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * contains nul-terminated strings</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">strings</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">strings</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">strings</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">32</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">strings</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">strings</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">osNonConforming</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * non-standard OS specific handling required</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">osNonConforming</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">256</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">osNonConforming</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">alloc</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * occupies memory during execution</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">alloc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">alloc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">alloc</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">alloc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">alloc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">execInstr</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * executable</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">execInstr</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">execInstr</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execInstr</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">execInstr</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execInstr</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">infoLink</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * &#39;sh_info&#39; contains SHT index</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">infoLink</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">infoLink</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">infoLink</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">64</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">infoLink</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">infoLink</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">write</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * writable</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">linkOrder</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * preserve order after combining</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">linkOrder</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">128</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">linkOrder</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">ordered</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * special ordering requirement (Solaris)</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">ordered</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">ordered</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ordered</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">67108864</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ordered</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">ordered</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">tls</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * section hold thread-local data</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">tls</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">tls</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tls</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1024</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">tls</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">tls</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">group</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * section is member of a group</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">group</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">512</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">group</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">group</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">SectionHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PhdrTypeFlags</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+        <span class="kd">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PhdrTypeFlags</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">read</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">read</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">read</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">read</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">read</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">write</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">write</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">write</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">write</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">execute</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">execute</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">execute</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execute</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">execute</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">execute</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">maskProc</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">maskProc</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4026531840L</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">maskProc</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">ProgramHeader</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html&quot;&gt;Figure 5-11: DT_FLAGS values&lt;/a&gt;</span>
+<span class="cm">     * @see &lt;a href=&quot;https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     * @see &lt;a href=&quot;https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">DtFlagValues</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+
+        <span class="kd">public</span> <span class="nf">DtFlagValues</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DtFlagValues</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="n">value</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">DtFlagValues</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">,</span> <span class="kt">long</span> <span class="n">value</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">value</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">bindNow</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * all relocations for this object must be processed before returning</span>
+<span class="cm">         * control to the program</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">bindNow</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">bindNow</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">bindNow</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">8</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">bindNow</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">bindNow</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">origin</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * object may reference the $ORIGIN substitution string</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">origin</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">origin</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">origin</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">origin</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">origin</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">textrel</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * relocation entries might request modifications to a non-writable segment</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">textrel</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">textrel</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">textrel</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">4</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">textrel</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">textrel</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">staticTls</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * object uses static thread-local storage scheme</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">staticTls</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">staticTls</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">staticTls</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">16</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">staticTls</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">staticTls</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">symbolic</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * symbolic linking</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">symbolic</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">symbolic</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">symbolic</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">((</span><span class="n">value</span><span class="p">()</span> <span class="o">&amp;</span> <span class="mi">2</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">symbolic</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">symbolic</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">value</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">value</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">value</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Elf</span><span class="p">.</span><span class="na">EndianElf</span><span class="p">.</span><span class="na">DynamicSectionEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">private</span> <span class="n">Integer</span> <span class="n">shIdxLoOs</span><span class="p">;</span>
     <span class="kd">public</span> <span class="n">Integer</span> <span class="nf">shIdxLoOs</span><span class="p">()</span> <span class="p">{</span>

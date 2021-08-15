@@ -49,489 +49,6 @@ void elf_t::_clean_up() {
     }
 }
 
-elf_t::phdr_type_flags_t::phdr_type_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::program_header_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_value = p_value;
-    f_read = false;
-    f_write = false;
-    f_execute = false;
-    f_mask_proc = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void elf_t::phdr_type_flags_t::_read() {
-}
-
-elf_t::phdr_type_flags_t::~phdr_type_flags_t() {
-    _clean_up();
-}
-
-void elf_t::phdr_type_flags_t::_clean_up() {
-}
-
-bool elf_t::phdr_type_flags_t::read() {
-    if (f_read)
-        return m_read;
-    m_read = (value() & 4) != 0;
-    f_read = true;
-    return m_read;
-}
-
-bool elf_t::phdr_type_flags_t::write() {
-    if (f_write)
-        return m_write;
-    m_write = (value() & 2) != 0;
-    f_write = true;
-    return m_write;
-}
-
-bool elf_t::phdr_type_flags_t::execute() {
-    if (f_execute)
-        return m_execute;
-    m_execute = (value() & 1) != 0;
-    f_execute = true;
-    return m_execute;
-}
-
-bool elf_t::phdr_type_flags_t::mask_proc() {
-    if (f_mask_proc)
-        return m_mask_proc;
-    m_mask_proc = (value() & 4026531840UL) != 0;
-    f_mask_proc = true;
-    return m_mask_proc;
-}
-
-elf_t::section_header_flags_t::section_header_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_value = p_value;
-    f_merge = false;
-    f_mask_os = false;
-    f_exclude = false;
-    f_mask_proc = false;
-    f_strings = false;
-    f_os_non_conforming = false;
-    f_alloc = false;
-    f_exec_instr = false;
-    f_info_link = false;
-    f_write = false;
-    f_link_order = false;
-    f_ordered = false;
-    f_tls = false;
-    f_group = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void elf_t::section_header_flags_t::_read() {
-}
-
-elf_t::section_header_flags_t::~section_header_flags_t() {
-    _clean_up();
-}
-
-void elf_t::section_header_flags_t::_clean_up() {
-}
-
-bool elf_t::section_header_flags_t::merge() {
-    if (f_merge)
-        return m_merge;
-    m_merge = (value() & 16) != 0;
-    f_merge = true;
-    return m_merge;
-}
-
-bool elf_t::section_header_flags_t::mask_os() {
-    if (f_mask_os)
-        return m_mask_os;
-    m_mask_os = (value() & 267386880) != 0;
-    f_mask_os = true;
-    return m_mask_os;
-}
-
-bool elf_t::section_header_flags_t::exclude() {
-    if (f_exclude)
-        return m_exclude;
-    m_exclude = (value() & 134217728) != 0;
-    f_exclude = true;
-    return m_exclude;
-}
-
-bool elf_t::section_header_flags_t::mask_proc() {
-    if (f_mask_proc)
-        return m_mask_proc;
-    m_mask_proc = (value() & 4026531840UL) != 0;
-    f_mask_proc = true;
-    return m_mask_proc;
-}
-
-bool elf_t::section_header_flags_t::strings() {
-    if (f_strings)
-        return m_strings;
-    m_strings = (value() & 32) != 0;
-    f_strings = true;
-    return m_strings;
-}
-
-bool elf_t::section_header_flags_t::os_non_conforming() {
-    if (f_os_non_conforming)
-        return m_os_non_conforming;
-    m_os_non_conforming = (value() & 256) != 0;
-    f_os_non_conforming = true;
-    return m_os_non_conforming;
-}
-
-bool elf_t::section_header_flags_t::alloc() {
-    if (f_alloc)
-        return m_alloc;
-    m_alloc = (value() & 2) != 0;
-    f_alloc = true;
-    return m_alloc;
-}
-
-bool elf_t::section_header_flags_t::exec_instr() {
-    if (f_exec_instr)
-        return m_exec_instr;
-    m_exec_instr = (value() & 4) != 0;
-    f_exec_instr = true;
-    return m_exec_instr;
-}
-
-bool elf_t::section_header_flags_t::info_link() {
-    if (f_info_link)
-        return m_info_link;
-    m_info_link = (value() & 64) != 0;
-    f_info_link = true;
-    return m_info_link;
-}
-
-bool elf_t::section_header_flags_t::write() {
-    if (f_write)
-        return m_write;
-    m_write = (value() & 1) != 0;
-    f_write = true;
-    return m_write;
-}
-
-bool elf_t::section_header_flags_t::link_order() {
-    if (f_link_order)
-        return m_link_order;
-    m_link_order = (value() & 128) != 0;
-    f_link_order = true;
-    return m_link_order;
-}
-
-bool elf_t::section_header_flags_t::ordered() {
-    if (f_ordered)
-        return m_ordered;
-    m_ordered = (value() & 67108864) != 0;
-    f_ordered = true;
-    return m_ordered;
-}
-
-bool elf_t::section_header_flags_t::tls() {
-    if (f_tls)
-        return m_tls;
-    m_tls = (value() & 1024) != 0;
-    f_tls = true;
-    return m_tls;
-}
-
-bool elf_t::section_header_flags_t::group() {
-    if (f_group)
-        return m_group;
-    m_group = (value() & 512) != 0;
-    f_group = true;
-    return m_group;
-}
-
-elf_t::dt_flag_1_values_t::dt_flag_1_values_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_entry_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
-    m__parent = p__parent;
-    m__root = p__root;
-    m_value = p_value;
-    f_singleton = false;
-    f_ignmuldef = false;
-    f_loadfltr = false;
-    f_initfirst = false;
-    f_symintpose = false;
-    f_noreloc = false;
-    f_confalt = false;
-    f_dispreldne = false;
-    f_rtld_global = false;
-    f_nodelete = false;
-    f_trans = false;
-    f_origin = false;
-    f_now = false;
-    f_nohdr = false;
-    f_endfiltee = false;
-    f_nodirect = false;
-    f_globaudit = false;
-    f_noksyms = false;
-    f_interpose = false;
-    f_nodump = false;
-    f_disprelpnd = false;
-    f_noopen = false;
-    f_stub = false;
-    f_direct = false;
-    f_edited = false;
-    f_group = false;
-    f_pie = false;
-    f_nodeflib = false;
-
-    try {
-        _read();
-    } catch(...) {
-        _clean_up();
-        throw;
-    }
-}
-
-void elf_t::dt_flag_1_values_t::_read() {
-}
-
-elf_t::dt_flag_1_values_t::~dt_flag_1_values_t() {
-    _clean_up();
-}
-
-void elf_t::dt_flag_1_values_t::_clean_up() {
-}
-
-bool elf_t::dt_flag_1_values_t::singleton() {
-    if (f_singleton)
-        return m_singleton;
-    m_singleton = (value() & 33554432) != 0;
-    f_singleton = true;
-    return m_singleton;
-}
-
-bool elf_t::dt_flag_1_values_t::ignmuldef() {
-    if (f_ignmuldef)
-        return m_ignmuldef;
-    m_ignmuldef = (value() & 262144) != 0;
-    f_ignmuldef = true;
-    return m_ignmuldef;
-}
-
-bool elf_t::dt_flag_1_values_t::loadfltr() {
-    if (f_loadfltr)
-        return m_loadfltr;
-    m_loadfltr = (value() & 16) != 0;
-    f_loadfltr = true;
-    return m_loadfltr;
-}
-
-bool elf_t::dt_flag_1_values_t::initfirst() {
-    if (f_initfirst)
-        return m_initfirst;
-    m_initfirst = (value() & 32) != 0;
-    f_initfirst = true;
-    return m_initfirst;
-}
-
-bool elf_t::dt_flag_1_values_t::symintpose() {
-    if (f_symintpose)
-        return m_symintpose;
-    m_symintpose = (value() & 8388608) != 0;
-    f_symintpose = true;
-    return m_symintpose;
-}
-
-bool elf_t::dt_flag_1_values_t::noreloc() {
-    if (f_noreloc)
-        return m_noreloc;
-    m_noreloc = (value() & 4194304) != 0;
-    f_noreloc = true;
-    return m_noreloc;
-}
-
-bool elf_t::dt_flag_1_values_t::confalt() {
-    if (f_confalt)
-        return m_confalt;
-    m_confalt = (value() & 8192) != 0;
-    f_confalt = true;
-    return m_confalt;
-}
-
-bool elf_t::dt_flag_1_values_t::dispreldne() {
-    if (f_dispreldne)
-        return m_dispreldne;
-    m_dispreldne = (value() & 32768) != 0;
-    f_dispreldne = true;
-    return m_dispreldne;
-}
-
-bool elf_t::dt_flag_1_values_t::rtld_global() {
-    if (f_rtld_global)
-        return m_rtld_global;
-    m_rtld_global = (value() & 2) != 0;
-    f_rtld_global = true;
-    return m_rtld_global;
-}
-
-bool elf_t::dt_flag_1_values_t::nodelete() {
-    if (f_nodelete)
-        return m_nodelete;
-    m_nodelete = (value() & 8) != 0;
-    f_nodelete = true;
-    return m_nodelete;
-}
-
-bool elf_t::dt_flag_1_values_t::trans() {
-    if (f_trans)
-        return m_trans;
-    m_trans = (value() & 512) != 0;
-    f_trans = true;
-    return m_trans;
-}
-
-bool elf_t::dt_flag_1_values_t::origin() {
-    if (f_origin)
-        return m_origin;
-    m_origin = (value() & 128) != 0;
-    f_origin = true;
-    return m_origin;
-}
-
-bool elf_t::dt_flag_1_values_t::now() {
-    if (f_now)
-        return m_now;
-    m_now = (value() & 1) != 0;
-    f_now = true;
-    return m_now;
-}
-
-bool elf_t::dt_flag_1_values_t::nohdr() {
-    if (f_nohdr)
-        return m_nohdr;
-    m_nohdr = (value() & 1048576) != 0;
-    f_nohdr = true;
-    return m_nohdr;
-}
-
-bool elf_t::dt_flag_1_values_t::endfiltee() {
-    if (f_endfiltee)
-        return m_endfiltee;
-    m_endfiltee = (value() & 16384) != 0;
-    f_endfiltee = true;
-    return m_endfiltee;
-}
-
-bool elf_t::dt_flag_1_values_t::nodirect() {
-    if (f_nodirect)
-        return m_nodirect;
-    m_nodirect = (value() & 131072) != 0;
-    f_nodirect = true;
-    return m_nodirect;
-}
-
-bool elf_t::dt_flag_1_values_t::globaudit() {
-    if (f_globaudit)
-        return m_globaudit;
-    m_globaudit = (value() & 16777216) != 0;
-    f_globaudit = true;
-    return m_globaudit;
-}
-
-bool elf_t::dt_flag_1_values_t::noksyms() {
-    if (f_noksyms)
-        return m_noksyms;
-    m_noksyms = (value() & 524288) != 0;
-    f_noksyms = true;
-    return m_noksyms;
-}
-
-bool elf_t::dt_flag_1_values_t::interpose() {
-    if (f_interpose)
-        return m_interpose;
-    m_interpose = (value() & 1024) != 0;
-    f_interpose = true;
-    return m_interpose;
-}
-
-bool elf_t::dt_flag_1_values_t::nodump() {
-    if (f_nodump)
-        return m_nodump;
-    m_nodump = (value() & 4096) != 0;
-    f_nodump = true;
-    return m_nodump;
-}
-
-bool elf_t::dt_flag_1_values_t::disprelpnd() {
-    if (f_disprelpnd)
-        return m_disprelpnd;
-    m_disprelpnd = (value() & 65536) != 0;
-    f_disprelpnd = true;
-    return m_disprelpnd;
-}
-
-bool elf_t::dt_flag_1_values_t::noopen() {
-    if (f_noopen)
-        return m_noopen;
-    m_noopen = (value() & 64) != 0;
-    f_noopen = true;
-    return m_noopen;
-}
-
-bool elf_t::dt_flag_1_values_t::stub() {
-    if (f_stub)
-        return m_stub;
-    m_stub = (value() & 67108864) != 0;
-    f_stub = true;
-    return m_stub;
-}
-
-bool elf_t::dt_flag_1_values_t::direct() {
-    if (f_direct)
-        return m_direct;
-    m_direct = (value() & 256) != 0;
-    f_direct = true;
-    return m_direct;
-}
-
-bool elf_t::dt_flag_1_values_t::edited() {
-    if (f_edited)
-        return m_edited;
-    m_edited = (value() & 2097152) != 0;
-    f_edited = true;
-    return m_edited;
-}
-
-bool elf_t::dt_flag_1_values_t::group() {
-    if (f_group)
-        return m_group;
-    m_group = (value() & 4) != 0;
-    f_group = true;
-    return m_group;
-}
-
-bool elf_t::dt_flag_1_values_t::pie() {
-    if (f_pie)
-        return m_pie;
-    m_pie = (value() & 134217728) != 0;
-    f_pie = true;
-    return m_pie;
-}
-
-bool elf_t::dt_flag_1_values_t::nodeflib() {
-    if (f_nodeflib)
-        return m_nodeflib;
-    m_nodeflib = (value() & 2048) != 0;
-    f_nodeflib = true;
-    return m_nodeflib;
-}
-
 elf_t::endian_elf_t::endian_elf_t(kaitai::kstream* p__io, elf_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -1074,9 +591,11 @@ elf_t::endian_elf_t::dynamic_section_entry_t::dynamic_section_entry_t(kaitai::ks
     m__root = p__root;
     m__is_le = p_is_le;
     m_flag_1_values = 0;
-    f_tag_enum = false;
+    m_flag_values = 0;
     f_flag_1_values = false;
     f_value_str = false;
+    f_tag_enum = false;
+    f_flag_values = false;
     f_is_value_str = false;
 
     try {
@@ -1172,14 +691,11 @@ void elf_t::endian_elf_t::dynamic_section_entry_t::_clean_up() {
     }
     if (f_value_str && !n_value_str) {
     }
-}
-
-elf_t::dynamic_array_tags_t elf_t::endian_elf_t::dynamic_section_entry_t::tag_enum() {
-    if (f_tag_enum)
-        return m_tag_enum;
-    m_tag_enum = static_cast<elf_t::dynamic_array_tags_t>(tag());
-    f_tag_enum = true;
-    return m_tag_enum;
+    if (f_flag_values && !n_flag_values) {
+        if (m_flag_values) {
+            delete m_flag_values; m_flag_values = 0;
+        }
+    }
 }
 
 elf_t::dt_flag_1_values_t* elf_t::endian_elf_t::dynamic_section_entry_t::flag_1_values() {
@@ -1216,6 +732,30 @@ std::string elf_t::endian_elf_t::dynamic_section_entry_t::value_str() {
         f_value_str = true;
     }
     return m_value_str;
+}
+
+elf_t::dynamic_array_tags_t elf_t::endian_elf_t::dynamic_section_entry_t::tag_enum() {
+    if (f_tag_enum)
+        return m_tag_enum;
+    m_tag_enum = static_cast<elf_t::dynamic_array_tags_t>(tag());
+    f_tag_enum = true;
+    return m_tag_enum;
+}
+
+elf_t::dt_flag_values_t* elf_t::endian_elf_t::dynamic_section_entry_t::flag_values() {
+    if (f_flag_values)
+        return m_flag_values;
+    n_flag_values = true;
+    if (tag_enum() == elf_t::DYNAMIC_ARRAY_TAGS_FLAGS) {
+        n_flag_values = false;
+        if (m__is_le == 1) {
+            m_flag_values = new dt_flag_values_t(value_or_ptr(), m__io, this, m__root);
+        } else {
+            m_flag_values = new dt_flag_values_t(value_or_ptr(), m__io, this, m__root);
+        }
+        f_flag_values = true;
+    }
+    return m_flag_values;
 }
 
 bool elf_t::endian_elf_t::dynamic_section_entry_t::is_value_str() {
@@ -2348,6 +1888,557 @@ elf_t::endian_elf_t::strings_struct_t* elf_t::endian_elf_t::section_names() {
         f_section_names = true;
     }
     return m_section_names;
+}
+
+elf_t::dt_flag_1_values_t::dt_flag_1_values_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_entry_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_singleton = false;
+    f_ignmuldef = false;
+    f_loadfltr = false;
+    f_initfirst = false;
+    f_symintpose = false;
+    f_noreloc = false;
+    f_confalt = false;
+    f_dispreldne = false;
+    f_rtld_global = false;
+    f_nodelete = false;
+    f_trans = false;
+    f_origin = false;
+    f_now = false;
+    f_nohdr = false;
+    f_endfiltee = false;
+    f_nodirect = false;
+    f_globaudit = false;
+    f_noksyms = false;
+    f_interpose = false;
+    f_nodump = false;
+    f_disprelpnd = false;
+    f_noopen = false;
+    f_stub = false;
+    f_direct = false;
+    f_edited = false;
+    f_group = false;
+    f_pie = false;
+    f_nodeflib = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void elf_t::dt_flag_1_values_t::_read() {
+}
+
+elf_t::dt_flag_1_values_t::~dt_flag_1_values_t() {
+    _clean_up();
+}
+
+void elf_t::dt_flag_1_values_t::_clean_up() {
+}
+
+bool elf_t::dt_flag_1_values_t::singleton() {
+    if (f_singleton)
+        return m_singleton;
+    m_singleton = (value() & 33554432) != 0;
+    f_singleton = true;
+    return m_singleton;
+}
+
+bool elf_t::dt_flag_1_values_t::ignmuldef() {
+    if (f_ignmuldef)
+        return m_ignmuldef;
+    m_ignmuldef = (value() & 262144) != 0;
+    f_ignmuldef = true;
+    return m_ignmuldef;
+}
+
+bool elf_t::dt_flag_1_values_t::loadfltr() {
+    if (f_loadfltr)
+        return m_loadfltr;
+    m_loadfltr = (value() & 16) != 0;
+    f_loadfltr = true;
+    return m_loadfltr;
+}
+
+bool elf_t::dt_flag_1_values_t::initfirst() {
+    if (f_initfirst)
+        return m_initfirst;
+    m_initfirst = (value() & 32) != 0;
+    f_initfirst = true;
+    return m_initfirst;
+}
+
+bool elf_t::dt_flag_1_values_t::symintpose() {
+    if (f_symintpose)
+        return m_symintpose;
+    m_symintpose = (value() & 8388608) != 0;
+    f_symintpose = true;
+    return m_symintpose;
+}
+
+bool elf_t::dt_flag_1_values_t::noreloc() {
+    if (f_noreloc)
+        return m_noreloc;
+    m_noreloc = (value() & 4194304) != 0;
+    f_noreloc = true;
+    return m_noreloc;
+}
+
+bool elf_t::dt_flag_1_values_t::confalt() {
+    if (f_confalt)
+        return m_confalt;
+    m_confalt = (value() & 8192) != 0;
+    f_confalt = true;
+    return m_confalt;
+}
+
+bool elf_t::dt_flag_1_values_t::dispreldne() {
+    if (f_dispreldne)
+        return m_dispreldne;
+    m_dispreldne = (value() & 32768) != 0;
+    f_dispreldne = true;
+    return m_dispreldne;
+}
+
+bool elf_t::dt_flag_1_values_t::rtld_global() {
+    if (f_rtld_global)
+        return m_rtld_global;
+    m_rtld_global = (value() & 2) != 0;
+    f_rtld_global = true;
+    return m_rtld_global;
+}
+
+bool elf_t::dt_flag_1_values_t::nodelete() {
+    if (f_nodelete)
+        return m_nodelete;
+    m_nodelete = (value() & 8) != 0;
+    f_nodelete = true;
+    return m_nodelete;
+}
+
+bool elf_t::dt_flag_1_values_t::trans() {
+    if (f_trans)
+        return m_trans;
+    m_trans = (value() & 512) != 0;
+    f_trans = true;
+    return m_trans;
+}
+
+bool elf_t::dt_flag_1_values_t::origin() {
+    if (f_origin)
+        return m_origin;
+    m_origin = (value() & 128) != 0;
+    f_origin = true;
+    return m_origin;
+}
+
+bool elf_t::dt_flag_1_values_t::now() {
+    if (f_now)
+        return m_now;
+    m_now = (value() & 1) != 0;
+    f_now = true;
+    return m_now;
+}
+
+bool elf_t::dt_flag_1_values_t::nohdr() {
+    if (f_nohdr)
+        return m_nohdr;
+    m_nohdr = (value() & 1048576) != 0;
+    f_nohdr = true;
+    return m_nohdr;
+}
+
+bool elf_t::dt_flag_1_values_t::endfiltee() {
+    if (f_endfiltee)
+        return m_endfiltee;
+    m_endfiltee = (value() & 16384) != 0;
+    f_endfiltee = true;
+    return m_endfiltee;
+}
+
+bool elf_t::dt_flag_1_values_t::nodirect() {
+    if (f_nodirect)
+        return m_nodirect;
+    m_nodirect = (value() & 131072) != 0;
+    f_nodirect = true;
+    return m_nodirect;
+}
+
+bool elf_t::dt_flag_1_values_t::globaudit() {
+    if (f_globaudit)
+        return m_globaudit;
+    m_globaudit = (value() & 16777216) != 0;
+    f_globaudit = true;
+    return m_globaudit;
+}
+
+bool elf_t::dt_flag_1_values_t::noksyms() {
+    if (f_noksyms)
+        return m_noksyms;
+    m_noksyms = (value() & 524288) != 0;
+    f_noksyms = true;
+    return m_noksyms;
+}
+
+bool elf_t::dt_flag_1_values_t::interpose() {
+    if (f_interpose)
+        return m_interpose;
+    m_interpose = (value() & 1024) != 0;
+    f_interpose = true;
+    return m_interpose;
+}
+
+bool elf_t::dt_flag_1_values_t::nodump() {
+    if (f_nodump)
+        return m_nodump;
+    m_nodump = (value() & 4096) != 0;
+    f_nodump = true;
+    return m_nodump;
+}
+
+bool elf_t::dt_flag_1_values_t::disprelpnd() {
+    if (f_disprelpnd)
+        return m_disprelpnd;
+    m_disprelpnd = (value() & 65536) != 0;
+    f_disprelpnd = true;
+    return m_disprelpnd;
+}
+
+bool elf_t::dt_flag_1_values_t::noopen() {
+    if (f_noopen)
+        return m_noopen;
+    m_noopen = (value() & 64) != 0;
+    f_noopen = true;
+    return m_noopen;
+}
+
+bool elf_t::dt_flag_1_values_t::stub() {
+    if (f_stub)
+        return m_stub;
+    m_stub = (value() & 67108864) != 0;
+    f_stub = true;
+    return m_stub;
+}
+
+bool elf_t::dt_flag_1_values_t::direct() {
+    if (f_direct)
+        return m_direct;
+    m_direct = (value() & 256) != 0;
+    f_direct = true;
+    return m_direct;
+}
+
+bool elf_t::dt_flag_1_values_t::edited() {
+    if (f_edited)
+        return m_edited;
+    m_edited = (value() & 2097152) != 0;
+    f_edited = true;
+    return m_edited;
+}
+
+bool elf_t::dt_flag_1_values_t::group() {
+    if (f_group)
+        return m_group;
+    m_group = (value() & 4) != 0;
+    f_group = true;
+    return m_group;
+}
+
+bool elf_t::dt_flag_1_values_t::pie() {
+    if (f_pie)
+        return m_pie;
+    m_pie = (value() & 134217728) != 0;
+    f_pie = true;
+    return m_pie;
+}
+
+bool elf_t::dt_flag_1_values_t::nodeflib() {
+    if (f_nodeflib)
+        return m_nodeflib;
+    m_nodeflib = (value() & 2048) != 0;
+    f_nodeflib = true;
+    return m_nodeflib;
+}
+
+elf_t::section_header_flags_t::section_header_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::section_header_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_merge = false;
+    f_mask_os = false;
+    f_exclude = false;
+    f_mask_proc = false;
+    f_strings = false;
+    f_os_non_conforming = false;
+    f_alloc = false;
+    f_exec_instr = false;
+    f_info_link = false;
+    f_write = false;
+    f_link_order = false;
+    f_ordered = false;
+    f_tls = false;
+    f_group = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void elf_t::section_header_flags_t::_read() {
+}
+
+elf_t::section_header_flags_t::~section_header_flags_t() {
+    _clean_up();
+}
+
+void elf_t::section_header_flags_t::_clean_up() {
+}
+
+bool elf_t::section_header_flags_t::merge() {
+    if (f_merge)
+        return m_merge;
+    m_merge = (value() & 16) != 0;
+    f_merge = true;
+    return m_merge;
+}
+
+bool elf_t::section_header_flags_t::mask_os() {
+    if (f_mask_os)
+        return m_mask_os;
+    m_mask_os = (value() & 267386880) != 0;
+    f_mask_os = true;
+    return m_mask_os;
+}
+
+bool elf_t::section_header_flags_t::exclude() {
+    if (f_exclude)
+        return m_exclude;
+    m_exclude = (value() & 134217728) != 0;
+    f_exclude = true;
+    return m_exclude;
+}
+
+bool elf_t::section_header_flags_t::mask_proc() {
+    if (f_mask_proc)
+        return m_mask_proc;
+    m_mask_proc = (value() & 4026531840UL) != 0;
+    f_mask_proc = true;
+    return m_mask_proc;
+}
+
+bool elf_t::section_header_flags_t::strings() {
+    if (f_strings)
+        return m_strings;
+    m_strings = (value() & 32) != 0;
+    f_strings = true;
+    return m_strings;
+}
+
+bool elf_t::section_header_flags_t::os_non_conforming() {
+    if (f_os_non_conforming)
+        return m_os_non_conforming;
+    m_os_non_conforming = (value() & 256) != 0;
+    f_os_non_conforming = true;
+    return m_os_non_conforming;
+}
+
+bool elf_t::section_header_flags_t::alloc() {
+    if (f_alloc)
+        return m_alloc;
+    m_alloc = (value() & 2) != 0;
+    f_alloc = true;
+    return m_alloc;
+}
+
+bool elf_t::section_header_flags_t::exec_instr() {
+    if (f_exec_instr)
+        return m_exec_instr;
+    m_exec_instr = (value() & 4) != 0;
+    f_exec_instr = true;
+    return m_exec_instr;
+}
+
+bool elf_t::section_header_flags_t::info_link() {
+    if (f_info_link)
+        return m_info_link;
+    m_info_link = (value() & 64) != 0;
+    f_info_link = true;
+    return m_info_link;
+}
+
+bool elf_t::section_header_flags_t::write() {
+    if (f_write)
+        return m_write;
+    m_write = (value() & 1) != 0;
+    f_write = true;
+    return m_write;
+}
+
+bool elf_t::section_header_flags_t::link_order() {
+    if (f_link_order)
+        return m_link_order;
+    m_link_order = (value() & 128) != 0;
+    f_link_order = true;
+    return m_link_order;
+}
+
+bool elf_t::section_header_flags_t::ordered() {
+    if (f_ordered)
+        return m_ordered;
+    m_ordered = (value() & 67108864) != 0;
+    f_ordered = true;
+    return m_ordered;
+}
+
+bool elf_t::section_header_flags_t::tls() {
+    if (f_tls)
+        return m_tls;
+    m_tls = (value() & 1024) != 0;
+    f_tls = true;
+    return m_tls;
+}
+
+bool elf_t::section_header_flags_t::group() {
+    if (f_group)
+        return m_group;
+    m_group = (value() & 512) != 0;
+    f_group = true;
+    return m_group;
+}
+
+elf_t::phdr_type_flags_t::phdr_type_flags_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::program_header_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_read = false;
+    f_write = false;
+    f_execute = false;
+    f_mask_proc = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void elf_t::phdr_type_flags_t::_read() {
+}
+
+elf_t::phdr_type_flags_t::~phdr_type_flags_t() {
+    _clean_up();
+}
+
+void elf_t::phdr_type_flags_t::_clean_up() {
+}
+
+bool elf_t::phdr_type_flags_t::read() {
+    if (f_read)
+        return m_read;
+    m_read = (value() & 4) != 0;
+    f_read = true;
+    return m_read;
+}
+
+bool elf_t::phdr_type_flags_t::write() {
+    if (f_write)
+        return m_write;
+    m_write = (value() & 2) != 0;
+    f_write = true;
+    return m_write;
+}
+
+bool elf_t::phdr_type_flags_t::execute() {
+    if (f_execute)
+        return m_execute;
+    m_execute = (value() & 1) != 0;
+    f_execute = true;
+    return m_execute;
+}
+
+bool elf_t::phdr_type_flags_t::mask_proc() {
+    if (f_mask_proc)
+        return m_mask_proc;
+    m_mask_proc = (value() & 4026531840UL) != 0;
+    f_mask_proc = true;
+    return m_mask_proc;
+}
+
+elf_t::dt_flag_values_t::dt_flag_values_t(uint32_t p_value, kaitai::kstream* p__io, elf_t::endian_elf_t::dynamic_section_entry_t* p__parent, elf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_value = p_value;
+    f_bind_now = false;
+    f_origin = false;
+    f_textrel = false;
+    f_static_tls = false;
+    f_symbolic = false;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void elf_t::dt_flag_values_t::_read() {
+}
+
+elf_t::dt_flag_values_t::~dt_flag_values_t() {
+    _clean_up();
+}
+
+void elf_t::dt_flag_values_t::_clean_up() {
+}
+
+bool elf_t::dt_flag_values_t::bind_now() {
+    if (f_bind_now)
+        return m_bind_now;
+    m_bind_now = (value() & 8) != 0;
+    f_bind_now = true;
+    return m_bind_now;
+}
+
+bool elf_t::dt_flag_values_t::origin() {
+    if (f_origin)
+        return m_origin;
+    m_origin = (value() & 1) != 0;
+    f_origin = true;
+    return m_origin;
+}
+
+bool elf_t::dt_flag_values_t::textrel() {
+    if (f_textrel)
+        return m_textrel;
+    m_textrel = (value() & 4) != 0;
+    f_textrel = true;
+    return m_textrel;
+}
+
+bool elf_t::dt_flag_values_t::static_tls() {
+    if (f_static_tls)
+        return m_static_tls;
+    m_static_tls = (value() & 16) != 0;
+    f_static_tls = true;
+    return m_static_tls;
+}
+
+bool elf_t::dt_flag_values_t::symbolic() {
+    if (f_symbolic)
+        return m_symbolic;
+    m_symbolic = (value() & 2) != 0;
+    f_symbolic = true;
+    return m_symbolic;
 }
 
 int32_t elf_t::sh_idx_lo_os() {

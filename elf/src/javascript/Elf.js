@@ -930,559 +930,6 @@ var Elf = (function() {
     this.header = new EndianElf(this._io, this, this._root);
   }
 
-  var PhdrTypeFlags = Elf.PhdrTypeFlags = (function() {
-    function PhdrTypeFlags(_io, _parent, _root, value) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.value = value;
-
-      this._read();
-    }
-    PhdrTypeFlags.prototype._read = function() {
-    }
-    Object.defineProperty(PhdrTypeFlags.prototype, 'read', {
-      get: function() {
-        if (this._m_read !== undefined)
-          return this._m_read;
-        this._m_read = (this.value & 4) != 0;
-        return this._m_read;
-      }
-    });
-    Object.defineProperty(PhdrTypeFlags.prototype, 'write', {
-      get: function() {
-        if (this._m_write !== undefined)
-          return this._m_write;
-        this._m_write = (this.value & 2) != 0;
-        return this._m_write;
-      }
-    });
-    Object.defineProperty(PhdrTypeFlags.prototype, 'execute', {
-      get: function() {
-        if (this._m_execute !== undefined)
-          return this._m_execute;
-        this._m_execute = (this.value & 1) != 0;
-        return this._m_execute;
-      }
-    });
-    Object.defineProperty(PhdrTypeFlags.prototype, 'maskProc', {
-      get: function() {
-        if (this._m_maskProc !== undefined)
-          return this._m_maskProc;
-        this._m_maskProc = (this.value & 4026531840) != 0;
-        return this._m_maskProc;
-      }
-    });
-
-    return PhdrTypeFlags;
-  })();
-
-  var SectionHeaderFlags = Elf.SectionHeaderFlags = (function() {
-    function SectionHeaderFlags(_io, _parent, _root, value) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.value = value;
-
-      this._read();
-    }
-    SectionHeaderFlags.prototype._read = function() {
-    }
-
-    /**
-     * might be merged
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'merge', {
-      get: function() {
-        if (this._m_merge !== undefined)
-          return this._m_merge;
-        this._m_merge = (this.value & 16) != 0;
-        return this._m_merge;
-      }
-    });
-
-    /**
-     * OS-specific
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'maskOs', {
-      get: function() {
-        if (this._m_maskOs !== undefined)
-          return this._m_maskOs;
-        this._m_maskOs = (this.value & 267386880) != 0;
-        return this._m_maskOs;
-      }
-    });
-
-    /**
-     * section is excluded unless referenced or allocated (Solaris)
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'exclude', {
-      get: function() {
-        if (this._m_exclude !== undefined)
-          return this._m_exclude;
-        this._m_exclude = (this.value & 134217728) != 0;
-        return this._m_exclude;
-      }
-    });
-
-    /**
-     * Processor-specific
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'maskProc', {
-      get: function() {
-        if (this._m_maskProc !== undefined)
-          return this._m_maskProc;
-        this._m_maskProc = (this.value & 4026531840) != 0;
-        return this._m_maskProc;
-      }
-    });
-
-    /**
-     * contains nul-terminated strings
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'strings', {
-      get: function() {
-        if (this._m_strings !== undefined)
-          return this._m_strings;
-        this._m_strings = (this.value & 32) != 0;
-        return this._m_strings;
-      }
-    });
-
-    /**
-     * non-standard OS specific handling required
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'osNonConforming', {
-      get: function() {
-        if (this._m_osNonConforming !== undefined)
-          return this._m_osNonConforming;
-        this._m_osNonConforming = (this.value & 256) != 0;
-        return this._m_osNonConforming;
-      }
-    });
-
-    /**
-     * occupies memory during execution
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'alloc', {
-      get: function() {
-        if (this._m_alloc !== undefined)
-          return this._m_alloc;
-        this._m_alloc = (this.value & 2) != 0;
-        return this._m_alloc;
-      }
-    });
-
-    /**
-     * executable
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'execInstr', {
-      get: function() {
-        if (this._m_execInstr !== undefined)
-          return this._m_execInstr;
-        this._m_execInstr = (this.value & 4) != 0;
-        return this._m_execInstr;
-      }
-    });
-
-    /**
-     * 'sh_info' contains SHT index
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'infoLink', {
-      get: function() {
-        if (this._m_infoLink !== undefined)
-          return this._m_infoLink;
-        this._m_infoLink = (this.value & 64) != 0;
-        return this._m_infoLink;
-      }
-    });
-
-    /**
-     * writable
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'write', {
-      get: function() {
-        if (this._m_write !== undefined)
-          return this._m_write;
-        this._m_write = (this.value & 1) != 0;
-        return this._m_write;
-      }
-    });
-
-    /**
-     * preserve order after combining
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'linkOrder', {
-      get: function() {
-        if (this._m_linkOrder !== undefined)
-          return this._m_linkOrder;
-        this._m_linkOrder = (this.value & 128) != 0;
-        return this._m_linkOrder;
-      }
-    });
-
-    /**
-     * special ordering requirement (Solaris)
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'ordered', {
-      get: function() {
-        if (this._m_ordered !== undefined)
-          return this._m_ordered;
-        this._m_ordered = (this.value & 67108864) != 0;
-        return this._m_ordered;
-      }
-    });
-
-    /**
-     * section hold thread-local data
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'tls', {
-      get: function() {
-        if (this._m_tls !== undefined)
-          return this._m_tls;
-        this._m_tls = (this.value & 1024) != 0;
-        return this._m_tls;
-      }
-    });
-
-    /**
-     * section is member of a group
-     */
-    Object.defineProperty(SectionHeaderFlags.prototype, 'group', {
-      get: function() {
-        if (this._m_group !== undefined)
-          return this._m_group;
-        this._m_group = (this.value & 512) != 0;
-        return this._m_group;
-      }
-    });
-
-    return SectionHeaderFlags;
-  })();
-
-  var DtFlag1Values = Elf.DtFlag1Values = (function() {
-    function DtFlag1Values(_io, _parent, _root, value) {
-      this._io = _io;
-      this._parent = _parent;
-      this._root = _root || this;
-      this.value = value;
-
-      this._read();
-    }
-    DtFlag1Values.prototype._read = function() {
-    }
-
-    /**
-     * Singleton symbols are used.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'singleton', {
-      get: function() {
-        if (this._m_singleton !== undefined)
-          return this._m_singleton;
-        this._m_singleton = (this.value & 33554432) != 0;
-        return this._m_singleton;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'ignmuldef', {
-      get: function() {
-        if (this._m_ignmuldef !== undefined)
-          return this._m_ignmuldef;
-        this._m_ignmuldef = (this.value & 262144) != 0;
-        return this._m_ignmuldef;
-      }
-    });
-
-    /**
-     * Trigger filtee loading at runtime.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'loadfltr', {
-      get: function() {
-        if (this._m_loadfltr !== undefined)
-          return this._m_loadfltr;
-        this._m_loadfltr = (this.value & 16) != 0;
-        return this._m_loadfltr;
-      }
-    });
-
-    /**
-     * Set RTLD_INITFIRST for this object
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'initfirst', {
-      get: function() {
-        if (this._m_initfirst !== undefined)
-          return this._m_initfirst;
-        this._m_initfirst = (this.value & 32) != 0;
-        return this._m_initfirst;
-      }
-    });
-
-    /**
-     * Object has individual interposers.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'symintpose', {
-      get: function() {
-        if (this._m_symintpose !== undefined)
-          return this._m_symintpose;
-        this._m_symintpose = (this.value & 8388608) != 0;
-        return this._m_symintpose;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'noreloc', {
-      get: function() {
-        if (this._m_noreloc !== undefined)
-          return this._m_noreloc;
-        this._m_noreloc = (this.value & 4194304) != 0;
-        return this._m_noreloc;
-      }
-    });
-
-    /**
-     * Configuration alternative created.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'confalt', {
-      get: function() {
-        if (this._m_confalt !== undefined)
-          return this._m_confalt;
-        this._m_confalt = (this.value & 8192) != 0;
-        return this._m_confalt;
-      }
-    });
-
-    /**
-     * Disp reloc applied at build time.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'dispreldne', {
-      get: function() {
-        if (this._m_dispreldne !== undefined)
-          return this._m_dispreldne;
-        this._m_dispreldne = (this.value & 32768) != 0;
-        return this._m_dispreldne;
-      }
-    });
-
-    /**
-     * Set RTLD_GLOBAL for this object.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'rtldGlobal', {
-      get: function() {
-        if (this._m_rtldGlobal !== undefined)
-          return this._m_rtldGlobal;
-        this._m_rtldGlobal = (this.value & 2) != 0;
-        return this._m_rtldGlobal;
-      }
-    });
-
-    /**
-     * Set RTLD_NODELETE for this object.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodelete', {
-      get: function() {
-        if (this._m_nodelete !== undefined)
-          return this._m_nodelete;
-        this._m_nodelete = (this.value & 8) != 0;
-        return this._m_nodelete;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'trans', {
-      get: function() {
-        if (this._m_trans !== undefined)
-          return this._m_trans;
-        this._m_trans = (this.value & 512) != 0;
-        return this._m_trans;
-      }
-    });
-
-    /**
-     * $ORIGIN must be handled.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'origin', {
-      get: function() {
-        if (this._m_origin !== undefined)
-          return this._m_origin;
-        this._m_origin = (this.value & 128) != 0;
-        return this._m_origin;
-      }
-    });
-
-    /**
-     * Set RTLD_NOW for this object.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'now', {
-      get: function() {
-        if (this._m_now !== undefined)
-          return this._m_now;
-        this._m_now = (this.value & 1) != 0;
-        return this._m_now;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'nohdr', {
-      get: function() {
-        if (this._m_nohdr !== undefined)
-          return this._m_nohdr;
-        this._m_nohdr = (this.value & 1048576) != 0;
-        return this._m_nohdr;
-      }
-    });
-
-    /**
-     * Filtee terminates filters search.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'endfiltee', {
-      get: function() {
-        if (this._m_endfiltee !== undefined)
-          return this._m_endfiltee;
-        this._m_endfiltee = (this.value & 16384) != 0;
-        return this._m_endfiltee;
-      }
-    });
-
-    /**
-     * Object has no-direct binding.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodirect', {
-      get: function() {
-        if (this._m_nodirect !== undefined)
-          return this._m_nodirect;
-        this._m_nodirect = (this.value & 131072) != 0;
-        return this._m_nodirect;
-      }
-    });
-
-    /**
-     * Global auditing required.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'globaudit', {
-      get: function() {
-        if (this._m_globaudit !== undefined)
-          return this._m_globaudit;
-        this._m_globaudit = (this.value & 16777216) != 0;
-        return this._m_globaudit;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'noksyms', {
-      get: function() {
-        if (this._m_noksyms !== undefined)
-          return this._m_noksyms;
-        this._m_noksyms = (this.value & 524288) != 0;
-        return this._m_noksyms;
-      }
-    });
-
-    /**
-     * Object is used to interpose.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'interpose', {
-      get: function() {
-        if (this._m_interpose !== undefined)
-          return this._m_interpose;
-        this._m_interpose = (this.value & 1024) != 0;
-        return this._m_interpose;
-      }
-    });
-
-    /**
-     * Object can't be dldump'ed.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodump', {
-      get: function() {
-        if (this._m_nodump !== undefined)
-          return this._m_nodump;
-        this._m_nodump = (this.value & 4096) != 0;
-        return this._m_nodump;
-      }
-    });
-
-    /**
-     * Disp reloc applied at run-time.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'disprelpnd', {
-      get: function() {
-        if (this._m_disprelpnd !== undefined)
-          return this._m_disprelpnd;
-        this._m_disprelpnd = (this.value & 65536) != 0;
-        return this._m_disprelpnd;
-      }
-    });
-
-    /**
-     * Set RTLD_NOOPEN for this object.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'noopen', {
-      get: function() {
-        if (this._m_noopen !== undefined)
-          return this._m_noopen;
-        this._m_noopen = (this.value & 64) != 0;
-        return this._m_noopen;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'stub', {
-      get: function() {
-        if (this._m_stub !== undefined)
-          return this._m_stub;
-        this._m_stub = (this.value & 67108864) != 0;
-        return this._m_stub;
-      }
-    });
-
-    /**
-     * Direct binding enabled.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'direct', {
-      get: function() {
-        if (this._m_direct !== undefined)
-          return this._m_direct;
-        this._m_direct = (this.value & 256) != 0;
-        return this._m_direct;
-      }
-    });
-
-    /**
-     * Object is modified after built.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'edited', {
-      get: function() {
-        if (this._m_edited !== undefined)
-          return this._m_edited;
-        this._m_edited = (this.value & 2097152) != 0;
-        return this._m_edited;
-      }
-    });
-
-    /**
-     * Set RTLD_GROUP for this object.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'group', {
-      get: function() {
-        if (this._m_group !== undefined)
-          return this._m_group;
-        this._m_group = (this.value & 4) != 0;
-        return this._m_group;
-      }
-    });
-    Object.defineProperty(DtFlag1Values.prototype, 'pie', {
-      get: function() {
-        if (this._m_pie !== undefined)
-          return this._m_pie;
-        this._m_pie = (this.value & 134217728) != 0;
-        return this._m_pie;
-      }
-    });
-
-    /**
-     * Ignore default lib search path.
-     */
-    Object.defineProperty(DtFlag1Values.prototype, 'nodeflib', {
-      get: function() {
-        if (this._m_nodeflib !== undefined)
-          return this._m_nodeflib;
-        this._m_nodeflib = (this.value & 2048) != 0;
-        return this._m_nodeflib;
-      }
-    });
-
-    return DtFlag1Values;
-  })();
-
   var EndianElf = Elf.EndianElf = (function() {
     function EndianElf(_io, _parent, _root) {
       this._io = _io;
@@ -1844,14 +1291,6 @@ var Elf = (function() {
           break;
         }
       }
-      Object.defineProperty(DynamicSectionEntry.prototype, 'tagEnum', {
-        get: function() {
-          if (this._m_tagEnum !== undefined)
-            return this._m_tagEnum;
-          this._m_tagEnum = this.tag;
-          return this._m_tagEnum;
-        }
-      });
       Object.defineProperty(DynamicSectionEntry.prototype, 'flag1Values', {
         get: function() {
           if (this._m_flag1Values !== undefined)
@@ -1882,6 +1321,28 @@ var Elf = (function() {
             io.seek(_pos);
           }
           return this._m_valueStr;
+        }
+      });
+      Object.defineProperty(DynamicSectionEntry.prototype, 'tagEnum', {
+        get: function() {
+          if (this._m_tagEnum !== undefined)
+            return this._m_tagEnum;
+          this._m_tagEnum = this.tag;
+          return this._m_tagEnum;
+        }
+      });
+      Object.defineProperty(DynamicSectionEntry.prototype, 'flagValues', {
+        get: function() {
+          if (this._m_flagValues !== undefined)
+            return this._m_flagValues;
+          if (this.tagEnum == Elf.DynamicArrayTags.FLAGS) {
+            if (this._is_le) {
+              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
+            } else {
+              this._m_flagValues = new DtFlagValues(this._io, this, this._root, this.valueOrPtr);
+            }
+          }
+          return this._m_flagValues;
         }
       });
       Object.defineProperty(DynamicSectionEntry.prototype, 'isValueStr', {
@@ -2702,6 +2163,641 @@ var Elf = (function() {
     });
 
     return EndianElf;
+  })();
+
+  var DtFlag1Values = Elf.DtFlag1Values = (function() {
+    function DtFlag1Values(_io, _parent, _root, value) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.value = value;
+
+      this._read();
+    }
+    DtFlag1Values.prototype._read = function() {
+    }
+
+    /**
+     * Singleton symbols are used.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'singleton', {
+      get: function() {
+        if (this._m_singleton !== undefined)
+          return this._m_singleton;
+        this._m_singleton = (this.value & 33554432) != 0;
+        return this._m_singleton;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'ignmuldef', {
+      get: function() {
+        if (this._m_ignmuldef !== undefined)
+          return this._m_ignmuldef;
+        this._m_ignmuldef = (this.value & 262144) != 0;
+        return this._m_ignmuldef;
+      }
+    });
+
+    /**
+     * Trigger filtee loading at runtime.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'loadfltr', {
+      get: function() {
+        if (this._m_loadfltr !== undefined)
+          return this._m_loadfltr;
+        this._m_loadfltr = (this.value & 16) != 0;
+        return this._m_loadfltr;
+      }
+    });
+
+    /**
+     * Set RTLD_INITFIRST for this object
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'initfirst', {
+      get: function() {
+        if (this._m_initfirst !== undefined)
+          return this._m_initfirst;
+        this._m_initfirst = (this.value & 32) != 0;
+        return this._m_initfirst;
+      }
+    });
+
+    /**
+     * Object has individual interposers.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'symintpose', {
+      get: function() {
+        if (this._m_symintpose !== undefined)
+          return this._m_symintpose;
+        this._m_symintpose = (this.value & 8388608) != 0;
+        return this._m_symintpose;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'noreloc', {
+      get: function() {
+        if (this._m_noreloc !== undefined)
+          return this._m_noreloc;
+        this._m_noreloc = (this.value & 4194304) != 0;
+        return this._m_noreloc;
+      }
+    });
+
+    /**
+     * Configuration alternative created.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'confalt', {
+      get: function() {
+        if (this._m_confalt !== undefined)
+          return this._m_confalt;
+        this._m_confalt = (this.value & 8192) != 0;
+        return this._m_confalt;
+      }
+    });
+
+    /**
+     * Disp reloc applied at build time.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'dispreldne', {
+      get: function() {
+        if (this._m_dispreldne !== undefined)
+          return this._m_dispreldne;
+        this._m_dispreldne = (this.value & 32768) != 0;
+        return this._m_dispreldne;
+      }
+    });
+
+    /**
+     * Set RTLD_GLOBAL for this object.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'rtldGlobal', {
+      get: function() {
+        if (this._m_rtldGlobal !== undefined)
+          return this._m_rtldGlobal;
+        this._m_rtldGlobal = (this.value & 2) != 0;
+        return this._m_rtldGlobal;
+      }
+    });
+
+    /**
+     * Set RTLD_NODELETE for this object.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'nodelete', {
+      get: function() {
+        if (this._m_nodelete !== undefined)
+          return this._m_nodelete;
+        this._m_nodelete = (this.value & 8) != 0;
+        return this._m_nodelete;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'trans', {
+      get: function() {
+        if (this._m_trans !== undefined)
+          return this._m_trans;
+        this._m_trans = (this.value & 512) != 0;
+        return this._m_trans;
+      }
+    });
+
+    /**
+     * $ORIGIN must be handled.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'origin', {
+      get: function() {
+        if (this._m_origin !== undefined)
+          return this._m_origin;
+        this._m_origin = (this.value & 128) != 0;
+        return this._m_origin;
+      }
+    });
+
+    /**
+     * Set RTLD_NOW for this object.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'now', {
+      get: function() {
+        if (this._m_now !== undefined)
+          return this._m_now;
+        this._m_now = (this.value & 1) != 0;
+        return this._m_now;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'nohdr', {
+      get: function() {
+        if (this._m_nohdr !== undefined)
+          return this._m_nohdr;
+        this._m_nohdr = (this.value & 1048576) != 0;
+        return this._m_nohdr;
+      }
+    });
+
+    /**
+     * Filtee terminates filters search.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'endfiltee', {
+      get: function() {
+        if (this._m_endfiltee !== undefined)
+          return this._m_endfiltee;
+        this._m_endfiltee = (this.value & 16384) != 0;
+        return this._m_endfiltee;
+      }
+    });
+
+    /**
+     * Object has no-direct binding.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'nodirect', {
+      get: function() {
+        if (this._m_nodirect !== undefined)
+          return this._m_nodirect;
+        this._m_nodirect = (this.value & 131072) != 0;
+        return this._m_nodirect;
+      }
+    });
+
+    /**
+     * Global auditing required.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'globaudit', {
+      get: function() {
+        if (this._m_globaudit !== undefined)
+          return this._m_globaudit;
+        this._m_globaudit = (this.value & 16777216) != 0;
+        return this._m_globaudit;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'noksyms', {
+      get: function() {
+        if (this._m_noksyms !== undefined)
+          return this._m_noksyms;
+        this._m_noksyms = (this.value & 524288) != 0;
+        return this._m_noksyms;
+      }
+    });
+
+    /**
+     * Object is used to interpose.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'interpose', {
+      get: function() {
+        if (this._m_interpose !== undefined)
+          return this._m_interpose;
+        this._m_interpose = (this.value & 1024) != 0;
+        return this._m_interpose;
+      }
+    });
+
+    /**
+     * Object can't be dldump'ed.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'nodump', {
+      get: function() {
+        if (this._m_nodump !== undefined)
+          return this._m_nodump;
+        this._m_nodump = (this.value & 4096) != 0;
+        return this._m_nodump;
+      }
+    });
+
+    /**
+     * Disp reloc applied at run-time.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'disprelpnd', {
+      get: function() {
+        if (this._m_disprelpnd !== undefined)
+          return this._m_disprelpnd;
+        this._m_disprelpnd = (this.value & 65536) != 0;
+        return this._m_disprelpnd;
+      }
+    });
+
+    /**
+     * Set RTLD_NOOPEN for this object.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'noopen', {
+      get: function() {
+        if (this._m_noopen !== undefined)
+          return this._m_noopen;
+        this._m_noopen = (this.value & 64) != 0;
+        return this._m_noopen;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'stub', {
+      get: function() {
+        if (this._m_stub !== undefined)
+          return this._m_stub;
+        this._m_stub = (this.value & 67108864) != 0;
+        return this._m_stub;
+      }
+    });
+
+    /**
+     * Direct binding enabled.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'direct', {
+      get: function() {
+        if (this._m_direct !== undefined)
+          return this._m_direct;
+        this._m_direct = (this.value & 256) != 0;
+        return this._m_direct;
+      }
+    });
+
+    /**
+     * Object is modified after built.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'edited', {
+      get: function() {
+        if (this._m_edited !== undefined)
+          return this._m_edited;
+        this._m_edited = (this.value & 2097152) != 0;
+        return this._m_edited;
+      }
+    });
+
+    /**
+     * Set RTLD_GROUP for this object.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'group', {
+      get: function() {
+        if (this._m_group !== undefined)
+          return this._m_group;
+        this._m_group = (this.value & 4) != 0;
+        return this._m_group;
+      }
+    });
+    Object.defineProperty(DtFlag1Values.prototype, 'pie', {
+      get: function() {
+        if (this._m_pie !== undefined)
+          return this._m_pie;
+        this._m_pie = (this.value & 134217728) != 0;
+        return this._m_pie;
+      }
+    });
+
+    /**
+     * Ignore default lib search path.
+     */
+    Object.defineProperty(DtFlag1Values.prototype, 'nodeflib', {
+      get: function() {
+        if (this._m_nodeflib !== undefined)
+          return this._m_nodeflib;
+        this._m_nodeflib = (this.value & 2048) != 0;
+        return this._m_nodeflib;
+      }
+    });
+
+    return DtFlag1Values;
+  })();
+
+  var SectionHeaderFlags = Elf.SectionHeaderFlags = (function() {
+    function SectionHeaderFlags(_io, _parent, _root, value) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.value = value;
+
+      this._read();
+    }
+    SectionHeaderFlags.prototype._read = function() {
+    }
+
+    /**
+     * might be merged
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'merge', {
+      get: function() {
+        if (this._m_merge !== undefined)
+          return this._m_merge;
+        this._m_merge = (this.value & 16) != 0;
+        return this._m_merge;
+      }
+    });
+
+    /**
+     * OS-specific
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'maskOs', {
+      get: function() {
+        if (this._m_maskOs !== undefined)
+          return this._m_maskOs;
+        this._m_maskOs = (this.value & 267386880) != 0;
+        return this._m_maskOs;
+      }
+    });
+
+    /**
+     * section is excluded unless referenced or allocated (Solaris)
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'exclude', {
+      get: function() {
+        if (this._m_exclude !== undefined)
+          return this._m_exclude;
+        this._m_exclude = (this.value & 134217728) != 0;
+        return this._m_exclude;
+      }
+    });
+
+    /**
+     * Processor-specific
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'maskProc', {
+      get: function() {
+        if (this._m_maskProc !== undefined)
+          return this._m_maskProc;
+        this._m_maskProc = (this.value & 4026531840) != 0;
+        return this._m_maskProc;
+      }
+    });
+
+    /**
+     * contains nul-terminated strings
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'strings', {
+      get: function() {
+        if (this._m_strings !== undefined)
+          return this._m_strings;
+        this._m_strings = (this.value & 32) != 0;
+        return this._m_strings;
+      }
+    });
+
+    /**
+     * non-standard OS specific handling required
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'osNonConforming', {
+      get: function() {
+        if (this._m_osNonConforming !== undefined)
+          return this._m_osNonConforming;
+        this._m_osNonConforming = (this.value & 256) != 0;
+        return this._m_osNonConforming;
+      }
+    });
+
+    /**
+     * occupies memory during execution
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'alloc', {
+      get: function() {
+        if (this._m_alloc !== undefined)
+          return this._m_alloc;
+        this._m_alloc = (this.value & 2) != 0;
+        return this._m_alloc;
+      }
+    });
+
+    /**
+     * executable
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'execInstr', {
+      get: function() {
+        if (this._m_execInstr !== undefined)
+          return this._m_execInstr;
+        this._m_execInstr = (this.value & 4) != 0;
+        return this._m_execInstr;
+      }
+    });
+
+    /**
+     * 'sh_info' contains SHT index
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'infoLink', {
+      get: function() {
+        if (this._m_infoLink !== undefined)
+          return this._m_infoLink;
+        this._m_infoLink = (this.value & 64) != 0;
+        return this._m_infoLink;
+      }
+    });
+
+    /**
+     * writable
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'write', {
+      get: function() {
+        if (this._m_write !== undefined)
+          return this._m_write;
+        this._m_write = (this.value & 1) != 0;
+        return this._m_write;
+      }
+    });
+
+    /**
+     * preserve order after combining
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'linkOrder', {
+      get: function() {
+        if (this._m_linkOrder !== undefined)
+          return this._m_linkOrder;
+        this._m_linkOrder = (this.value & 128) != 0;
+        return this._m_linkOrder;
+      }
+    });
+
+    /**
+     * special ordering requirement (Solaris)
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'ordered', {
+      get: function() {
+        if (this._m_ordered !== undefined)
+          return this._m_ordered;
+        this._m_ordered = (this.value & 67108864) != 0;
+        return this._m_ordered;
+      }
+    });
+
+    /**
+     * section hold thread-local data
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'tls', {
+      get: function() {
+        if (this._m_tls !== undefined)
+          return this._m_tls;
+        this._m_tls = (this.value & 1024) != 0;
+        return this._m_tls;
+      }
+    });
+
+    /**
+     * section is member of a group
+     */
+    Object.defineProperty(SectionHeaderFlags.prototype, 'group', {
+      get: function() {
+        if (this._m_group !== undefined)
+          return this._m_group;
+        this._m_group = (this.value & 512) != 0;
+        return this._m_group;
+      }
+    });
+
+    return SectionHeaderFlags;
+  })();
+
+  var PhdrTypeFlags = Elf.PhdrTypeFlags = (function() {
+    function PhdrTypeFlags(_io, _parent, _root, value) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.value = value;
+
+      this._read();
+    }
+    PhdrTypeFlags.prototype._read = function() {
+    }
+    Object.defineProperty(PhdrTypeFlags.prototype, 'read', {
+      get: function() {
+        if (this._m_read !== undefined)
+          return this._m_read;
+        this._m_read = (this.value & 4) != 0;
+        return this._m_read;
+      }
+    });
+    Object.defineProperty(PhdrTypeFlags.prototype, 'write', {
+      get: function() {
+        if (this._m_write !== undefined)
+          return this._m_write;
+        this._m_write = (this.value & 2) != 0;
+        return this._m_write;
+      }
+    });
+    Object.defineProperty(PhdrTypeFlags.prototype, 'execute', {
+      get: function() {
+        if (this._m_execute !== undefined)
+          return this._m_execute;
+        this._m_execute = (this.value & 1) != 0;
+        return this._m_execute;
+      }
+    });
+    Object.defineProperty(PhdrTypeFlags.prototype, 'maskProc', {
+      get: function() {
+        if (this._m_maskProc !== undefined)
+          return this._m_maskProc;
+        this._m_maskProc = (this.value & 4026531840) != 0;
+        return this._m_maskProc;
+      }
+    });
+
+    return PhdrTypeFlags;
+  })();
+
+  /**
+   * @see {@link https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html|Figure 5-11: DT_FLAGS values}
+   * @see {@link https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095|Source}
+   * @see {@link https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5|Source}
+   */
+
+  var DtFlagValues = Elf.DtFlagValues = (function() {
+    function DtFlagValues(_io, _parent, _root, value) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+      this.value = value;
+
+      this._read();
+    }
+    DtFlagValues.prototype._read = function() {
+    }
+
+    /**
+     * all relocations for this object must be processed before returning
+     * control to the program
+     */
+    Object.defineProperty(DtFlagValues.prototype, 'bindNow', {
+      get: function() {
+        if (this._m_bindNow !== undefined)
+          return this._m_bindNow;
+        this._m_bindNow = (this.value & 8) != 0;
+        return this._m_bindNow;
+      }
+    });
+
+    /**
+     * object may reference the $ORIGIN substitution string
+     */
+    Object.defineProperty(DtFlagValues.prototype, 'origin', {
+      get: function() {
+        if (this._m_origin !== undefined)
+          return this._m_origin;
+        this._m_origin = (this.value & 1) != 0;
+        return this._m_origin;
+      }
+    });
+
+    /**
+     * relocation entries might request modifications to a non-writable segment
+     */
+    Object.defineProperty(DtFlagValues.prototype, 'textrel', {
+      get: function() {
+        if (this._m_textrel !== undefined)
+          return this._m_textrel;
+        this._m_textrel = (this.value & 4) != 0;
+        return this._m_textrel;
+      }
+    });
+
+    /**
+     * object uses static thread-local storage scheme
+     */
+    Object.defineProperty(DtFlagValues.prototype, 'staticTls', {
+      get: function() {
+        if (this._m_staticTls !== undefined)
+          return this._m_staticTls;
+        this._m_staticTls = (this.value & 16) != 0;
+        return this._m_staticTls;
+      }
+    });
+
+    /**
+     * symbolic linking
+     */
+    Object.defineProperty(DtFlagValues.prototype, 'symbolic', {
+      get: function() {
+        if (this._m_symbolic !== undefined)
+          return this._m_symbolic;
+        this._m_symbolic = (this.value & 2) != 0;
+        return this._m_symbolic;
+      }
+    });
+
+    return DtFlagValues;
   })();
   Object.defineProperty(Elf.prototype, 'shIdxLoOs', {
     get: function() {

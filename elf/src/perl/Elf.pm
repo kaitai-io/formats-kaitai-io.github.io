@@ -561,439 +561,6 @@ sub header {
 }
 
 ########################################################################
-package Elf::PhdrTypeFlags;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-}
-
-sub read {
-    my ($self) = @_;
-    return $self->{read} if ($self->{read});
-    $self->{read} = ($self->value() & 4) != 0;
-    return $self->{read};
-}
-
-sub write {
-    my ($self) = @_;
-    return $self->{write} if ($self->{write});
-    $self->{write} = ($self->value() & 2) != 0;
-    return $self->{write};
-}
-
-sub execute {
-    my ($self) = @_;
-    return $self->{execute} if ($self->{execute});
-    $self->{execute} = ($self->value() & 1) != 0;
-    return $self->{execute};
-}
-
-sub mask_proc {
-    my ($self) = @_;
-    return $self->{mask_proc} if ($self->{mask_proc});
-    $self->{mask_proc} = ($self->value() & 4026531840) != 0;
-    return $self->{mask_proc};
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value};
-}
-
-########################################################################
-package Elf::SectionHeaderFlags;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-}
-
-sub merge {
-    my ($self) = @_;
-    return $self->{merge} if ($self->{merge});
-    $self->{merge} = ($self->value() & 16) != 0;
-    return $self->{merge};
-}
-
-sub mask_os {
-    my ($self) = @_;
-    return $self->{mask_os} if ($self->{mask_os});
-    $self->{mask_os} = ($self->value() & 267386880) != 0;
-    return $self->{mask_os};
-}
-
-sub exclude {
-    my ($self) = @_;
-    return $self->{exclude} if ($self->{exclude});
-    $self->{exclude} = ($self->value() & 134217728) != 0;
-    return $self->{exclude};
-}
-
-sub mask_proc {
-    my ($self) = @_;
-    return $self->{mask_proc} if ($self->{mask_proc});
-    $self->{mask_proc} = ($self->value() & 4026531840) != 0;
-    return $self->{mask_proc};
-}
-
-sub strings {
-    my ($self) = @_;
-    return $self->{strings} if ($self->{strings});
-    $self->{strings} = ($self->value() & 32) != 0;
-    return $self->{strings};
-}
-
-sub os_non_conforming {
-    my ($self) = @_;
-    return $self->{os_non_conforming} if ($self->{os_non_conforming});
-    $self->{os_non_conforming} = ($self->value() & 256) != 0;
-    return $self->{os_non_conforming};
-}
-
-sub alloc {
-    my ($self) = @_;
-    return $self->{alloc} if ($self->{alloc});
-    $self->{alloc} = ($self->value() & 2) != 0;
-    return $self->{alloc};
-}
-
-sub exec_instr {
-    my ($self) = @_;
-    return $self->{exec_instr} if ($self->{exec_instr});
-    $self->{exec_instr} = ($self->value() & 4) != 0;
-    return $self->{exec_instr};
-}
-
-sub info_link {
-    my ($self) = @_;
-    return $self->{info_link} if ($self->{info_link});
-    $self->{info_link} = ($self->value() & 64) != 0;
-    return $self->{info_link};
-}
-
-sub write {
-    my ($self) = @_;
-    return $self->{write} if ($self->{write});
-    $self->{write} = ($self->value() & 1) != 0;
-    return $self->{write};
-}
-
-sub link_order {
-    my ($self) = @_;
-    return $self->{link_order} if ($self->{link_order});
-    $self->{link_order} = ($self->value() & 128) != 0;
-    return $self->{link_order};
-}
-
-sub ordered {
-    my ($self) = @_;
-    return $self->{ordered} if ($self->{ordered});
-    $self->{ordered} = ($self->value() & 67108864) != 0;
-    return $self->{ordered};
-}
-
-sub tls {
-    my ($self) = @_;
-    return $self->{tls} if ($self->{tls});
-    $self->{tls} = ($self->value() & 1024) != 0;
-    return $self->{tls};
-}
-
-sub group {
-    my ($self) = @_;
-    return $self->{group} if ($self->{group});
-    $self->{group} = ($self->value() & 512) != 0;
-    return $self->{group};
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value};
-}
-
-########################################################################
-package Elf::DtFlag1Values;
-
-our @ISA = 'IO::KaitaiStruct::Struct';
-
-sub from_file {
-    my ($class, $filename) = @_;
-    my $fd;
-
-    open($fd, '<', $filename) or return undef;
-    binmode($fd);
-    return new($class, IO::KaitaiStruct::Stream->new($fd));
-}
-
-sub new {
-    my ($class, $_io, $_parent, $_root) = @_;
-    my $self = IO::KaitaiStruct::Struct->new($_io);
-
-    bless $self, $class;
-    $self->{_parent} = $_parent;
-    $self->{_root} = $_root || $self;;
-
-    $self->_read();
-
-    return $self;
-}
-
-sub _read {
-    my ($self) = @_;
-
-}
-
-sub singleton {
-    my ($self) = @_;
-    return $self->{singleton} if ($self->{singleton});
-    $self->{singleton} = ($self->value() & 33554432) != 0;
-    return $self->{singleton};
-}
-
-sub ignmuldef {
-    my ($self) = @_;
-    return $self->{ignmuldef} if ($self->{ignmuldef});
-    $self->{ignmuldef} = ($self->value() & 262144) != 0;
-    return $self->{ignmuldef};
-}
-
-sub loadfltr {
-    my ($self) = @_;
-    return $self->{loadfltr} if ($self->{loadfltr});
-    $self->{loadfltr} = ($self->value() & 16) != 0;
-    return $self->{loadfltr};
-}
-
-sub initfirst {
-    my ($self) = @_;
-    return $self->{initfirst} if ($self->{initfirst});
-    $self->{initfirst} = ($self->value() & 32) != 0;
-    return $self->{initfirst};
-}
-
-sub symintpose {
-    my ($self) = @_;
-    return $self->{symintpose} if ($self->{symintpose});
-    $self->{symintpose} = ($self->value() & 8388608) != 0;
-    return $self->{symintpose};
-}
-
-sub noreloc {
-    my ($self) = @_;
-    return $self->{noreloc} if ($self->{noreloc});
-    $self->{noreloc} = ($self->value() & 4194304) != 0;
-    return $self->{noreloc};
-}
-
-sub confalt {
-    my ($self) = @_;
-    return $self->{confalt} if ($self->{confalt});
-    $self->{confalt} = ($self->value() & 8192) != 0;
-    return $self->{confalt};
-}
-
-sub dispreldne {
-    my ($self) = @_;
-    return $self->{dispreldne} if ($self->{dispreldne});
-    $self->{dispreldne} = ($self->value() & 32768) != 0;
-    return $self->{dispreldne};
-}
-
-sub rtld_global {
-    my ($self) = @_;
-    return $self->{rtld_global} if ($self->{rtld_global});
-    $self->{rtld_global} = ($self->value() & 2) != 0;
-    return $self->{rtld_global};
-}
-
-sub nodelete {
-    my ($self) = @_;
-    return $self->{nodelete} if ($self->{nodelete});
-    $self->{nodelete} = ($self->value() & 8) != 0;
-    return $self->{nodelete};
-}
-
-sub trans {
-    my ($self) = @_;
-    return $self->{trans} if ($self->{trans});
-    $self->{trans} = ($self->value() & 512) != 0;
-    return $self->{trans};
-}
-
-sub origin {
-    my ($self) = @_;
-    return $self->{origin} if ($self->{origin});
-    $self->{origin} = ($self->value() & 128) != 0;
-    return $self->{origin};
-}
-
-sub now {
-    my ($self) = @_;
-    return $self->{now} if ($self->{now});
-    $self->{now} = ($self->value() & 1) != 0;
-    return $self->{now};
-}
-
-sub nohdr {
-    my ($self) = @_;
-    return $self->{nohdr} if ($self->{nohdr});
-    $self->{nohdr} = ($self->value() & 1048576) != 0;
-    return $self->{nohdr};
-}
-
-sub endfiltee {
-    my ($self) = @_;
-    return $self->{endfiltee} if ($self->{endfiltee});
-    $self->{endfiltee} = ($self->value() & 16384) != 0;
-    return $self->{endfiltee};
-}
-
-sub nodirect {
-    my ($self) = @_;
-    return $self->{nodirect} if ($self->{nodirect});
-    $self->{nodirect} = ($self->value() & 131072) != 0;
-    return $self->{nodirect};
-}
-
-sub globaudit {
-    my ($self) = @_;
-    return $self->{globaudit} if ($self->{globaudit});
-    $self->{globaudit} = ($self->value() & 16777216) != 0;
-    return $self->{globaudit};
-}
-
-sub noksyms {
-    my ($self) = @_;
-    return $self->{noksyms} if ($self->{noksyms});
-    $self->{noksyms} = ($self->value() & 524288) != 0;
-    return $self->{noksyms};
-}
-
-sub interpose {
-    my ($self) = @_;
-    return $self->{interpose} if ($self->{interpose});
-    $self->{interpose} = ($self->value() & 1024) != 0;
-    return $self->{interpose};
-}
-
-sub nodump {
-    my ($self) = @_;
-    return $self->{nodump} if ($self->{nodump});
-    $self->{nodump} = ($self->value() & 4096) != 0;
-    return $self->{nodump};
-}
-
-sub disprelpnd {
-    my ($self) = @_;
-    return $self->{disprelpnd} if ($self->{disprelpnd});
-    $self->{disprelpnd} = ($self->value() & 65536) != 0;
-    return $self->{disprelpnd};
-}
-
-sub noopen {
-    my ($self) = @_;
-    return $self->{noopen} if ($self->{noopen});
-    $self->{noopen} = ($self->value() & 64) != 0;
-    return $self->{noopen};
-}
-
-sub stub {
-    my ($self) = @_;
-    return $self->{stub} if ($self->{stub});
-    $self->{stub} = ($self->value() & 67108864) != 0;
-    return $self->{stub};
-}
-
-sub direct {
-    my ($self) = @_;
-    return $self->{direct} if ($self->{direct});
-    $self->{direct} = ($self->value() & 256) != 0;
-    return $self->{direct};
-}
-
-sub edited {
-    my ($self) = @_;
-    return $self->{edited} if ($self->{edited});
-    $self->{edited} = ($self->value() & 2097152) != 0;
-    return $self->{edited};
-}
-
-sub group {
-    my ($self) = @_;
-    return $self->{group} if ($self->{group});
-    $self->{group} = ($self->value() & 4) != 0;
-    return $self->{group};
-}
-
-sub pie {
-    my ($self) = @_;
-    return $self->{pie} if ($self->{pie});
-    $self->{pie} = ($self->value() & 134217728) != 0;
-    return $self->{pie};
-}
-
-sub nodeflib {
-    my ($self) = @_;
-    return $self->{nodeflib} if ($self->{nodeflib});
-    $self->{nodeflib} = ($self->value() & 2048) != 0;
-    return $self->{nodeflib};
-}
-
-sub value {
-    my ($self) = @_;
-    return $self->{value};
-}
-
-########################################################################
 package Elf::EndianElf;
 
 our @ISA = 'IO::KaitaiStruct::Struct';
@@ -1624,13 +1191,6 @@ sub _read_be {
     }
 }
 
-sub tag_enum {
-    my ($self) = @_;
-    return $self->{tag_enum} if ($self->{tag_enum});
-    $self->{tag_enum} = $self->tag();
-    return $self->{tag_enum};
-}
-
 sub flag_1_values {
     my ($self) = @_;
     return $self->{flag_1_values} if ($self->{flag_1_values});
@@ -1659,6 +1219,26 @@ sub value_str {
         $io->seek($_pos);
     }
     return $self->{value_str};
+}
+
+sub tag_enum {
+    my ($self) = @_;
+    return $self->{tag_enum} if ($self->{tag_enum});
+    $self->{tag_enum} = $self->tag();
+    return $self->{tag_enum};
+}
+
+sub flag_values {
+    my ($self) = @_;
+    return $self->{flag_values} if ($self->{flag_values});
+    if ($self->tag_enum() == $Elf::DYNAMIC_ARRAY_TAGS_FLAGS) {
+        if ($self->{_is_le}) {
+            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
+        } else {
+            $self->{flag_values} = Elf::DtFlagValues->new($self->{_io}, $self, $self->{_root});
+        }
+    }
+    return $self->{flag_values};
 }
 
 sub is_value_str {
@@ -2679,6 +2259,511 @@ sub _read_be {
 sub entries {
     my ($self) = @_;
     return $self->{entries};
+}
+
+########################################################################
+package Elf::DtFlag1Values;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub singleton {
+    my ($self) = @_;
+    return $self->{singleton} if ($self->{singleton});
+    $self->{singleton} = ($self->value() & 33554432) != 0;
+    return $self->{singleton};
+}
+
+sub ignmuldef {
+    my ($self) = @_;
+    return $self->{ignmuldef} if ($self->{ignmuldef});
+    $self->{ignmuldef} = ($self->value() & 262144) != 0;
+    return $self->{ignmuldef};
+}
+
+sub loadfltr {
+    my ($self) = @_;
+    return $self->{loadfltr} if ($self->{loadfltr});
+    $self->{loadfltr} = ($self->value() & 16) != 0;
+    return $self->{loadfltr};
+}
+
+sub initfirst {
+    my ($self) = @_;
+    return $self->{initfirst} if ($self->{initfirst});
+    $self->{initfirst} = ($self->value() & 32) != 0;
+    return $self->{initfirst};
+}
+
+sub symintpose {
+    my ($self) = @_;
+    return $self->{symintpose} if ($self->{symintpose});
+    $self->{symintpose} = ($self->value() & 8388608) != 0;
+    return $self->{symintpose};
+}
+
+sub noreloc {
+    my ($self) = @_;
+    return $self->{noreloc} if ($self->{noreloc});
+    $self->{noreloc} = ($self->value() & 4194304) != 0;
+    return $self->{noreloc};
+}
+
+sub confalt {
+    my ($self) = @_;
+    return $self->{confalt} if ($self->{confalt});
+    $self->{confalt} = ($self->value() & 8192) != 0;
+    return $self->{confalt};
+}
+
+sub dispreldne {
+    my ($self) = @_;
+    return $self->{dispreldne} if ($self->{dispreldne});
+    $self->{dispreldne} = ($self->value() & 32768) != 0;
+    return $self->{dispreldne};
+}
+
+sub rtld_global {
+    my ($self) = @_;
+    return $self->{rtld_global} if ($self->{rtld_global});
+    $self->{rtld_global} = ($self->value() & 2) != 0;
+    return $self->{rtld_global};
+}
+
+sub nodelete {
+    my ($self) = @_;
+    return $self->{nodelete} if ($self->{nodelete});
+    $self->{nodelete} = ($self->value() & 8) != 0;
+    return $self->{nodelete};
+}
+
+sub trans {
+    my ($self) = @_;
+    return $self->{trans} if ($self->{trans});
+    $self->{trans} = ($self->value() & 512) != 0;
+    return $self->{trans};
+}
+
+sub origin {
+    my ($self) = @_;
+    return $self->{origin} if ($self->{origin});
+    $self->{origin} = ($self->value() & 128) != 0;
+    return $self->{origin};
+}
+
+sub now {
+    my ($self) = @_;
+    return $self->{now} if ($self->{now});
+    $self->{now} = ($self->value() & 1) != 0;
+    return $self->{now};
+}
+
+sub nohdr {
+    my ($self) = @_;
+    return $self->{nohdr} if ($self->{nohdr});
+    $self->{nohdr} = ($self->value() & 1048576) != 0;
+    return $self->{nohdr};
+}
+
+sub endfiltee {
+    my ($self) = @_;
+    return $self->{endfiltee} if ($self->{endfiltee});
+    $self->{endfiltee} = ($self->value() & 16384) != 0;
+    return $self->{endfiltee};
+}
+
+sub nodirect {
+    my ($self) = @_;
+    return $self->{nodirect} if ($self->{nodirect});
+    $self->{nodirect} = ($self->value() & 131072) != 0;
+    return $self->{nodirect};
+}
+
+sub globaudit {
+    my ($self) = @_;
+    return $self->{globaudit} if ($self->{globaudit});
+    $self->{globaudit} = ($self->value() & 16777216) != 0;
+    return $self->{globaudit};
+}
+
+sub noksyms {
+    my ($self) = @_;
+    return $self->{noksyms} if ($self->{noksyms});
+    $self->{noksyms} = ($self->value() & 524288) != 0;
+    return $self->{noksyms};
+}
+
+sub interpose {
+    my ($self) = @_;
+    return $self->{interpose} if ($self->{interpose});
+    $self->{interpose} = ($self->value() & 1024) != 0;
+    return $self->{interpose};
+}
+
+sub nodump {
+    my ($self) = @_;
+    return $self->{nodump} if ($self->{nodump});
+    $self->{nodump} = ($self->value() & 4096) != 0;
+    return $self->{nodump};
+}
+
+sub disprelpnd {
+    my ($self) = @_;
+    return $self->{disprelpnd} if ($self->{disprelpnd});
+    $self->{disprelpnd} = ($self->value() & 65536) != 0;
+    return $self->{disprelpnd};
+}
+
+sub noopen {
+    my ($self) = @_;
+    return $self->{noopen} if ($self->{noopen});
+    $self->{noopen} = ($self->value() & 64) != 0;
+    return $self->{noopen};
+}
+
+sub stub {
+    my ($self) = @_;
+    return $self->{stub} if ($self->{stub});
+    $self->{stub} = ($self->value() & 67108864) != 0;
+    return $self->{stub};
+}
+
+sub direct {
+    my ($self) = @_;
+    return $self->{direct} if ($self->{direct});
+    $self->{direct} = ($self->value() & 256) != 0;
+    return $self->{direct};
+}
+
+sub edited {
+    my ($self) = @_;
+    return $self->{edited} if ($self->{edited});
+    $self->{edited} = ($self->value() & 2097152) != 0;
+    return $self->{edited};
+}
+
+sub group {
+    my ($self) = @_;
+    return $self->{group} if ($self->{group});
+    $self->{group} = ($self->value() & 4) != 0;
+    return $self->{group};
+}
+
+sub pie {
+    my ($self) = @_;
+    return $self->{pie} if ($self->{pie});
+    $self->{pie} = ($self->value() & 134217728) != 0;
+    return $self->{pie};
+}
+
+sub nodeflib {
+    my ($self) = @_;
+    return $self->{nodeflib} if ($self->{nodeflib});
+    $self->{nodeflib} = ($self->value() & 2048) != 0;
+    return $self->{nodeflib};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
+package Elf::SectionHeaderFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub merge {
+    my ($self) = @_;
+    return $self->{merge} if ($self->{merge});
+    $self->{merge} = ($self->value() & 16) != 0;
+    return $self->{merge};
+}
+
+sub mask_os {
+    my ($self) = @_;
+    return $self->{mask_os} if ($self->{mask_os});
+    $self->{mask_os} = ($self->value() & 267386880) != 0;
+    return $self->{mask_os};
+}
+
+sub exclude {
+    my ($self) = @_;
+    return $self->{exclude} if ($self->{exclude});
+    $self->{exclude} = ($self->value() & 134217728) != 0;
+    return $self->{exclude};
+}
+
+sub mask_proc {
+    my ($self) = @_;
+    return $self->{mask_proc} if ($self->{mask_proc});
+    $self->{mask_proc} = ($self->value() & 4026531840) != 0;
+    return $self->{mask_proc};
+}
+
+sub strings {
+    my ($self) = @_;
+    return $self->{strings} if ($self->{strings});
+    $self->{strings} = ($self->value() & 32) != 0;
+    return $self->{strings};
+}
+
+sub os_non_conforming {
+    my ($self) = @_;
+    return $self->{os_non_conforming} if ($self->{os_non_conforming});
+    $self->{os_non_conforming} = ($self->value() & 256) != 0;
+    return $self->{os_non_conforming};
+}
+
+sub alloc {
+    my ($self) = @_;
+    return $self->{alloc} if ($self->{alloc});
+    $self->{alloc} = ($self->value() & 2) != 0;
+    return $self->{alloc};
+}
+
+sub exec_instr {
+    my ($self) = @_;
+    return $self->{exec_instr} if ($self->{exec_instr});
+    $self->{exec_instr} = ($self->value() & 4) != 0;
+    return $self->{exec_instr};
+}
+
+sub info_link {
+    my ($self) = @_;
+    return $self->{info_link} if ($self->{info_link});
+    $self->{info_link} = ($self->value() & 64) != 0;
+    return $self->{info_link};
+}
+
+sub write {
+    my ($self) = @_;
+    return $self->{write} if ($self->{write});
+    $self->{write} = ($self->value() & 1) != 0;
+    return $self->{write};
+}
+
+sub link_order {
+    my ($self) = @_;
+    return $self->{link_order} if ($self->{link_order});
+    $self->{link_order} = ($self->value() & 128) != 0;
+    return $self->{link_order};
+}
+
+sub ordered {
+    my ($self) = @_;
+    return $self->{ordered} if ($self->{ordered});
+    $self->{ordered} = ($self->value() & 67108864) != 0;
+    return $self->{ordered};
+}
+
+sub tls {
+    my ($self) = @_;
+    return $self->{tls} if ($self->{tls});
+    $self->{tls} = ($self->value() & 1024) != 0;
+    return $self->{tls};
+}
+
+sub group {
+    my ($self) = @_;
+    return $self->{group} if ($self->{group});
+    $self->{group} = ($self->value() & 512) != 0;
+    return $self->{group};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
+package Elf::PhdrTypeFlags;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub read {
+    my ($self) = @_;
+    return $self->{read} if ($self->{read});
+    $self->{read} = ($self->value() & 4) != 0;
+    return $self->{read};
+}
+
+sub write {
+    my ($self) = @_;
+    return $self->{write} if ($self->{write});
+    $self->{write} = ($self->value() & 2) != 0;
+    return $self->{write};
+}
+
+sub execute {
+    my ($self) = @_;
+    return $self->{execute} if ($self->{execute});
+    $self->{execute} = ($self->value() & 1) != 0;
+    return $self->{execute};
+}
+
+sub mask_proc {
+    my ($self) = @_;
+    return $self->{mask_proc} if ($self->{mask_proc});
+    $self->{mask_proc} = ($self->value() & 4026531840) != 0;
+    return $self->{mask_proc};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
+}
+
+########################################################################
+package Elf::DtFlagValues;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+}
+
+sub bind_now {
+    my ($self) = @_;
+    return $self->{bind_now} if ($self->{bind_now});
+    $self->{bind_now} = ($self->value() & 8) != 0;
+    return $self->{bind_now};
+}
+
+sub origin {
+    my ($self) = @_;
+    return $self->{origin} if ($self->{origin});
+    $self->{origin} = ($self->value() & 1) != 0;
+    return $self->{origin};
+}
+
+sub textrel {
+    my ($self) = @_;
+    return $self->{textrel} if ($self->{textrel});
+    $self->{textrel} = ($self->value() & 4) != 0;
+    return $self->{textrel};
+}
+
+sub static_tls {
+    my ($self) = @_;
+    return $self->{static_tls} if ($self->{static_tls});
+    $self->{static_tls} = ($self->value() & 16) != 0;
+    return $self->{static_tls};
+}
+
+sub symbolic {
+    my ($self) = @_;
+    return $self->{symbolic} if ($self->{symbolic});
+    $self->{symbolic} = ($self->value() & 2) != 0;
+    return $self->{symbolic};
+}
+
+sub value {
+    my ($self) = @_;
+    return $self->{value};
 }
 
 1;

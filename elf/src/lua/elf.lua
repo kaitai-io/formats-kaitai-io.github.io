@@ -573,578 +573,6 @@ end
 -- Version of ABI targeted by this ELF file. Interpretation
 -- depends on `abi` attribute.
 
-Elf.PhdrTypeFlags = class.class(KaitaiStruct)
-
-function Elf.PhdrTypeFlags:_init(value, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.value = value
-  self:_read()
-end
-
-function Elf.PhdrTypeFlags:_read()
-end
-
-Elf.PhdrTypeFlags.property.read = {}
-function Elf.PhdrTypeFlags.property.read:get()
-  if self._m_read ~= nil then
-    return self._m_read
-  end
-
-  self._m_read = (self.value & 4) ~= 0
-  return self._m_read
-end
-
-Elf.PhdrTypeFlags.property.write = {}
-function Elf.PhdrTypeFlags.property.write:get()
-  if self._m_write ~= nil then
-    return self._m_write
-  end
-
-  self._m_write = (self.value & 2) ~= 0
-  return self._m_write
-end
-
-Elf.PhdrTypeFlags.property.execute = {}
-function Elf.PhdrTypeFlags.property.execute:get()
-  if self._m_execute ~= nil then
-    return self._m_execute
-  end
-
-  self._m_execute = (self.value & 1) ~= 0
-  return self._m_execute
-end
-
-Elf.PhdrTypeFlags.property.mask_proc = {}
-function Elf.PhdrTypeFlags.property.mask_proc:get()
-  if self._m_mask_proc ~= nil then
-    return self._m_mask_proc
-  end
-
-  self._m_mask_proc = (self.value & 4026531840) ~= 0
-  return self._m_mask_proc
-end
-
-
-Elf.SectionHeaderFlags = class.class(KaitaiStruct)
-
-function Elf.SectionHeaderFlags:_init(value, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.value = value
-  self:_read()
-end
-
-function Elf.SectionHeaderFlags:_read()
-end
-
--- 
--- might be merged.
-Elf.SectionHeaderFlags.property.merge = {}
-function Elf.SectionHeaderFlags.property.merge:get()
-  if self._m_merge ~= nil then
-    return self._m_merge
-  end
-
-  self._m_merge = (self.value & 16) ~= 0
-  return self._m_merge
-end
-
--- 
--- OS-specific.
-Elf.SectionHeaderFlags.property.mask_os = {}
-function Elf.SectionHeaderFlags.property.mask_os:get()
-  if self._m_mask_os ~= nil then
-    return self._m_mask_os
-  end
-
-  self._m_mask_os = (self.value & 267386880) ~= 0
-  return self._m_mask_os
-end
-
--- 
--- section is excluded unless referenced or allocated (Solaris).
-Elf.SectionHeaderFlags.property.exclude = {}
-function Elf.SectionHeaderFlags.property.exclude:get()
-  if self._m_exclude ~= nil then
-    return self._m_exclude
-  end
-
-  self._m_exclude = (self.value & 134217728) ~= 0
-  return self._m_exclude
-end
-
--- 
--- Processor-specific.
-Elf.SectionHeaderFlags.property.mask_proc = {}
-function Elf.SectionHeaderFlags.property.mask_proc:get()
-  if self._m_mask_proc ~= nil then
-    return self._m_mask_proc
-  end
-
-  self._m_mask_proc = (self.value & 4026531840) ~= 0
-  return self._m_mask_proc
-end
-
--- 
--- contains nul-terminated strings.
-Elf.SectionHeaderFlags.property.strings = {}
-function Elf.SectionHeaderFlags.property.strings:get()
-  if self._m_strings ~= nil then
-    return self._m_strings
-  end
-
-  self._m_strings = (self.value & 32) ~= 0
-  return self._m_strings
-end
-
--- 
--- non-standard OS specific handling required.
-Elf.SectionHeaderFlags.property.os_non_conforming = {}
-function Elf.SectionHeaderFlags.property.os_non_conforming:get()
-  if self._m_os_non_conforming ~= nil then
-    return self._m_os_non_conforming
-  end
-
-  self._m_os_non_conforming = (self.value & 256) ~= 0
-  return self._m_os_non_conforming
-end
-
--- 
--- occupies memory during execution.
-Elf.SectionHeaderFlags.property.alloc = {}
-function Elf.SectionHeaderFlags.property.alloc:get()
-  if self._m_alloc ~= nil then
-    return self._m_alloc
-  end
-
-  self._m_alloc = (self.value & 2) ~= 0
-  return self._m_alloc
-end
-
--- 
--- executable.
-Elf.SectionHeaderFlags.property.exec_instr = {}
-function Elf.SectionHeaderFlags.property.exec_instr:get()
-  if self._m_exec_instr ~= nil then
-    return self._m_exec_instr
-  end
-
-  self._m_exec_instr = (self.value & 4) ~= 0
-  return self._m_exec_instr
-end
-
--- 
--- 'sh_info' contains SHT index.
-Elf.SectionHeaderFlags.property.info_link = {}
-function Elf.SectionHeaderFlags.property.info_link:get()
-  if self._m_info_link ~= nil then
-    return self._m_info_link
-  end
-
-  self._m_info_link = (self.value & 64) ~= 0
-  return self._m_info_link
-end
-
--- 
--- writable.
-Elf.SectionHeaderFlags.property.write = {}
-function Elf.SectionHeaderFlags.property.write:get()
-  if self._m_write ~= nil then
-    return self._m_write
-  end
-
-  self._m_write = (self.value & 1) ~= 0
-  return self._m_write
-end
-
--- 
--- preserve order after combining.
-Elf.SectionHeaderFlags.property.link_order = {}
-function Elf.SectionHeaderFlags.property.link_order:get()
-  if self._m_link_order ~= nil then
-    return self._m_link_order
-  end
-
-  self._m_link_order = (self.value & 128) ~= 0
-  return self._m_link_order
-end
-
--- 
--- special ordering requirement (Solaris).
-Elf.SectionHeaderFlags.property.ordered = {}
-function Elf.SectionHeaderFlags.property.ordered:get()
-  if self._m_ordered ~= nil then
-    return self._m_ordered
-  end
-
-  self._m_ordered = (self.value & 67108864) ~= 0
-  return self._m_ordered
-end
-
--- 
--- section hold thread-local data.
-Elf.SectionHeaderFlags.property.tls = {}
-function Elf.SectionHeaderFlags.property.tls:get()
-  if self._m_tls ~= nil then
-    return self._m_tls
-  end
-
-  self._m_tls = (self.value & 1024) ~= 0
-  return self._m_tls
-end
-
--- 
--- section is member of a group.
-Elf.SectionHeaderFlags.property.group = {}
-function Elf.SectionHeaderFlags.property.group:get()
-  if self._m_group ~= nil then
-    return self._m_group
-  end
-
-  self._m_group = (self.value & 512) ~= 0
-  return self._m_group
-end
-
-
-Elf.DtFlag1Values = class.class(KaitaiStruct)
-
-function Elf.DtFlag1Values:_init(value, io, parent, root)
-  KaitaiStruct._init(self, io)
-  self._parent = parent
-  self._root = root or self
-  self.value = value
-  self:_read()
-end
-
-function Elf.DtFlag1Values:_read()
-end
-
--- 
--- Singleton symbols are used.
-Elf.DtFlag1Values.property.singleton = {}
-function Elf.DtFlag1Values.property.singleton:get()
-  if self._m_singleton ~= nil then
-    return self._m_singleton
-  end
-
-  self._m_singleton = (self.value & 33554432) ~= 0
-  return self._m_singleton
-end
-
-Elf.DtFlag1Values.property.ignmuldef = {}
-function Elf.DtFlag1Values.property.ignmuldef:get()
-  if self._m_ignmuldef ~= nil then
-    return self._m_ignmuldef
-  end
-
-  self._m_ignmuldef = (self.value & 262144) ~= 0
-  return self._m_ignmuldef
-end
-
--- 
--- Trigger filtee loading at runtime.
-Elf.DtFlag1Values.property.loadfltr = {}
-function Elf.DtFlag1Values.property.loadfltr:get()
-  if self._m_loadfltr ~= nil then
-    return self._m_loadfltr
-  end
-
-  self._m_loadfltr = (self.value & 16) ~= 0
-  return self._m_loadfltr
-end
-
--- 
--- Set RTLD_INITFIRST for this object.
-Elf.DtFlag1Values.property.initfirst = {}
-function Elf.DtFlag1Values.property.initfirst:get()
-  if self._m_initfirst ~= nil then
-    return self._m_initfirst
-  end
-
-  self._m_initfirst = (self.value & 32) ~= 0
-  return self._m_initfirst
-end
-
--- 
--- Object has individual interposers.
-Elf.DtFlag1Values.property.symintpose = {}
-function Elf.DtFlag1Values.property.symintpose:get()
-  if self._m_symintpose ~= nil then
-    return self._m_symintpose
-  end
-
-  self._m_symintpose = (self.value & 8388608) ~= 0
-  return self._m_symintpose
-end
-
-Elf.DtFlag1Values.property.noreloc = {}
-function Elf.DtFlag1Values.property.noreloc:get()
-  if self._m_noreloc ~= nil then
-    return self._m_noreloc
-  end
-
-  self._m_noreloc = (self.value & 4194304) ~= 0
-  return self._m_noreloc
-end
-
--- 
--- Configuration alternative created.
-Elf.DtFlag1Values.property.confalt = {}
-function Elf.DtFlag1Values.property.confalt:get()
-  if self._m_confalt ~= nil then
-    return self._m_confalt
-  end
-
-  self._m_confalt = (self.value & 8192) ~= 0
-  return self._m_confalt
-end
-
--- 
--- Disp reloc applied at build time.
-Elf.DtFlag1Values.property.dispreldne = {}
-function Elf.DtFlag1Values.property.dispreldne:get()
-  if self._m_dispreldne ~= nil then
-    return self._m_dispreldne
-  end
-
-  self._m_dispreldne = (self.value & 32768) ~= 0
-  return self._m_dispreldne
-end
-
--- 
--- Set RTLD_GLOBAL for this object.
-Elf.DtFlag1Values.property.rtld_global = {}
-function Elf.DtFlag1Values.property.rtld_global:get()
-  if self._m_rtld_global ~= nil then
-    return self._m_rtld_global
-  end
-
-  self._m_rtld_global = (self.value & 2) ~= 0
-  return self._m_rtld_global
-end
-
--- 
--- Set RTLD_NODELETE for this object.
-Elf.DtFlag1Values.property.nodelete = {}
-function Elf.DtFlag1Values.property.nodelete:get()
-  if self._m_nodelete ~= nil then
-    return self._m_nodelete
-  end
-
-  self._m_nodelete = (self.value & 8) ~= 0
-  return self._m_nodelete
-end
-
-Elf.DtFlag1Values.property.trans = {}
-function Elf.DtFlag1Values.property.trans:get()
-  if self._m_trans ~= nil then
-    return self._m_trans
-  end
-
-  self._m_trans = (self.value & 512) ~= 0
-  return self._m_trans
-end
-
--- 
--- $ORIGIN must be handled.
-Elf.DtFlag1Values.property.origin = {}
-function Elf.DtFlag1Values.property.origin:get()
-  if self._m_origin ~= nil then
-    return self._m_origin
-  end
-
-  self._m_origin = (self.value & 128) ~= 0
-  return self._m_origin
-end
-
--- 
--- Set RTLD_NOW for this object.
-Elf.DtFlag1Values.property.now = {}
-function Elf.DtFlag1Values.property.now:get()
-  if self._m_now ~= nil then
-    return self._m_now
-  end
-
-  self._m_now = (self.value & 1) ~= 0
-  return self._m_now
-end
-
-Elf.DtFlag1Values.property.nohdr = {}
-function Elf.DtFlag1Values.property.nohdr:get()
-  if self._m_nohdr ~= nil then
-    return self._m_nohdr
-  end
-
-  self._m_nohdr = (self.value & 1048576) ~= 0
-  return self._m_nohdr
-end
-
--- 
--- Filtee terminates filters search.
-Elf.DtFlag1Values.property.endfiltee = {}
-function Elf.DtFlag1Values.property.endfiltee:get()
-  if self._m_endfiltee ~= nil then
-    return self._m_endfiltee
-  end
-
-  self._m_endfiltee = (self.value & 16384) ~= 0
-  return self._m_endfiltee
-end
-
--- 
--- Object has no-direct binding.
-Elf.DtFlag1Values.property.nodirect = {}
-function Elf.DtFlag1Values.property.nodirect:get()
-  if self._m_nodirect ~= nil then
-    return self._m_nodirect
-  end
-
-  self._m_nodirect = (self.value & 131072) ~= 0
-  return self._m_nodirect
-end
-
--- 
--- Global auditing required.
-Elf.DtFlag1Values.property.globaudit = {}
-function Elf.DtFlag1Values.property.globaudit:get()
-  if self._m_globaudit ~= nil then
-    return self._m_globaudit
-  end
-
-  self._m_globaudit = (self.value & 16777216) ~= 0
-  return self._m_globaudit
-end
-
-Elf.DtFlag1Values.property.noksyms = {}
-function Elf.DtFlag1Values.property.noksyms:get()
-  if self._m_noksyms ~= nil then
-    return self._m_noksyms
-  end
-
-  self._m_noksyms = (self.value & 524288) ~= 0
-  return self._m_noksyms
-end
-
--- 
--- Object is used to interpose.
-Elf.DtFlag1Values.property.interpose = {}
-function Elf.DtFlag1Values.property.interpose:get()
-  if self._m_interpose ~= nil then
-    return self._m_interpose
-  end
-
-  self._m_interpose = (self.value & 1024) ~= 0
-  return self._m_interpose
-end
-
--- 
--- Object can't be dldump'ed.
-Elf.DtFlag1Values.property.nodump = {}
-function Elf.DtFlag1Values.property.nodump:get()
-  if self._m_nodump ~= nil then
-    return self._m_nodump
-  end
-
-  self._m_nodump = (self.value & 4096) ~= 0
-  return self._m_nodump
-end
-
--- 
--- Disp reloc applied at run-time.
-Elf.DtFlag1Values.property.disprelpnd = {}
-function Elf.DtFlag1Values.property.disprelpnd:get()
-  if self._m_disprelpnd ~= nil then
-    return self._m_disprelpnd
-  end
-
-  self._m_disprelpnd = (self.value & 65536) ~= 0
-  return self._m_disprelpnd
-end
-
--- 
--- Set RTLD_NOOPEN for this object.
-Elf.DtFlag1Values.property.noopen = {}
-function Elf.DtFlag1Values.property.noopen:get()
-  if self._m_noopen ~= nil then
-    return self._m_noopen
-  end
-
-  self._m_noopen = (self.value & 64) ~= 0
-  return self._m_noopen
-end
-
-Elf.DtFlag1Values.property.stub = {}
-function Elf.DtFlag1Values.property.stub:get()
-  if self._m_stub ~= nil then
-    return self._m_stub
-  end
-
-  self._m_stub = (self.value & 67108864) ~= 0
-  return self._m_stub
-end
-
--- 
--- Direct binding enabled.
-Elf.DtFlag1Values.property.direct = {}
-function Elf.DtFlag1Values.property.direct:get()
-  if self._m_direct ~= nil then
-    return self._m_direct
-  end
-
-  self._m_direct = (self.value & 256) ~= 0
-  return self._m_direct
-end
-
--- 
--- Object is modified after built.
-Elf.DtFlag1Values.property.edited = {}
-function Elf.DtFlag1Values.property.edited:get()
-  if self._m_edited ~= nil then
-    return self._m_edited
-  end
-
-  self._m_edited = (self.value & 2097152) ~= 0
-  return self._m_edited
-end
-
--- 
--- Set RTLD_GROUP for this object.
-Elf.DtFlag1Values.property.group = {}
-function Elf.DtFlag1Values.property.group:get()
-  if self._m_group ~= nil then
-    return self._m_group
-  end
-
-  self._m_group = (self.value & 4) ~= 0
-  return self._m_group
-end
-
-Elf.DtFlag1Values.property.pie = {}
-function Elf.DtFlag1Values.property.pie:get()
-  if self._m_pie ~= nil then
-    return self._m_pie
-  end
-
-  self._m_pie = (self.value & 134217728) ~= 0
-  return self._m_pie
-end
-
--- 
--- Ignore default lib search path.
-Elf.DtFlag1Values.property.nodeflib = {}
-function Elf.DtFlag1Values.property.nodeflib:get()
-  if self._m_nodeflib ~= nil then
-    return self._m_nodeflib
-  end
-
-  self._m_nodeflib = (self.value & 2048) ~= 0
-  return self._m_nodeflib
-end
-
-
 Elf.EndianElf = class.class(KaitaiStruct)
 
 function Elf.EndianElf:_init(io, parent, root)
@@ -1547,16 +975,6 @@ function Elf.EndianElf.DynamicSectionEntry:_read_be()
   end
 end
 
-Elf.EndianElf.DynamicSectionEntry.property.tag_enum = {}
-function Elf.EndianElf.DynamicSectionEntry.property.tag_enum:get()
-  if self._m_tag_enum ~= nil then
-    return self._m_tag_enum
-  end
-
-  self._m_tag_enum = Elf.DynamicArrayTags(self.tag)
-  return self._m_tag_enum
-end
-
 Elf.EndianElf.DynamicSectionEntry.property.flag_1_values = {}
 function Elf.EndianElf.DynamicSectionEntry.property.flag_1_values:get()
   if self._m_flag_1_values ~= nil then
@@ -1591,6 +1009,32 @@ function Elf.EndianElf.DynamicSectionEntry.property.value_str:get()
     _io:seek(_pos)
   end
   return self._m_value_str
+end
+
+Elf.EndianElf.DynamicSectionEntry.property.tag_enum = {}
+function Elf.EndianElf.DynamicSectionEntry.property.tag_enum:get()
+  if self._m_tag_enum ~= nil then
+    return self._m_tag_enum
+  end
+
+  self._m_tag_enum = Elf.DynamicArrayTags(self.tag)
+  return self._m_tag_enum
+end
+
+Elf.EndianElf.DynamicSectionEntry.property.flag_values = {}
+function Elf.EndianElf.DynamicSectionEntry.property.flag_values:get()
+  if self._m_flag_values ~= nil then
+    return self._m_flag_values
+  end
+
+  if self.tag_enum == Elf.DynamicArrayTags.flags then
+    if self._is_le then
+      self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+    else
+      self._m_flag_values = Elf.DtFlagValues(self.value_or_ptr, self._io, self, self._root)
+    end
+  end
+  return self._m_flag_values
 end
 
 Elf.EndianElf.DynamicSectionEntry.property.is_value_str = {}
@@ -2301,6 +1745,657 @@ function Elf.EndianElf.StringsStruct:_read_be()
     self.entries[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
     i = i + 1
   end
+end
+
+
+Elf.DtFlag1Values = class.class(KaitaiStruct)
+
+function Elf.DtFlag1Values:_init(value, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.value = value
+  self:_read()
+end
+
+function Elf.DtFlag1Values:_read()
+end
+
+-- 
+-- Singleton symbols are used.
+Elf.DtFlag1Values.property.singleton = {}
+function Elf.DtFlag1Values.property.singleton:get()
+  if self._m_singleton ~= nil then
+    return self._m_singleton
+  end
+
+  self._m_singleton = (self.value & 33554432) ~= 0
+  return self._m_singleton
+end
+
+Elf.DtFlag1Values.property.ignmuldef = {}
+function Elf.DtFlag1Values.property.ignmuldef:get()
+  if self._m_ignmuldef ~= nil then
+    return self._m_ignmuldef
+  end
+
+  self._m_ignmuldef = (self.value & 262144) ~= 0
+  return self._m_ignmuldef
+end
+
+-- 
+-- Trigger filtee loading at runtime.
+Elf.DtFlag1Values.property.loadfltr = {}
+function Elf.DtFlag1Values.property.loadfltr:get()
+  if self._m_loadfltr ~= nil then
+    return self._m_loadfltr
+  end
+
+  self._m_loadfltr = (self.value & 16) ~= 0
+  return self._m_loadfltr
+end
+
+-- 
+-- Set RTLD_INITFIRST for this object.
+Elf.DtFlag1Values.property.initfirst = {}
+function Elf.DtFlag1Values.property.initfirst:get()
+  if self._m_initfirst ~= nil then
+    return self._m_initfirst
+  end
+
+  self._m_initfirst = (self.value & 32) ~= 0
+  return self._m_initfirst
+end
+
+-- 
+-- Object has individual interposers.
+Elf.DtFlag1Values.property.symintpose = {}
+function Elf.DtFlag1Values.property.symintpose:get()
+  if self._m_symintpose ~= nil then
+    return self._m_symintpose
+  end
+
+  self._m_symintpose = (self.value & 8388608) ~= 0
+  return self._m_symintpose
+end
+
+Elf.DtFlag1Values.property.noreloc = {}
+function Elf.DtFlag1Values.property.noreloc:get()
+  if self._m_noreloc ~= nil then
+    return self._m_noreloc
+  end
+
+  self._m_noreloc = (self.value & 4194304) ~= 0
+  return self._m_noreloc
+end
+
+-- 
+-- Configuration alternative created.
+Elf.DtFlag1Values.property.confalt = {}
+function Elf.DtFlag1Values.property.confalt:get()
+  if self._m_confalt ~= nil then
+    return self._m_confalt
+  end
+
+  self._m_confalt = (self.value & 8192) ~= 0
+  return self._m_confalt
+end
+
+-- 
+-- Disp reloc applied at build time.
+Elf.DtFlag1Values.property.dispreldne = {}
+function Elf.DtFlag1Values.property.dispreldne:get()
+  if self._m_dispreldne ~= nil then
+    return self._m_dispreldne
+  end
+
+  self._m_dispreldne = (self.value & 32768) ~= 0
+  return self._m_dispreldne
+end
+
+-- 
+-- Set RTLD_GLOBAL for this object.
+Elf.DtFlag1Values.property.rtld_global = {}
+function Elf.DtFlag1Values.property.rtld_global:get()
+  if self._m_rtld_global ~= nil then
+    return self._m_rtld_global
+  end
+
+  self._m_rtld_global = (self.value & 2) ~= 0
+  return self._m_rtld_global
+end
+
+-- 
+-- Set RTLD_NODELETE for this object.
+Elf.DtFlag1Values.property.nodelete = {}
+function Elf.DtFlag1Values.property.nodelete:get()
+  if self._m_nodelete ~= nil then
+    return self._m_nodelete
+  end
+
+  self._m_nodelete = (self.value & 8) ~= 0
+  return self._m_nodelete
+end
+
+Elf.DtFlag1Values.property.trans = {}
+function Elf.DtFlag1Values.property.trans:get()
+  if self._m_trans ~= nil then
+    return self._m_trans
+  end
+
+  self._m_trans = (self.value & 512) ~= 0
+  return self._m_trans
+end
+
+-- 
+-- $ORIGIN must be handled.
+Elf.DtFlag1Values.property.origin = {}
+function Elf.DtFlag1Values.property.origin:get()
+  if self._m_origin ~= nil then
+    return self._m_origin
+  end
+
+  self._m_origin = (self.value & 128) ~= 0
+  return self._m_origin
+end
+
+-- 
+-- Set RTLD_NOW for this object.
+Elf.DtFlag1Values.property.now = {}
+function Elf.DtFlag1Values.property.now:get()
+  if self._m_now ~= nil then
+    return self._m_now
+  end
+
+  self._m_now = (self.value & 1) ~= 0
+  return self._m_now
+end
+
+Elf.DtFlag1Values.property.nohdr = {}
+function Elf.DtFlag1Values.property.nohdr:get()
+  if self._m_nohdr ~= nil then
+    return self._m_nohdr
+  end
+
+  self._m_nohdr = (self.value & 1048576) ~= 0
+  return self._m_nohdr
+end
+
+-- 
+-- Filtee terminates filters search.
+Elf.DtFlag1Values.property.endfiltee = {}
+function Elf.DtFlag1Values.property.endfiltee:get()
+  if self._m_endfiltee ~= nil then
+    return self._m_endfiltee
+  end
+
+  self._m_endfiltee = (self.value & 16384) ~= 0
+  return self._m_endfiltee
+end
+
+-- 
+-- Object has no-direct binding.
+Elf.DtFlag1Values.property.nodirect = {}
+function Elf.DtFlag1Values.property.nodirect:get()
+  if self._m_nodirect ~= nil then
+    return self._m_nodirect
+  end
+
+  self._m_nodirect = (self.value & 131072) ~= 0
+  return self._m_nodirect
+end
+
+-- 
+-- Global auditing required.
+Elf.DtFlag1Values.property.globaudit = {}
+function Elf.DtFlag1Values.property.globaudit:get()
+  if self._m_globaudit ~= nil then
+    return self._m_globaudit
+  end
+
+  self._m_globaudit = (self.value & 16777216) ~= 0
+  return self._m_globaudit
+end
+
+Elf.DtFlag1Values.property.noksyms = {}
+function Elf.DtFlag1Values.property.noksyms:get()
+  if self._m_noksyms ~= nil then
+    return self._m_noksyms
+  end
+
+  self._m_noksyms = (self.value & 524288) ~= 0
+  return self._m_noksyms
+end
+
+-- 
+-- Object is used to interpose.
+Elf.DtFlag1Values.property.interpose = {}
+function Elf.DtFlag1Values.property.interpose:get()
+  if self._m_interpose ~= nil then
+    return self._m_interpose
+  end
+
+  self._m_interpose = (self.value & 1024) ~= 0
+  return self._m_interpose
+end
+
+-- 
+-- Object can't be dldump'ed.
+Elf.DtFlag1Values.property.nodump = {}
+function Elf.DtFlag1Values.property.nodump:get()
+  if self._m_nodump ~= nil then
+    return self._m_nodump
+  end
+
+  self._m_nodump = (self.value & 4096) ~= 0
+  return self._m_nodump
+end
+
+-- 
+-- Disp reloc applied at run-time.
+Elf.DtFlag1Values.property.disprelpnd = {}
+function Elf.DtFlag1Values.property.disprelpnd:get()
+  if self._m_disprelpnd ~= nil then
+    return self._m_disprelpnd
+  end
+
+  self._m_disprelpnd = (self.value & 65536) ~= 0
+  return self._m_disprelpnd
+end
+
+-- 
+-- Set RTLD_NOOPEN for this object.
+Elf.DtFlag1Values.property.noopen = {}
+function Elf.DtFlag1Values.property.noopen:get()
+  if self._m_noopen ~= nil then
+    return self._m_noopen
+  end
+
+  self._m_noopen = (self.value & 64) ~= 0
+  return self._m_noopen
+end
+
+Elf.DtFlag1Values.property.stub = {}
+function Elf.DtFlag1Values.property.stub:get()
+  if self._m_stub ~= nil then
+    return self._m_stub
+  end
+
+  self._m_stub = (self.value & 67108864) ~= 0
+  return self._m_stub
+end
+
+-- 
+-- Direct binding enabled.
+Elf.DtFlag1Values.property.direct = {}
+function Elf.DtFlag1Values.property.direct:get()
+  if self._m_direct ~= nil then
+    return self._m_direct
+  end
+
+  self._m_direct = (self.value & 256) ~= 0
+  return self._m_direct
+end
+
+-- 
+-- Object is modified after built.
+Elf.DtFlag1Values.property.edited = {}
+function Elf.DtFlag1Values.property.edited:get()
+  if self._m_edited ~= nil then
+    return self._m_edited
+  end
+
+  self._m_edited = (self.value & 2097152) ~= 0
+  return self._m_edited
+end
+
+-- 
+-- Set RTLD_GROUP for this object.
+Elf.DtFlag1Values.property.group = {}
+function Elf.DtFlag1Values.property.group:get()
+  if self._m_group ~= nil then
+    return self._m_group
+  end
+
+  self._m_group = (self.value & 4) ~= 0
+  return self._m_group
+end
+
+Elf.DtFlag1Values.property.pie = {}
+function Elf.DtFlag1Values.property.pie:get()
+  if self._m_pie ~= nil then
+    return self._m_pie
+  end
+
+  self._m_pie = (self.value & 134217728) ~= 0
+  return self._m_pie
+end
+
+-- 
+-- Ignore default lib search path.
+Elf.DtFlag1Values.property.nodeflib = {}
+function Elf.DtFlag1Values.property.nodeflib:get()
+  if self._m_nodeflib ~= nil then
+    return self._m_nodeflib
+  end
+
+  self._m_nodeflib = (self.value & 2048) ~= 0
+  return self._m_nodeflib
+end
+
+
+Elf.SectionHeaderFlags = class.class(KaitaiStruct)
+
+function Elf.SectionHeaderFlags:_init(value, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.value = value
+  self:_read()
+end
+
+function Elf.SectionHeaderFlags:_read()
+end
+
+-- 
+-- might be merged.
+Elf.SectionHeaderFlags.property.merge = {}
+function Elf.SectionHeaderFlags.property.merge:get()
+  if self._m_merge ~= nil then
+    return self._m_merge
+  end
+
+  self._m_merge = (self.value & 16) ~= 0
+  return self._m_merge
+end
+
+-- 
+-- OS-specific.
+Elf.SectionHeaderFlags.property.mask_os = {}
+function Elf.SectionHeaderFlags.property.mask_os:get()
+  if self._m_mask_os ~= nil then
+    return self._m_mask_os
+  end
+
+  self._m_mask_os = (self.value & 267386880) ~= 0
+  return self._m_mask_os
+end
+
+-- 
+-- section is excluded unless referenced or allocated (Solaris).
+Elf.SectionHeaderFlags.property.exclude = {}
+function Elf.SectionHeaderFlags.property.exclude:get()
+  if self._m_exclude ~= nil then
+    return self._m_exclude
+  end
+
+  self._m_exclude = (self.value & 134217728) ~= 0
+  return self._m_exclude
+end
+
+-- 
+-- Processor-specific.
+Elf.SectionHeaderFlags.property.mask_proc = {}
+function Elf.SectionHeaderFlags.property.mask_proc:get()
+  if self._m_mask_proc ~= nil then
+    return self._m_mask_proc
+  end
+
+  self._m_mask_proc = (self.value & 4026531840) ~= 0
+  return self._m_mask_proc
+end
+
+-- 
+-- contains nul-terminated strings.
+Elf.SectionHeaderFlags.property.strings = {}
+function Elf.SectionHeaderFlags.property.strings:get()
+  if self._m_strings ~= nil then
+    return self._m_strings
+  end
+
+  self._m_strings = (self.value & 32) ~= 0
+  return self._m_strings
+end
+
+-- 
+-- non-standard OS specific handling required.
+Elf.SectionHeaderFlags.property.os_non_conforming = {}
+function Elf.SectionHeaderFlags.property.os_non_conforming:get()
+  if self._m_os_non_conforming ~= nil then
+    return self._m_os_non_conforming
+  end
+
+  self._m_os_non_conforming = (self.value & 256) ~= 0
+  return self._m_os_non_conforming
+end
+
+-- 
+-- occupies memory during execution.
+Elf.SectionHeaderFlags.property.alloc = {}
+function Elf.SectionHeaderFlags.property.alloc:get()
+  if self._m_alloc ~= nil then
+    return self._m_alloc
+  end
+
+  self._m_alloc = (self.value & 2) ~= 0
+  return self._m_alloc
+end
+
+-- 
+-- executable.
+Elf.SectionHeaderFlags.property.exec_instr = {}
+function Elf.SectionHeaderFlags.property.exec_instr:get()
+  if self._m_exec_instr ~= nil then
+    return self._m_exec_instr
+  end
+
+  self._m_exec_instr = (self.value & 4) ~= 0
+  return self._m_exec_instr
+end
+
+-- 
+-- 'sh_info' contains SHT index.
+Elf.SectionHeaderFlags.property.info_link = {}
+function Elf.SectionHeaderFlags.property.info_link:get()
+  if self._m_info_link ~= nil then
+    return self._m_info_link
+  end
+
+  self._m_info_link = (self.value & 64) ~= 0
+  return self._m_info_link
+end
+
+-- 
+-- writable.
+Elf.SectionHeaderFlags.property.write = {}
+function Elf.SectionHeaderFlags.property.write:get()
+  if self._m_write ~= nil then
+    return self._m_write
+  end
+
+  self._m_write = (self.value & 1) ~= 0
+  return self._m_write
+end
+
+-- 
+-- preserve order after combining.
+Elf.SectionHeaderFlags.property.link_order = {}
+function Elf.SectionHeaderFlags.property.link_order:get()
+  if self._m_link_order ~= nil then
+    return self._m_link_order
+  end
+
+  self._m_link_order = (self.value & 128) ~= 0
+  return self._m_link_order
+end
+
+-- 
+-- special ordering requirement (Solaris).
+Elf.SectionHeaderFlags.property.ordered = {}
+function Elf.SectionHeaderFlags.property.ordered:get()
+  if self._m_ordered ~= nil then
+    return self._m_ordered
+  end
+
+  self._m_ordered = (self.value & 67108864) ~= 0
+  return self._m_ordered
+end
+
+-- 
+-- section hold thread-local data.
+Elf.SectionHeaderFlags.property.tls = {}
+function Elf.SectionHeaderFlags.property.tls:get()
+  if self._m_tls ~= nil then
+    return self._m_tls
+  end
+
+  self._m_tls = (self.value & 1024) ~= 0
+  return self._m_tls
+end
+
+-- 
+-- section is member of a group.
+Elf.SectionHeaderFlags.property.group = {}
+function Elf.SectionHeaderFlags.property.group:get()
+  if self._m_group ~= nil then
+    return self._m_group
+  end
+
+  self._m_group = (self.value & 512) ~= 0
+  return self._m_group
+end
+
+
+Elf.PhdrTypeFlags = class.class(KaitaiStruct)
+
+function Elf.PhdrTypeFlags:_init(value, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.value = value
+  self:_read()
+end
+
+function Elf.PhdrTypeFlags:_read()
+end
+
+Elf.PhdrTypeFlags.property.read = {}
+function Elf.PhdrTypeFlags.property.read:get()
+  if self._m_read ~= nil then
+    return self._m_read
+  end
+
+  self._m_read = (self.value & 4) ~= 0
+  return self._m_read
+end
+
+Elf.PhdrTypeFlags.property.write = {}
+function Elf.PhdrTypeFlags.property.write:get()
+  if self._m_write ~= nil then
+    return self._m_write
+  end
+
+  self._m_write = (self.value & 2) ~= 0
+  return self._m_write
+end
+
+Elf.PhdrTypeFlags.property.execute = {}
+function Elf.PhdrTypeFlags.property.execute:get()
+  if self._m_execute ~= nil then
+    return self._m_execute
+  end
+
+  self._m_execute = (self.value & 1) ~= 0
+  return self._m_execute
+end
+
+Elf.PhdrTypeFlags.property.mask_proc = {}
+function Elf.PhdrTypeFlags.property.mask_proc:get()
+  if self._m_mask_proc ~= nil then
+    return self._m_mask_proc
+  end
+
+  self._m_mask_proc = (self.value & 4026531840) ~= 0
+  return self._m_mask_proc
+end
+
+
+-- 
+-- See also: Figure 5-11: DT_FLAGS values (https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html)
+-- See also: Source (https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095)
+-- See also: Source (https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5)
+Elf.DtFlagValues = class.class(KaitaiStruct)
+
+function Elf.DtFlagValues:_init(value, io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self.value = value
+  self:_read()
+end
+
+function Elf.DtFlagValues:_read()
+end
+
+-- 
+-- all relocations for this object must be processed before returning
+-- control to the program
+Elf.DtFlagValues.property.bind_now = {}
+function Elf.DtFlagValues.property.bind_now:get()
+  if self._m_bind_now ~= nil then
+    return self._m_bind_now
+  end
+
+  self._m_bind_now = (self.value & 8) ~= 0
+  return self._m_bind_now
+end
+
+-- 
+-- object may reference the $ORIGIN substitution string.
+Elf.DtFlagValues.property.origin = {}
+function Elf.DtFlagValues.property.origin:get()
+  if self._m_origin ~= nil then
+    return self._m_origin
+  end
+
+  self._m_origin = (self.value & 1) ~= 0
+  return self._m_origin
+end
+
+-- 
+-- relocation entries might request modifications to a non-writable segment.
+Elf.DtFlagValues.property.textrel = {}
+function Elf.DtFlagValues.property.textrel:get()
+  if self._m_textrel ~= nil then
+    return self._m_textrel
+  end
+
+  self._m_textrel = (self.value & 4) ~= 0
+  return self._m_textrel
+end
+
+-- 
+-- object uses static thread-local storage scheme.
+Elf.DtFlagValues.property.static_tls = {}
+function Elf.DtFlagValues.property.static_tls:get()
+  if self._m_static_tls ~= nil then
+    return self._m_static_tls
+  end
+
+  self._m_static_tls = (self.value & 16) ~= 0
+  return self._m_static_tls
+end
+
+-- 
+-- symbolic linking.
+Elf.DtFlagValues.property.symbolic = {}
+function Elf.DtFlagValues.property.symbolic:get()
+  if self._m_symbolic ~= nil then
+    return self._m_symbolic
+  end
+
+  self._m_symbolic = (self.value & 2) ~= 0
+  return self._m_symbolic
 end
 
 

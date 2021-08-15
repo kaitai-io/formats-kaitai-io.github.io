@@ -628,592 +628,6 @@ public class Elf extends KaitaiStruct {
         this.pad = this._io.readBytes(7);
         this.header = new EndianElf(this._io, this, _root);
     }
-    public static class PhdrTypeFlags extends KaitaiStruct {
-
-        public PhdrTypeFlags(KaitaiStream _io, long value) {
-            this(_io, null, null, value);
-        }
-
-        public PhdrTypeFlags(KaitaiStream _io, Elf.EndianElf.ProgramHeader _parent, long value) {
-            this(_io, _parent, null, value);
-        }
-
-        public PhdrTypeFlags(KaitaiStream _io, Elf.EndianElf.ProgramHeader _parent, Elf _root, long value) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.value = value;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean read;
-        public Boolean read() {
-            if (this.read != null)
-                return this.read;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.read = _tmp;
-            return this.read;
-        }
-        private Boolean write;
-        public Boolean write() {
-            if (this.write != null)
-                return this.write;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.write = _tmp;
-            return this.write;
-        }
-        private Boolean execute;
-        public Boolean execute() {
-            if (this.execute != null)
-                return this.execute;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.execute = _tmp;
-            return this.execute;
-        }
-        private Boolean maskProc;
-        public Boolean maskProc() {
-            if (this.maskProc != null)
-                return this.maskProc;
-            boolean _tmp = (boolean) ((value() & 4026531840L) != 0);
-            this.maskProc = _tmp;
-            return this.maskProc;
-        }
-        private long value;
-        private Elf _root;
-        private Elf.EndianElf.ProgramHeader _parent;
-        public long value() { return value; }
-        public Elf _root() { return _root; }
-        public Elf.EndianElf.ProgramHeader _parent() { return _parent; }
-    }
-    public static class SectionHeaderFlags extends KaitaiStruct {
-
-        public SectionHeaderFlags(KaitaiStream _io, long value) {
-            this(_io, null, null, value);
-        }
-
-        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, long value) {
-            this(_io, _parent, null, value);
-        }
-
-        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, long value) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.value = value;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean merge;
-
-        /**
-         * might be merged
-         */
-        public Boolean merge() {
-            if (this.merge != null)
-                return this.merge;
-            boolean _tmp = (boolean) ((value() & 16) != 0);
-            this.merge = _tmp;
-            return this.merge;
-        }
-        private Boolean maskOs;
-
-        /**
-         * OS-specific
-         */
-        public Boolean maskOs() {
-            if (this.maskOs != null)
-                return this.maskOs;
-            boolean _tmp = (boolean) ((value() & 267386880) != 0);
-            this.maskOs = _tmp;
-            return this.maskOs;
-        }
-        private Boolean exclude;
-
-        /**
-         * section is excluded unless referenced or allocated (Solaris)
-         */
-        public Boolean exclude() {
-            if (this.exclude != null)
-                return this.exclude;
-            boolean _tmp = (boolean) ((value() & 134217728) != 0);
-            this.exclude = _tmp;
-            return this.exclude;
-        }
-        private Boolean maskProc;
-
-        /**
-         * Processor-specific
-         */
-        public Boolean maskProc() {
-            if (this.maskProc != null)
-                return this.maskProc;
-            boolean _tmp = (boolean) ((value() & 4026531840L) != 0);
-            this.maskProc = _tmp;
-            return this.maskProc;
-        }
-        private Boolean strings;
-
-        /**
-         * contains nul-terminated strings
-         */
-        public Boolean strings() {
-            if (this.strings != null)
-                return this.strings;
-            boolean _tmp = (boolean) ((value() & 32) != 0);
-            this.strings = _tmp;
-            return this.strings;
-        }
-        private Boolean osNonConforming;
-
-        /**
-         * non-standard OS specific handling required
-         */
-        public Boolean osNonConforming() {
-            if (this.osNonConforming != null)
-                return this.osNonConforming;
-            boolean _tmp = (boolean) ((value() & 256) != 0);
-            this.osNonConforming = _tmp;
-            return this.osNonConforming;
-        }
-        private Boolean alloc;
-
-        /**
-         * occupies memory during execution
-         */
-        public Boolean alloc() {
-            if (this.alloc != null)
-                return this.alloc;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.alloc = _tmp;
-            return this.alloc;
-        }
-        private Boolean execInstr;
-
-        /**
-         * executable
-         */
-        public Boolean execInstr() {
-            if (this.execInstr != null)
-                return this.execInstr;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.execInstr = _tmp;
-            return this.execInstr;
-        }
-        private Boolean infoLink;
-
-        /**
-         * 'sh_info' contains SHT index
-         */
-        public Boolean infoLink() {
-            if (this.infoLink != null)
-                return this.infoLink;
-            boolean _tmp = (boolean) ((value() & 64) != 0);
-            this.infoLink = _tmp;
-            return this.infoLink;
-        }
-        private Boolean write;
-
-        /**
-         * writable
-         */
-        public Boolean write() {
-            if (this.write != null)
-                return this.write;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.write = _tmp;
-            return this.write;
-        }
-        private Boolean linkOrder;
-
-        /**
-         * preserve order after combining
-         */
-        public Boolean linkOrder() {
-            if (this.linkOrder != null)
-                return this.linkOrder;
-            boolean _tmp = (boolean) ((value() & 128) != 0);
-            this.linkOrder = _tmp;
-            return this.linkOrder;
-        }
-        private Boolean ordered;
-
-        /**
-         * special ordering requirement (Solaris)
-         */
-        public Boolean ordered() {
-            if (this.ordered != null)
-                return this.ordered;
-            boolean _tmp = (boolean) ((value() & 67108864) != 0);
-            this.ordered = _tmp;
-            return this.ordered;
-        }
-        private Boolean tls;
-
-        /**
-         * section hold thread-local data
-         */
-        public Boolean tls() {
-            if (this.tls != null)
-                return this.tls;
-            boolean _tmp = (boolean) ((value() & 1024) != 0);
-            this.tls = _tmp;
-            return this.tls;
-        }
-        private Boolean group;
-
-        /**
-         * section is member of a group
-         */
-        public Boolean group() {
-            if (this.group != null)
-                return this.group;
-            boolean _tmp = (boolean) ((value() & 512) != 0);
-            this.group = _tmp;
-            return this.group;
-        }
-        private long value;
-        private Elf _root;
-        private Elf.EndianElf.SectionHeader _parent;
-        public long value() { return value; }
-        public Elf _root() { return _root; }
-        public Elf.EndianElf.SectionHeader _parent() { return _parent; }
-    }
-    public static class DtFlag1Values extends KaitaiStruct {
-
-        public DtFlag1Values(KaitaiStream _io, long value) {
-            this(_io, null, null, value);
-        }
-
-        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
-            this(_io, _parent, null, value);
-        }
-
-        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
-            super(_io);
-            this._parent = _parent;
-            this._root = _root;
-            this.value = value;
-            _read();
-        }
-        private void _read() {
-        }
-        private Boolean singleton;
-
-        /**
-         * Singleton symbols are used.
-         */
-        public Boolean singleton() {
-            if (this.singleton != null)
-                return this.singleton;
-            boolean _tmp = (boolean) ((value() & 33554432) != 0);
-            this.singleton = _tmp;
-            return this.singleton;
-        }
-        private Boolean ignmuldef;
-        public Boolean ignmuldef() {
-            if (this.ignmuldef != null)
-                return this.ignmuldef;
-            boolean _tmp = (boolean) ((value() & 262144) != 0);
-            this.ignmuldef = _tmp;
-            return this.ignmuldef;
-        }
-        private Boolean loadfltr;
-
-        /**
-         * Trigger filtee loading at runtime.
-         */
-        public Boolean loadfltr() {
-            if (this.loadfltr != null)
-                return this.loadfltr;
-            boolean _tmp = (boolean) ((value() & 16) != 0);
-            this.loadfltr = _tmp;
-            return this.loadfltr;
-        }
-        private Boolean initfirst;
-
-        /**
-         * Set RTLD_INITFIRST for this object
-         */
-        public Boolean initfirst() {
-            if (this.initfirst != null)
-                return this.initfirst;
-            boolean _tmp = (boolean) ((value() & 32) != 0);
-            this.initfirst = _tmp;
-            return this.initfirst;
-        }
-        private Boolean symintpose;
-
-        /**
-         * Object has individual interposers.
-         */
-        public Boolean symintpose() {
-            if (this.symintpose != null)
-                return this.symintpose;
-            boolean _tmp = (boolean) ((value() & 8388608) != 0);
-            this.symintpose = _tmp;
-            return this.symintpose;
-        }
-        private Boolean noreloc;
-        public Boolean noreloc() {
-            if (this.noreloc != null)
-                return this.noreloc;
-            boolean _tmp = (boolean) ((value() & 4194304) != 0);
-            this.noreloc = _tmp;
-            return this.noreloc;
-        }
-        private Boolean confalt;
-
-        /**
-         * Configuration alternative created.
-         */
-        public Boolean confalt() {
-            if (this.confalt != null)
-                return this.confalt;
-            boolean _tmp = (boolean) ((value() & 8192) != 0);
-            this.confalt = _tmp;
-            return this.confalt;
-        }
-        private Boolean dispreldne;
-
-        /**
-         * Disp reloc applied at build time.
-         */
-        public Boolean dispreldne() {
-            if (this.dispreldne != null)
-                return this.dispreldne;
-            boolean _tmp = (boolean) ((value() & 32768) != 0);
-            this.dispreldne = _tmp;
-            return this.dispreldne;
-        }
-        private Boolean rtldGlobal;
-
-        /**
-         * Set RTLD_GLOBAL for this object.
-         */
-        public Boolean rtldGlobal() {
-            if (this.rtldGlobal != null)
-                return this.rtldGlobal;
-            boolean _tmp = (boolean) ((value() & 2) != 0);
-            this.rtldGlobal = _tmp;
-            return this.rtldGlobal;
-        }
-        private Boolean nodelete;
-
-        /**
-         * Set RTLD_NODELETE for this object.
-         */
-        public Boolean nodelete() {
-            if (this.nodelete != null)
-                return this.nodelete;
-            boolean _tmp = (boolean) ((value() & 8) != 0);
-            this.nodelete = _tmp;
-            return this.nodelete;
-        }
-        private Boolean trans;
-        public Boolean trans() {
-            if (this.trans != null)
-                return this.trans;
-            boolean _tmp = (boolean) ((value() & 512) != 0);
-            this.trans = _tmp;
-            return this.trans;
-        }
-        private Boolean origin;
-
-        /**
-         * $ORIGIN must be handled.
-         */
-        public Boolean origin() {
-            if (this.origin != null)
-                return this.origin;
-            boolean _tmp = (boolean) ((value() & 128) != 0);
-            this.origin = _tmp;
-            return this.origin;
-        }
-        private Boolean now;
-
-        /**
-         * Set RTLD_NOW for this object.
-         */
-        public Boolean now() {
-            if (this.now != null)
-                return this.now;
-            boolean _tmp = (boolean) ((value() & 1) != 0);
-            this.now = _tmp;
-            return this.now;
-        }
-        private Boolean nohdr;
-        public Boolean nohdr() {
-            if (this.nohdr != null)
-                return this.nohdr;
-            boolean _tmp = (boolean) ((value() & 1048576) != 0);
-            this.nohdr = _tmp;
-            return this.nohdr;
-        }
-        private Boolean endfiltee;
-
-        /**
-         * Filtee terminates filters search.
-         */
-        public Boolean endfiltee() {
-            if (this.endfiltee != null)
-                return this.endfiltee;
-            boolean _tmp = (boolean) ((value() & 16384) != 0);
-            this.endfiltee = _tmp;
-            return this.endfiltee;
-        }
-        private Boolean nodirect;
-
-        /**
-         * Object has no-direct binding.
-         */
-        public Boolean nodirect() {
-            if (this.nodirect != null)
-                return this.nodirect;
-            boolean _tmp = (boolean) ((value() & 131072) != 0);
-            this.nodirect = _tmp;
-            return this.nodirect;
-        }
-        private Boolean globaudit;
-
-        /**
-         * Global auditing required.
-         */
-        public Boolean globaudit() {
-            if (this.globaudit != null)
-                return this.globaudit;
-            boolean _tmp = (boolean) ((value() & 16777216) != 0);
-            this.globaudit = _tmp;
-            return this.globaudit;
-        }
-        private Boolean noksyms;
-        public Boolean noksyms() {
-            if (this.noksyms != null)
-                return this.noksyms;
-            boolean _tmp = (boolean) ((value() & 524288) != 0);
-            this.noksyms = _tmp;
-            return this.noksyms;
-        }
-        private Boolean interpose;
-
-        /**
-         * Object is used to interpose.
-         */
-        public Boolean interpose() {
-            if (this.interpose != null)
-                return this.interpose;
-            boolean _tmp = (boolean) ((value() & 1024) != 0);
-            this.interpose = _tmp;
-            return this.interpose;
-        }
-        private Boolean nodump;
-
-        /**
-         * Object can't be dldump'ed.
-         */
-        public Boolean nodump() {
-            if (this.nodump != null)
-                return this.nodump;
-            boolean _tmp = (boolean) ((value() & 4096) != 0);
-            this.nodump = _tmp;
-            return this.nodump;
-        }
-        private Boolean disprelpnd;
-
-        /**
-         * Disp reloc applied at run-time.
-         */
-        public Boolean disprelpnd() {
-            if (this.disprelpnd != null)
-                return this.disprelpnd;
-            boolean _tmp = (boolean) ((value() & 65536) != 0);
-            this.disprelpnd = _tmp;
-            return this.disprelpnd;
-        }
-        private Boolean noopen;
-
-        /**
-         * Set RTLD_NOOPEN for this object.
-         */
-        public Boolean noopen() {
-            if (this.noopen != null)
-                return this.noopen;
-            boolean _tmp = (boolean) ((value() & 64) != 0);
-            this.noopen = _tmp;
-            return this.noopen;
-        }
-        private Boolean stub;
-        public Boolean stub() {
-            if (this.stub != null)
-                return this.stub;
-            boolean _tmp = (boolean) ((value() & 67108864) != 0);
-            this.stub = _tmp;
-            return this.stub;
-        }
-        private Boolean direct;
-
-        /**
-         * Direct binding enabled.
-         */
-        public Boolean direct() {
-            if (this.direct != null)
-                return this.direct;
-            boolean _tmp = (boolean) ((value() & 256) != 0);
-            this.direct = _tmp;
-            return this.direct;
-        }
-        private Boolean edited;
-
-        /**
-         * Object is modified after built.
-         */
-        public Boolean edited() {
-            if (this.edited != null)
-                return this.edited;
-            boolean _tmp = (boolean) ((value() & 2097152) != 0);
-            this.edited = _tmp;
-            return this.edited;
-        }
-        private Boolean group;
-
-        /**
-         * Set RTLD_GROUP for this object.
-         */
-        public Boolean group() {
-            if (this.group != null)
-                return this.group;
-            boolean _tmp = (boolean) ((value() & 4) != 0);
-            this.group = _tmp;
-            return this.group;
-        }
-        private Boolean pie;
-        public Boolean pie() {
-            if (this.pie != null)
-                return this.pie;
-            boolean _tmp = (boolean) ((value() & 134217728) != 0);
-            this.pie = _tmp;
-            return this.pie;
-        }
-        private Boolean nodeflib;
-
-        /**
-         * Ignore default lib search path.
-         */
-        public Boolean nodeflib() {
-            if (this.nodeflib != null)
-                return this.nodeflib;
-            boolean _tmp = (boolean) ((value() & 2048) != 0);
-            this.nodeflib = _tmp;
-            return this.nodeflib;
-        }
-        private long value;
-        private Elf _root;
-        private Elf.EndianElf.DynamicSectionEntry _parent;
-        public long value() { return value; }
-        public Elf _root() { return _root; }
-        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
-    }
     public static class EndianElf extends KaitaiStruct {
         public static EndianElf fromFile(String fileName) throws IOException {
             return new EndianElf(new ByteBufferKaitaiStream(fileName));
@@ -1791,13 +1205,6 @@ public class Elf extends KaitaiStruct {
                     }
                 }
             }
-            private DynamicArrayTags tagEnum;
-            public DynamicArrayTags tagEnum() {
-                if (this.tagEnum != null)
-                    return this.tagEnum;
-                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
-                return this.tagEnum;
-            }
             private DtFlag1Values flag1Values;
             public DtFlag1Values flag1Values() {
                 if (this.flag1Values != null)
@@ -1827,6 +1234,26 @@ public class Elf extends KaitaiStruct {
                     io.seek(_pos);
                 }
                 return this.valueStr;
+            }
+            private DynamicArrayTags tagEnum;
+            public DynamicArrayTags tagEnum() {
+                if (this.tagEnum != null)
+                    return this.tagEnum;
+                this.tagEnum = Elf.DynamicArrayTags.byId(tag());
+                return this.tagEnum;
+            }
+            private DtFlagValues flagValues;
+            public DtFlagValues flagValues() {
+                if (this.flagValues != null)
+                    return this.flagValues;
+                if (tagEnum() == Elf.DynamicArrayTags.FLAGS) {
+                    if (_is_le) {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    } else {
+                        this.flagValues = new DtFlagValues(this._io, this, _root, valueOrPtr());
+                    }
+                }
+                return this.flagValues;
             }
             private Boolean isValueStr;
             public Boolean isValueStr() {
@@ -2934,6 +2361,685 @@ public class Elf extends KaitaiStruct {
         public ArrayList<byte[]> _raw_programHeaders() { return _raw_programHeaders; }
         public ArrayList<byte[]> _raw_sectionHeaders() { return _raw_sectionHeaders; }
         public byte[] _raw_sectionNames() { return _raw_sectionNames; }
+    }
+    public static class DtFlag1Values extends KaitaiStruct {
+
+        public DtFlag1Values(KaitaiStream _io, long value) {
+            this(_io, null, null, value);
+        }
+
+        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+            this(_io, _parent, null, value);
+        }
+
+        public DtFlag1Values(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.value = value;
+            _read();
+        }
+        private void _read() {
+        }
+        private Boolean singleton;
+
+        /**
+         * Singleton symbols are used.
+         */
+        public Boolean singleton() {
+            if (this.singleton != null)
+                return this.singleton;
+            boolean _tmp = (boolean) ((value() & 33554432) != 0);
+            this.singleton = _tmp;
+            return this.singleton;
+        }
+        private Boolean ignmuldef;
+        public Boolean ignmuldef() {
+            if (this.ignmuldef != null)
+                return this.ignmuldef;
+            boolean _tmp = (boolean) ((value() & 262144) != 0);
+            this.ignmuldef = _tmp;
+            return this.ignmuldef;
+        }
+        private Boolean loadfltr;
+
+        /**
+         * Trigger filtee loading at runtime.
+         */
+        public Boolean loadfltr() {
+            if (this.loadfltr != null)
+                return this.loadfltr;
+            boolean _tmp = (boolean) ((value() & 16) != 0);
+            this.loadfltr = _tmp;
+            return this.loadfltr;
+        }
+        private Boolean initfirst;
+
+        /**
+         * Set RTLD_INITFIRST for this object
+         */
+        public Boolean initfirst() {
+            if (this.initfirst != null)
+                return this.initfirst;
+            boolean _tmp = (boolean) ((value() & 32) != 0);
+            this.initfirst = _tmp;
+            return this.initfirst;
+        }
+        private Boolean symintpose;
+
+        /**
+         * Object has individual interposers.
+         */
+        public Boolean symintpose() {
+            if (this.symintpose != null)
+                return this.symintpose;
+            boolean _tmp = (boolean) ((value() & 8388608) != 0);
+            this.symintpose = _tmp;
+            return this.symintpose;
+        }
+        private Boolean noreloc;
+        public Boolean noreloc() {
+            if (this.noreloc != null)
+                return this.noreloc;
+            boolean _tmp = (boolean) ((value() & 4194304) != 0);
+            this.noreloc = _tmp;
+            return this.noreloc;
+        }
+        private Boolean confalt;
+
+        /**
+         * Configuration alternative created.
+         */
+        public Boolean confalt() {
+            if (this.confalt != null)
+                return this.confalt;
+            boolean _tmp = (boolean) ((value() & 8192) != 0);
+            this.confalt = _tmp;
+            return this.confalt;
+        }
+        private Boolean dispreldne;
+
+        /**
+         * Disp reloc applied at build time.
+         */
+        public Boolean dispreldne() {
+            if (this.dispreldne != null)
+                return this.dispreldne;
+            boolean _tmp = (boolean) ((value() & 32768) != 0);
+            this.dispreldne = _tmp;
+            return this.dispreldne;
+        }
+        private Boolean rtldGlobal;
+
+        /**
+         * Set RTLD_GLOBAL for this object.
+         */
+        public Boolean rtldGlobal() {
+            if (this.rtldGlobal != null)
+                return this.rtldGlobal;
+            boolean _tmp = (boolean) ((value() & 2) != 0);
+            this.rtldGlobal = _tmp;
+            return this.rtldGlobal;
+        }
+        private Boolean nodelete;
+
+        /**
+         * Set RTLD_NODELETE for this object.
+         */
+        public Boolean nodelete() {
+            if (this.nodelete != null)
+                return this.nodelete;
+            boolean _tmp = (boolean) ((value() & 8) != 0);
+            this.nodelete = _tmp;
+            return this.nodelete;
+        }
+        private Boolean trans;
+        public Boolean trans() {
+            if (this.trans != null)
+                return this.trans;
+            boolean _tmp = (boolean) ((value() & 512) != 0);
+            this.trans = _tmp;
+            return this.trans;
+        }
+        private Boolean origin;
+
+        /**
+         * $ORIGIN must be handled.
+         */
+        public Boolean origin() {
+            if (this.origin != null)
+                return this.origin;
+            boolean _tmp = (boolean) ((value() & 128) != 0);
+            this.origin = _tmp;
+            return this.origin;
+        }
+        private Boolean now;
+
+        /**
+         * Set RTLD_NOW for this object.
+         */
+        public Boolean now() {
+            if (this.now != null)
+                return this.now;
+            boolean _tmp = (boolean) ((value() & 1) != 0);
+            this.now = _tmp;
+            return this.now;
+        }
+        private Boolean nohdr;
+        public Boolean nohdr() {
+            if (this.nohdr != null)
+                return this.nohdr;
+            boolean _tmp = (boolean) ((value() & 1048576) != 0);
+            this.nohdr = _tmp;
+            return this.nohdr;
+        }
+        private Boolean endfiltee;
+
+        /**
+         * Filtee terminates filters search.
+         */
+        public Boolean endfiltee() {
+            if (this.endfiltee != null)
+                return this.endfiltee;
+            boolean _tmp = (boolean) ((value() & 16384) != 0);
+            this.endfiltee = _tmp;
+            return this.endfiltee;
+        }
+        private Boolean nodirect;
+
+        /**
+         * Object has no-direct binding.
+         */
+        public Boolean nodirect() {
+            if (this.nodirect != null)
+                return this.nodirect;
+            boolean _tmp = (boolean) ((value() & 131072) != 0);
+            this.nodirect = _tmp;
+            return this.nodirect;
+        }
+        private Boolean globaudit;
+
+        /**
+         * Global auditing required.
+         */
+        public Boolean globaudit() {
+            if (this.globaudit != null)
+                return this.globaudit;
+            boolean _tmp = (boolean) ((value() & 16777216) != 0);
+            this.globaudit = _tmp;
+            return this.globaudit;
+        }
+        private Boolean noksyms;
+        public Boolean noksyms() {
+            if (this.noksyms != null)
+                return this.noksyms;
+            boolean _tmp = (boolean) ((value() & 524288) != 0);
+            this.noksyms = _tmp;
+            return this.noksyms;
+        }
+        private Boolean interpose;
+
+        /**
+         * Object is used to interpose.
+         */
+        public Boolean interpose() {
+            if (this.interpose != null)
+                return this.interpose;
+            boolean _tmp = (boolean) ((value() & 1024) != 0);
+            this.interpose = _tmp;
+            return this.interpose;
+        }
+        private Boolean nodump;
+
+        /**
+         * Object can't be dldump'ed.
+         */
+        public Boolean nodump() {
+            if (this.nodump != null)
+                return this.nodump;
+            boolean _tmp = (boolean) ((value() & 4096) != 0);
+            this.nodump = _tmp;
+            return this.nodump;
+        }
+        private Boolean disprelpnd;
+
+        /**
+         * Disp reloc applied at run-time.
+         */
+        public Boolean disprelpnd() {
+            if (this.disprelpnd != null)
+                return this.disprelpnd;
+            boolean _tmp = (boolean) ((value() & 65536) != 0);
+            this.disprelpnd = _tmp;
+            return this.disprelpnd;
+        }
+        private Boolean noopen;
+
+        /**
+         * Set RTLD_NOOPEN for this object.
+         */
+        public Boolean noopen() {
+            if (this.noopen != null)
+                return this.noopen;
+            boolean _tmp = (boolean) ((value() & 64) != 0);
+            this.noopen = _tmp;
+            return this.noopen;
+        }
+        private Boolean stub;
+        public Boolean stub() {
+            if (this.stub != null)
+                return this.stub;
+            boolean _tmp = (boolean) ((value() & 67108864) != 0);
+            this.stub = _tmp;
+            return this.stub;
+        }
+        private Boolean direct;
+
+        /**
+         * Direct binding enabled.
+         */
+        public Boolean direct() {
+            if (this.direct != null)
+                return this.direct;
+            boolean _tmp = (boolean) ((value() & 256) != 0);
+            this.direct = _tmp;
+            return this.direct;
+        }
+        private Boolean edited;
+
+        /**
+         * Object is modified after built.
+         */
+        public Boolean edited() {
+            if (this.edited != null)
+                return this.edited;
+            boolean _tmp = (boolean) ((value() & 2097152) != 0);
+            this.edited = _tmp;
+            return this.edited;
+        }
+        private Boolean group;
+
+        /**
+         * Set RTLD_GROUP for this object.
+         */
+        public Boolean group() {
+            if (this.group != null)
+                return this.group;
+            boolean _tmp = (boolean) ((value() & 4) != 0);
+            this.group = _tmp;
+            return this.group;
+        }
+        private Boolean pie;
+        public Boolean pie() {
+            if (this.pie != null)
+                return this.pie;
+            boolean _tmp = (boolean) ((value() & 134217728) != 0);
+            this.pie = _tmp;
+            return this.pie;
+        }
+        private Boolean nodeflib;
+
+        /**
+         * Ignore default lib search path.
+         */
+        public Boolean nodeflib() {
+            if (this.nodeflib != null)
+                return this.nodeflib;
+            boolean _tmp = (boolean) ((value() & 2048) != 0);
+            this.nodeflib = _tmp;
+            return this.nodeflib;
+        }
+        private long value;
+        private Elf _root;
+        private Elf.EndianElf.DynamicSectionEntry _parent;
+        public long value() { return value; }
+        public Elf _root() { return _root; }
+        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
+    }
+    public static class SectionHeaderFlags extends KaitaiStruct {
+
+        public SectionHeaderFlags(KaitaiStream _io, long value) {
+            this(_io, null, null, value);
+        }
+
+        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, long value) {
+            this(_io, _parent, null, value);
+        }
+
+        public SectionHeaderFlags(KaitaiStream _io, Elf.EndianElf.SectionHeader _parent, Elf _root, long value) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.value = value;
+            _read();
+        }
+        private void _read() {
+        }
+        private Boolean merge;
+
+        /**
+         * might be merged
+         */
+        public Boolean merge() {
+            if (this.merge != null)
+                return this.merge;
+            boolean _tmp = (boolean) ((value() & 16) != 0);
+            this.merge = _tmp;
+            return this.merge;
+        }
+        private Boolean maskOs;
+
+        /**
+         * OS-specific
+         */
+        public Boolean maskOs() {
+            if (this.maskOs != null)
+                return this.maskOs;
+            boolean _tmp = (boolean) ((value() & 267386880) != 0);
+            this.maskOs = _tmp;
+            return this.maskOs;
+        }
+        private Boolean exclude;
+
+        /**
+         * section is excluded unless referenced or allocated (Solaris)
+         */
+        public Boolean exclude() {
+            if (this.exclude != null)
+                return this.exclude;
+            boolean _tmp = (boolean) ((value() & 134217728) != 0);
+            this.exclude = _tmp;
+            return this.exclude;
+        }
+        private Boolean maskProc;
+
+        /**
+         * Processor-specific
+         */
+        public Boolean maskProc() {
+            if (this.maskProc != null)
+                return this.maskProc;
+            boolean _tmp = (boolean) ((value() & 4026531840L) != 0);
+            this.maskProc = _tmp;
+            return this.maskProc;
+        }
+        private Boolean strings;
+
+        /**
+         * contains nul-terminated strings
+         */
+        public Boolean strings() {
+            if (this.strings != null)
+                return this.strings;
+            boolean _tmp = (boolean) ((value() & 32) != 0);
+            this.strings = _tmp;
+            return this.strings;
+        }
+        private Boolean osNonConforming;
+
+        /**
+         * non-standard OS specific handling required
+         */
+        public Boolean osNonConforming() {
+            if (this.osNonConforming != null)
+                return this.osNonConforming;
+            boolean _tmp = (boolean) ((value() & 256) != 0);
+            this.osNonConforming = _tmp;
+            return this.osNonConforming;
+        }
+        private Boolean alloc;
+
+        /**
+         * occupies memory during execution
+         */
+        public Boolean alloc() {
+            if (this.alloc != null)
+                return this.alloc;
+            boolean _tmp = (boolean) ((value() & 2) != 0);
+            this.alloc = _tmp;
+            return this.alloc;
+        }
+        private Boolean execInstr;
+
+        /**
+         * executable
+         */
+        public Boolean execInstr() {
+            if (this.execInstr != null)
+                return this.execInstr;
+            boolean _tmp = (boolean) ((value() & 4) != 0);
+            this.execInstr = _tmp;
+            return this.execInstr;
+        }
+        private Boolean infoLink;
+
+        /**
+         * 'sh_info' contains SHT index
+         */
+        public Boolean infoLink() {
+            if (this.infoLink != null)
+                return this.infoLink;
+            boolean _tmp = (boolean) ((value() & 64) != 0);
+            this.infoLink = _tmp;
+            return this.infoLink;
+        }
+        private Boolean write;
+
+        /**
+         * writable
+         */
+        public Boolean write() {
+            if (this.write != null)
+                return this.write;
+            boolean _tmp = (boolean) ((value() & 1) != 0);
+            this.write = _tmp;
+            return this.write;
+        }
+        private Boolean linkOrder;
+
+        /**
+         * preserve order after combining
+         */
+        public Boolean linkOrder() {
+            if (this.linkOrder != null)
+                return this.linkOrder;
+            boolean _tmp = (boolean) ((value() & 128) != 0);
+            this.linkOrder = _tmp;
+            return this.linkOrder;
+        }
+        private Boolean ordered;
+
+        /**
+         * special ordering requirement (Solaris)
+         */
+        public Boolean ordered() {
+            if (this.ordered != null)
+                return this.ordered;
+            boolean _tmp = (boolean) ((value() & 67108864) != 0);
+            this.ordered = _tmp;
+            return this.ordered;
+        }
+        private Boolean tls;
+
+        /**
+         * section hold thread-local data
+         */
+        public Boolean tls() {
+            if (this.tls != null)
+                return this.tls;
+            boolean _tmp = (boolean) ((value() & 1024) != 0);
+            this.tls = _tmp;
+            return this.tls;
+        }
+        private Boolean group;
+
+        /**
+         * section is member of a group
+         */
+        public Boolean group() {
+            if (this.group != null)
+                return this.group;
+            boolean _tmp = (boolean) ((value() & 512) != 0);
+            this.group = _tmp;
+            return this.group;
+        }
+        private long value;
+        private Elf _root;
+        private Elf.EndianElf.SectionHeader _parent;
+        public long value() { return value; }
+        public Elf _root() { return _root; }
+        public Elf.EndianElf.SectionHeader _parent() { return _parent; }
+    }
+    public static class PhdrTypeFlags extends KaitaiStruct {
+
+        public PhdrTypeFlags(KaitaiStream _io, long value) {
+            this(_io, null, null, value);
+        }
+
+        public PhdrTypeFlags(KaitaiStream _io, Elf.EndianElf.ProgramHeader _parent, long value) {
+            this(_io, _parent, null, value);
+        }
+
+        public PhdrTypeFlags(KaitaiStream _io, Elf.EndianElf.ProgramHeader _parent, Elf _root, long value) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.value = value;
+            _read();
+        }
+        private void _read() {
+        }
+        private Boolean read;
+        public Boolean read() {
+            if (this.read != null)
+                return this.read;
+            boolean _tmp = (boolean) ((value() & 4) != 0);
+            this.read = _tmp;
+            return this.read;
+        }
+        private Boolean write;
+        public Boolean write() {
+            if (this.write != null)
+                return this.write;
+            boolean _tmp = (boolean) ((value() & 2) != 0);
+            this.write = _tmp;
+            return this.write;
+        }
+        private Boolean execute;
+        public Boolean execute() {
+            if (this.execute != null)
+                return this.execute;
+            boolean _tmp = (boolean) ((value() & 1) != 0);
+            this.execute = _tmp;
+            return this.execute;
+        }
+        private Boolean maskProc;
+        public Boolean maskProc() {
+            if (this.maskProc != null)
+                return this.maskProc;
+            boolean _tmp = (boolean) ((value() & 4026531840L) != 0);
+            this.maskProc = _tmp;
+            return this.maskProc;
+        }
+        private long value;
+        private Elf _root;
+        private Elf.EndianElf.ProgramHeader _parent;
+        public long value() { return value; }
+        public Elf _root() { return _root; }
+        public Elf.EndianElf.ProgramHeader _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://refspecs.linuxbase.org/elf/gabi4+/ch5.dynamic.html">Figure 5-11: DT_FLAGS values</a>
+     * @see <a href="https://github.com/golang/go/blob/48dfddbab3/src/debug/elf/elf.go#L1079-L1095">Source</a>
+     * @see <a href="https://docs.oracle.com/cd/E37838_01/html/E36783/chapter6-42444.html#OSLLGchapter7-tbl-5">Source</a>
+     */
+    public static class DtFlagValues extends KaitaiStruct {
+
+        public DtFlagValues(KaitaiStream _io, long value) {
+            this(_io, null, null, value);
+        }
+
+        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, long value) {
+            this(_io, _parent, null, value);
+        }
+
+        public DtFlagValues(KaitaiStream _io, Elf.EndianElf.DynamicSectionEntry _parent, Elf _root, long value) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            this.value = value;
+            _read();
+        }
+        private void _read() {
+        }
+        private Boolean bindNow;
+
+        /**
+         * all relocations for this object must be processed before returning
+         * control to the program
+         */
+        public Boolean bindNow() {
+            if (this.bindNow != null)
+                return this.bindNow;
+            boolean _tmp = (boolean) ((value() & 8) != 0);
+            this.bindNow = _tmp;
+            return this.bindNow;
+        }
+        private Boolean origin;
+
+        /**
+         * object may reference the $ORIGIN substitution string
+         */
+        public Boolean origin() {
+            if (this.origin != null)
+                return this.origin;
+            boolean _tmp = (boolean) ((value() & 1) != 0);
+            this.origin = _tmp;
+            return this.origin;
+        }
+        private Boolean textrel;
+
+        /**
+         * relocation entries might request modifications to a non-writable segment
+         */
+        public Boolean textrel() {
+            if (this.textrel != null)
+                return this.textrel;
+            boolean _tmp = (boolean) ((value() & 4) != 0);
+            this.textrel = _tmp;
+            return this.textrel;
+        }
+        private Boolean staticTls;
+
+        /**
+         * object uses static thread-local storage scheme
+         */
+        public Boolean staticTls() {
+            if (this.staticTls != null)
+                return this.staticTls;
+            boolean _tmp = (boolean) ((value() & 16) != 0);
+            this.staticTls = _tmp;
+            return this.staticTls;
+        }
+        private Boolean symbolic;
+
+        /**
+         * symbolic linking
+         */
+        public Boolean symbolic() {
+            if (this.symbolic != null)
+                return this.symbolic;
+            boolean _tmp = (boolean) ((value() & 2) != 0);
+            this.symbolic = _tmp;
+            return this.symbolic;
+        }
+        private long value;
+        private Elf _root;
+        private Elf.EndianElf.DynamicSectionEntry _parent;
+        public long value() { return value; }
+        public Elf _root() { return _root; }
+        public Elf.EndianElf.DynamicSectionEntry _parent() { return _parent; }
     }
     private Integer shIdxLoOs;
     public Integer shIdxLoOs() {
