@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Flattened Devicetree Format: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Hardware Protocols</li>
+        <li class="active">Flattened Devicetree Format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Flattened Devicetree Format:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Also referred to as Devicetree Blob (DTB). It is a flat binary encoding
+of data (primarily devicetree data, although other data is possible as well).
+The data is internally stored as a tree of named nodes and properties. Nodes
+contain properties and child nodes, while properties are name–value pairs.</p>
+<p>The Devicetree Blobs (<code>.dtb</code> files) are compiled from the Devicetree Source
+files (<code>.dts</code>) through the Devicetree compiler (DTC).</p>
+<p>On Linux systems that support this, the blobs can be accessed in
+<code>/sys/firmware/fdt</code>:</p>
+<ul>
+<li><a href="https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-ofw">https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-ofw</a></li>
+</ul>
+<p>The encoding of strings used in the <code>strings_block</code> and <code>structure_block</code> is
+actually a subset of ASCII:</p>
+<p><a href="https://devicetree-specification.readthedocs.io/en/v0.3/devicetree-basics.html#node-names">https://devicetree-specification.readthedocs.io/en/v0.3/devicetree-basics.html#node-names</a></p>
+<p>Example files:</p>
+<ul>
+<li><a href="https://github.com/qemu/qemu/tree/master/pc-bios">https://github.com/qemu/qemu/tree/master/pc-bios</a></li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["Linux", "Das U-Boot"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        dtb
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q16960371">Wikidata Q16960371</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Flattened Devicetree Format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="Flattened Devicetree Format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Flattened Devicetree Format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Flattened Devicetree Format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Flattened Devicetree Format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Flattened Devicetree Format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Flattened Devicetree Format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Flattened Devicetree Format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Flattened Devicetree Format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Flattened Devicetree Format parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="Flattened Devicetree Format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Flattened Devicetree Format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Flattened Devicetree Format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Flattened Devicetree Format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Flattened Devicetree Format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse Flattened Devicetree Format
+            
+        </h2>
+
+        
+
+        <h3>dtb.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/dtb.nim" download="dtb.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">Dtb</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">totalSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsStructureBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsStringsBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsMemoryReservationBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">version</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">minCompatibleVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">bootCpuidPhys</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenStringsBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenStructureBlock</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawMemoryReservationBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rawStructureBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">rawStringsBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">memoryReservationBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_MemoryBlock</span>
+    <span class="p">`</span><span class="n">structureBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_FdtBlock</span>
+    <span class="p">`</span><span class="n">stringsBlockInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_Strings</span>
+  <span class="n">Dtb_Fdt</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
+    <span class="n">begin_node</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">end_node</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">prop</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">nop</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="k">end</span> <span class="o">=</span> <span class="mi">9</span>
+  <span class="n">Dtb_MemoryBlock</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">entries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Dtb_MemoryBlockEntry</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb</span>
+  <span class="n">Dtb_FdtBlock</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">nodes</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Dtb_FdtNode</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb</span>
+  <span class="n">Dtb_MemoryBlockEntry</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">address</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">size</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint64</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_MemoryBlock</span>
+  <span class="n">Dtb_Strings</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">strings</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">string</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb</span>
+  <span class="n">Dtb_FdtProp</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">lenProperty</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsName</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">property</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_FdtNode</span>
+    <span class="p">`</span><span class="n">nameInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+  <span class="n">Dtb_FdtNode</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="k">type</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_Fdt</span>
+    <span class="p">`</span><span class="n">body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_FdtBlock</span>
+  <span class="n">Dtb_FdtBeginNode</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">name</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">string</span>
+    <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Dtb_FdtNode</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dtb</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_MemoryBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_MemoryBlock</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_FdtBlock</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_MemoryBlockEntry], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_MemoryBlock): Dtb_MemoryBlockEntry</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_Strings], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_Strings</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtProp</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtBlock): Dtb_FdtNode</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtBeginNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtBeginNode</span>
+
+<span class="k">proc </span><span class="nf">memoryReservationBlock</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_MemoryBlock</span>
+<span class="k">proc </span><span class="nf">structureBlock</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_FdtBlock</span>
+<span class="k">proc </span><span class="nf">stringsBlock</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_Strings</span>
+<span class="k">proc </span><span class="nf">name</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb_FdtProp</span><span class="p">):</span> <span class="kt">string</span>
+
+
+<span class="sd">##[</span>
+<span class="n">Also</span> <span class="n">referred</span> <span class="n">to</span> <span class="k">as</span> <span class="n">Devicetree</span> <span class="n">Blob</span> <span class="p">(</span><span class="n">DTB</span><span class="p">).</span> <span class="n">It</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">flat</span> <span class="n">binary</span> <span class="n">encoding</span>
+<span class="k">of</span> <span class="n">data</span> <span class="p">(</span><span class="n">primarily</span> <span class="n">devicetree</span> <span class="n">data</span><span class="p">,</span> <span class="n">although</span> <span class="n">other</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">possible</span> <span class="k">as</span> <span class="n">well</span><span class="p">).</span>
+<span class="n">The</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">internally</span> <span class="n">stored</span> <span class="k">as</span> <span class="n">a</span> <span class="n">tree</span> <span class="k">of</span> <span class="n">named</span> <span class="n">nodes</span> <span class="ow">and</span> <span class="n">properties</span><span class="p">.</span> <span class="n">Nodes</span>
+<span class="n">contain</span> <span class="n">properties</span> <span class="ow">and</span> <span class="n">child</span> <span class="n">nodes</span><span class="p">,</span> <span class="k">while</span> <span class="n">properties</span> <span class="n">are</span> <span class="n">name</span><span class="err">–value pairs.</span>
+
+<span class="n">The</span> <span class="n">Devicetree</span> <span class="n">Blobs</span> <span class="p">(`.</span><span class="n">dtb</span><span class="p">`</span> <span class="n">files</span><span class="p">)</span> <span class="n">are</span> <span class="n">compiled</span> <span class="kn">from</span> <span class="n">the</span> <span class="n">Devicetree</span> <span class="n">Source</span>
+<span class="n">files</span> <span class="p">(`.</span><span class="n">dts</span><span class="p">`)</span> <span class="n">through</span> <span class="n">the</span> <span class="n">Devicetree</span> <span class="n">compiler</span> <span class="p">(</span><span class="n">DTC</span><span class="p">).</span>
+
+<span class="n">On</span> <span class="n">Linux</span> <span class="n">systems</span> <span class="n">that</span> <span class="n">support</span> <span class="n">this</span><span class="p">,</span> <span class="n">the</span> <span class="n">blobs</span> <span class="n">can</span> <span class="n">be</span> <span class="n">accessed</span> <span class="ow">in</span>
+<span class="p">`</span><span class="o">/</span><span class="n">sys</span><span class="o">/</span><span class="n">firmware</span><span class="o">/</span><span class="n">fdt</span><span class="p">`:</span>
+
+<span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">kernel</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">Documentation</span><span class="o">/</span><span class="n">ABI</span><span class="o">/</span><span class="n">testing</span><span class="o">/</span><span class="n">sysfs</span><span class="o">-</span><span class="n">firmware</span><span class="o">-</span><span class="n">ofw</span><span class="o">&gt;</span>
+
+<span class="n">The</span> <span class="n">encoding</span> <span class="k">of</span> <span class="n">strings</span> <span class="n">used</span> <span class="ow">in</span> <span class="n">the</span> <span class="p">`</span><span class="n">strings_block</span><span class="p">`</span> <span class="ow">and</span> <span class="p">`</span><span class="n">structure_block</span><span class="p">`</span> <span class="ow">is</span>
+<span class="n">actually</span> <span class="n">a</span> <span class="n">subset</span> <span class="k">of</span> <span class="n">ASCII</span><span class="p">:</span>
+
+<span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">devicetree</span><span class="o">-</span><span class="n">specification</span><span class="p">.</span><span class="n">readthedocs</span><span class="p">.</span><span class="n">io</span><span class="o">/</span><span class="n">en</span><span class="o">/</span><span class="n">v0</span><span class="p">.</span><span class="mi">3</span><span class="o">/</span><span class="n">devicetree</span><span class="o">-</span><span class="n">basics</span><span class="p">.</span><span class="n">html</span><span class="c">#node-names&gt;</span>
+
+<span class="n">Example</span> <span class="n">files</span><span class="p">:</span>
+
+<span class="o">*</span> <span class="o">&lt;</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="o">/</span><span class="n">qemu</span><span class="o">/</span><span class="n">qemu</span><span class="o">/</span><span class="n">tree</span><span class="o">/</span><span class="n">master</span><span class="o">/</span><span class="n">pc</span><span class="o">-</span><span class="n">bios</span><span class="o">&gt;</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://devicetree-specification.readthedocs.io/en/v0.3/flattened-format.html&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://elinux.org/images/f/f4/Elc2013_Fernandes.pdf&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dtb =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+  <span class="k">let</span> <span class="n">totalSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">totalSize</span> <span class="o">=</span> <span class="n">totalSizeExpr</span>
+  <span class="k">let</span> <span class="n">ofsStructureBlockExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsStructureBlock</span> <span class="o">=</span> <span class="n">ofsStructureBlockExpr</span>
+  <span class="k">let</span> <span class="n">ofsStringsBlockExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsStringsBlock</span> <span class="o">=</span> <span class="n">ofsStringsBlockExpr</span>
+  <span class="k">let</span> <span class="n">ofsMemoryReservationBlockExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsMemoryReservationBlock</span> <span class="o">=</span> <span class="n">ofsMemoryReservationBlockExpr</span>
+  <span class="k">let</span> <span class="n">versionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">versionExpr</span>
+  <span class="k">let</span> <span class="n">minCompatibleVersionExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">minCompatibleVersion</span> <span class="o">=</span> <span class="n">minCompatibleVersionExpr</span>
+  <span class="k">let</span> <span class="n">bootCpuidPhysExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">bootCpuidPhys</span> <span class="o">=</span> <span class="n">bootCpuidPhysExpr</span>
+  <span class="k">let</span> <span class="n">lenStringsBlockExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenStringsBlock</span> <span class="o">=</span> <span class="n">lenStringsBlockExpr</span>
+  <span class="k">let</span> <span class="n">lenStructureBlockExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenStructureBlock</span> <span class="o">=</span> <span class="n">lenStructureBlockExpr</span>
+
+<span class="k">proc </span><span class="nf">memoryReservationBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_MemoryBlock</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsMemoryReservationBlock</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">rawMemoryReservationBlockInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStructureBlock</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsMemoryReservationBlock</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawMemoryReservationBlockInst</span> <span class="o">=</span> <span class="n">rawMemoryReservationBlockInstExpr</span>
+  <span class="k">let</span> <span class="n">rawMemoryReservationBlockInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawMemoryReservationBlockInstExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">memoryReservationBlockInstExpr</span> <span class="o">=</span> <span class="n">Dtb_MemoryBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawMemoryReservationBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span> <span class="o">=</span> <span class="n">memoryReservationBlockInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">memoryReservationBlockInst</span>
+
+<span class="k">proc </span><span class="nf">structureBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_FdtBlock</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStructureBlock</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">rawStructureBlockInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenStructureBlock</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawStructureBlockInst</span> <span class="o">=</span> <span class="n">rawStructureBlockInstExpr</span>
+  <span class="k">let</span> <span class="n">rawStructureBlockInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawStructureBlockInstExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">structureBlockInstExpr</span> <span class="o">=</span> <span class="n">Dtb_FdtBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStructureBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span> <span class="o">=</span> <span class="n">structureBlockInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">structureBlockInst</span>
+
+<span class="k">proc </span><span class="nf">stringsBlock</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb</span><span class="p">):</span> <span class="n">Dtb_Strings</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStringsBlock</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">rawStringsBlockInstExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenStringsBlock</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawStringsBlockInst</span> <span class="o">=</span> <span class="n">rawStringsBlockInstExpr</span>
+  <span class="k">let</span> <span class="n">rawStringsBlockInstIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawStringsBlockInstExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">stringsBlockInstExpr</span> <span class="o">=</span> <span class="n">Dtb_Strings</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawStringsBlockInstIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span> <span class="o">=</span> <span class="n">stringsBlockInstExpr</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">stringsBlockInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb], filename: string): Dtb =</span>
+  <span class="n">Dtb</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_MemoryBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_MemoryBlock =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_MemoryBlock</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Dtb_MemoryBlockEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">entries</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_MemoryBlock], filename: string): Dtb_MemoryBlock =</span>
+  <span class="n">Dtb_MemoryBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtBlock], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_FdtBlock =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_FdtBlock</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="kp">true</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Dtb_FdtNode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">nodes</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">it</span><span class="p">.</span><span class="k">type</span> <span class="o">==</span> <span class="n">dtb</span><span class="p">.</span><span class="k">end</span><span class="p">:</span>
+        <span class="k">break</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtBlock], filename: string): Dtb_FdtBlock =</span>
+  <span class="n">Dtb_FdtBlock</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_MemoryBlockEntry], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_MemoryBlock): Dtb_MemoryBlockEntry =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_MemoryBlockEntry</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+
+  <span class="sd">##[</span>
+  <span class="n">physical</span> <span class="n">address</span> <span class="k">of</span> <span class="n">a</span> <span class="n">reserved</span> <span class="n">memory</span> <span class="n">region</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">addressExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">addressExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">size</span> <span class="k">of</span> <span class="n">a</span> <span class="n">reserved</span> <span class="n">memory</span> <span class="n">region</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">sizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU8be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">sizeExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_MemoryBlockEntry], filename: string): Dtb_MemoryBlockEntry =</span>
+  <span class="n">Dtb_MemoryBlockEntry</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_Strings], io: KaitaiStream, root: KaitaiStruct, parent: Dtb): Dtb_Strings =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_Strings</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">block</span><span class="p">:</span>
+    <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">strings</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+      <span class="n">inc</span> <span class="n">i</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_Strings], filename: string): Dtb_Strings =</span>
+  <span class="n">Dtb_Strings</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtProp], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtProp =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_FdtProp</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">lenPropertyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenProperty</span> <span class="o">=</span> <span class="n">lenPropertyExpr</span>
+  <span class="k">let</span> <span class="n">ofsNameExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsName</span> <span class="o">=</span> <span class="n">ofsNameExpr</span>
+  <span class="k">let</span> <span class="n">propertyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenProperty</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">property</span> <span class="o">=</span> <span class="n">propertyExpr</span>
+  <span class="k">let</span> <span class="n">paddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
+
+<span class="k">proc </span><span class="nf">name</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Dtb_FdtProp</span><span class="p">):</span> <span class="kt">string</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Dtb</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">stringsBlock</span><span class="p">.</span><span class="n">io</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsName</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">nameInstExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span> <span class="o">=</span> <span class="n">nameInstExpr</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">nameInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtProp], filename: string): Dtb_FdtProp =</span>
+  <span class="n">Dtb_FdtProp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtBlock): Dtb_FdtNode =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_FdtNode</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">typeExpr</span> <span class="o">=</span> <span class="n">Dtb_Fdt</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">())</span>
+  <span class="n">this</span><span class="p">.</span><span class="k">type</span> <span class="o">=</span> <span class="n">typeExpr</span>
+  <span class="k">block</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">on</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="k">type</span>
+    <span class="k">if</span> <span class="n">on</span> <span class="o">==</span> <span class="n">dtb</span><span class="p">.</span><span class="n">begin_node</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Dtb_FdtBeginNode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">dtb</span><span class="p">.</span><span class="n">prop</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">bodyExpr</span> <span class="o">=</span> <span class="n">Dtb_FdtProp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">bodyExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtNode], filename: string): Dtb_FdtNode =</span>
+  <span class="n">Dtb_FdtNode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtBeginNode], io: KaitaiStream, root: KaitaiStruct, parent: Dtb_FdtNode): Dtb_FdtBeginNode =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Dtb_FdtBeginNode</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Dtb</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">nameExpr</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">),</span> <span class="s">&quot;ASCII&quot;</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">nameExpr</span>
+  <span class="k">let</span> <span class="n">paddingExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">((</span><span class="o">-</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">%%%</span> <span class="mi">4</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">padding</span> <span class="o">=</span> <span class="n">paddingExpr</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Dtb_FdtBeginNode], filename: string): Dtb_FdtBeginNode =</span>
+  <span class="n">Dtb_FdtBeginNode</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

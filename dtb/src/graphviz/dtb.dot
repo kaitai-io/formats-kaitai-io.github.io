@@ -1,0 +1,134 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__dtb {
+		label="Dtb";
+		graph[style=dotted];
+
+		dtb__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="total_size_pos">4</TD><TD PORT="total_size_size">4</TD><TD>u4be</TD><TD PORT="total_size_type">total_size</TD></TR>
+			<TR><TD PORT="ofs_structure_block_pos">8</TD><TD PORT="ofs_structure_block_size">4</TD><TD>u4be</TD><TD PORT="ofs_structure_block_type">ofs_structure_block</TD></TR>
+			<TR><TD PORT="ofs_strings_block_pos">12</TD><TD PORT="ofs_strings_block_size">4</TD><TD>u4be</TD><TD PORT="ofs_strings_block_type">ofs_strings_block</TD></TR>
+			<TR><TD PORT="ofs_memory_reservation_block_pos">16</TD><TD PORT="ofs_memory_reservation_block_size">4</TD><TD>u4be</TD><TD PORT="ofs_memory_reservation_block_type">ofs_memory_reservation_block</TD></TR>
+			<TR><TD PORT="version_pos">20</TD><TD PORT="version_size">4</TD><TD>u4be</TD><TD PORT="version_type">version</TD></TR>
+			<TR><TD PORT="min_compatible_version_pos">24</TD><TD PORT="min_compatible_version_size">4</TD><TD>u4be</TD><TD PORT="min_compatible_version_type">min_compatible_version</TD></TR>
+			<TR><TD PORT="boot_cpuid_phys_pos">28</TD><TD PORT="boot_cpuid_phys_size">4</TD><TD>u4be</TD><TD PORT="boot_cpuid_phys_type">boot_cpuid_phys</TD></TR>
+			<TR><TD PORT="len_strings_block_pos">32</TD><TD PORT="len_strings_block_size">4</TD><TD>u4be</TD><TD PORT="len_strings_block_type">len_strings_block</TD></TR>
+			<TR><TD PORT="len_structure_block_pos">36</TD><TD PORT="len_structure_block_size">4</TD><TD>u4be</TD><TD PORT="len_structure_block_type">len_structure_block</TD></TR>
+		</TABLE>>];
+		dtb__inst__memory_reservation_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="memory_reservation_block_pos">ofs_memory_reservation_block</TD><TD PORT="memory_reservation_block_size">(ofs_structure_block - ofs_memory_reservation_block)</TD><TD>MemoryBlock</TD><TD PORT="memory_reservation_block_type">memory_reservation_block</TD></TR>
+		</TABLE>>];
+		dtb__inst__structure_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="structure_block_pos">ofs_structure_block</TD><TD PORT="structure_block_size">len_structure_block</TD><TD>FdtBlock</TD><TD PORT="structure_block_type">structure_block</TD></TR>
+		</TABLE>>];
+		dtb__inst__strings_block [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="strings_block_pos">ofs_strings_block</TD><TD PORT="strings_block_size">len_strings_block</TD><TD>Strings</TD><TD PORT="strings_block_type">strings_block</TD></TR>
+		</TABLE>>];
+		subgraph cluster__memory_block {
+			label="Dtb::MemoryBlock";
+			graph[style=dotted];
+
+			memory_block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="entries_pos">0</TD><TD PORT="entries_size">16</TD><TD>MemoryBlockEntry</TD><TD PORT="entries_type">entries</TD></TR>
+				<TR><TD COLSPAN="4" PORT="entries__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fdt_block {
+			label="Dtb::FdtBlock";
+			graph[style=dotted];
+
+			fdt_block__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="nodes_pos">0</TD><TD PORT="nodes_size">...</TD><TD>FdtNode</TD><TD PORT="nodes_type">nodes</TD></TR>
+				<TR><TD COLSPAN="4" PORT="nodes__repeat">repeat until _.type == :fdt_end</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__memory_block_entry {
+			label="Dtb::MemoryBlockEntry";
+			graph[style=dotted];
+
+			memory_block_entry__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="address_pos">0</TD><TD PORT="address_size">8</TD><TD>u8be</TD><TD PORT="address_type">address</TD></TR>
+				<TR><TD PORT="size_pos">8</TD><TD PORT="size_size">8</TD><TD>u8be</TD><TD PORT="size_type">size</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__strings {
+			label="Dtb::Strings";
+			graph[style=dotted];
+
+			strings__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="strings_pos">0</TD><TD PORT="strings_size">...</TD><TD>str(ASCII)</TD><TD PORT="strings_type">strings</TD></TR>
+				<TR><TD COLSPAN="4" PORT="strings__repeat">repeat to end of stream</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fdt_prop {
+			label="Dtb::FdtProp";
+			graph[style=dotted];
+
+			fdt_prop__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="len_property_pos">0</TD><TD PORT="len_property_size">4</TD><TD>u4be</TD><TD PORT="len_property_type">len_property</TD></TR>
+				<TR><TD PORT="ofs_name_pos">4</TD><TD PORT="ofs_name_size">4</TD><TD>u4be</TD><TD PORT="ofs_name_type">ofs_name</TD></TR>
+				<TR><TD PORT="property_pos">8</TD><TD PORT="property_size">len_property</TD><TD></TD><TD PORT="property_type">property</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(-(_io.pos) % 4)</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+			fdt_prop__inst__name [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">ofs_name</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__fdt_node {
+			label="Dtb::FdtNode";
+			graph[style=dotted];
+
+			fdt_node__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="type_pos">0</TD><TD PORT="type_size">4</TD><TD>u4be→Fdt</TD><TD PORT="type_type">type</TD></TR>
+				<TR><TD PORT="body_pos">4</TD><TD PORT="body_size">...</TD><TD>switch (type)</TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+fdt_node__seq_body_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+	<TR><TD BGCOLOR="#F0F2E4">case</TD><TD BGCOLOR="#F0F2E4">type</TD></TR>
+	<TR><TD>:fdt_begin_node</TD><TD PORT="case0">FdtBeginNode</TD></TR>
+	<TR><TD>:fdt_prop</TD><TD PORT="case1">FdtProp</TD></TR>
+</TABLE>>];
+		}
+		subgraph cluster__fdt_begin_node {
+			label="Dtb::FdtBeginNode";
+			graph[style=dotted];
+
+			fdt_begin_node__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">...</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="padding_pos">...</TD><TD PORT="padding_size">(-(_io.pos) % 4)</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
+			</TABLE>>];
+		}
+	}
+	dtb__seq:ofs_memory_reservation_block_type -> dtb__inst__memory_reservation_block:memory_reservation_block_pos [color="#404040"];
+	dtb__seq:ofs_structure_block_type -> dtb__inst__memory_reservation_block:memory_reservation_block_size [color="#404040"];
+	dtb__seq:ofs_memory_reservation_block_type -> dtb__inst__memory_reservation_block:memory_reservation_block_size [color="#404040"];
+	dtb__inst__memory_reservation_block:memory_reservation_block_type -> memory_block__seq [style=bold];
+	dtb__seq:ofs_structure_block_type -> dtb__inst__structure_block:structure_block_pos [color="#404040"];
+	dtb__seq:len_structure_block_type -> dtb__inst__structure_block:structure_block_size [color="#404040"];
+	dtb__inst__structure_block:structure_block_type -> fdt_block__seq [style=bold];
+	dtb__seq:ofs_strings_block_type -> dtb__inst__strings_block:strings_block_pos [color="#404040"];
+	dtb__seq:len_strings_block_type -> dtb__inst__strings_block:strings_block_size [color="#404040"];
+	dtb__inst__strings_block:strings_block_type -> strings__seq [style=bold];
+	memory_block__seq:entries_type -> memory_block_entry__seq [style=bold];
+	fdt_block__seq:nodes_type -> fdt_node__seq [style=bold];
+	fdt_node__seq:type_type -> fdt_block__seq:nodes__repeat [color="#404040"];
+	fdt_prop__seq:len_property_type -> fdt_prop__seq:property_size [color="#404040"];
+	fdt_prop__seq:ofs_name_type -> fdt_prop__inst__name:name_pos [color="#404040"];
+	fdt_node__seq:body_type -> fdt_node__seq_body_switch [style=bold];
+	fdt_node__seq_body_switch:case0 -> fdt_begin_node__seq [style=bold];
+	fdt_node__seq_body_switch:case1 -> fdt_prop__seq [style=bold];
+	fdt_node__seq:type_type -> fdt_node__seq:body_type [color="#404040"];
+}

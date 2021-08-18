@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Flattened Devicetree Format format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Hardware Protocols</li>
+        <li class="active">Flattened Devicetree Format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Flattened Devicetree Format:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>Also referred to as Devicetree Blob (DTB). It is a flat binary encoding
+of data (primarily devicetree data, although other data is possible as well).
+The data is internally stored as a tree of named nodes and properties. Nodes
+contain properties and child nodes, while properties are name–value pairs.</p>
+<p>The Devicetree Blobs (<code>.dtb</code> files) are compiled from the Devicetree Source
+files (<code>.dts</code>) through the Devicetree compiler (DTC).</p>
+<p>On Linux systems that support this, the blobs can be accessed in
+<code>/sys/firmware/fdt</code>:</p>
+<ul>
+<li><a href="https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-ofw">https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-ofw</a></li>
+</ul>
+<p>The encoding of strings used in the <code>strings_block</code> and <code>structure_block</code> is
+actually a subset of ASCII:</p>
+<p><a href="https://devicetree-specification.readthedocs.io/en/v0.3/devicetree-basics.html#node-names">https://devicetree-specification.readthedocs.io/en/v0.3/devicetree-basics.html#node-names</a></p>
+<p>Example files:</p>
+<ul>
+<li><a href="https://github.com/qemu/qemu/tree/master/pc-bios">https://github.com/qemu/qemu/tree/master/pc-bios</a></li>
+</ul>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["Linux", "Das U-Boot"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        dtb
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q16960371">Wikidata Q16960371</a></li>
+                            
+                            
+                            
+                            
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Flattened Devicetree Format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Flattened Devicetree Format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Flattened Devicetree Format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Flattened Devicetree Format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Flattened Devicetree Format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Flattened Devicetree Format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Flattened Devicetree Format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Flattened Devicetree Format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Flattened Devicetree Format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Flattened Devicetree Format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Flattened Devicetree Format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Flattened Devicetree Format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Flattened Devicetree Format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Flattened Devicetree Format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Flattened Devicetree Format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="dtb.svg">
+            <img class="diagram-img" src="dtb.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dtb</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Flattened Devicetree Format</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dtb</span>
+  <span class="nt">application</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Linux</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">Das U-Boot</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q16960371</span>
+  <span class="nt">tags</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">linux</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">serialization</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">Also referred to as Devicetree Blob (DTB). It is a flat binary encoding</span>
+  <span class="no">of data (primarily devicetree data, although other data is possible as well).</span>
+  <span class="no">The data is internally stored as a tree of named nodes and properties. Nodes</span>
+  <span class="no">contain properties and child nodes, while properties are name–value pairs.</span>
+
+  <span class="no">The Devicetree Blobs (`.dtb` files) are compiled from the Devicetree Source</span>
+  <span class="no">files (`.dts`) through the Devicetree compiler (DTC).</span>
+
+  <span class="no">On Linux systems that support this, the blobs can be accessed in</span>
+  <span class="no">`/sys/firmware/fdt`:</span>
+
+  <span class="no">* &lt;https://www.kernel.org/doc/Documentation/ABI/testing/sysfs-firmware-ofw&gt;</span>
+
+  <span class="no">The encoding of strings used in the `strings_block` and `structure_block` is</span>
+  <span class="no">actually a subset of ASCII:</span>
+
+  <span class="no">&lt;https://devicetree-specification.readthedocs.io/en/v0.3/devicetree-basics.html#node-names&gt;</span>
+
+  <span class="no">Example files:</span>
+
+  <span class="no">* &lt;https://github.com/qemu/qemu/tree/master/pc-bios&gt;</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://devicetree-specification.readthedocs.io/en/v0.3/flattened-format.html</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://elinux.org/images/f/f4/Elc2013_Fernandes.pdf</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0xd0</span><span class="p p-Indicator">,</span> <span class="nv">0x0d</span><span class="p p-Indicator">,</span> <span class="nv">0xfe</span><span class="p p-Indicator">,</span> <span class="nv">0xed</span><span class="p p-Indicator">]</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">total_size</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">totalsize</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_structure_block</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">off_dt_struct</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_strings_block</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">off_dt_strings</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_memory_reservation_block</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">off_mem_rsvmap</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">min_compatible_version</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_comp_version</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">valid</span><span class="p">:</span>
+      <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_cpuid_phys</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">boot_cpuid_phys</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_strings_block</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_dt_strings</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_structure_block</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size_dt_struct</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">memory_reservation_block</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_memory_reservation_block</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_structure_block - ofs_memory_reservation_block</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_block</span>
+  <span class="nt">structure_block</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_structure_block</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_structure_block</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fdt_block</span>
+  <span class="nt">strings_block</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_strings_block</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_strings_block</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strings</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">memory_block</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">memory_block_entry</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+  <span class="nt">memory_block_entry</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">address</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">physical address of a reserved memory region</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size of a reserved memory region</span>
+  <span class="nt">fdt_block</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nodes</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fdt_node</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">until</span>
+        <span class="nt">repeat-until</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_.type == fdt::end</span>
+  <span class="nt">fdt_node</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{type}</span><span class="nv"> </span><span class="s">{body}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fdt</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">fdt::begin_node</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fdt_begin_node</span>
+            <span class="l l-Scalar l-Scalar-Plain">fdt::prop</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">fdt_prop</span>
+  <span class="nt">fdt_begin_node</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(- _io.pos) % 4</span>
+  <span class="nt">fdt_prop</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_property</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nameoff</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">property</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_property</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">padding</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(- _io.pos) % 4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">name</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.strings_block._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
+  <span class="nt">strings</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strings</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">fdt</span><span class="p">:</span>
+    <span class="nt">0x00000001</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">begin_node</span>
+    <span class="nt">0x00000002</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end_node</span>
+    <span class="nt">0x00000003</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prop</span>
+    <span class="nt">0x00000004</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nop</span>
+    <span class="nt">0x00000009</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">end</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
