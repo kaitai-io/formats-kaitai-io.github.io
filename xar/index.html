@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>XAR (eXtensible ARchive) format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">XAR (eXtensible ARchive)</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>XAR (eXtensible ARchive):
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>From <a href="https://en.wikipedia.org/wiki/Xar_(archiver)">Wikipedia</a>:</p>
+<p>&quot;XAR (short for eXtensible ARchive format) is an open source file archiver
+and the archiver’s file format. It was created within the OpenDarwin project
+and is used in macOS X 10.5 and up for software installation routines, as
+well as browser extensions in Safari 5.0 and up.&quot;</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["xar", "pkg", "xip"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/600">PRONOM fmt/600</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q1093556">Wikidata Q1093556</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Xar_(Extensible_Archive)">Xar (Extensible Archive) in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of XAR (eXtensible ARchive)
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="XAR (eXtensible ARchive) parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="XAR (eXtensible ARchive) parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="XAR (eXtensible ARchive) parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="XAR (eXtensible ARchive) parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="XAR (eXtensible ARchive) parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="XAR (eXtensible ARchive) parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="XAR (eXtensible ARchive) parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="XAR (eXtensible ARchive) parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="XAR (eXtensible ARchive) parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="XAR (eXtensible ARchive) parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="xar.svg">
+            <img class="diagram-img" src="xar.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xar</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">XAR (eXtensible ARchive)</span>
+  <span class="nt">file-extension</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xar</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">pkg</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">xip</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Xar_(Extensible_Archive)</span>
+    <span class="nt">mime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/x-xar</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt/600</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q1093556</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">From [Wikipedia](https://en.wikipedia.org/wiki/Xar_(archiver)):</span>
+
+  <span class="no">&quot;XAR (short for eXtensible ARchive format) is an open source file archiver</span>
+  <span class="no">and the archiver’s file format. It was created within the OpenDarwin project</span>
+  <span class="no">and is used in macOS X 10.5 and up for software installation routines, as</span>
+  <span class="no">well as browser extensions in Safari 5.0 and up.&quot;</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/mackyle/xar/wiki/xarformat</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_prefix</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header_prefix</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">internal; access `_root.header` instead</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_prefix.len_header - header_prefix._sizeof</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">toc</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_toc_compressed</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">toc_type</span>
+    <span class="nt">process</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">zlib compressed XML further describing the content of the archive</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">checksum_algorithm_other</span><span class="p">:</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">XAR_CKSUM_OTHER</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+    <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/mackyle/xar/blob/66d451d/xar/include/xar.h.in#L85</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">file_header_prefix</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="s">&#39;xar!&#39;</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_header</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">internal; access `_root.header.len_header` instead</span>
+  <span class="nt">file_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">valid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_toc_compressed</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">toc_length_compressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">toc_length_uncompressed</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum_algorithm_int</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">internal; access `checksum_algorithm_name` instead</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">checksum_alg_name</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">valid</span><span class="p">:</span>
+          <span class="nt">expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_ != &quot;&quot; and _ != &quot;none&quot;</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_checksum_alg_name</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">internal; access `checksum_algorithm_name` instead</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">checksum_algorithm_name</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">has_checksum_alg_name ? checksum_alg_name</span>
+          <span class="no">: checksum_algorithm_int == checksum_algorithms_apple::none.to_i ? &quot;none&quot;</span>
+          <span class="no">: checksum_algorithm_int == checksum_algorithms_apple::sha1.to_i ? &quot;sha1&quot;</span>
+          <span class="no">: checksum_algorithm_int == checksum_algorithms_apple::md5.to_i ? &quot;md5&quot;</span>
+          <span class="no">: checksum_algorithm_int == checksum_algorithms_apple::sha256.to_i ? &quot;sha256&quot;</span>
+          <span class="no">: checksum_algorithm_int == checksum_algorithms_apple::sha512.to_i ? &quot;sha512&quot;</span>
+          <span class="no">: &quot;&quot;</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">If it is not</span>
+
+          <span class="no">* `&quot;&quot;` (empty string), indicating an unknown integer value (access</span>
+            <span class="no">`checksum_algorithm_int` for debugging purposes to find out</span>
+            <span class="no">what that value is), or</span>
+          <span class="no">* `&quot;none&quot;`, indicating that the TOC checksum is not provided (in that</span>
+            <span class="no">case, the `&lt;checksum&gt;` property or its `style` attribute should be</span>
+            <span class="no">missing, or the `style` attribute must be set to `&quot;none&quot;`),</span>
+
+          <span class="no">it must exactly match the `style` attribute value of the</span>
+          <span class="no">`&lt;checksum&gt;` property in the root node `&lt;toc&gt;`. See</span>
+          <span class="no">&lt;https://github.com/mackyle/xar/blob/66d451d/xar/lib/archive.c#L345-L371&gt;</span>
+          <span class="no">for reference.</span>
+
+          <span class="no">The `xar` (eXtensible ARchiver) program [uses OpenSSL&#39;s function</span>
+          <span class="no">`EVP_get_digestbyname`](</span>
+            <span class="no">https://github.com/mackyle/xar/blob/66d451d/xar/lib/archive.c#L328</span>
+          <span class="no">) to verify this value (if it&#39;s not `&quot;&quot;` or `&quot;none&quot;`, of course).</span>
+          <span class="no">So it&#39;s reasonable to assume that this can only have one of the values</span>
+          <span class="no">that OpenSSL recognizes.</span>
+      <span class="nt">has_checksum_alg_name</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">checksum_algorithm_int == _root.checksum_algorithm_other</span>
+          <span class="no">and len_header &gt;= 32</span>
+          <span class="no">and len_header % 4 == 0</span>
+      <span class="nt">len_header</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.header_prefix.len_header</span>
+  <span class="nt">toc_type</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xml_string</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="c1"># https://github.com/apple-opensource/xar/blob/03d10ac/xar/include/xar.h.in#L67-L73</span>
+  <span class="nt">checksum_algorithms_apple</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">none</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha1</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md5</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha256</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha512</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
