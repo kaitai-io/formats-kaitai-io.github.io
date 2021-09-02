@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Qualcomm Snapdragon (MSM) bootloader.img format format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">Qualcomm Snapdragon (MSM) bootloader.img format</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>Qualcomm Snapdragon (MSM) bootloader.img format:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>A bootloader for Android used on various devices powered by Qualcomm
+Snapdragon chips:</p>
+<p><a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors">https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors</a></p>
+<p>Although not all of the Snapdragon based Android devices use this particular
+bootloader format, it is known that devices with the following chips have used
+it (example devices are given for each chip):</p>
+<ul>
+<li>
+<p>APQ8064 (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_S4_Pro">devices</a>)</p>
+<ul>
+<li>Nexus 4 &quot;mako&quot;: <a href="https://androidfilehost.com/?fid=96039337900113996" title="bootloader-mako-makoz30f.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-mako&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/lge/mako/+/33f0114/releasetools.py#98">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>MSM8974AA (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)">devices</a>)</p>
+<ul>
+<li>Nexus 5 &quot;hammerhead&quot;: <a href="https://androidfilehost.com/?fid=385035244224410247" title="bootloader-hammerhead-hhz20h.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-hammerhead&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#116">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>MSM8992 (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)">devices</a>)</p>
+<ul>
+<li>Nexus 5X &quot;bullhead&quot;: <a href="https://androidfilehost.com/?fid=11410963190603870177" title="bootloader-bullhead-bhz32c.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-bullhead&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/lge/bullhead/+/2994b6b/releasetools.py#126">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>APQ8064-1AA (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_600_(2013)">devices</a>)</p>
+<ul>
+<li>Nexus 7 [2013] (Mobile) &quot;deb&quot; <!-- raw HTML omitted -->(**)<!-- raw HTML omitted -->: <a href="https://androidfilehost.com/?fid=23501681358552487" title="bootloader-deb-flo-04.02.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-deb-flo&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/asus/deb/+/14c1638/releasetools.py#105">releasetools.py</a></li>
+<li>Nexus 7 [2013] (Wi-Fi) &quot;flo&quot; <!-- raw HTML omitted -->(**)<!-- raw HTML omitted -->: <a href="https://androidfilehost.com/?fid=23991606952593542" title="bootloader-flo-flo-04.05.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-flo-flo&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/asus/flo/+/9d9fee9/releasetools.py#130">releasetools.py</a></li>
+</ul>
+</li>
+<li>
+<p>MSM8996 Pro-AB (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_820_and_821_(2016)">devices</a>)</p>
+<ul>
+<li>Pixel &quot;sailfish&quot; <!-- raw HTML omitted -->(*)<!-- raw HTML omitted -->:
+<a href="https://androidfilehost.com/?fid=6006931924117907154" title="bootloader-sailfish-8996-012001-1904111134.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-sailfish&amp;type=files">other samples</a>)</li>
+<li>Pixel XL &quot;marlin&quot; <!-- raw HTML omitted -->(*)<!-- raw HTML omitted -->:
+<a href="https://androidfilehost.com/?fid=6006931924117907131" title="bootloader-marlin-8996-012001-1904111134.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-marlin&amp;type=files">other samples</a>)</li>
+</ul>
+</li>
+<li>
+<p>MSM8998 (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_835_(2017)">devices</a>)</p>
+<ul>
+<li>Pixel 2 &quot;walleye&quot; <!-- raw HTML omitted -->(*)<!-- raw HTML omitted -->: <a href="https://androidfilehost.com/?fid=14943124697586348540" title="bootloader-walleye-mw8998-003.0085.00.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-walleye&amp;type=files">other samples</a>)</li>
+<li>Pixel 2 XL &quot;taimen&quot;: <a href="https://androidfilehost.com/?fid=14943124697586348536" title="bootloader-taimen-tmz30m.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-taimen&amp;type=files">other samples</a>)</li>
+</ul>
+</li>
+</ul>
+<p><!-- raw HTML omitted -->(*)
+<code>bootloader_size</code> is equal to the size of the whole file (not just <code>img_bodies</code> as usual).
+<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->(**)
+There are some data after the end of <code>img_bodies</code>.
+<!-- raw HTML omitted --></p>
+<hr />
+<p>On the other hand, devices with these chips <strong>do not</strong> use this format:</p>
+<ul>
+<li>
+<p><!-- raw HTML omitted -->APQ8084<!-- raw HTML omitted --> (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)">devices</a>)</p>
+<ul>
+<li>Nexus 6 &quot;shamu&quot;: <a href="https://androidfilehost.com/?fid=745849072291678307" title="bootloader-shamu-moto-apq8084-72.04.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-shamu&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/moto/shamu/+/df9354d/releasetools.py#12">releasetools.py</a> -
+uses &quot;Motoboot packed image format&quot; instead</li>
+</ul>
+</li>
+<li>
+<p><!-- raw HTML omitted -->MSM8994<!-- raw HTML omitted --> (<a href="https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)">devices</a>)</p>
+<ul>
+<li>Nexus 6P &quot;angler&quot;: <a href="https://androidfilehost.com/?fid=11410963190603870158" title="bootloader-angler-angler-03.84.img">sample</a> (<a href="https://androidfilehost.com/?w=search&amp;s=bootloader-angler&amp;type=files">other samples</a>),
+<a href="https://android.googlesource.com/device/huawei/angler/+/cf92cd8/releasetools.py#29">releasetools.py</a> -
+uses &quot;Huawei Bootloader packed image format&quot; instead</li>
+</ul>
+</li>
+</ul>
+<hr />
+<p>The <code>bootloader-*.img</code> samples referenced above originally come from factory
+images packed in ZIP archives that can be found on the page <a href="https://developers.google.com/android/images">Factory Images
+for Nexus and Pixel Devices</a> on
+the Google Developers site. Note that the codenames on that page may be
+different than the ones that are written in the list above. That's because the
+Google page indicates <strong>ROM codenames</strong> in headings (e.g. &quot;occam&quot; for Nexus 4)
+but the above list uses <strong>model codenames</strong> (e.g. &quot;mako&quot; for Nexus 4) because
+that is how the original <code>bootloader-*.img</code> files are identified. For most
+devices, however, these code names are the same.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        img
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of Qualcomm Snapdragon (MSM) bootloader.img format
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="Qualcomm Snapdragon (MSM) bootloader.img format parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="android_bootldr_qcom.svg">
+            <img class="diagram-img" src="android_bootldr_qcom.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">android_bootldr_qcom</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Qualcomm Snapdragon (MSM) bootloader.img format</span>
+  <span class="nt">file-extension</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img</span>
+  <span class="nt">tags</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">archive</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">android</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="c1"># The `releasetools.py` script is written for Python 2, where the default</span>
+  <span class="c1"># encoding is ASCII.</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">A bootloader for Android used on various devices powered by Qualcomm</span>
+  <span class="no">Snapdragon chips:</span>
+
+  <span class="no">&lt;https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors&gt;</span>
+
+  <span class="no">Although not all of the Snapdragon based Android devices use this particular</span>
+  <span class="no">bootloader format, it is known that devices with the following chips have used</span>
+  <span class="no">it (example devices are given for each chip):</span>
+
+  <span class="no">* APQ8064 ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_S4_Pro))</span>
+    <span class="no">- Nexus 4 &quot;mako&quot;: [sample][sample-mako] ([other samples][others-mako]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/lge/mako/+/33f0114/releasetools.py#98)</span>
+
+  <span class="no">* MSM8974AA ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)))</span>
+    <span class="no">- Nexus 5 &quot;hammerhead&quot;: [sample][sample-hammerhead] ([other samples][others-hammerhead]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#116)</span>
+
+  <span class="no">* MSM8992 ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)))</span>
+    <span class="no">- Nexus 5X &quot;bullhead&quot;: [sample][sample-bullhead] ([other samples][others-bullhead]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/lge/bullhead/+/2994b6b/releasetools.py#126)</span>
+
+  <span class="no">* APQ8064-1AA ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_600_(2013)))</span>
+    <span class="no">- Nexus 7 \[2013] (Mobile) &quot;deb&quot; &lt;a href=&quot;#doc-note-data-after-img-bodies&quot;&gt;(\**)&lt;/a&gt;: [sample][sample-deb] ([other samples][others-deb]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/asus/deb/+/14c1638/releasetools.py#105)</span>
+    <span class="no">- Nexus 7 \[2013] (Wi-Fi) &quot;flo&quot; &lt;a href=&quot;#doc-note-data-after-img-bodies&quot;&gt;(\**)&lt;/a&gt;: [sample][sample-flo] ([other samples][others-flo]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/asus/flo/+/9d9fee9/releasetools.py#130)</span>
+
+  <span class="no">* MSM8996 Pro-AB ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_820_and_821_(2016)))</span>
+    <span class="no">- Pixel &quot;sailfish&quot; &lt;a href=&quot;#doc-note-bootloader-size&quot;&gt;(\*)&lt;/a&gt;:</span>
+      <span class="no">[sample][sample-sailfish] ([other samples][others-sailfish])</span>
+    <span class="no">- Pixel XL &quot;marlin&quot; &lt;a href=&quot;#doc-note-bootloader-size&quot;&gt;(\*)&lt;/a&gt;:</span>
+      <span class="no">[sample][sample-marlin] ([other samples][others-marlin])</span>
+
+  <span class="no">* MSM8998 ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_835_(2017)))</span>
+    <span class="no">- Pixel 2 &quot;walleye&quot; &lt;a href=&quot;#doc-note-bootloader-size&quot;&gt;(\*)&lt;/a&gt;: [sample][sample-walleye] ([other samples][others-walleye])</span>
+    <span class="no">- Pixel 2 XL &quot;taimen&quot;: [sample][sample-taimen] ([other samples][others-taimen])</span>
+
+  <span class="no">&lt;small id=&quot;doc-note-bootloader-size&quot;&gt;(\*)</span>
+  <span class="no">`bootloader_size` is equal to the size of the whole file (not just `img_bodies` as usual).</span>
+  <span class="no">&lt;/small&gt;</span>
+
+  <span class="no">&lt;small id=&quot;doc-note-data-after-img-bodies&quot;&gt;(\**)</span>
+  <span class="no">There are some data after the end of `img_bodies`.</span>
+  <span class="no">&lt;/small&gt;</span>
+
+  <span class="no">---</span>
+
+  <span class="no">On the other hand, devices with these chips **do not** use this format:</span>
+
+  <span class="no">* &lt;del&gt;APQ8084&lt;/del&gt; ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_800,_801_and_805_(2013/14)))</span>
+    <span class="no">- Nexus 6 &quot;shamu&quot;: [sample][foreign-sample-shamu] ([other samples][foreign-others-shamu]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/moto/shamu/+/df9354d/releasetools.py#12) -</span>
+      <span class="no">uses &quot;Motoboot packed image format&quot; instead</span>
+
+  <span class="no">* &lt;del&gt;MSM8994&lt;/del&gt; ([devices](https://en.wikipedia.org/wiki/Devices_using_Qualcomm_Snapdragon_processors#Snapdragon_808_and_810_(2015)))</span>
+    <span class="no">- Nexus 6P &quot;angler&quot;: [sample][foreign-sample-angler] ([other samples][foreign-others-angler]),</span>
+      <span class="no">[releasetools.py](https://android.googlesource.com/device/huawei/angler/+/cf92cd8/releasetools.py#29) -</span>
+      <span class="no">uses &quot;Huawei Bootloader packed image format&quot; instead</span>
+
+  <span class="no">[sample-mako]: https://androidfilehost.com/?fid=96039337900113996 &quot;bootloader-mako-makoz30f.img&quot;</span>
+  <span class="no">[others-mako]: https://androidfilehost.com/?w=search&amp;s=bootloader-mako&amp;type=files</span>
+
+  <span class="no">[sample-hammerhead]: https://androidfilehost.com/?fid=385035244224410247 &quot;bootloader-hammerhead-hhz20h.img&quot;</span>
+  <span class="no">[others-hammerhead]: https://androidfilehost.com/?w=search&amp;s=bootloader-hammerhead&amp;type=files</span>
+
+  <span class="no">[sample-bullhead]: https://androidfilehost.com/?fid=11410963190603870177 &quot;bootloader-bullhead-bhz32c.img&quot;</span>
+  <span class="no">[others-bullhead]: https://androidfilehost.com/?w=search&amp;s=bootloader-bullhead&amp;type=files</span>
+
+  <span class="no">[sample-deb]: https://androidfilehost.com/?fid=23501681358552487 &quot;bootloader-deb-flo-04.02.img&quot;</span>
+  <span class="no">[others-deb]: https://androidfilehost.com/?w=search&amp;s=bootloader-deb-flo&amp;type=files</span>
+
+  <span class="no">[sample-flo]: https://androidfilehost.com/?fid=23991606952593542 &quot;bootloader-flo-flo-04.05.img&quot;</span>
+  <span class="no">[others-flo]: https://androidfilehost.com/?w=search&amp;s=bootloader-flo-flo&amp;type=files</span>
+
+  <span class="no">[sample-sailfish]: https://androidfilehost.com/?fid=6006931924117907154 &quot;bootloader-sailfish-8996-012001-1904111134.img&quot;</span>
+  <span class="no">[others-sailfish]: https://androidfilehost.com/?w=search&amp;s=bootloader-sailfish&amp;type=files</span>
+
+  <span class="no">[sample-marlin]: https://androidfilehost.com/?fid=6006931924117907131 &quot;bootloader-marlin-8996-012001-1904111134.img&quot;</span>
+  <span class="no">[others-marlin]: https://androidfilehost.com/?w=search&amp;s=bootloader-marlin&amp;type=files</span>
+
+  <span class="no">[sample-walleye]: https://androidfilehost.com/?fid=14943124697586348540 &quot;bootloader-walleye-mw8998-003.0085.00.img&quot;</span>
+  <span class="no">[others-walleye]: https://androidfilehost.com/?w=search&amp;s=bootloader-walleye&amp;type=files</span>
+
+  <span class="no">[sample-taimen]: https://androidfilehost.com/?fid=14943124697586348536 &quot;bootloader-taimen-tmz30m.img&quot;</span>
+  <span class="no">[others-taimen]: https://androidfilehost.com/?w=search&amp;s=bootloader-taimen&amp;type=files</span>
+
+  <span class="no">[foreign-sample-shamu]: https://androidfilehost.com/?fid=745849072291678307 &quot;bootloader-shamu-moto-apq8084-72.04.img&quot;</span>
+  <span class="no">[foreign-others-shamu]: https://androidfilehost.com/?w=search&amp;s=bootloader-shamu&amp;type=files</span>
+
+  <span class="no">[foreign-sample-angler]: https://androidfilehost.com/?fid=11410963190603870158 &quot;bootloader-angler-angler-03.84.img&quot;</span>
+  <span class="no">[foreign-others-angler]: https://androidfilehost.com/?w=search&amp;s=bootloader-angler&amp;type=files</span>
+
+  <span class="no">---</span>
+
+  <span class="no">The `bootloader-*.img` samples referenced above originally come from factory</span>
+  <span class="no">images packed in ZIP archives that can be found on the page [Factory Images</span>
+  <span class="no">for Nexus and Pixel Devices](https://developers.google.com/android/images) on</span>
+  <span class="no">the Google Developers site. Note that the codenames on that page may be</span>
+  <span class="no">different than the ones that are written in the list above. That&#39;s because the</span>
+  <span class="no">Google page indicates **ROM codenames** in headings (e.g. &quot;occam&quot; for Nexus 4)</span>
+  <span class="no">but the above list uses **model codenames** (e.g. &quot;mako&quot; for Nexus 4) because</span>
+  <span class="no">that is how the original `bootloader-*.img` files are identified. For most</span>
+  <span class="no">devices, however, these code names are the same.</span>
+
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+    <span class="nt">contents</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BOOTLDR!</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_images</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_img_bodies</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">start_offset</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bootloader_size</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bootldr_size</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">According to all available `releasetools.py` versions from AOSP (links are</span>
+      <span class="no">in the top-level `/doc`), this should determine only the size of</span>
+      <span class="no">`img_bodies` - there is [an assertion](</span>
+      <span class="no">https://android.googlesource.com/device/lge/hammerhead/+/7618a7d/releasetools.py#167)</span>
+      <span class="no">for it.</span>
+
+      <span class="no">However, files for certain Pixel devices (see `/doc`) apparently declare</span>
+      <span class="no">the entire file size here (i.e. including also fields from `magic` to</span>
+      <span class="no">`img_headers`). So if you interpreted `bootloader_size` as the size of</span>
+      <span class="no">`img_bodies` substream in these files, you would exceed the end of file.</span>
+      <span class="no">Although you could check that it fits in the file before attempting to</span>
+      <span class="no">create a substream of that size, you wouldn&#39;t know if it&#39;s meant to</span>
+      <span class="no">specify the size of just `img_bodies` or the size of the entire bootloader</span>
+      <span class="no">payload (whereas there may be additional data after the end of payload)</span>
+      <span class="no">until parsing `img_bodies` (or at least summing sizes from `img_headers`,</span>
+      <span class="no">but that&#39;s stupid).</span>
+
+      <span class="no">So this field isn&#39;t reliable enough to be used as the size of any</span>
+      <span class="no">substream. If you want to check if it has a reasonable value, do so in</span>
+      <span class="no">your application code.</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img_headers</span>
+    <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img_info</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img_header</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_images</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">img_bodies</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_img_bodies</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img_body(_index)</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_images</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">img_header</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">64</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+  <span class="nt">img_body</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{img_header.name}:</span><span class="nv"> </span><span class="s">{img_header.len_body:dec}</span><span class="nv"> </span><span class="s">bytes&#39;</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">img_header.len_body</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">img_header</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root.img_headers[idx]</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015-2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

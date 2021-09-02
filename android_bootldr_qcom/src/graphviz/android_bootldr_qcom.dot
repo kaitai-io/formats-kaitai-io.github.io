@@ -1,0 +1,54 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__android_bootldr_qcom {
+		label="AndroidBootldrQcom";
+		graph[style=dotted];
+
+		android_bootldr_qcom__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="magic_pos">0</TD><TD PORT="magic_size">8</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="num_images_pos">8</TD><TD PORT="num_images_size">4</TD><TD>u4le</TD><TD PORT="num_images_type">num_images</TD></TR>
+			<TR><TD PORT="ofs_img_bodies_pos">12</TD><TD PORT="ofs_img_bodies_size">4</TD><TD>u4le</TD><TD PORT="ofs_img_bodies_type">ofs_img_bodies</TD></TR>
+			<TR><TD PORT="bootloader_size_pos">16</TD><TD PORT="bootloader_size_size">4</TD><TD>u4le</TD><TD PORT="bootloader_size_type">bootloader_size</TD></TR>
+			<TR><TD PORT="img_headers_pos">20</TD><TD PORT="img_headers_size">68</TD><TD>ImgHeader</TD><TD PORT="img_headers_type">img_headers</TD></TR>
+			<TR><TD COLSPAN="4" PORT="img_headers__repeat">repeat num_images times</TD></TR>
+		</TABLE>>];
+		android_bootldr_qcom__inst__img_bodies [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="img_bodies_pos">ofs_img_bodies</TD><TD PORT="img_bodies_size">...</TD><TD>ImgBody</TD><TD PORT="img_bodies_type">img_bodies</TD></TR>
+			<TR><TD COLSPAN="4" PORT="img_bodies__repeat">repeat num_images times</TD></TR>
+		</TABLE>>];
+		subgraph cluster__img_header {
+			label="AndroidBootldrQcom::ImgHeader";
+			graph[style=dotted];
+
+			img_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="name_pos">0</TD><TD PORT="name_size">64</TD><TD>str(ASCII)</TD><TD PORT="name_type">name</TD></TR>
+				<TR><TD PORT="len_body_pos">64</TD><TD PORT="len_body_size">4</TD><TD>u4le</TD><TD PORT="len_body_type">len_body</TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__img_body {
+			label="AndroidBootldrQcom::ImgBody";
+			graph[style=dotted];
+
+			img_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="body_pos">0</TD><TD PORT="body_size">img_header.len_body</TD><TD></TD><TD PORT="body_type">body</TD></TR>
+			</TABLE>>];
+			img_body__inst__img_header [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>img_header</TD><TD>_root.img_headers[idx]</TD></TR>
+			</TABLE>>];
+		}
+	}
+	android_bootldr_qcom__seq:img_headers_type -> img_header__seq [style=bold];
+	android_bootldr_qcom__seq:num_images_type -> android_bootldr_qcom__seq:img_headers__repeat [color="#404040"];
+	android_bootldr_qcom__seq:ofs_img_bodies_type -> android_bootldr_qcom__inst__img_bodies:img_bodies_pos [color="#404040"];
+	android_bootldr_qcom__inst__img_bodies:img_bodies_type -> img_body__seq [style=bold];
+	android_bootldr_qcom__seq:num_images_type -> android_bootldr_qcom__inst__img_bodies:img_bodies__repeat [color="#404040"];
+	img_header__seq:len_body_type -> img_body__seq:body_size [color="#404040"];
+	android_bootldr_qcom__seq:img_headers_type -> img_body__inst__img_header [color="#404040"];
+	img_body__params:idx_type -> img_body__inst__img_header [color="#404040"];
+}
