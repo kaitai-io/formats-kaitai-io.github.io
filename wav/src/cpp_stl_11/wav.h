@@ -17,11 +17,18 @@
  * followed by a sequence of data chunks. A WAVE file is often just a RIFF
  * file with a single "WAVE" chunk which consists of two sub-chunks --
  * a "fmt " chunk specifying the data format and a "data" chunk containing
- * the actual sample data.
+ * the actual sample data, although other chunks exist and are used.
+ * 
+ * An extension of the file format is the Broadcast Wave Format (BWF) for radio
+ * broadcasts. Sample files can be found at:
+ * 
+ * https://www.bbc.co.uk/rd/publications/saqas
  * 
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
  * \sa http://soundfile.sapp.org/doc/WaveFormat/ Source
+ * \sa http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html Source
+ * \sa https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php Source
  */
 
 class wav_t : public kaitai::kstruct {
@@ -29,7 +36,10 @@ class wav_t : public kaitai::kstruct {
 public:
     class sample_type_t;
     class format_chunk_type_t;
+    class pmx_chunk_type_t;
+    class fact_chunk_type_t;
     class guid_type_t;
+    class ixml_chunk_type_t;
     class info_chunk_type_t;
     class cue_point_type_t;
     class data_chunk_type_t;
@@ -38,6 +48,8 @@ public:
     class cue_chunk_type_t;
     class list_chunk_type_t;
     class channel_mask_type_t;
+    class afsp_chunk_type_t;
+    class axml_chunk_type_t;
     class chunk_type_t;
     class bext_chunk_type_t;
 
@@ -302,7 +314,7 @@ public:
         W_FORMAT_TAG_TYPE_VOCORD_G723_1 = 41248,
         W_FORMAT_TAG_TYPE_VOCORD_LBC = 41249,
         W_FORMAT_TAG_TYPE_NICE_G728 = 41250,
-        W_FORMAT_TAG_TYPE_FRACE_TELECOM_G729 = 41251,
+        W_FORMAT_TAG_TYPE_FRANCE_TELECOM_G729 = 41251,
         W_FORMAT_TAG_TYPE_CODIAN = 41252,
         W_FORMAT_TAG_TYPE_FLAC = 61868,
         W_FORMAT_TAG_TYPE_EXTENSIBLE = 65534,
@@ -310,16 +322,24 @@ public:
     };
 
     enum fourcc_t {
+        FOURCC_ID3 = 540238953,
         FOURCC_CUE = 543520099,
         FOURCC_FMT = 544501094,
         FOURCC_WAVE = 1163280727,
         FOURCC_RIFF = 1179011410,
+        FOURCC_PEAK = 1262568784,
+        FOURCC_IXML = 1280137321,
         FOURCC_INFO = 1330007625,
         FOURCC_LIST = 1414744396,
+        FOURCC_PMX = 1481461855,
+        FOURCC_CHNA = 1634625635,
         FOURCC_DATA = 1635017060,
         FOURCC_UMID = 1684630901,
         FOURCC_MINF = 1718511981,
+        FOURCC_AXML = 1819113569,
         FOURCC_REGN = 1852269938,
+        FOURCC_AFSP = 1886611041,
+        FOURCC_FACT = 1952670054,
         FOURCC_BEXT = 1954047330
     };
 
@@ -442,6 +462,65 @@ public:
         wav_t::chunk_type_t* _parent() const { return m__parent; }
     };
 
+    class pmx_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        pmx_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~pmx_chunk_type_t();
+
+    private:
+        std::string m_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+
+        /**
+         * XMP data
+         * \sa https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf Source
+         */
+        std::string data() const { return m_data; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * required for all non-PCM formats
+     * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+     * `format_chunk_type` context)
+     */
+
+    class fact_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        fact_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~fact_chunk_type_t();
+
+    private:
+        uint32_t m_num_samples_per_channel;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        uint32_t num_samples_per_channel() const { return m_num_samples_per_channel; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
     class guid_type_t : public kaitai::kstruct {
 
     public:
@@ -472,6 +551,34 @@ public:
         uint32_t data4a() const { return m_data4a; }
         wav_t* _root() const { return m__root; }
         wav_t::channel_mask_and_subformat_type_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://en.wikipedia.org/wiki/IXML Source
+     */
+
+    class ixml_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        ixml_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~ixml_chunk_type_t();
+
+    private:
+        std::string m_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        std::string data() const { return m_data; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
     };
 
     class info_chunk_type_t : public kaitai::kstruct {
@@ -739,6 +846,72 @@ public:
         wav_t::channel_mask_and_subformat_type_t* _parent() const { return m__parent; }
     };
 
+    /**
+     * \sa http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
+     */
+
+    class afsp_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        afsp_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~afsp_chunk_type_t();
+
+    private:
+        std::string m_magic;
+        std::unique_ptr<std::vector<std::string>> m_info_records;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        std::string magic() const { return m_magic; }
+
+        /**
+         * An array of AFsp information records, in the `<field_name>: <value>`
+         * format (e.g. "`program: CopyAudio`"). The list of existing information
+         * record types are available in the `doc-ref` links.
+         * \sa http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html Source
+         * \sa http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html Source
+         */
+        std::vector<std::string>* info_records() const { return m_info_records.get(); }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
+    /**
+     * \sa https://tech.ebu.ch/docs/tech/tech3285s5.pdf Source
+     */
+
+    class axml_chunk_type_t : public kaitai::kstruct {
+
+    public:
+
+        axml_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent = nullptr, wav_t* p__root = nullptr);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~axml_chunk_type_t();
+
+    private:
+        std::string m_data;
+        wav_t* m__root;
+        wav_t::chunk_type_t* m__parent;
+
+    public:
+        std::string data() const { return m_data; }
+        wav_t* _root() const { return m__root; }
+        wav_t::chunk_type_t* _parent() const { return m__parent; }
+    };
+
     class chunk_type_t : public kaitai::kstruct {
 
     public:
@@ -782,6 +955,10 @@ public:
         wav_t* _root() const { return m__root; }
         wav_t* _parent() const { return m__parent; }
     };
+
+    /**
+     * \sa https://en.wikipedia.org/wiki/Broadcast_Wave_Format Source
+     */
 
     class bext_chunk_type_t : public kaitai::kstruct {
 

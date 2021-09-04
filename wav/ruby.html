@@ -109,7 +109,10 @@ storage of multimedia files. A RIFF file starts out with a file header
 followed by a sequence of data chunks. A WAVE file is often just a RIFF
 file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
 a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
-the actual sample data.</p>
+the actual sample data, although other chunks exist and are used.</p>
+<p>An extension of the file format is the Broadcast Wave Format (BWF) for radio
+broadcasts. Sample files can be found at:</p>
+<p>https://www.bbc.co.uk/rd/publications/saqas</p>
 <p>This Kaitai implementation was written by John Byrd of Gigantic Software
 (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</p>
 </p>
@@ -122,7 +125,7 @@ the actual sample data.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        wav
+                        ["wav", "bwf"]
                     </div>
                     
                     
@@ -149,14 +152,36 @@ the actual sample data.</p>
                             <li><a href="https://tools.ietf.org/html/rfc2361">RFC 2361</a></li>
                             
                             <li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml">LOC fdd000001</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000002.shtml">LOC fdd000002</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000356.shtml">LOC fdd000356</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000003.shtml">LOC fdd000003</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000357.shtml">LOC fdd000357</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000359.shtml">LOC fdd000359</a></li>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/6">PRONOM fmt/6</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/141">PRONOM fmt/141</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/142">PRONOM fmt/142</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/143">PRONOM fmt/143</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/1">PRONOM fmt/1</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/703">PRONOM fmt/703</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/706">PRONOM fmt/706</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/709">PRONOM fmt/709</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/2">PRONOM fmt/2</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/704">PRONOM fmt/704</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/707">PRONOM fmt/707</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/710">PRONOM fmt/710</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/527">PRONOM fmt/527</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/705">PRONOM fmt/705</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/708">PRONOM fmt/708</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/711">PRONOM fmt/711</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q217570">Wikidata Q217570</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q922446">Wikidata Q922446</a></li>
                             
                             
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/WAV">WAV in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/BWF">BWF in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -276,7 +301,7 @@ the actual sample data.</p>
 
 
 
-<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Wav</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.wav&quot;</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Wav</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.[&quot;</span><span class="n">wav</span><span class="s2">&quot;, &quot;</span><span class="n">bwf</span><span class="s2">&quot;]&quot;</span><span class="p">)</span>
 </pre></div>
 
 <p>Or parse structure from a string of bytes:</p>
@@ -331,11 +356,18 @@ the actual sample data.</p>
 <span class="c1"># followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
 <span class="c1"># file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
 <span class="c1"># a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
-<span class="c1"># the actual sample data.</span>
+<span class="c1"># the actual sample data, although other chunks exist and are used.</span>
+<span class="c1"># </span>
+<span class="c1"># An extension of the file format is the Broadcast Wave Format (BWF) for radio</span>
+<span class="c1"># broadcasts. Sample files can be found at:</span>
+<span class="c1"># </span>
+<span class="c1"># https://www.bbc.co.uk/rd/publications/saqas</span>
 <span class="c1"># </span>
 <span class="c1"># This Kaitai implementation was written by John Byrd of Gigantic Software</span>
 <span class="c1"># (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
 <span class="c1"># @see http://soundfile.sapp.org/doc/WaveFormat/ Source</span>
+<span class="c1"># @see http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html Source</span>
+<span class="c1"># @see https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php Source</span>
 <span class="k">class</span> <span class="nc">Wav</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
 
   <span class="no">W_FORMAT_TAG_TYPE</span> <span class="o">=</span> <span class="p">{</span>
@@ -599,7 +631,7 @@ the actual sample data.</p>
     <span class="mi">41248</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_g723_1</span><span class="p">,</span>
     <span class="mi">41249</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_vocord_lbc</span><span class="p">,</span>
     <span class="mi">41250</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_nice_g728</span><span class="p">,</span>
-    <span class="mi">41251</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_frace_telecom_g729</span><span class="p">,</span>
+    <span class="mi">41251</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_france_telecom_g729</span><span class="p">,</span>
     <span class="mi">41252</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_codian</span><span class="p">,</span>
     <span class="mi">61868</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_flac</span><span class="p">,</span>
     <span class="mi">65534</span> <span class="o">=&gt;</span> <span class="ss">:w_format_tag_type_extensible</span><span class="p">,</span>
@@ -608,16 +640,24 @@ the actual sample data.</p>
   <span class="no">I__W_FORMAT_TAG_TYPE</span> <span class="o">=</span> <span class="no">W_FORMAT_TAG_TYPE</span><span class="o">.</span><span class="n">invert</span>
 
   <span class="no">FOURCC</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="mi">540238953</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_id3</span><span class="p">,</span>
     <span class="mi">543520099</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_cue</span><span class="p">,</span>
     <span class="mi">544501094</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_fmt</span><span class="p">,</span>
     <span class="mi">1163280727</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_wave</span><span class="p">,</span>
     <span class="mi">1179011410</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_riff</span><span class="p">,</span>
+    <span class="mi">1262568784</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_peak</span><span class="p">,</span>
+    <span class="mi">1280137321</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_ixml</span><span class="p">,</span>
     <span class="mi">1330007625</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_info</span><span class="p">,</span>
     <span class="mi">1414744396</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_list</span><span class="p">,</span>
+    <span class="mi">1481461855</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_pmx</span><span class="p">,</span>
+    <span class="mi">1634625635</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_chna</span><span class="p">,</span>
     <span class="mi">1635017060</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_data</span><span class="p">,</span>
     <span class="mi">1684630901</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_umid</span><span class="p">,</span>
     <span class="mi">1718511981</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_minf</span><span class="p">,</span>
+    <span class="mi">1819113569</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_axml</span><span class="p">,</span>
     <span class="mi">1852269938</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_regn</span><span class="p">,</span>
+    <span class="mi">1886611041</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_afsp</span><span class="p">,</span>
+    <span class="mi">1952670054</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_fact</span><span class="p">,</span>
     <span class="mi">1954047330</span> <span class="o">=&gt;</span> <span class="ss">:fourcc_bext</span><span class="p">,</span>
   <span class="p">}</span>
   <span class="no">I__FOURCC</span> <span class="o">=</span> <span class="no">FOURCC</span><span class="o">.</span><span class="n">invert</span>
@@ -696,6 +736,39 @@ the actual sample data.</p>
     <span class="kp">attr_reader</span> <span class="ss">:w_valid_bits_per_sample</span>
     <span class="kp">attr_reader</span> <span class="ss">:channel_mask_and_subformat</span>
   <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">PmxChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># XMP data</span>
+    <span class="c1"># @see https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># required for all non-PCM formats</span>
+  <span class="c1"># (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in</span>
+  <span class="c1"># `format_chunk_type` context)</span>
+  <span class="k">class</span> <span class="nc">FactChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@num_samples_per_channel</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_samples_per_channel</span>
+  <span class="k">end</span>
   <span class="k">class</span> <span class="nc">GuidType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
@@ -715,6 +788,21 @@ the actual sample data.</p>
     <span class="kp">attr_reader</span> <span class="ss">:data3</span>
     <span class="kp">attr_reader</span> <span class="ss">:data4</span>
     <span class="kp">attr_reader</span> <span class="ss">:data4a</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://en.wikipedia.org/wiki/IXML Source</span>
+  <span class="k">class</span> <span class="nc">IxmlChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
   <span class="k">end</span>
   <span class="k">class</span> <span class="nc">InfoChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
@@ -898,6 +986,51 @@ the actual sample data.</p>
     <span class="kp">attr_reader</span> <span class="ss">:top_back_center</span>
     <span class="kp">attr_reader</span> <span class="ss">:unused2</span>
   <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source</span>
+  <span class="k">class</span> <span class="nc">AfspChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">112</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/afsp_chunk_type/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">112</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="vi">@info_records</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+      <span class="k">while</span> <span class="ow">not</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">eof?</span>
+        <span class="vi">@info_records</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_term</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kp">false</span><span class="p">,</span> <span class="kp">true</span><span class="p">,</span> <span class="kp">true</span><span class="p">))</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;ASCII&quot;</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># An array of AFsp information records, in the `&lt;field_name&gt;: &lt;value&gt;`</span>
+    <span class="c1"># format (e.g. &quot;`program: CopyAudio`&quot;). The list of existing information</span>
+    <span class="c1"># record types are available in the `doc-ref` links.</span>
+    <span class="c1"># @see http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html Source</span>
+    <span class="c1"># @see http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html Source</span>
+    <span class="kp">attr_reader</span> <span class="ss">:info_records</span>
+  <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://tech.ebu.ch/docs/tech/tech3285s5.pdf Source</span>
+  <span class="k">class</span> <span class="nc">AxmlChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="p">(</span><span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes_full</span><span class="p">)</span><span class="o">.</span><span class="n">force_encoding</span><span class="p">(</span><span class="s2">&quot;UTF-8&quot;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:data</span>
+  <span class="k">end</span>
   <span class="k">class</span> <span class="nc">ChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
@@ -919,14 +1052,24 @@ the actual sample data.</p>
       <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
       <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
       <span class="k">case</span> <span class="n">chunk_id</span>
+      <span class="k">when</span> <span class="ss">:fourcc_fact</span>
+        <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">FactChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:fourcc_list</span>
         <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">ListChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:fourcc_fmt</span>
         <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">FormatChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:fourcc_afsp</span>
+        <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">AfspChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:fourcc_bext</span>
         <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">BextChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:fourcc_cue</span>
         <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">CueChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:fourcc_ixml</span>
+        <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">IxmlChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:fourcc_pmx</span>
+        <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">PmxChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:fourcc_axml</span>
+        <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">AxmlChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:fourcc_data</span>
         <span class="vi">@chunk_data</span> <span class="o">=</span> <span class="no">DataChunkType</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">end</span>
@@ -935,6 +1078,9 @@ the actual sample data.</p>
     <span class="k">end</span>
     <span class="kp">attr_reader</span> <span class="ss">:chunk</span>
   <span class="k">end</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># @see https://en.wikipedia.org/wiki/Broadcast_Wave_Format Source</span>
   <span class="k">class</span> <span class="nc">BextChunkType</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>

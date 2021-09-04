@@ -13,11 +13,18 @@ local str_decode = require("string_decode")
 -- followed by a sequence of data chunks. A WAVE file is often just a RIFF
 -- file with a single "WAVE" chunk which consists of two sub-chunks --
 -- a "fmt " chunk specifying the data format and a "data" chunk containing
--- the actual sample data.
+-- the actual sample data, although other chunks exist and are used.
+-- 
+-- An extension of the file format is the Broadcast Wave Format (BWF) for radio
+-- broadcasts. Sample files can be found at:
+-- 
+-- https://www.bbc.co.uk/rd/publications/saqas
 -- 
 -- This Kaitai implementation was written by John Byrd of Gigantic Software
 -- (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
 -- See also: Source (http://soundfile.sapp.org/doc/WaveFormat/)
+-- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html)
+-- See also: Source (https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php)
 Wav = class.class(KaitaiStruct)
 
 Wav.WFormatTagType = enum.Enum {
@@ -281,7 +288,7 @@ Wav.WFormatTagType = enum.Enum {
   vocord_g723_1 = 41248,
   vocord_lbc = 41249,
   nice_g728 = 41250,
-  frace_telecom_g729 = 41251,
+  france_telecom_g729 = 41251,
   codian = 41252,
   flac = 61868,
   extensible = 65534,
@@ -289,16 +296,24 @@ Wav.WFormatTagType = enum.Enum {
 }
 
 Wav.Fourcc = enum.Enum {
+  id3 = 540238953,
   cue = 543520099,
   fmt = 544501094,
   wave = 1163280727,
   riff = 1179011410,
+  peak = 1262568784,
+  ixml = 1280137321,
   info = 1330007625,
   list = 1414744396,
+  pmx = 1481461855,
+  chna = 1634625635,
   data = 1635017060,
   umid = 1684630901,
   minf = 1718511981,
+  axml = 1819113569,
   regn = 1852269938,
+  afsp = 1886611041,
+  fact = 1952670054,
   bext = 1954047330,
 }
 
@@ -473,6 +488,41 @@ function Wav.FormatChunkType.property.is_cb_size_meaningful:get()
 end
 
 
+Wav.PmxChunkType = class.class(KaitaiStruct)
+
+function Wav.PmxChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Wav.PmxChunkType:_read()
+  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+end
+
+-- 
+-- XMP data.
+-- See also: Source (https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf)
+
+-- 
+-- required for all non-PCM formats
+-- (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+-- `format_chunk_type` context)
+Wav.FactChunkType = class.class(KaitaiStruct)
+
+function Wav.FactChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Wav.FactChunkType:_read()
+  self.num_samples_per_channel = self._io:read_u4le()
+end
+
+
 Wav.GuidType = class.class(KaitaiStruct)
 
 function Wav.GuidType:_init(io, parent, root)
@@ -488,6 +538,22 @@ function Wav.GuidType:_read()
   self.data3 = self._io:read_u2le()
   self.data4 = self._io:read_u4be()
   self.data4a = self._io:read_u4be()
+end
+
+
+-- 
+-- See also: Source (https://en.wikipedia.org/wiki/IXML)
+Wav.IxmlChunkType = class.class(KaitaiStruct)
+
+function Wav.IxmlChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Wav.IxmlChunkType:_read()
+  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
 end
 
 
@@ -678,6 +744,53 @@ function Wav.ChannelMaskType:_read()
 end
 
 
+-- 
+-- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/)
+Wav.AfspChunkType = class.class(KaitaiStruct)
+
+function Wav.AfspChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Wav.AfspChunkType:_read()
+  self.magic = self._io:read_bytes(4)
+  if not(self.magic == "\065\070\115\112") then
+    error("not equal, expected " ..  "\065\070\115\112" .. ", but got " .. self.magic)
+  end
+  self.info_records = {}
+  local i = 0
+  while not self._io:is_eof() do
+    self.info_records[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+    i = i + 1
+  end
+end
+
+-- 
+-- An array of AFsp information records, in the `<field_name>: <value>`
+-- format (e.g. "`program: CopyAudio`"). The list of existing information
+-- record types are available in the `doc-ref` links.
+-- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html)
+-- See also: Source (http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html)
+
+-- 
+-- See also: Source (https://tech.ebu.ch/docs/tech/tech3285s5.pdf)
+Wav.AxmlChunkType = class.class(KaitaiStruct)
+
+function Wav.AxmlChunkType:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function Wav.AxmlChunkType:_read()
+  self.data = str_decode.decode(self._io:read_bytes_full(), "UTF-8")
+end
+
+
 Wav.ChunkType = class.class(KaitaiStruct)
 
 function Wav.ChunkType:_init(io, parent, root)
@@ -711,14 +824,24 @@ function Wav.ChunkType.property.chunk_data:get()
   local _pos = _io:pos()
   _io:seek(0)
   local _on = self.chunk_id
-  if _on == Wav.Fourcc.list then
+  if _on == Wav.Fourcc.fact then
+    self._m_chunk_data = Wav.FactChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.list then
     self._m_chunk_data = Wav.ListChunkType(_io, self, self._root)
   elseif _on == Wav.Fourcc.fmt then
     self._m_chunk_data = Wav.FormatChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.afsp then
+    self._m_chunk_data = Wav.AfspChunkType(_io, self, self._root)
   elseif _on == Wav.Fourcc.bext then
     self._m_chunk_data = Wav.BextChunkType(_io, self, self._root)
   elseif _on == Wav.Fourcc.cue then
     self._m_chunk_data = Wav.CueChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.ixml then
+    self._m_chunk_data = Wav.IxmlChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.pmx then
+    self._m_chunk_data = Wav.PmxChunkType(_io, self, self._root)
+  elseif _on == Wav.Fourcc.axml then
+    self._m_chunk_data = Wav.AxmlChunkType(_io, self, self._root)
   elseif _on == Wav.Fourcc.data then
     self._m_chunk_data = Wav.DataChunkType(_io, self, self._root)
   end
@@ -727,6 +850,8 @@ function Wav.ChunkType.property.chunk_data:get()
 end
 
 
+-- 
+-- See also: Source (https://en.wikipedia.org/wiki/Broadcast_Wave_Format)
 Wav.BextChunkType = class.class(KaitaiStruct)
 
 function Wav.BextChunkType:_init(io, parent, root)

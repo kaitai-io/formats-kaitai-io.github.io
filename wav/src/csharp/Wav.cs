@@ -11,13 +11,24 @@ namespace Kaitai
     /// followed by a sequence of data chunks. A WAVE file is often just a RIFF
     /// file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
     /// a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
-    /// the actual sample data.
+    /// the actual sample data, although other chunks exist and are used.
+    /// 
+    /// An extension of the file format is the Broadcast Wave Format (BWF) for radio
+    /// broadcasts. Sample files can be found at:
+    /// 
+    /// https://www.bbc.co.uk/rd/publications/saqas
     /// 
     /// This Kaitai implementation was written by John Byrd of Gigantic Software
     /// (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
     /// </summary>
     /// <remarks>
     /// Reference: <a href="http://soundfile.sapp.org/doc/WaveFormat/">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php">Source</a>
     /// </remarks>
     public partial class Wav : KaitaiStruct
     {
@@ -289,7 +300,7 @@ namespace Kaitai
             VocordG7231 = 41248,
             VocordLbc = 41249,
             NiceG728 = 41250,
-            FraceTelecomG729 = 41251,
+            FranceTelecomG729 = 41251,
             Codian = 41252,
             Flac = 61868,
             Extensible = 65534,
@@ -298,16 +309,24 @@ namespace Kaitai
 
         public enum Fourcc
         {
+            Id3 = 540238953,
             Cue = 543520099,
             Fmt = 544501094,
             Wave = 1163280727,
             Riff = 1179011410,
+            Peak = 1262568784,
+            Ixml = 1280137321,
             Info = 1330007625,
             List = 1414744396,
+            Pmx = 1481461855,
+            Chna = 1634625635,
             Data = 1635017060,
             Umid = 1684630901,
             Minf = 1718511981,
+            Axml = 1819113569,
             Regn = 1852269938,
+            Afsp = 1886611041,
+            Fact = 1952670054,
             Bext = 1954047330,
         }
         public Wav(KaitaiStream p__io, KaitaiStruct p__parent = null, Wav p__root = null) : base(p__io)
@@ -460,6 +479,67 @@ namespace Kaitai
             public Wav M_Root { get { return m_root; } }
             public Wav.ChunkType M_Parent { get { return m_parent; } }
         }
+        public partial class PmxChunkType : KaitaiStruct
+        {
+            public static PmxChunkType FromFile(string fileName)
+            {
+                return new PmxChunkType(new KaitaiStream(fileName));
+            }
+
+            public PmxChunkType(KaitaiStream p__io, Wav.ChunkType p__parent = null, Wav p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _data = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+            }
+            private string _data;
+            private Wav m_root;
+            private Wav.ChunkType m_parent;
+
+            /// <summary>
+            /// XMP data
+            /// </summary>
+            /// <remarks>
+            /// Reference: <a href="https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf">Source</a>
+            /// </remarks>
+            public string Data { get { return _data; } }
+            public Wav M_Root { get { return m_root; } }
+            public Wav.ChunkType M_Parent { get { return m_parent; } }
+        }
+
+        /// <summary>
+        /// required for all non-PCM formats
+        /// (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+        /// `format_chunk_type` context)
+        /// </summary>
+        public partial class FactChunkType : KaitaiStruct
+        {
+            public static FactChunkType FromFile(string fileName)
+            {
+                return new FactChunkType(new KaitaiStream(fileName));
+            }
+
+            public FactChunkType(KaitaiStream p__io, Wav.ChunkType p__parent = null, Wav p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _numSamplesPerChannel = m_io.ReadU4le();
+            }
+            private uint _numSamplesPerChannel;
+            private Wav m_root;
+            private Wav.ChunkType m_parent;
+            public uint NumSamplesPerChannel { get { return _numSamplesPerChannel; } }
+            public Wav M_Root { get { return m_root; } }
+            public Wav.ChunkType M_Parent { get { return m_parent; } }
+        }
         public partial class GuidType : KaitaiStruct
         {
             public static GuidType FromFile(string fileName)
@@ -495,6 +575,34 @@ namespace Kaitai
             public uint Data4a { get { return _data4a; } }
             public Wav M_Root { get { return m_root; } }
             public Wav.ChannelMaskAndSubformatType M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://en.wikipedia.org/wiki/IXML">Source</a>
+        /// </remarks>
+        public partial class IxmlChunkType : KaitaiStruct
+        {
+            public static IxmlChunkType FromFile(string fileName)
+            {
+                return new IxmlChunkType(new KaitaiStream(fileName));
+            }
+
+            public IxmlChunkType(KaitaiStream p__io, Wav.ChunkType p__parent = null, Wav p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _data = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+            }
+            private string _data;
+            private Wav m_root;
+            private Wav.ChunkType m_parent;
+            public string Data { get { return _data; } }
+            public Wav M_Root { get { return m_root; } }
+            public Wav.ChunkType M_Parent { get { return m_parent; } }
         }
         public partial class InfoChunkType : KaitaiStruct
         {
@@ -832,6 +940,88 @@ namespace Kaitai
             public Wav M_Root { get { return m_root; } }
             public Wav.ChannelMaskAndSubformatType M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
+        /// </remarks>
+        public partial class AfspChunkType : KaitaiStruct
+        {
+            public static AfspChunkType FromFile(string fileName)
+            {
+                return new AfspChunkType(new KaitaiStream(fileName));
+            }
+
+            public AfspChunkType(KaitaiStream p__io, Wav.ChunkType p__parent = null, Wav p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _magic = m_io.ReadBytes(4);
+                if (!((KaitaiStream.ByteArrayCompare(Magic, new byte[] { 65, 70, 115, 112 }) == 0)))
+                {
+                    throw new ValidationNotEqualError(new byte[] { 65, 70, 115, 112 }, Magic, M_Io, "/types/afsp_chunk_type/seq/0");
+                }
+                _infoRecords = new List<string>();
+                {
+                    var i = 0;
+                    while (!m_io.IsEof) {
+                        _infoRecords.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                        i++;
+                    }
+                }
+            }
+            private byte[] _magic;
+            private List<string> _infoRecords;
+            private Wav m_root;
+            private Wav.ChunkType m_parent;
+            public byte[] Magic { get { return _magic; } }
+
+            /// <summary>
+            /// An array of AFsp information records, in the `&lt;field_name&gt;: &lt;value&gt;`
+            /// format (e.g. &quot;`program: CopyAudio`&quot;). The list of existing information
+            /// record types are available in the `doc-ref` links.
+            /// </summary>
+            /// <remarks>
+            /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html">Source</a>
+            /// </remarks>
+            /// <remarks>
+            /// Reference: <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html">Source</a>
+            /// </remarks>
+            public List<string> InfoRecords { get { return _infoRecords; } }
+            public Wav M_Root { get { return m_root; } }
+            public Wav.ChunkType M_Parent { get { return m_parent; } }
+        }
+
+        /// <remarks>
+        /// Reference: <a href="https://tech.ebu.ch/docs/tech/tech3285s5.pdf">Source</a>
+        /// </remarks>
+        public partial class AxmlChunkType : KaitaiStruct
+        {
+            public static AxmlChunkType FromFile(string fileName)
+            {
+                return new AxmlChunkType(new KaitaiStream(fileName));
+            }
+
+            public AxmlChunkType(KaitaiStream p__io, Wav.ChunkType p__parent = null, Wav p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
+                _data = System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesFull());
+            }
+            private string _data;
+            private Wav m_root;
+            private Wav.ChunkType m_parent;
+            public string Data { get { return _data; } }
+            public Wav M_Root { get { return m_root; } }
+            public Wav.ChunkType M_Parent { get { return m_parent; } }
+        }
         public partial class ChunkType : KaitaiStruct
         {
             public static ChunkType FromFile(string fileName)
@@ -876,6 +1066,10 @@ namespace Kaitai
                     long _pos = io.Pos;
                     io.Seek(0);
                     switch (ChunkId) {
+                    case Wav.Fourcc.Fact: {
+                        _chunkData = new FactChunkType(io, this, m_root);
+                        break;
+                    }
                     case Wav.Fourcc.List: {
                         _chunkData = new ListChunkType(io, this, m_root);
                         break;
@@ -884,12 +1078,28 @@ namespace Kaitai
                         _chunkData = new FormatChunkType(io, this, m_root);
                         break;
                     }
+                    case Wav.Fourcc.Afsp: {
+                        _chunkData = new AfspChunkType(io, this, m_root);
+                        break;
+                    }
                     case Wav.Fourcc.Bext: {
                         _chunkData = new BextChunkType(io, this, m_root);
                         break;
                     }
                     case Wav.Fourcc.Cue: {
                         _chunkData = new CueChunkType(io, this, m_root);
+                        break;
+                    }
+                    case Wav.Fourcc.Ixml: {
+                        _chunkData = new IxmlChunkType(io, this, m_root);
+                        break;
+                    }
+                    case Wav.Fourcc.Pmx: {
+                        _chunkData = new PmxChunkType(io, this, m_root);
+                        break;
+                    }
+                    case Wav.Fourcc.Axml: {
+                        _chunkData = new AxmlChunkType(io, this, m_root);
                         break;
                     }
                     case Wav.Fourcc.Data: {
@@ -909,6 +1119,10 @@ namespace Kaitai
             public Wav M_Root { get { return m_root; } }
             public Wav M_Parent { get { return m_parent; } }
         }
+
+        /// <remarks>
+        /// Reference: <a href="https://en.wikipedia.org/wiki/Broadcast_Wave_Format">Source</a>
+        /// </remarks>
         public partial class BextChunkType : KaitaiStruct
         {
             public static BextChunkType FromFile(string fileName)

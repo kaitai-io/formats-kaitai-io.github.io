@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 /**
@@ -16,11 +17,18 @@ import java.util.ArrayList;
  * followed by a sequence of data chunks. A WAVE file is often just a RIFF
  * file with a single "WAVE" chunk which consists of two sub-chunks --
  * a "fmt " chunk specifying the data format and a "data" chunk containing
- * the actual sample data.
+ * the actual sample data, although other chunks exist and are used.
+ * 
+ * An extension of the file format is the Broadcast Wave Format (BWF) for radio
+ * broadcasts. Sample files can be found at:
+ * 
+ * https://www.bbc.co.uk/rd/publications/saqas
  * 
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
  * @see <a href="http://soundfile.sapp.org/doc/WaveFormat/">Source</a>
+ * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
+ * @see <a href="https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php">Source</a>
  */
 public class Wav extends KaitaiStruct {
     public static Wav fromFile(String fileName) throws IOException {
@@ -288,7 +296,7 @@ public class Wav extends KaitaiStruct {
         VOCORD_G723_1(41248),
         VOCORD_LBC(41249),
         NICE_G728(41250),
-        FRACE_TELECOM_G729(41251),
+        FRANCE_TELECOM_G729(41251),
         CODIAN(41252),
         FLAC(61868),
         EXTENSIBLE(65534),
@@ -306,22 +314,30 @@ public class Wav extends KaitaiStruct {
     }
 
     public enum Fourcc {
+        ID3(540238953),
         CUE(543520099),
         FMT(544501094),
         WAVE(1163280727),
         RIFF(1179011410),
+        PEAK(1262568784),
+        IXML(1280137321),
         INFO(1330007625),
         LIST(1414744396),
+        PMX(1481461855),
+        CHNA(1634625635),
         DATA(1635017060),
         UMID(1684630901),
         MINF(1718511981),
+        AXML(1819113569),
         REGN(1852269938),
+        AFSP(1886611041),
+        FACT(1952670054),
         BEXT(1954047330);
 
         private final long id;
         Fourcc(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Fourcc> byId = new HashMap<Long, Fourcc>(11);
+        private static final Map<Long, Fourcc> byId = new HashMap<Long, Fourcc>(19);
         static {
             for (Fourcc e : Fourcc.values())
                 byId.put(e.id(), e);
@@ -466,6 +482,75 @@ public class Wav extends KaitaiStruct {
         public Wav _root() { return _root; }
         public Wav.ChunkType _parent() { return _parent; }
     }
+    public static class PmxChunkType extends KaitaiStruct {
+        public static PmxChunkType fromFile(String fileName) throws IOException {
+            return new PmxChunkType(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public PmxChunkType(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public PmxChunkType(KaitaiStream _io, Wav.ChunkType _parent) {
+            this(_io, _parent, null);
+        }
+
+        public PmxChunkType(KaitaiStream _io, Wav.ChunkType _parent, Wav _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.data = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+        }
+        private String data;
+        private Wav _root;
+        private Wav.ChunkType _parent;
+
+        /**
+         * XMP data
+         * @see <a href="https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf">Source</a>
+         */
+        public String data() { return data; }
+        public Wav _root() { return _root; }
+        public Wav.ChunkType _parent() { return _parent; }
+    }
+
+    /**
+     * required for all non-PCM formats
+     * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+     * `format_chunk_type` context)
+     */
+    public static class FactChunkType extends KaitaiStruct {
+        public static FactChunkType fromFile(String fileName) throws IOException {
+            return new FactChunkType(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public FactChunkType(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public FactChunkType(KaitaiStream _io, Wav.ChunkType _parent) {
+            this(_io, _parent, null);
+        }
+
+        public FactChunkType(KaitaiStream _io, Wav.ChunkType _parent, Wav _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.numSamplesPerChannel = this._io.readU4le();
+        }
+        private long numSamplesPerChannel;
+        private Wav _root;
+        private Wav.ChunkType _parent;
+        public long numSamplesPerChannel() { return numSamplesPerChannel; }
+        public Wav _root() { return _root; }
+        public Wav.ChunkType _parent() { return _parent; }
+    }
     public static class GuidType extends KaitaiStruct {
         public static GuidType fromFile(String fileName) throws IOException {
             return new GuidType(new ByteBufferKaitaiStream(fileName));
@@ -506,6 +591,39 @@ public class Wav extends KaitaiStruct {
         public long data4a() { return data4a; }
         public Wav _root() { return _root; }
         public Wav.ChannelMaskAndSubformatType _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://en.wikipedia.org/wiki/IXML">Source</a>
+     */
+    public static class IxmlChunkType extends KaitaiStruct {
+        public static IxmlChunkType fromFile(String fileName) throws IOException {
+            return new IxmlChunkType(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public IxmlChunkType(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public IxmlChunkType(KaitaiStream _io, Wav.ChunkType _parent) {
+            this(_io, _parent, null);
+        }
+
+        public IxmlChunkType(KaitaiStream _io, Wav.ChunkType _parent, Wav _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.data = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+        }
+        private String data;
+        private Wav _root;
+        private Wav.ChunkType _parent;
+        public String data() { return data; }
+        public Wav _root() { return _root; }
+        public Wav.ChunkType _parent() { return _parent; }
     }
     public static class InfoChunkType extends KaitaiStruct {
         public static InfoChunkType fromFile(String fileName) throws IOException {
@@ -866,6 +984,93 @@ public class Wav extends KaitaiStruct {
         public Wav _root() { return _root; }
         public Wav.ChannelMaskAndSubformatType _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
+     */
+    public static class AfspChunkType extends KaitaiStruct {
+        public static AfspChunkType fromFile(String fileName) throws IOException {
+            return new AfspChunkType(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public AfspChunkType(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AfspChunkType(KaitaiStream _io, Wav.ChunkType _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AfspChunkType(KaitaiStream _io, Wav.ChunkType _parent, Wav _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.magic = this._io.readBytes(4);
+            if (!(Arrays.equals(magic(), new byte[] { 65, 70, 115, 112 }))) {
+                throw new KaitaiStream.ValidationNotEqualError(new byte[] { 65, 70, 115, 112 }, magic(), _io(), "/types/afsp_chunk_type/seq/0");
+            }
+            this.infoRecords = new ArrayList<String>();
+            {
+                int i = 0;
+                while (!this._io.isEof()) {
+                    this.infoRecords.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                    i++;
+                }
+            }
+        }
+        private byte[] magic;
+        private ArrayList<String> infoRecords;
+        private Wav _root;
+        private Wav.ChunkType _parent;
+        public byte[] magic() { return magic; }
+
+        /**
+         * An array of AFsp information records, in the `<field_name>: <value>`
+         * format (e.g. "`program: CopyAudio`"). The list of existing information
+         * record types are available in the `doc-ref` links.
+         * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html">Source</a>
+         * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html">Source</a>
+         */
+        public ArrayList<String> infoRecords() { return infoRecords; }
+        public Wav _root() { return _root; }
+        public Wav.ChunkType _parent() { return _parent; }
+    }
+
+    /**
+     * @see <a href="https://tech.ebu.ch/docs/tech/tech3285s5.pdf">Source</a>
+     */
+    public static class AxmlChunkType extends KaitaiStruct {
+        public static AxmlChunkType fromFile(String fileName) throws IOException {
+            return new AxmlChunkType(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public AxmlChunkType(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public AxmlChunkType(KaitaiStream _io, Wav.ChunkType _parent) {
+            this(_io, _parent, null);
+        }
+
+        public AxmlChunkType(KaitaiStream _io, Wav.ChunkType _parent, Wav _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.data = new String(this._io.readBytesFull(), Charset.forName("UTF-8"));
+        }
+        private String data;
+        private Wav _root;
+        private Wav.ChunkType _parent;
+        public String data() { return data; }
+        public Wav _root() { return _root; }
+        public Wav.ChunkType _parent() { return _parent; }
+    }
     public static class ChunkType extends KaitaiStruct {
         public static ChunkType fromFile(String fileName) throws IOException {
             return new ChunkType(new ByteBufferKaitaiStream(fileName));
@@ -906,6 +1111,10 @@ public class Wav extends KaitaiStruct {
                 Fourcc on = chunkId();
                 if (on != null) {
                     switch (chunkId()) {
+                    case FACT: {
+                        this.chunkData = new FactChunkType(io, this, _root);
+                        break;
+                    }
                     case LIST: {
                         this.chunkData = new ListChunkType(io, this, _root);
                         break;
@@ -914,12 +1123,28 @@ public class Wav extends KaitaiStruct {
                         this.chunkData = new FormatChunkType(io, this, _root);
                         break;
                     }
+                    case AFSP: {
+                        this.chunkData = new AfspChunkType(io, this, _root);
+                        break;
+                    }
                     case BEXT: {
                         this.chunkData = new BextChunkType(io, this, _root);
                         break;
                     }
                     case CUE: {
                         this.chunkData = new CueChunkType(io, this, _root);
+                        break;
+                    }
+                    case IXML: {
+                        this.chunkData = new IxmlChunkType(io, this, _root);
+                        break;
+                    }
+                    case PMX: {
+                        this.chunkData = new PmxChunkType(io, this, _root);
+                        break;
+                    }
+                    case AXML: {
+                        this.chunkData = new AxmlChunkType(io, this, _root);
                         break;
                     }
                     case DATA: {
@@ -939,6 +1164,10 @@ public class Wav extends KaitaiStruct {
         public Wav _root() { return _root; }
         public Wav _parent() { return _parent; }
     }
+
+    /**
+     * @see <a href="https://en.wikipedia.org/wiki/Broadcast_Wave_Format">Source</a>
+     */
     public static class BextChunkType extends KaitaiStruct {
         public static BextChunkType fromFile(String fileName) throws IOException {
             return new BextChunkType(new ByteBufferKaitaiStream(fileName));

@@ -3,6 +3,7 @@
 import (
 	"github.com/kaitai-io/kaitai_struct_go_runtime/kaitai"
 	"io"
+	"bytes"
 )
 
 
@@ -12,11 +13,18 @@ import (
  * followed by a sequence of data chunks. A WAVE file is often just a RIFF
  * file with a single "WAVE" chunk which consists of two sub-chunks --
  * a "fmt " chunk specifying the data format and a "data" chunk containing
- * the actual sample data.
+ * the actual sample data, although other chunks exist and are used.
+ * 
+ * An extension of the file format is the Broadcast Wave Format (BWF) for radio
+ * broadcasts. Sample files can be found at:
+ * 
+ * https://www.bbc.co.uk/rd/publications/saqas
  * 
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
  * @see <a href="http://soundfile.sapp.org/doc/WaveFormat/">Source</a>
+ * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html">Source</a>
+ * @see <a href="https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php">Source</a>
  */
 
 type Wav_WFormatTagType int
@@ -281,7 +289,7 @@ const (
 	Wav_WFormatTagType__VocordG7231 Wav_WFormatTagType = 41248
 	Wav_WFormatTagType__VocordLbc Wav_WFormatTagType = 41249
 	Wav_WFormatTagType__NiceG728 Wav_WFormatTagType = 41250
-	Wav_WFormatTagType__FraceTelecomG729 Wav_WFormatTagType = 41251
+	Wav_WFormatTagType__FranceTelecomG729 Wav_WFormatTagType = 41251
 	Wav_WFormatTagType__Codian Wav_WFormatTagType = 41252
 	Wav_WFormatTagType__Flac Wav_WFormatTagType = 61868
 	Wav_WFormatTagType__Extensible Wav_WFormatTagType = 65534
@@ -290,16 +298,24 @@ const (
 
 type Wav_Fourcc int
 const (
+	Wav_Fourcc__Id3 Wav_Fourcc = 540238953
 	Wav_Fourcc__Cue Wav_Fourcc = 543520099
 	Wav_Fourcc__Fmt Wav_Fourcc = 544501094
 	Wav_Fourcc__Wave Wav_Fourcc = 1163280727
 	Wav_Fourcc__Riff Wav_Fourcc = 1179011410
+	Wav_Fourcc__Peak Wav_Fourcc = 1262568784
+	Wav_Fourcc__Ixml Wav_Fourcc = 1280137321
 	Wav_Fourcc__Info Wav_Fourcc = 1330007625
 	Wav_Fourcc__List Wav_Fourcc = 1414744396
+	Wav_Fourcc__Pmx Wav_Fourcc = 1481461855
+	Wav_Fourcc__Chna Wav_Fourcc = 1634625635
 	Wav_Fourcc__Data Wav_Fourcc = 1635017060
 	Wav_Fourcc__Umid Wav_Fourcc = 1684630901
 	Wav_Fourcc__Minf Wav_Fourcc = 1718511981
+	Wav_Fourcc__Axml Wav_Fourcc = 1819113569
 	Wav_Fourcc__Regn Wav_Fourcc = 1852269938
+	Wav_Fourcc__Afsp Wav_Fourcc = 1886611041
+	Wav_Fourcc__Fact Wav_Fourcc = 1952670054
 	Wav_Fourcc__Bext Wav_Fourcc = 1954047330
 )
 type Wav struct {
@@ -622,6 +638,64 @@ func (this *Wav_FormatChunkType) IsCbSizeMeaningful() (v bool, err error) {
 	this._f_isCbSizeMeaningful = true
 	return this.isCbSizeMeaningful, nil
 }
+type Wav_PmxChunkType struct {
+	Data string
+	_io *kaitai.Stream
+	_root *Wav
+	_parent *Wav_ChunkType
+}
+func NewWav_PmxChunkType() *Wav_PmxChunkType {
+	return &Wav_PmxChunkType{
+	}
+}
+
+func (this *Wav_PmxChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, root *Wav) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp26, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp26 = tmp26
+	this.Data = string(tmp26)
+	return err
+}
+
+/**
+ * XMP data
+ * @see <a href="https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf">Source</a>
+ */
+
+/**
+ * required for all non-PCM formats
+ * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+ * `format_chunk_type` context)
+ */
+type Wav_FactChunkType struct {
+	NumSamplesPerChannel uint32
+	_io *kaitai.Stream
+	_root *Wav
+	_parent *Wav_ChunkType
+}
+func NewWav_FactChunkType() *Wav_FactChunkType {
+	return &Wav_FactChunkType{
+	}
+}
+
+func (this *Wav_FactChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, root *Wav) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp27, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.NumSamplesPerChannel = uint32(tmp27)
+	return err
+}
 type Wav_GuidType struct {
 	Data1 uint32
 	Data2 uint16
@@ -642,31 +716,59 @@ func (this *Wav_GuidType) Read(io *kaitai.Stream, parent *Wav_ChannelMaskAndSubf
 	this._parent = parent
 	this._root = root
 
-	tmp26, err := this._io.ReadU4le()
+	tmp28, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Data1 = uint32(tmp26)
-	tmp27, err := this._io.ReadU2le()
+	this.Data1 = uint32(tmp28)
+	tmp29, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Data2 = uint16(tmp27)
-	tmp28, err := this._io.ReadU2le()
+	this.Data2 = uint16(tmp29)
+	tmp30, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Data3 = uint16(tmp28)
-	tmp29, err := this._io.ReadU4be()
+	this.Data3 = uint16(tmp30)
+	tmp31, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Data4 = uint32(tmp29)
-	tmp30, err := this._io.ReadU4be()
+	this.Data4 = uint32(tmp31)
+	tmp32, err := this._io.ReadU4be()
 	if err != nil {
 		return err
 	}
-	this.Data4a = uint32(tmp30)
+	this.Data4a = uint32(tmp32)
+	return err
+}
+
+/**
+ * @see <a href="https://en.wikipedia.org/wiki/IXML">Source</a>
+ */
+type Wav_IxmlChunkType struct {
+	Data string
+	_io *kaitai.Stream
+	_root *Wav
+	_parent *Wav_ChunkType
+}
+func NewWav_IxmlChunkType() *Wav_IxmlChunkType {
+	return &Wav_IxmlChunkType{
+	}
+}
+
+func (this *Wav_IxmlChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, root *Wav) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp33, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp33 = tmp33
+	this.Data = string(tmp33)
 	return err
 }
 type Wav_InfoChunkType struct {
@@ -687,12 +789,12 @@ func (this *Wav_InfoChunkType) Read(io *kaitai.Stream, parent *Wav_ListChunkType
 	this._parent = parent
 	this._root = root
 
-	tmp31 := NewRiff_Chunk()
-	err = tmp31.Read(this._io, this, this._root)
+	tmp34 := NewRiff_Chunk()
+	err = tmp34.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Chunk = tmp31
+	this.Chunk = tmp34
 	return err
 }
 func (this *Wav_InfoChunkType) ChunkData() (v string, err error) {
@@ -708,11 +810,11 @@ func (this *Wav_InfoChunkType) ChunkData() (v string, err error) {
 	if err != nil {
 		return "", err
 	}
-	tmp32, err := thisIo.ReadBytesTerm(0, false, true, true)
+	tmp35, err := thisIo.ReadBytesTerm(0, false, true, true)
 	if err != nil {
 		return "", err
 	}
-	this.chunkData = string(tmp32)
+	this.chunkData = string(tmp35)
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
 		return "", err
@@ -742,36 +844,36 @@ func (this *Wav_CuePointType) Read(io *kaitai.Stream, parent *Wav_CueChunkType, 
 	this._parent = parent
 	this._root = root
 
-	tmp33, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DwName = uint32(tmp33)
-	tmp34, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.DwPosition = uint32(tmp34)
-	tmp35, err := this._io.ReadU4le()
-	if err != nil {
-		return err
-	}
-	this.FccChunk = uint32(tmp35)
 	tmp36, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DwChunkStart = uint32(tmp36)
+	this.DwName = uint32(tmp36)
 	tmp37, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DwBlockStart = uint32(tmp37)
+	this.DwPosition = uint32(tmp37)
 	tmp38, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DwSampleOffset = uint32(tmp38)
+	this.FccChunk = uint32(tmp38)
+	tmp39, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DwChunkStart = uint32(tmp39)
+	tmp40, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DwBlockStart = uint32(tmp40)
+	tmp41, err := this._io.ReadU4le()
+	if err != nil {
+		return err
+	}
+	this.DwSampleOffset = uint32(tmp41)
 	return err
 }
 type Wav_DataChunkType struct {
@@ -790,12 +892,12 @@ func (this *Wav_DataChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, ro
 	this._parent = parent
 	this._root = root
 
-	tmp39, err := this._io.ReadBytesFull()
+	tmp42, err := this._io.ReadBytesFull()
 	if err != nil {
 		return err
 	}
-	tmp39 = tmp39
-	this.Data = tmp39
+	tmp42 = tmp42
+	this.Data = tmp42
 	return err
 }
 type Wav_SamplesType struct {
@@ -814,11 +916,11 @@ func (this *Wav_SamplesType) Read(io *kaitai.Stream, parent interface{}, root *W
 	this._parent = parent
 	this._root = root
 
-	tmp40, err := this._io.ReadU4le()
+	tmp43, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.Samples = uint32(tmp40)
+	this.Samples = uint32(tmp43)
 	return err
 }
 type Wav_ChannelMaskAndSubformatType struct {
@@ -838,18 +940,18 @@ func (this *Wav_ChannelMaskAndSubformatType) Read(io *kaitai.Stream, parent *Wav
 	this._parent = parent
 	this._root = root
 
-	tmp41 := NewWav_ChannelMaskType()
-	err = tmp41.Read(this._io, this, this._root)
+	tmp44 := NewWav_ChannelMaskType()
+	err = tmp44.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.DwChannelMask = tmp41
-	tmp42 := NewWav_GuidType()
-	err = tmp42.Read(this._io, this, this._root)
+	this.DwChannelMask = tmp44
+	tmp45 := NewWav_GuidType()
+	err = tmp45.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Subformat = tmp42
+	this.Subformat = tmp45
 	return err
 }
 type Wav_CueChunkType struct {
@@ -869,19 +971,19 @@ func (this *Wav_CueChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, roo
 	this._parent = parent
 	this._root = root
 
-	tmp43, err := this._io.ReadU4le()
+	tmp46, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.DwCuePoints = uint32(tmp43)
+	this.DwCuePoints = uint32(tmp46)
 	this.CuePoints = make([]*Wav_CuePointType, this.DwCuePoints)
 	for i := range this.CuePoints {
-		tmp44 := NewWav_CuePointType()
-		err = tmp44.Read(this._io, this, this._root)
+		tmp47 := NewWav_CuePointType()
+		err = tmp47.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
-		this.CuePoints[i] = tmp44
+		this.CuePoints[i] = tmp47
 	}
 	return err
 }
@@ -905,12 +1007,12 @@ func (this *Wav_ListChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, ro
 	this._parent = parent
 	this._root = root
 
-	tmp45 := NewRiff_ParentChunkData()
-	err = tmp45.Read(this._io, this, this._root)
+	tmp48 := NewRiff_ParentChunkData()
+	err = tmp48.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.ParentChunkData = tmp45
+	this.ParentChunkData = tmp48
 	return err
 }
 func (this *Wav_ListChunkType) FormType() (v Wav_Fourcc, err error) {
@@ -935,25 +1037,25 @@ func (this *Wav_ListChunkType) Subchunks() (v []*Wav_InfoChunkType, err error) {
 		return nil, err
 	}
 	for i := 1;; i++ {
-		tmp46, err := this._io.EOF()
+		tmp49, err := this._io.EOF()
 		if err != nil {
 			return nil, err
 		}
-		if tmp46 {
+		if tmp49 {
 			break
 		}
-		tmp47, err := this.FormType()
+		tmp50, err := this.FormType()
 		if err != nil {
 			return nil, err
 		}
-		switch (tmp47) {
+		switch (tmp50) {
 		case Wav_Fourcc__Info:
-			tmp48 := NewWav_InfoChunkType()
-			err = tmp48.Read(thisIo, this, this._root)
+			tmp51 := NewWav_InfoChunkType()
+			err = tmp51.Read(thisIo, this, this._root)
 			if err != nil {
 				return nil, err
 			}
-			this.subchunks = append(this.subchunks, tmp48)
+			this.subchunks = append(this.subchunks, tmp51)
 		}
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
@@ -999,106 +1101,188 @@ func (this *Wav_ChannelMaskType) Read(io *kaitai.Stream, parent *Wav_ChannelMask
 	this._parent = parent
 	this._root = root
 
-	tmp49, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.FrontRightOfCenter = tmp49 != 0
-	tmp50, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.FrontLeftOfCenter = tmp50 != 0
-	tmp51, err := this._io.ReadBitsIntBe(1)
-	if err != nil {
-		return err
-	}
-	this.BackRight = tmp51 != 0
 	tmp52, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.BackLeft = tmp52 != 0
+	this.FrontRightOfCenter = tmp52 != 0
 	tmp53, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.LowFrequency = tmp53 != 0
+	this.FrontLeftOfCenter = tmp53 != 0
 	tmp54, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.FrontCenter = tmp54 != 0
+	this.BackRight = tmp54 != 0
 	tmp55, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.FrontRight = tmp55 != 0
+	this.BackLeft = tmp55 != 0
 	tmp56, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.FrontLeft = tmp56 != 0
+	this.LowFrequency = tmp56 != 0
 	tmp57, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopCenter = tmp57 != 0
+	this.FrontCenter = tmp57 != 0
 	tmp58, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.SideRight = tmp58 != 0
+	this.FrontRight = tmp58 != 0
 	tmp59, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.SideLeft = tmp59 != 0
+	this.FrontLeft = tmp59 != 0
 	tmp60, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.BackCenter = tmp60 != 0
+	this.TopCenter = tmp60 != 0
 	tmp61, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopBackLeft = tmp61 != 0
+	this.SideRight = tmp61 != 0
 	tmp62, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopFrontRight = tmp62 != 0
+	this.SideLeft = tmp62 != 0
 	tmp63, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopFrontCenter = tmp63 != 0
+	this.BackCenter = tmp63 != 0
 	tmp64, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopFrontLeft = tmp64 != 0
-	tmp65, err := this._io.ReadBitsIntBe(6)
+	this.TopBackLeft = tmp64 != 0
+	tmp65, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.Unused1 = tmp65
+	this.TopFrontRight = tmp65 != 0
 	tmp66, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopBackRight = tmp66 != 0
+	this.TopFrontCenter = tmp66 != 0
 	tmp67, err := this._io.ReadBitsIntBe(1)
 	if err != nil {
 		return err
 	}
-	this.TopBackCenter = tmp67 != 0
-	tmp68, err := this._io.ReadBitsIntBe(8)
+	this.TopFrontLeft = tmp67 != 0
+	tmp68, err := this._io.ReadBitsIntBe(6)
 	if err != nil {
 		return err
 	}
-	this.Unused2 = tmp68
+	this.Unused1 = tmp68
+	tmp69, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.TopBackRight = tmp69 != 0
+	tmp70, err := this._io.ReadBitsIntBe(1)
+	if err != nil {
+		return err
+	}
+	this.TopBackCenter = tmp70 != 0
+	tmp71, err := this._io.ReadBitsIntBe(8)
+	if err != nil {
+		return err
+	}
+	this.Unused2 = tmp71
+	return err
+}
+
+/**
+ * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/">Source</a>
+ */
+type Wav_AfspChunkType struct {
+	Magic []byte
+	InfoRecords []string
+	_io *kaitai.Stream
+	_root *Wav
+	_parent *Wav_ChunkType
+}
+func NewWav_AfspChunkType() *Wav_AfspChunkType {
+	return &Wav_AfspChunkType{
+	}
+}
+
+func (this *Wav_AfspChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, root *Wav) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp72, err := this._io.ReadBytes(int(4))
+	if err != nil {
+		return err
+	}
+	tmp72 = tmp72
+	this.Magic = tmp72
+	if !(bytes.Equal(this.Magic, []uint8{65, 70, 115, 112})) {
+		return kaitai.NewValidationNotEqualError([]uint8{65, 70, 115, 112}, this.Magic, this._io, "/types/afsp_chunk_type/seq/0")
+	}
+	for i := 1;; i++ {
+		tmp73, err := this._io.EOF()
+		if err != nil {
+			return err
+		}
+		if tmp73 {
+			break
+		}
+		tmp74, err := this._io.ReadBytesTerm(0, false, true, true)
+		if err != nil {
+			return err
+		}
+		this.InfoRecords = append(this.InfoRecords, string(tmp74))
+	}
+	return err
+}
+
+/**
+ * An array of AFsp information records, in the `<field_name>: <value>`
+ * format (e.g. "`program: CopyAudio`"). The list of existing information
+ * record types are available in the `doc-ref` links.
+ * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html">Source</a>
+ * @see <a href="http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html">Source</a>
+ */
+
+/**
+ * @see <a href="https://tech.ebu.ch/docs/tech/tech3285s5.pdf">Source</a>
+ */
+type Wav_AxmlChunkType struct {
+	Data string
+	_io *kaitai.Stream
+	_root *Wav
+	_parent *Wav_ChunkType
+}
+func NewWav_AxmlChunkType() *Wav_AxmlChunkType {
+	return &Wav_AxmlChunkType{
+	}
+}
+
+func (this *Wav_AxmlChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, root *Wav) (err error) {
+	this._io = io
+	this._parent = parent
+	this._root = root
+
+	tmp75, err := this._io.ReadBytesFull()
+	if err != nil {
+		return err
+	}
+	tmp75 = tmp75
+	this.Data = string(tmp75)
 	return err
 }
 type Wav_ChunkType struct {
@@ -1121,12 +1305,12 @@ func (this *Wav_ChunkType) Read(io *kaitai.Stream, parent *Wav, root *Wav) (err 
 	this._parent = parent
 	this._root = root
 
-	tmp69 := NewRiff_Chunk()
-	err = tmp69.Read(this._io, this, this._root)
+	tmp76 := NewRiff_Chunk()
+	err = tmp76.Read(this._io, this, this._root)
 	if err != nil {
 		return err
 	}
-	this.Chunk = tmp69
+	this.Chunk = tmp76
 	return err
 }
 func (this *Wav_ChunkType) ChunkId() (v Wav_Fourcc, err error) {
@@ -1150,46 +1334,81 @@ func (this *Wav_ChunkType) ChunkData() (v interface{}, err error) {
 	if err != nil {
 		return nil, err
 	}
-	tmp70, err := this.ChunkId()
+	tmp77, err := this.ChunkId()
 	if err != nil {
 		return nil, err
 	}
-	switch (tmp70) {
+	switch (tmp77) {
+	case Wav_Fourcc__Fact:
+		tmp78 := NewWav_FactChunkType()
+		err = tmp78.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.chunkData = tmp78
 	case Wav_Fourcc__List:
-		tmp71 := NewWav_ListChunkType()
-		err = tmp71.Read(thisIo, this, this._root)
+		tmp79 := NewWav_ListChunkType()
+		err = tmp79.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = tmp71
+		this.chunkData = tmp79
 	case Wav_Fourcc__Fmt:
-		tmp72 := NewWav_FormatChunkType()
-		err = tmp72.Read(thisIo, this, this._root)
+		tmp80 := NewWav_FormatChunkType()
+		err = tmp80.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = tmp72
+		this.chunkData = tmp80
+	case Wav_Fourcc__Afsp:
+		tmp81 := NewWav_AfspChunkType()
+		err = tmp81.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.chunkData = tmp81
 	case Wav_Fourcc__Bext:
-		tmp73 := NewWav_BextChunkType()
-		err = tmp73.Read(thisIo, this, this._root)
+		tmp82 := NewWav_BextChunkType()
+		err = tmp82.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = tmp73
+		this.chunkData = tmp82
 	case Wav_Fourcc__Cue:
-		tmp74 := NewWav_CueChunkType()
-		err = tmp74.Read(thisIo, this, this._root)
+		tmp83 := NewWav_CueChunkType()
+		err = tmp83.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = tmp74
+		this.chunkData = tmp83
+	case Wav_Fourcc__Ixml:
+		tmp84 := NewWav_IxmlChunkType()
+		err = tmp84.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.chunkData = tmp84
+	case Wav_Fourcc__Pmx:
+		tmp85 := NewWav_PmxChunkType()
+		err = tmp85.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.chunkData = tmp85
+	case Wav_Fourcc__Axml:
+		tmp86 := NewWav_AxmlChunkType()
+		err = tmp86.Read(thisIo, this, this._root)
+		if err != nil {
+			return nil, err
+		}
+		this.chunkData = tmp86
 	case Wav_Fourcc__Data:
-		tmp75 := NewWav_DataChunkType()
-		err = tmp75.Read(thisIo, this, this._root)
+		tmp87 := NewWav_DataChunkType()
+		err = tmp87.Read(thisIo, this, this._root)
 		if err != nil {
 			return nil, err
 		}
-		this.chunkData = tmp75
+		this.chunkData = tmp87
 	}
 	_, err = thisIo.Seek(_pos, io.SeekStart)
 	if err != nil {
@@ -1199,6 +1418,10 @@ func (this *Wav_ChunkType) ChunkData() (v interface{}, err error) {
 	this._f_chunkData = true
 	return this.chunkData, nil
 }
+
+/**
+ * @see <a href="https://en.wikipedia.org/wiki/Broadcast_Wave_Format">Source</a>
+ */
 type Wav_BextChunkType struct {
 	Description string
 	Originator string
@@ -1228,81 +1451,81 @@ func (this *Wav_BextChunkType) Read(io *kaitai.Stream, parent *Wav_ChunkType, ro
 	this._parent = parent
 	this._root = root
 
-	tmp76, err := this._io.ReadBytes(int(256))
+	tmp88, err := this._io.ReadBytes(int(256))
 	if err != nil {
 		return err
 	}
-	tmp76 = kaitai.BytesTerminate(tmp76, 0, false)
-	this.Description = string(tmp76)
-	tmp77, err := this._io.ReadBytes(int(32))
+	tmp88 = kaitai.BytesTerminate(tmp88, 0, false)
+	this.Description = string(tmp88)
+	tmp89, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp77 = kaitai.BytesTerminate(tmp77, 0, false)
-	this.Originator = string(tmp77)
-	tmp78, err := this._io.ReadBytes(int(32))
+	tmp89 = kaitai.BytesTerminate(tmp89, 0, false)
+	this.Originator = string(tmp89)
+	tmp90, err := this._io.ReadBytes(int(32))
 	if err != nil {
 		return err
 	}
-	tmp78 = kaitai.BytesTerminate(tmp78, 0, false)
-	this.OriginatorReference = string(tmp78)
-	tmp79, err := this._io.ReadBytes(int(10))
+	tmp90 = kaitai.BytesTerminate(tmp90, 0, false)
+	this.OriginatorReference = string(tmp90)
+	tmp91, err := this._io.ReadBytes(int(10))
 	if err != nil {
 		return err
 	}
-	tmp79 = tmp79
-	this.OriginationDate = string(tmp79)
-	tmp80, err := this._io.ReadBytes(int(8))
+	tmp91 = tmp91
+	this.OriginationDate = string(tmp91)
+	tmp92, err := this._io.ReadBytes(int(8))
 	if err != nil {
 		return err
 	}
-	tmp80 = tmp80
-	this.OriginationTime = string(tmp80)
-	tmp81, err := this._io.ReadU4le()
+	tmp92 = tmp92
+	this.OriginationTime = string(tmp92)
+	tmp93, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TimeReferenceLow = uint32(tmp81)
-	tmp82, err := this._io.ReadU4le()
+	this.TimeReferenceLow = uint32(tmp93)
+	tmp94, err := this._io.ReadU4le()
 	if err != nil {
 		return err
 	}
-	this.TimeReferenceHigh = uint32(tmp82)
-	tmp83, err := this._io.ReadU2le()
+	this.TimeReferenceHigh = uint32(tmp94)
+	tmp95, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.Version = uint16(tmp83)
-	tmp84, err := this._io.ReadBytes(int(64))
+	this.Version = uint16(tmp95)
+	tmp96, err := this._io.ReadBytes(int(64))
 	if err != nil {
 		return err
 	}
-	tmp84 = tmp84
-	this.Umid = tmp84
-	tmp85, err := this._io.ReadU2le()
+	tmp96 = tmp96
+	this.Umid = tmp96
+	tmp97, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LoudnessValue = uint16(tmp85)
-	tmp86, err := this._io.ReadU2le()
+	this.LoudnessValue = uint16(tmp97)
+	tmp98, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.LoudnessRange = uint16(tmp86)
-	tmp87, err := this._io.ReadU2le()
+	this.LoudnessRange = uint16(tmp98)
+	tmp99, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaxTruePeakLevel = uint16(tmp87)
-	tmp88, err := this._io.ReadU2le()
+	this.MaxTruePeakLevel = uint16(tmp99)
+	tmp100, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaxMomentaryLoudness = uint16(tmp88)
-	tmp89, err := this._io.ReadU2le()
+	this.MaxMomentaryLoudness = uint16(tmp100)
+	tmp101, err := this._io.ReadU2le()
 	if err != nil {
 		return err
 	}
-	this.MaxShortTermLoudness = uint16(tmp89)
+	this.MaxShortTermLoudness = uint16(tmp101)
 	return err
 }

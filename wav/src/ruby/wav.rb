@@ -13,11 +13,18 @@ end
 # followed by a sequence of data chunks. A WAVE file is often just a RIFF
 # file with a single "WAVE" chunk which consists of two sub-chunks --
 # a "fmt " chunk specifying the data format and a "data" chunk containing
-# the actual sample data.
+# the actual sample data, although other chunks exist and are used.
+# 
+# An extension of the file format is the Broadcast Wave Format (BWF) for radio
+# broadcasts. Sample files can be found at:
+# 
+# https://www.bbc.co.uk/rd/publications/saqas
 # 
 # This Kaitai implementation was written by John Byrd of Gigantic Software
 # (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
 # @see http://soundfile.sapp.org/doc/WaveFormat/ Source
+# @see http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html Source
+# @see https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php Source
 class Wav < Kaitai::Struct::Struct
 
   W_FORMAT_TAG_TYPE = {
@@ -281,7 +288,7 @@ class Wav < Kaitai::Struct::Struct
     41248 => :w_format_tag_type_vocord_g723_1,
     41249 => :w_format_tag_type_vocord_lbc,
     41250 => :w_format_tag_type_nice_g728,
-    41251 => :w_format_tag_type_frace_telecom_g729,
+    41251 => :w_format_tag_type_france_telecom_g729,
     41252 => :w_format_tag_type_codian,
     61868 => :w_format_tag_type_flac,
     65534 => :w_format_tag_type_extensible,
@@ -290,16 +297,24 @@ class Wav < Kaitai::Struct::Struct
   I__W_FORMAT_TAG_TYPE = W_FORMAT_TAG_TYPE.invert
 
   FOURCC = {
+    540238953 => :fourcc_id3,
     543520099 => :fourcc_cue,
     544501094 => :fourcc_fmt,
     1163280727 => :fourcc_wave,
     1179011410 => :fourcc_riff,
+    1262568784 => :fourcc_peak,
+    1280137321 => :fourcc_ixml,
     1330007625 => :fourcc_info,
     1414744396 => :fourcc_list,
+    1481461855 => :fourcc_pmx,
+    1634625635 => :fourcc_chna,
     1635017060 => :fourcc_data,
     1684630901 => :fourcc_umid,
     1718511981 => :fourcc_minf,
+    1819113569 => :fourcc_axml,
     1852269938 => :fourcc_regn,
+    1886611041 => :fourcc_afsp,
+    1952670054 => :fourcc_fact,
     1954047330 => :fourcc_bext,
   }
   I__FOURCC = FOURCC.invert
@@ -378,6 +393,39 @@ class Wav < Kaitai::Struct::Struct
     attr_reader :w_valid_bits_per_sample
     attr_reader :channel_mask_and_subformat
   end
+  class PmxChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+
+    ##
+    # XMP data
+    # @see https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf Source
+    attr_reader :data
+  end
+
+  ##
+  # required for all non-PCM formats
+  # (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+  # `format_chunk_type` context)
+  class FactChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @num_samples_per_channel = @_io.read_u4le
+      self
+    end
+    attr_reader :num_samples_per_channel
+  end
   class GuidType < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -397,6 +445,21 @@ class Wav < Kaitai::Struct::Struct
     attr_reader :data3
     attr_reader :data4
     attr_reader :data4a
+  end
+
+  ##
+  # @see https://en.wikipedia.org/wiki/IXML Source
+  class IxmlChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :data
   end
   class InfoChunkType < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
@@ -580,6 +643,51 @@ class Wav < Kaitai::Struct::Struct
     attr_reader :top_back_center
     attr_reader :unused2
   end
+
+  ##
+  # @see http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/ Source
+  class AfspChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @magic = @_io.read_bytes(4)
+      raise Kaitai::Struct::ValidationNotEqualError.new([65, 70, 115, 112].pack('C*'), magic, _io, "/types/afsp_chunk_type/seq/0") if not magic == [65, 70, 115, 112].pack('C*')
+      @info_records = []
+      i = 0
+      while not @_io.eof?
+        @info_records << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+        i += 1
+      end
+      self
+    end
+    attr_reader :magic
+
+    ##
+    # An array of AFsp information records, in the `<field_name>: <value>`
+    # format (e.g. "`program: CopyAudio`"). The list of existing information
+    # record types are available in the `doc-ref` links.
+    # @see http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html Source
+    # @see http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html Source
+    attr_reader :info_records
+  end
+
+  ##
+  # @see https://tech.ebu.ch/docs/tech/tech3285s5.pdf Source
+  class AxmlChunkType < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
+      @data = (@_io.read_bytes_full).force_encoding("UTF-8")
+      self
+    end
+    attr_reader :data
+  end
   class ChunkType < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
@@ -601,14 +709,24 @@ class Wav < Kaitai::Struct::Struct
       _pos = io.pos
       io.seek(0)
       case chunk_id
+      when :fourcc_fact
+        @chunk_data = FactChunkType.new(io, self, @_root)
       when :fourcc_list
         @chunk_data = ListChunkType.new(io, self, @_root)
       when :fourcc_fmt
         @chunk_data = FormatChunkType.new(io, self, @_root)
+      when :fourcc_afsp
+        @chunk_data = AfspChunkType.new(io, self, @_root)
       when :fourcc_bext
         @chunk_data = BextChunkType.new(io, self, @_root)
       when :fourcc_cue
         @chunk_data = CueChunkType.new(io, self, @_root)
+      when :fourcc_ixml
+        @chunk_data = IxmlChunkType.new(io, self, @_root)
+      when :fourcc_pmx
+        @chunk_data = PmxChunkType.new(io, self, @_root)
+      when :fourcc_axml
+        @chunk_data = AxmlChunkType.new(io, self, @_root)
       when :fourcc_data
         @chunk_data = DataChunkType.new(io, self, @_root)
       end
@@ -617,6 +735,9 @@ class Wav < Kaitai::Struct::Struct
     end
     attr_reader :chunk
   end
+
+  ##
+  # @see https://en.wikipedia.org/wiki/Broadcast_Wave_Format Source
   class BextChunkType < Kaitai::Struct::Struct
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)

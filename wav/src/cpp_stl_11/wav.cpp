@@ -1,6 +1,7 @@
 // This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild
 
 #include "wav.h"
+#include "kaitai/exceptions.h"
 
 wav_t::wav_t(kaitai::kstream* p__io, kaitai::kstruct* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
@@ -129,6 +130,40 @@ bool wav_t::format_chunk_type_t::is_cb_size_meaningful() {
     return m_is_cb_size_meaningful;
 }
 
+wav_t::pmx_chunk_type_t::pmx_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void wav_t::pmx_chunk_type_t::_read() {
+    m_data = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("UTF-8"));
+}
+
+wav_t::pmx_chunk_type_t::~pmx_chunk_type_t() {
+    _clean_up();
+}
+
+void wav_t::pmx_chunk_type_t::_clean_up() {
+}
+
+wav_t::fact_chunk_type_t::fact_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void wav_t::fact_chunk_type_t::_read() {
+    m_num_samples_per_channel = m__io->read_u4le();
+}
+
+wav_t::fact_chunk_type_t::~fact_chunk_type_t() {
+    _clean_up();
+}
+
+void wav_t::fact_chunk_type_t::_clean_up() {
+}
+
 wav_t::guid_type_t::guid_type_t(kaitai::kstream* p__io, wav_t::channel_mask_and_subformat_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -148,6 +183,23 @@ wav_t::guid_type_t::~guid_type_t() {
 }
 
 void wav_t::guid_type_t::_clean_up() {
+}
+
+wav_t::ixml_chunk_type_t::ixml_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void wav_t::ixml_chunk_type_t::_read() {
+    m_data = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("UTF-8"));
+}
+
+wav_t::ixml_chunk_type_t::~ixml_chunk_type_t() {
+    _clean_up();
+}
+
+void wav_t::ixml_chunk_type_t::_clean_up() {
 }
 
 wav_t::info_chunk_type_t::info_chunk_type_t(kaitai::kstream* p__io, wav_t::list_chunk_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
@@ -374,6 +426,52 @@ wav_t::channel_mask_type_t::~channel_mask_type_t() {
 void wav_t::channel_mask_type_t::_clean_up() {
 }
 
+wav_t::afsp_chunk_type_t::afsp_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    m_info_records = nullptr;
+    _read();
+}
+
+void wav_t::afsp_chunk_type_t::_read() {
+    m_magic = m__io->read_bytes(4);
+    if (!(magic() == std::string("\x41\x46\x73\x70", 4))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x41\x46\x73\x70", 4), magic(), _io(), std::string("/types/afsp_chunk_type/seq/0"));
+    }
+    m_info_records = std::unique_ptr<std::vector<std::string>>(new std::vector<std::string>());
+    {
+        int i = 0;
+        while (!m__io->is_eof()) {
+            m_info_records->push_back(std::move(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII"))));
+            i++;
+        }
+    }
+}
+
+wav_t::afsp_chunk_type_t::~afsp_chunk_type_t() {
+    _clean_up();
+}
+
+void wav_t::afsp_chunk_type_t::_clean_up() {
+}
+
+wav_t::axml_chunk_type_t::axml_chunk_type_t(kaitai::kstream* p__io, wav_t::chunk_type_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+    _read();
+}
+
+void wav_t::axml_chunk_type_t::_read() {
+    m_data = kaitai::kstream::bytes_to_str(m__io->read_bytes_full(), std::string("UTF-8"));
+}
+
+wav_t::axml_chunk_type_t::~axml_chunk_type_t() {
+    _clean_up();
+}
+
+void wav_t::axml_chunk_type_t::_clean_up() {
+}
+
 wav_t::chunk_type_t::chunk_type_t(kaitai::kstream* p__io, wav_t* p__parent, wav_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
@@ -412,6 +510,11 @@ kaitai::kstruct* wav_t::chunk_type_t::chunk_data() {
     io->seek(0);
     n_chunk_data = true;
     switch (chunk_id()) {
+    case wav_t::FOURCC_FACT: {
+        n_chunk_data = false;
+        m_chunk_data = std::unique_ptr<fact_chunk_type_t>(new fact_chunk_type_t(io, this, m__root));
+        break;
+    }
     case wav_t::FOURCC_LIST: {
         n_chunk_data = false;
         m_chunk_data = std::unique_ptr<list_chunk_type_t>(new list_chunk_type_t(io, this, m__root));
@@ -422,6 +525,11 @@ kaitai::kstruct* wav_t::chunk_type_t::chunk_data() {
         m_chunk_data = std::unique_ptr<format_chunk_type_t>(new format_chunk_type_t(io, this, m__root));
         break;
     }
+    case wav_t::FOURCC_AFSP: {
+        n_chunk_data = false;
+        m_chunk_data = std::unique_ptr<afsp_chunk_type_t>(new afsp_chunk_type_t(io, this, m__root));
+        break;
+    }
     case wav_t::FOURCC_BEXT: {
         n_chunk_data = false;
         m_chunk_data = std::unique_ptr<bext_chunk_type_t>(new bext_chunk_type_t(io, this, m__root));
@@ -430,6 +538,21 @@ kaitai::kstruct* wav_t::chunk_type_t::chunk_data() {
     case wav_t::FOURCC_CUE: {
         n_chunk_data = false;
         m_chunk_data = std::unique_ptr<cue_chunk_type_t>(new cue_chunk_type_t(io, this, m__root));
+        break;
+    }
+    case wav_t::FOURCC_IXML: {
+        n_chunk_data = false;
+        m_chunk_data = std::unique_ptr<ixml_chunk_type_t>(new ixml_chunk_type_t(io, this, m__root));
+        break;
+    }
+    case wav_t::FOURCC_PMX: {
+        n_chunk_data = false;
+        m_chunk_data = std::unique_ptr<pmx_chunk_type_t>(new pmx_chunk_type_t(io, this, m__root));
+        break;
+    }
+    case wav_t::FOURCC_AXML: {
+        n_chunk_data = false;
+        m_chunk_data = std::unique_ptr<axml_chunk_type_t>(new axml_chunk_type_t(io, this, m__root));
         break;
     }
     case wav_t::FOURCC_DATA: {

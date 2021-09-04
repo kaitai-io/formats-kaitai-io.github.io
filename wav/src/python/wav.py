@@ -15,13 +15,26 @@ class Wav(KaitaiStruct):
     followed by a sequence of data chunks. A WAVE file is often just a RIFF
     file with a single "WAVE" chunk which consists of two sub-chunks --
     a "fmt " chunk specifying the data format and a "data" chunk containing
-    the actual sample data.
+    the actual sample data, although other chunks exist and are used.
+    
+    An extension of the file format is the Broadcast Wave Format (BWF) for radio
+    broadcasts. Sample files can be found at:
+    
+    https://www.bbc.co.uk/rd/publications/saqas
     
     This Kaitai implementation was written by John Byrd of Gigantic Software
     (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
     
     .. seealso::
        Source - http://soundfile.sapp.org/doc/WaveFormat/
+    
+    
+    .. seealso::
+       Source - http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html
+    
+    
+    .. seealso::
+       Source - https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php
     """
 
     class WFormatTagType(Enum):
@@ -285,23 +298,31 @@ class Wav(KaitaiStruct):
         vocord_g723_1 = 41248
         vocord_lbc = 41249
         nice_g728 = 41250
-        frace_telecom_g729 = 41251
+        france_telecom_g729 = 41251
         codian = 41252
         flac = 61868
         extensible = 65534
         development = 65535
 
     class Fourcc(Enum):
+        id3 = 540238953
         cue = 543520099
         fmt = 544501094
         wave = 1163280727
         riff = 1179011410
+        peak = 1262568784
+        ixml = 1280137321
         info = 1330007625
         list = 1414744396
+        pmx = 1481461855
+        chna = 1634625635
         data = 1635017060
         umid = 1684630901
         minf = 1718511981
+        axml = 1819113569
         regn = 1852269938
+        afsp = 1886611041
+        fact = 1952670054
         bext = 1954047330
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -380,6 +401,32 @@ class Wav(KaitaiStruct):
             return self._m_is_cb_size_meaningful if hasattr(self, '_m_is_cb_size_meaningful') else None
 
 
+    class PmxChunkType(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
+
+
+    class FactChunkType(KaitaiStruct):
+        """required for all non-PCM formats
+        (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+        `format_chunk_type` context)
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.num_samples_per_channel = self._io.read_u4le()
+
+
     class GuidType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -393,6 +440,21 @@ class Wav(KaitaiStruct):
             self.data3 = self._io.read_u2le()
             self.data4 = self._io.read_u4be()
             self.data4a = self._io.read_u4be()
+
+
+    class IxmlChunkType(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://en.wikipedia.org/wiki/IXML
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
 
 
     class InfoChunkType(KaitaiStruct):
@@ -551,6 +613,44 @@ class Wav(KaitaiStruct):
             self.unused2 = self._io.read_bits_int_be(8)
 
 
+    class AfspChunkType(KaitaiStruct):
+        """
+        .. seealso::
+           Source - http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.magic = self._io.read_bytes(4)
+            if not self.magic == b"\x41\x46\x73\x70":
+                raise kaitaistruct.ValidationNotEqualError(b"\x41\x46\x73\x70", self.magic, self._io, u"/types/afsp_chunk_type/seq/0")
+            self.info_records = []
+            i = 0
+            while not self._io.is_eof():
+                self.info_records.append((self._io.read_bytes_term(0, False, True, True)).decode(u"ASCII"))
+                i += 1
+
+
+
+    class AxmlChunkType(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://tech.ebu.ch/docs/tech/tech3285s5.pdf
+        """
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.data = (self._io.read_bytes_full()).decode(u"UTF-8")
+
+
     class ChunkType(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
@@ -578,14 +678,24 @@ class Wav(KaitaiStruct):
             _pos = io.pos()
             io.seek(0)
             _on = self.chunk_id
-            if _on == Wav.Fourcc.list:
+            if _on == Wav.Fourcc.fact:
+                self._m_chunk_data = Wav.FactChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.list:
                 self._m_chunk_data = Wav.ListChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.fmt:
                 self._m_chunk_data = Wav.FormatChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.afsp:
+                self._m_chunk_data = Wav.AfspChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.bext:
                 self._m_chunk_data = Wav.BextChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.cue:
                 self._m_chunk_data = Wav.CueChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.ixml:
+                self._m_chunk_data = Wav.IxmlChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.pmx:
+                self._m_chunk_data = Wav.PmxChunkType(io, self, self._root)
+            elif _on == Wav.Fourcc.axml:
+                self._m_chunk_data = Wav.AxmlChunkType(io, self, self._root)
             elif _on == Wav.Fourcc.data:
                 self._m_chunk_data = Wav.DataChunkType(io, self, self._root)
             io.seek(_pos)
@@ -593,6 +703,10 @@ class Wav(KaitaiStruct):
 
 
     class BextChunkType(KaitaiStruct):
+        """
+        .. seealso::
+           Source - https://en.wikipedia.org/wiki/Broadcast_Wave_Format
+        """
         def __init__(self, _io, _parent=None, _root=None):
             self._io = _io
             self._parent = _parent

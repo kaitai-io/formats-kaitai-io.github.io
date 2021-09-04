@@ -109,7 +109,10 @@ storage of multimedia files. A RIFF file starts out with a file header
 followed by a sequence of data chunks. A WAVE file is often just a RIFF
 file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
 a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
-the actual sample data.</p>
+the actual sample data, although other chunks exist and are used.</p>
+<p>An extension of the file format is the Broadcast Wave Format (BWF) for radio
+broadcasts. Sample files can be found at:</p>
+<p>https://www.bbc.co.uk/rd/publications/saqas</p>
 <p>This Kaitai implementation was written by John Byrd of Gigantic Software
 (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</p>
 </p>
@@ -122,7 +125,7 @@ the actual sample data.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        wav
+                        ["wav", "bwf"]
                     </div>
                     
                     
@@ -149,14 +152,36 @@ the actual sample data.</p>
                             <li><a href="https://tools.ietf.org/html/rfc2361">RFC 2361</a></li>
                             
                             <li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml">LOC fdd000001</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000002.shtml">LOC fdd000002</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000356.shtml">LOC fdd000356</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000003.shtml">LOC fdd000003</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000357.shtml">LOC fdd000357</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000359.shtml">LOC fdd000359</a></li>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/6">PRONOM fmt/6</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/141">PRONOM fmt/141</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/142">PRONOM fmt/142</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/143">PRONOM fmt/143</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/1">PRONOM fmt/1</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/703">PRONOM fmt/703</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/706">PRONOM fmt/706</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/709">PRONOM fmt/709</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/2">PRONOM fmt/2</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/704">PRONOM fmt/704</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/707">PRONOM fmt/707</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/710">PRONOM fmt/710</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/527">PRONOM fmt/527</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/705">PRONOM fmt/705</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/708">PRONOM fmt/708</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/711">PRONOM fmt/711</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q217570">Wikidata Q217570</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q922446">Wikidata Q922446</a></li>
                             
                             
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/WAV">WAV in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/BWF">BWF in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -278,7 +303,7 @@ for instructions how to add it into your project with the build tool that you us
 
 
 
-<div class="highlight"><pre><span></span><span class="n">Wav</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Wav</span><span class="p">.</span><span class="na">fromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.wav&quot;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="n">Wav</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Wav</span><span class="p">.</span><span class="na">fromFile</span><span class="p">(</span><span class="s">&quot;path/to/local/file.[&quot;</span><span class="n">wav</span><span class="s">&quot;, &quot;</span><span class="n">bwf</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
 </pre></div>
 
 <p>Or parse structure from a byte array:</p>
@@ -328,6 +353,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.nio.charset.Charset</span><span class="p">;</span>
 <span class="kn">import</span> <span class="nn">java.util.ArrayList</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="p">;</span>
 
 
 <span class="cm">/**</span>
@@ -336,11 +362,18 @@ for instructions how to add it into your project with the build tool that you us
 <span class="cm"> * followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
 <span class="cm"> * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
 <span class="cm"> * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
-<span class="cm"> * the actual sample data.</span>
+<span class="cm"> * the actual sample data, although other chunks exist and are used.</span>
+<span class="cm"> * </span>
+<span class="cm"> * An extension of the file format is the Broadcast Wave Format (BWF) for radio</span>
+<span class="cm"> * broadcasts. Sample files can be found at:</span>
+<span class="cm"> * </span>
+<span class="cm"> * https://www.bbc.co.uk/rd/publications/saqas</span>
 <span class="cm"> * </span>
 <span class="cm"> * This Kaitai implementation was written by John Byrd of Gigantic Software</span>
 <span class="cm"> * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
 <span class="cm"> * @see &lt;a href=&quot;http://soundfile.sapp.org/doc/WaveFormat/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">Wav</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">Wav</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -608,7 +641,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="n">VOCORD_G723_1</span><span class="p">(</span><span class="mi">41248</span><span class="p">),</span>
         <span class="n">VOCORD_LBC</span><span class="p">(</span><span class="mi">41249</span><span class="p">),</span>
         <span class="n">NICE_G728</span><span class="p">(</span><span class="mi">41250</span><span class="p">),</span>
-        <span class="n">FRACE_TELECOM_G729</span><span class="p">(</span><span class="mi">41251</span><span class="p">),</span>
+        <span class="n">FRANCE_TELECOM_G729</span><span class="p">(</span><span class="mi">41251</span><span class="p">),</span>
         <span class="n">CODIAN</span><span class="p">(</span><span class="mi">41252</span><span class="p">),</span>
         <span class="n">FLAC</span><span class="p">(</span><span class="mi">61868</span><span class="p">),</span>
         <span class="n">EXTENSIBLE</span><span class="p">(</span><span class="mi">65534</span><span class="p">),</span>
@@ -626,22 +659,30 @@ for instructions how to add it into your project with the build tool that you us
     <span class="p">}</span>
 
     <span class="kd">public</span> <span class="kd">enum</span> <span class="n">Fourcc</span> <span class="p">{</span>
+        <span class="n">ID3</span><span class="p">(</span><span class="mi">540238953</span><span class="p">),</span>
         <span class="n">CUE</span><span class="p">(</span><span class="mi">543520099</span><span class="p">),</span>
         <span class="n">FMT</span><span class="p">(</span><span class="mi">544501094</span><span class="p">),</span>
         <span class="n">WAVE</span><span class="p">(</span><span class="mi">1163280727</span><span class="p">),</span>
         <span class="n">RIFF</span><span class="p">(</span><span class="mi">1179011410</span><span class="p">),</span>
+        <span class="n">PEAK</span><span class="p">(</span><span class="mi">1262568784</span><span class="p">),</span>
+        <span class="n">IXML</span><span class="p">(</span><span class="mi">1280137321</span><span class="p">),</span>
         <span class="n">INFO</span><span class="p">(</span><span class="mi">1330007625</span><span class="p">),</span>
         <span class="n">LIST</span><span class="p">(</span><span class="mi">1414744396</span><span class="p">),</span>
+        <span class="n">PMX</span><span class="p">(</span><span class="mi">1481461855</span><span class="p">),</span>
+        <span class="n">CHNA</span><span class="p">(</span><span class="mi">1634625635</span><span class="p">),</span>
         <span class="n">DATA</span><span class="p">(</span><span class="mi">1635017060</span><span class="p">),</span>
         <span class="n">UMID</span><span class="p">(</span><span class="mi">1684630901</span><span class="p">),</span>
         <span class="n">MINF</span><span class="p">(</span><span class="mi">1718511981</span><span class="p">),</span>
+        <span class="n">AXML</span><span class="p">(</span><span class="mi">1819113569</span><span class="p">),</span>
         <span class="n">REGN</span><span class="p">(</span><span class="mi">1852269938</span><span class="p">),</span>
+        <span class="n">AFSP</span><span class="p">(</span><span class="mi">1886611041</span><span class="p">),</span>
+        <span class="n">FACT</span><span class="p">(</span><span class="mi">1952670054</span><span class="p">),</span>
         <span class="n">BEXT</span><span class="p">(</span><span class="mi">1954047330</span><span class="p">);</span>
 
         <span class="kd">private</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">id</span><span class="p">;</span>
         <span class="n">Fourcc</span><span class="p">(</span><span class="kt">long</span> <span class="n">id</span><span class="p">)</span> <span class="p">{</span> <span class="k">this</span><span class="p">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">id</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">id</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Fourcc</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Fourcc</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">11</span><span class="p">);</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Fourcc</span><span class="o">&gt;</span> <span class="n">byId</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">Long</span><span class="p">,</span> <span class="n">Fourcc</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">19</span><span class="p">);</span>
         <span class="kd">static</span> <span class="p">{</span>
             <span class="k">for</span> <span class="p">(</span><span class="n">Fourcc</span> <span class="n">e</span> <span class="p">:</span> <span class="n">Fourcc</span><span class="p">.</span><span class="na">values</span><span class="p">())</span>
                 <span class="n">byId</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">e</span><span class="p">.</span><span class="na">id</span><span class="p">(),</span> <span class="n">e</span><span class="p">);</span>
@@ -786,6 +827,75 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PmxChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">PmxChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">PmxChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PmxChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PmxChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">PmxChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * XMP data</span>
+<span class="cm">         * @see &lt;a href=&quot;https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * required for all non-PCM formats</span>
+<span class="cm">     * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in</span>
+<span class="cm">     * `format_chunk_type` context)</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">FactChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">FactChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">FactChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">FactChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">FactChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">FactChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">numSamplesPerChannel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">long</span> <span class="n">numSamplesPerChannel</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">long</span> <span class="nf">numSamplesPerChannel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numSamplesPerChannel</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">GuidType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">GuidType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
             <span class="k">return</span> <span class="k">new</span> <span class="n">GuidType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -826,6 +936,39 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">public</span> <span class="kt">long</span> <span class="nf">data4a</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data4a</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChannelMaskAndSubformatType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/IXML&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">IxmlChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">IxmlChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">IxmlChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">IxmlChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">IxmlChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">IxmlChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">InfoChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">InfoChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -1186,6 +1329,93 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChannelMaskAndSubformatType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">AfspChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">AfspChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">AfspChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">AfspChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">AfspChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">AfspChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">magic</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">Arrays</span><span class="p">.</span><span class="na">equals</span><span class="p">(</span><span class="n">magic</span><span class="p">(),</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">112</span> <span class="p">})))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">.</span><span class="na">ValidationNotEqualError</span><span class="p">(</span><span class="k">new</span> <span class="kt">byte</span><span class="o">[]</span> <span class="p">{</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">112</span> <span class="p">},</span> <span class="n">magic</span><span class="p">(),</span> <span class="n">_io</span><span class="p">(),</span> <span class="s">&quot;/types/afsp_chunk_type/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">infoRecords</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span><span class="p">();</span>
+            <span class="p">{</span>
+                <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="na">infoRecords</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;ASCII&quot;</span><span class="p">)));</span>
+                    <span class="n">i</span><span class="o">++</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">magic</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">infoRecords</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">magic</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * An array of AFsp information records, in the `&lt;field_name&gt;: &lt;value&gt;`</span>
+<span class="cm">         * format (e.g. &quot;`program: CopyAudio`&quot;). The list of existing information</span>
+<span class="cm">         * record types are available in the `doc-ref` links.</span>
+<span class="cm">         * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="nf">infoRecords</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">infoRecords</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://tech.ebu.ch/docs/tech/tech3285s5.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">AxmlChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">AxmlChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">AxmlChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">AxmlChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">AxmlChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">AxmlChunkType</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">data</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="n">Charset</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;UTF-8&quot;</span><span class="p">));</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">data</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="n">_parent</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">data</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Wav</span><span class="p">.</span><span class="na">ChunkType</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">ChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">ChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
             <span class="k">return</span> <span class="k">new</span> <span class="n">ChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
@@ -1226,6 +1456,10 @@ for instructions how to add it into your project with the build tool that you us
                 <span class="n">Fourcc</span> <span class="n">on</span> <span class="o">=</span> <span class="n">chunkId</span><span class="p">();</span>
                 <span class="k">if</span> <span class="p">(</span><span class="n">on</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
                     <span class="k">switch</span> <span class="p">(</span><span class="n">chunkId</span><span class="p">())</span> <span class="p">{</span>
+                    <span class="k">case</span> <span class="n">FACT</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FactChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">LIST</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ListChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
@@ -1234,12 +1468,28 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FormatChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">AFSP</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AfspChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">BEXT</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BextChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">CUE</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CueChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">IXML</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">IxmlChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">PMX</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PmxChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">AXML</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AxmlChunkType</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">DATA</span><span class="p">:</span> <span class="p">{</span>
@@ -1259,6 +1509,10 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Wav</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/Broadcast_Wave_Format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">     */</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">BextChunkType</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">BextChunkType</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
             <span class="k">return</span> <span class="k">new</span> <span class="n">BextChunkType</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>

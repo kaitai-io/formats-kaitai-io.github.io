@@ -109,7 +109,10 @@ storage of multimedia files. A RIFF file starts out with a file header
 followed by a sequence of data chunks. A WAVE file is often just a RIFF
 file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
 a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
-the actual sample data.</p>
+the actual sample data, although other chunks exist and are used.</p>
+<p>An extension of the file format is the Broadcast Wave Format (BWF) for radio
+broadcasts. Sample files can be found at:</p>
+<p>https://www.bbc.co.uk/rd/publications/saqas</p>
 <p>This Kaitai implementation was written by John Byrd of Gigantic Software
 (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</p>
 </p>
@@ -122,7 +125,7 @@ the actual sample data.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        wav
+                        ["wav", "bwf"]
                     </div>
                     
                     
@@ -149,14 +152,36 @@ the actual sample data.</p>
                             <li><a href="https://tools.ietf.org/html/rfc2361">RFC 2361</a></li>
                             
                             <li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml">LOC fdd000001</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000002.shtml">LOC fdd000002</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000356.shtml">LOC fdd000356</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000003.shtml">LOC fdd000003</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000357.shtml">LOC fdd000357</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000359.shtml">LOC fdd000359</a></li>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/6">PRONOM fmt/6</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/141">PRONOM fmt/141</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/142">PRONOM fmt/142</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/143">PRONOM fmt/143</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/1">PRONOM fmt/1</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/703">PRONOM fmt/703</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/706">PRONOM fmt/706</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/709">PRONOM fmt/709</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/2">PRONOM fmt/2</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/704">PRONOM fmt/704</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/707">PRONOM fmt/707</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/710">PRONOM fmt/710</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/527">PRONOM fmt/527</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/705">PRONOM fmt/705</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/708">PRONOM fmt/708</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/711">PRONOM fmt/711</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q217570">Wikidata Q217570</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q922446">Wikidata Q922446</a></li>
                             
                             
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/WAV">WAV in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/BWF">BWF in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -279,6 +304,7 @@ the actual sample data.</p>
 <span class="kn">import</span> <span class="p">(</span>
 	<span class="s">&quot;github.com/kaitai-io/kaitai_struct_go_runtime/kaitai&quot;</span>
 	<span class="s">&quot;io&quot;</span>
+	<span class="s">&quot;bytes&quot;</span>
 <span class="p">)</span>
 
 
@@ -288,11 +314,18 @@ the actual sample data.</p>
 <span class="cm"> * followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
 <span class="cm"> * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
 <span class="cm"> * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
-<span class="cm"> * the actual sample data.</span>
+<span class="cm"> * the actual sample data, although other chunks exist and are used.</span>
+<span class="cm"> * </span>
+<span class="cm"> * An extension of the file format is the Broadcast Wave Format (BWF) for radio</span>
+<span class="cm"> * broadcasts. Sample files can be found at:</span>
+<span class="cm"> * </span>
+<span class="cm"> * https://www.bbc.co.uk/rd/publications/saqas</span>
 <span class="cm"> * </span>
 <span class="cm"> * This Kaitai implementation was written by John Byrd of Gigantic Software</span>
 <span class="cm"> * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
 <span class="cm"> * @see &lt;a href=&quot;http://soundfile.sapp.org/doc/WaveFormat/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 
 <span class="kd">type</span> <span class="nx">Wav_WFormatTagType</span> <span class="kt">int</span>
@@ -557,7 +590,7 @@ the actual sample data.</p>
 	<span class="nx">Wav_WFormatTagType__VocordG7231</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">41248</span>
 	<span class="nx">Wav_WFormatTagType__VocordLbc</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">41249</span>
 	<span class="nx">Wav_WFormatTagType__NiceG728</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">41250</span>
-	<span class="nx">Wav_WFormatTagType__FraceTelecomG729</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">41251</span>
+	<span class="nx">Wav_WFormatTagType__FranceTelecomG729</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">41251</span>
 	<span class="nx">Wav_WFormatTagType__Codian</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">41252</span>
 	<span class="nx">Wav_WFormatTagType__Flac</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">61868</span>
 	<span class="nx">Wav_WFormatTagType__Extensible</span> <span class="nx">Wav_WFormatTagType</span> <span class="p">=</span> <span class="mi">65534</span>
@@ -566,16 +599,24 @@ the actual sample data.</p>
 
 <span class="kd">type</span> <span class="nx">Wav_Fourcc</span> <span class="kt">int</span>
 <span class="kd">const</span> <span class="p">(</span>
+	<span class="nx">Wav_Fourcc__Id3</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">540238953</span>
 	<span class="nx">Wav_Fourcc__Cue</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">543520099</span>
 	<span class="nx">Wav_Fourcc__Fmt</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">544501094</span>
 	<span class="nx">Wav_Fourcc__Wave</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1163280727</span>
 	<span class="nx">Wav_Fourcc__Riff</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1179011410</span>
+	<span class="nx">Wav_Fourcc__Peak</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1262568784</span>
+	<span class="nx">Wav_Fourcc__Ixml</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1280137321</span>
 	<span class="nx">Wav_Fourcc__Info</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1330007625</span>
 	<span class="nx">Wav_Fourcc__List</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1414744396</span>
+	<span class="nx">Wav_Fourcc__Pmx</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1481461855</span>
+	<span class="nx">Wav_Fourcc__Chna</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1634625635</span>
 	<span class="nx">Wav_Fourcc__Data</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1635017060</span>
 	<span class="nx">Wav_Fourcc__Umid</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1684630901</span>
 	<span class="nx">Wav_Fourcc__Minf</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1718511981</span>
+	<span class="nx">Wav_Fourcc__Axml</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1819113569</span>
 	<span class="nx">Wav_Fourcc__Regn</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1852269938</span>
+	<span class="nx">Wav_Fourcc__Afsp</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1886611041</span>
+	<span class="nx">Wav_Fourcc__Fact</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1952670054</span>
 	<span class="nx">Wav_Fourcc__Bext</span> <span class="nx">Wav_Fourcc</span> <span class="p">=</span> <span class="mi">1954047330</span>
 <span class="p">)</span>
 <span class="kd">type</span> <span class="nx">Wav</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -898,6 +939,64 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_isCbSizeMeaningful</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isCbSizeMeaningful</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
+<span class="kd">type</span> <span class="nx">Wav_PmxChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Data</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Wav</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWav_PmxChunkType</span><span class="p">()</span> <span class="o">*</span><span class="nx">Wav_PmxChunkType</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Wav_PmxChunkType</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_PmxChunkType</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Wav</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp26</span> <span class="p">=</span> <span class="nx">tmp26</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * XMP data</span>
+<span class="cm"> * @see &lt;a href=&quot;https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * required for all non-PCM formats</span>
+<span class="cm"> * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in</span>
+<span class="cm"> * `format_chunk_type` context)</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Wav_FactChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">NumSamplesPerChannel</span> <span class="kt">uint32</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Wav</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWav_FactChunkType</span><span class="p">()</span> <span class="o">*</span><span class="nx">Wav_FactChunkType</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Wav_FactChunkType</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_FactChunkType</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Wav</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">NumSamplesPerChannel</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_GuidType</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Data1</span> <span class="kt">uint32</span>
 	<span class="nx">Data2</span> <span class="kt">uint16</span>
@@ -918,31 +1017,59 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp26</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Data1</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp26</span><span class="p">)</span>
-	<span class="nx">tmp27</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data1</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
+	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Data2</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp27</span><span class="p">)</span>
-	<span class="nx">tmp28</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data2</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
+	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Data3</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp28</span><span class="p">)</span>
-	<span class="nx">tmp29</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data3</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+	<span class="nx">tmp31</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Data4</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp29</span><span class="p">)</span>
-	<span class="nx">tmp30</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data4</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp31</span><span class="p">)</span>
+	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4be</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Data4a</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp30</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data4a</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/IXML&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Wav_IxmlChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Data</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Wav</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWav_IxmlChunkType</span><span class="p">()</span> <span class="o">*</span><span class="nx">Wav_IxmlChunkType</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Wav_IxmlChunkType</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_IxmlChunkType</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Wav</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp33</span> <span class="p">=</span> <span class="nx">tmp33</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp33</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_InfoChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -963,12 +1090,12 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp31</span> <span class="o">:=</span> <span class="nx">NewRiff_Chunk</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp31</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp34</span> <span class="o">:=</span> <span class="nx">NewRiff_Chunk</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp34</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Chunk</span> <span class="p">=</span> <span class="nx">tmp31</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Chunk</span> <span class="p">=</span> <span class="nx">tmp34</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_InfoChunkType</span><span class="p">)</span> <span class="nx">ChunkData</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">string</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -984,11 +1111,11 @@ the actual sample data.</p>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp32</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp32</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
 	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">,</span> <span class="nx">err</span>
@@ -1018,36 +1145,36 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp33</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwName</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp33</span><span class="p">)</span>
-	<span class="nx">tmp34</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwPosition</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp34</span><span class="p">)</span>
-	<span class="nx">tmp35</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FccChunk</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp35</span><span class="p">)</span>
 	<span class="nx">tmp36</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwChunkStart</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwName</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp36</span><span class="p">)</span>
 	<span class="nx">tmp37</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwBlockStart</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp37</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwPosition</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp37</span><span class="p">)</span>
 	<span class="nx">tmp38</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwSampleOffset</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FccChunk</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp38</span><span class="p">)</span>
+	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwChunkStart</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp39</span><span class="p">)</span>
+	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwBlockStart</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
+	<span class="nx">tmp41</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwSampleOffset</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp41</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_DataChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -1066,12 +1193,12 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp39</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
+	<span class="nx">tmp42</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp39</span> <span class="p">=</span> <span class="nx">tmp39</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nx">tmp39</span>
+	<span class="nx">tmp42</span> <span class="p">=</span> <span class="nx">tmp42</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nx">tmp42</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_SamplesType</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -1090,11 +1217,11 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp40</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Samples</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp40</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Samples</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp43</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_ChannelMaskAndSubformatType</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -1114,18 +1241,18 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp41</span> <span class="o">:=</span> <span class="nx">NewWav_ChannelMaskType</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp41</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp44</span> <span class="o">:=</span> <span class="nx">NewWav_ChannelMaskType</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp44</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwChannelMask</span> <span class="p">=</span> <span class="nx">tmp41</span>
-	<span class="nx">tmp42</span> <span class="o">:=</span> <span class="nx">NewWav_GuidType</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp42</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwChannelMask</span> <span class="p">=</span> <span class="nx">tmp44</span>
+	<span class="nx">tmp45</span> <span class="o">:=</span> <span class="nx">NewWav_GuidType</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp45</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Subformat</span> <span class="p">=</span> <span class="nx">tmp42</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Subformat</span> <span class="p">=</span> <span class="nx">tmp45</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_CueChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -1145,19 +1272,19 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp43</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">DwCuePoints</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp43</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">DwCuePoints</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp46</span><span class="p">)</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">CuePoints</span> <span class="p">=</span> <span class="nb">make</span><span class="p">([]</span><span class="o">*</span><span class="nx">Wav_CuePointType</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">DwCuePoints</span><span class="p">)</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="k">range</span> <span class="nx">this</span><span class="p">.</span><span class="nx">CuePoints</span> <span class="p">{</span>
-		<span class="nx">tmp44</span> <span class="o">:=</span> <span class="nx">NewWav_CuePointType</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp44</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp47</span> <span class="o">:=</span> <span class="nx">NewWav_CuePointType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp47</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">CuePoints</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp44</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">CuePoints</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="p">=</span> <span class="nx">tmp47</span>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
@@ -1181,12 +1308,12 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp45</span> <span class="o">:=</span> <span class="nx">NewRiff_ParentChunkData</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp45</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp48</span> <span class="o">:=</span> <span class="nx">NewRiff_ParentChunkData</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp48</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">ParentChunkData</span> <span class="p">=</span> <span class="nx">tmp45</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">ParentChunkData</span> <span class="p">=</span> <span class="nx">tmp48</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_ListChunkType</span><span class="p">)</span> <span class="nx">FormType</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="nx">Wav_Fourcc</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -1211,25 +1338,25 @@ the actual sample data.</p>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
 	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
-		<span class="nx">tmp46</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="k">if</span> <span class="nx">tmp46</span> <span class="p">{</span>
+		<span class="k">if</span> <span class="nx">tmp49</span> <span class="p">{</span>
 			<span class="k">break</span>
 		<span class="p">}</span>
-		<span class="nx">tmp47</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">FormType</span><span class="p">()</span>
+		<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">FormType</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="k">switch</span> <span class="p">(</span><span class="nx">tmp47</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="nx">tmp50</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">case</span> <span class="nx">Wav_Fourcc__Info</span><span class="p">:</span>
-			<span class="nx">tmp48</span> <span class="o">:=</span> <span class="nx">NewWav_InfoChunkType</span><span class="p">()</span>
-			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp48</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+			<span class="nx">tmp51</span> <span class="o">:=</span> <span class="nx">NewWav_InfoChunkType</span><span class="p">()</span>
+			<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp51</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 			<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 				<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 			<span class="p">}</span>
-			<span class="nx">this</span><span class="p">.</span><span class="nx">subchunks</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">subchunks</span><span class="p">,</span> <span class="nx">tmp48</span><span class="p">)</span>
+			<span class="nx">this</span><span class="p">.</span><span class="nx">subchunks</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">subchunks</span><span class="p">,</span> <span class="nx">tmp51</span><span class="p">)</span>
 		<span class="p">}</span>
 	<span class="p">}</span>
 	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
@@ -1275,106 +1402,188 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp49</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontRightOfCenter</span> <span class="p">=</span> <span class="nx">tmp49</span> <span class="o">!=</span> <span class="mi">0</span>
-	<span class="nx">tmp50</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontLeftOfCenter</span> <span class="p">=</span> <span class="nx">tmp50</span> <span class="o">!=</span> <span class="mi">0</span>
-	<span class="nx">tmp51</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BackRight</span> <span class="p">=</span> <span class="nx">tmp51</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp52</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BackLeft</span> <span class="p">=</span> <span class="nx">tmp52</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontRightOfCenter</span> <span class="p">=</span> <span class="nx">tmp52</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp53</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LowFrequency</span> <span class="p">=</span> <span class="nx">tmp53</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontLeftOfCenter</span> <span class="p">=</span> <span class="nx">tmp53</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp54</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontCenter</span> <span class="p">=</span> <span class="nx">tmp54</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BackRight</span> <span class="p">=</span> <span class="nx">tmp54</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp55</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontRight</span> <span class="p">=</span> <span class="nx">tmp55</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BackLeft</span> <span class="p">=</span> <span class="nx">tmp55</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp56</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontLeft</span> <span class="p">=</span> <span class="nx">tmp56</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LowFrequency</span> <span class="p">=</span> <span class="nx">tmp56</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp57</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopCenter</span> <span class="p">=</span> <span class="nx">tmp57</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontCenter</span> <span class="p">=</span> <span class="nx">tmp57</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp58</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">SideRight</span> <span class="p">=</span> <span class="nx">tmp58</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontRight</span> <span class="p">=</span> <span class="nx">tmp58</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp59</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">SideLeft</span> <span class="p">=</span> <span class="nx">tmp59</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">FrontLeft</span> <span class="p">=</span> <span class="nx">tmp59</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp60</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">BackCenter</span> <span class="p">=</span> <span class="nx">tmp60</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopCenter</span> <span class="p">=</span> <span class="nx">tmp60</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp61</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopBackLeft</span> <span class="p">=</span> <span class="nx">tmp61</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">SideRight</span> <span class="p">=</span> <span class="nx">tmp61</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp62</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopFrontRight</span> <span class="p">=</span> <span class="nx">tmp62</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">SideLeft</span> <span class="p">=</span> <span class="nx">tmp62</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp63</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopFrontCenter</span> <span class="p">=</span> <span class="nx">tmp63</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">BackCenter</span> <span class="p">=</span> <span class="nx">tmp63</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp64</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopFrontLeft</span> <span class="p">=</span> <span class="nx">tmp64</span> <span class="o">!=</span> <span class="mi">0</span>
-	<span class="nx">tmp65</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopBackLeft</span> <span class="p">=</span> <span class="nx">tmp64</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp65</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Unused1</span> <span class="p">=</span> <span class="nx">tmp65</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopFrontRight</span> <span class="p">=</span> <span class="nx">tmp65</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp66</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopBackRight</span> <span class="p">=</span> <span class="nx">tmp66</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopFrontCenter</span> <span class="p">=</span> <span class="nx">tmp66</span> <span class="o">!=</span> <span class="mi">0</span>
 	<span class="nx">tmp67</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TopBackCenter</span> <span class="p">=</span> <span class="nx">tmp67</span> <span class="o">!=</span> <span class="mi">0</span>
-	<span class="nx">tmp68</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopFrontLeft</span> <span class="p">=</span> <span class="nx">tmp67</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp68</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Unused2</span> <span class="p">=</span> <span class="nx">tmp68</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Unused1</span> <span class="p">=</span> <span class="nx">tmp68</span>
+	<span class="nx">tmp69</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopBackRight</span> <span class="p">=</span> <span class="nx">tmp69</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp70</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TopBackCenter</span> <span class="p">=</span> <span class="nx">tmp70</span> <span class="o">!=</span> <span class="mi">0</span>
+	<span class="nx">tmp71</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBitsIntBe</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Unused2</span> <span class="p">=</span> <span class="nx">tmp71</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Wav_AfspChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Magic</span> <span class="p">[]</span><span class="kt">byte</span>
+	<span class="nx">InfoRecords</span> <span class="p">[]</span><span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Wav</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWav_AfspChunkType</span><span class="p">()</span> <span class="o">*</span><span class="nx">Wav_AfspChunkType</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Wav_AfspChunkType</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_AfspChunkType</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Wav</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp72</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp72</span> <span class="p">=</span> <span class="nx">tmp72</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span> <span class="p">=</span> <span class="nx">tmp72</span>
+	<span class="k">if</span> <span class="p">!(</span><span class="nx">bytes</span><span class="p">.</span><span class="nx">Equal</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="p">[]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">112</span><span class="p">}))</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">NewValidationNotEqualError</span><span class="p">([]</span><span class="kt">uint8</span><span class="p">{</span><span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">115</span><span class="p">,</span> <span class="mi">112</span><span class="p">},</span> <span class="nx">this</span><span class="p">.</span><span class="nx">Magic</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="s">&quot;/types/afsp_chunk_type/seq/0&quot;</span><span class="p">)</span>
+	<span class="p">}</span>
+	<span class="k">for</span> <span class="nx">i</span> <span class="o">:=</span> <span class="mi">1</span><span class="p">;;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">{</span>
+		<span class="nx">tmp73</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">EOF</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="k">if</span> <span class="nx">tmp73</span> <span class="p">{</span>
+			<span class="k">break</span>
+		<span class="p">}</span>
+		<span class="nx">tmp74</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">InfoRecords</span> <span class="p">=</span> <span class="nb">append</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">InfoRecords</span><span class="p">,</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp74</span><span class="p">))</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nx">err</span>
+<span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * An array of AFsp information records, in the `&lt;field_name&gt;: &lt;value&gt;`</span>
+<span class="cm"> * format (e.g. &quot;`program: CopyAudio`&quot;). The list of existing information</span>
+<span class="cm"> * record types are available in the `doc-ref` links.</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://tech.ebu.ch/docs/tech/tech3285s5.pdf&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">type</span> <span class="nx">Wav_AxmlChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
+	<span class="nx">Data</span> <span class="kt">string</span>
+	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
+	<span class="nx">_root</span> <span class="o">*</span><span class="nx">Wav</span>
+	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span>
+<span class="p">}</span>
+<span class="kd">func</span> <span class="nx">NewWav_AxmlChunkType</span><span class="p">()</span> <span class="o">*</span><span class="nx">Wav_AxmlChunkType</span> <span class="p">{</span>
+	<span class="k">return</span> <span class="o">&amp;</span><span class="nx">Wav_AxmlChunkType</span><span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_AxmlChunkType</span><span class="p">)</span> <span class="nx">Read</span><span class="p">(</span><span class="nx">io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span><span class="p">,</span> <span class="nx">parent</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span><span class="p">,</span> <span class="nx">root</span> <span class="o">*</span><span class="nx">Wav</span><span class="p">)</span> <span class="p">(</span><span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_io</span> <span class="p">=</span> <span class="nx">io</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
+
+	<span class="nx">tmp75</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytesFull</span><span class="p">()</span>
+	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">err</span>
+	<span class="p">}</span>
+	<span class="nx">tmp75</span> <span class="p">=</span> <span class="nx">tmp75</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Data</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp75</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">type</span> <span class="nx">Wav_ChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
@@ -1397,12 +1606,12 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp69</span> <span class="o">:=</span> <span class="nx">NewRiff_Chunk</span><span class="p">()</span>
-	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp69</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="nx">tmp76</span> <span class="o">:=</span> <span class="nx">NewRiff_Chunk</span><span class="p">()</span>
+	<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp76</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Chunk</span> <span class="p">=</span> <span class="nx">tmp69</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Chunk</span> <span class="p">=</span> <span class="nx">tmp76</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">Wav_ChunkType</span><span class="p">)</span> <span class="nx">ChunkId</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="nx">Wav_Fourcc</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
@@ -1426,46 +1635,81 @@ the actual sample data.</p>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp70</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">ChunkId</span><span class="p">()</span>
+	<span class="nx">tmp77</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">ChunkId</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="k">switch</span> <span class="p">(</span><span class="nx">tmp70</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="nx">tmp77</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">case</span> <span class="nx">Wav_Fourcc__Fact</span><span class="p">:</span>
+		<span class="nx">tmp78</span> <span class="o">:=</span> <span class="nx">NewWav_FactChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp78</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp78</span>
 	<span class="k">case</span> <span class="nx">Wav_Fourcc__List</span><span class="p">:</span>
-		<span class="nx">tmp71</span> <span class="o">:=</span> <span class="nx">NewWav_ListChunkType</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp71</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp79</span> <span class="o">:=</span> <span class="nx">NewWav_ListChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp79</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp71</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp79</span>
 	<span class="k">case</span> <span class="nx">Wav_Fourcc__Fmt</span><span class="p">:</span>
-		<span class="nx">tmp72</span> <span class="o">:=</span> <span class="nx">NewWav_FormatChunkType</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp72</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp80</span> <span class="o">:=</span> <span class="nx">NewWav_FormatChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp80</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp72</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp80</span>
+	<span class="k">case</span> <span class="nx">Wav_Fourcc__Afsp</span><span class="p">:</span>
+		<span class="nx">tmp81</span> <span class="o">:=</span> <span class="nx">NewWav_AfspChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp81</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp81</span>
 	<span class="k">case</span> <span class="nx">Wav_Fourcc__Bext</span><span class="p">:</span>
-		<span class="nx">tmp73</span> <span class="o">:=</span> <span class="nx">NewWav_BextChunkType</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp73</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp82</span> <span class="o">:=</span> <span class="nx">NewWav_BextChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp82</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp73</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp82</span>
 	<span class="k">case</span> <span class="nx">Wav_Fourcc__Cue</span><span class="p">:</span>
-		<span class="nx">tmp74</span> <span class="o">:=</span> <span class="nx">NewWav_CueChunkType</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp74</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp83</span> <span class="o">:=</span> <span class="nx">NewWav_CueChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp83</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp74</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp83</span>
+	<span class="k">case</span> <span class="nx">Wav_Fourcc__Ixml</span><span class="p">:</span>
+		<span class="nx">tmp84</span> <span class="o">:=</span> <span class="nx">NewWav_IxmlChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp84</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp84</span>
+	<span class="k">case</span> <span class="nx">Wav_Fourcc__Pmx</span><span class="p">:</span>
+		<span class="nx">tmp85</span> <span class="o">:=</span> <span class="nx">NewWav_PmxChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp85</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp85</span>
+	<span class="k">case</span> <span class="nx">Wav_Fourcc__Axml</span><span class="p">:</span>
+		<span class="nx">tmp86</span> <span class="o">:=</span> <span class="nx">NewWav_AxmlChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp86</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp86</span>
 	<span class="k">case</span> <span class="nx">Wav_Fourcc__Data</span><span class="p">:</span>
-		<span class="nx">tmp75</span> <span class="o">:=</span> <span class="nx">NewWav_DataChunkType</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp75</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+		<span class="nx">tmp87</span> <span class="o">:=</span> <span class="nx">NewWav_DataChunkType</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp87</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">thisIo</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 		<span class="p">}</span>
-		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp75</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span> <span class="p">=</span> <span class="nx">tmp87</span>
 	<span class="p">}</span>
 	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
@@ -1475,6 +1719,10 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_chunkData</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">chunkData</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://en.wikipedia.org/wiki/Broadcast_Wave_Format&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">Wav_BextChunkType</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Description</span> <span class="kt">string</span>
 	<span class="nx">Originator</span> <span class="kt">string</span>
@@ -1504,82 +1752,82 @@ the actual sample data.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="p">=</span> <span class="nx">parent</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_root</span> <span class="p">=</span> <span class="nx">root</span>
 
-	<span class="nx">tmp76</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
+	<span class="nx">tmp88</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">256</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp76</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp76</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Description</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp76</span><span class="p">)</span>
-	<span class="nx">tmp77</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+	<span class="nx">tmp88</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp88</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Description</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp88</span><span class="p">)</span>
+	<span class="nx">tmp89</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp77</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp77</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Originator</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp77</span><span class="p">)</span>
-	<span class="nx">tmp78</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
+	<span class="nx">tmp89</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp89</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Originator</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp89</span><span class="p">)</span>
+	<span class="nx">tmp90</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">32</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp78</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp78</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">OriginatorReference</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp78</span><span class="p">)</span>
-	<span class="nx">tmp79</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+	<span class="nx">tmp90</span> <span class="p">=</span> <span class="nx">kaitai</span><span class="p">.</span><span class="nx">BytesTerminate</span><span class="p">(</span><span class="nx">tmp90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">false</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OriginatorReference</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp90</span><span class="p">)</span>
+	<span class="nx">tmp91</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp79</span> <span class="p">=</span> <span class="nx">tmp79</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">OriginationDate</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp79</span><span class="p">)</span>
-	<span class="nx">tmp80</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+	<span class="nx">tmp91</span> <span class="p">=</span> <span class="nx">tmp91</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OriginationDate</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp91</span><span class="p">)</span>
+	<span class="nx">tmp92</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp80</span> <span class="p">=</span> <span class="nx">tmp80</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">OriginationTime</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp80</span><span class="p">)</span>
-	<span class="nx">tmp81</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">tmp92</span> <span class="p">=</span> <span class="nx">tmp92</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">OriginationTime</span> <span class="p">=</span> <span class="nb">string</span><span class="p">(</span><span class="nx">tmp92</span><span class="p">)</span>
+	<span class="nx">tmp93</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TimeReferenceLow</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp81</span><span class="p">)</span>
-	<span class="nx">tmp82</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TimeReferenceLow</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp93</span><span class="p">)</span>
+	<span class="nx">tmp94</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU4le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">TimeReferenceHigh</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp82</span><span class="p">)</span>
-	<span class="nx">tmp83</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">TimeReferenceHigh</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp94</span><span class="p">)</span>
+	<span class="nx">tmp95</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp83</span><span class="p">)</span>
-	<span class="nx">tmp84</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">64</span><span class="p">))</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Version</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp95</span><span class="p">)</span>
+	<span class="nx">tmp96</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">64</span><span class="p">))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">tmp84</span> <span class="p">=</span> <span class="nx">tmp84</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">Umid</span> <span class="p">=</span> <span class="nx">tmp84</span>
-	<span class="nx">tmp85</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">tmp96</span> <span class="p">=</span> <span class="nx">tmp96</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">Umid</span> <span class="p">=</span> <span class="nx">tmp96</span>
+	<span class="nx">tmp97</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LoudnessValue</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp85</span><span class="p">)</span>
-	<span class="nx">tmp86</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LoudnessValue</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp97</span><span class="p">)</span>
+	<span class="nx">tmp98</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">LoudnessRange</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp86</span><span class="p">)</span>
-	<span class="nx">tmp87</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">LoudnessRange</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp98</span><span class="p">)</span>
+	<span class="nx">tmp99</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">MaxTruePeakLevel</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp87</span><span class="p">)</span>
-	<span class="nx">tmp88</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MaxTruePeakLevel</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp99</span><span class="p">)</span>
+	<span class="nx">tmp100</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">MaxMomentaryLoudness</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp88</span><span class="p">)</span>
-	<span class="nx">tmp89</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MaxMomentaryLoudness</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp100</span><span class="p">)</span>
+	<span class="nx">tmp101</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU2le</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">MaxShortTermLoudness</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp89</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">MaxShortTermLoudness</span> <span class="p">=</span> <span class="nb">uint16</span><span class="p">(</span><span class="nx">tmp101</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
 </pre></div>

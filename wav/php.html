@@ -109,7 +109,10 @@ storage of multimedia files. A RIFF file starts out with a file header
 followed by a sequence of data chunks. A WAVE file is often just a RIFF
 file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --
 a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing
-the actual sample data.</p>
+the actual sample data, although other chunks exist and are used.</p>
+<p>An extension of the file format is the Broadcast Wave Format (BWF) for radio
+broadcasts. Sample files can be found at:</p>
+<p>https://www.bbc.co.uk/rd/publications/saqas</p>
 <p>This Kaitai implementation was written by John Byrd of Gigantic Software
 (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</p>
 </p>
@@ -122,7 +125,7 @@ the actual sample data.</p>
                         <h3 class="panel-title">File extension</h3>
                     </div>
                     <div class="panel-body">
-                        wav
+                        ["wav", "bwf"]
                     </div>
                     
                     
@@ -149,14 +152,36 @@ the actual sample data.</p>
                             <li><a href="https://tools.ietf.org/html/rfc2361">RFC 2361</a></li>
                             
                             <li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000001.shtml">LOC fdd000001</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000002.shtml">LOC fdd000002</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000356.shtml">LOC fdd000356</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000003.shtml">LOC fdd000003</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000357.shtml">LOC fdd000357</a></li>
+<li><a href="https://www.loc.gov/preservation/digital/formats/fdd/fdd000359.shtml">LOC fdd000359</a></li>
                             
                             <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/6">PRONOM fmt/6</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/141">PRONOM fmt/141</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/142">PRONOM fmt/142</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/143">PRONOM fmt/143</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/1">PRONOM fmt/1</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/703">PRONOM fmt/703</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/706">PRONOM fmt/706</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/709">PRONOM fmt/709</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/2">PRONOM fmt/2</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/704">PRONOM fmt/704</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/707">PRONOM fmt/707</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/710">PRONOM fmt/710</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/527">PRONOM fmt/527</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/705">PRONOM fmt/705</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/708">PRONOM fmt/708</a></li>
+<li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/711">PRONOM fmt/711</a></li>
                             
                             <li><a href="https://www.wikidata.org/wiki/Q217570">Wikidata Q217570</a></li>
+<li><a href="https://www.wikidata.org/wiki/Q922446">Wikidata Q922446</a></li>
                             
                             
                             
                             <li><a href="http://fileformats.archiveteam.org/wiki/WAV">WAV in Just Solve the File Format Problem</a></li>
+<li><a href="http://fileformats.archiveteam.org/wiki/BWF">BWF in Just Solve the File Format Problem</a></li>
                             
                         </ul>
                     </div>
@@ -283,7 +308,12 @@ the actual sample data.</p>
 <span class="sd"> * followed by a sequence of data chunks. A WAVE file is often just a RIFF</span>
 <span class="sd"> * file with a single &quot;WAVE&quot; chunk which consists of two sub-chunks --</span>
 <span class="sd"> * a &quot;fmt &quot; chunk specifying the data format and a &quot;data&quot; chunk containing</span>
-<span class="sd"> * the actual sample data.</span>
+<span class="sd"> * the actual sample data, although other chunks exist and are used.</span>
+<span class="sd"> * </span>
+<span class="sd"> * An extension of the file format is the Broadcast Wave Format (BWF) for radio</span>
+<span class="sd"> * broadcasts. Sample files can be found at:</span>
+<span class="sd"> * </span>
+<span class="sd"> * https://www.bbc.co.uk/rd/publications/saqas</span>
 <span class="sd"> * </span>
 <span class="sd"> * This Kaitai implementation was written by John Byrd of Gigantic Software</span>
 <span class="sd"> * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.</span>
@@ -452,6 +482,46 @@ the actual sample data.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">PmxChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * XMP data</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="sd">/**</span>
+<span class="sd"> * required for all non-PCM formats</span>
+<span class="sd"> * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in</span>
+<span class="sd"> * `format_chunk_type` context)</span>
+<span class="sd"> */</span>
+
+<span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">FactChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSamplesPerChannel</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU4le</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_numSamplesPerChannel</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numSamplesPerChannel</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numSamplesPerChannel</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">GuidType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
         <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChannelMaskAndSubformatType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
@@ -475,6 +545,21 @@ the actual sample data.</p>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">data3</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data3</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">data4</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data4</span><span class="p">;</span> <span class="p">}</span>
         <span class="k">public</span> <span class="k">function</span> <span class="nf">data4a</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data4a</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">IxmlChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
 <span class="p">}</span>
 
@@ -719,6 +804,53 @@ the actual sample data.</p>
 <span class="p">}</span>
 
 <span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">AfspChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytes</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">magic</span><span class="p">()</span> <span class="o">==</span> <span class="s2">&quot;</span><span class="se">\x41\x46\x73\x70</span><span class="s2">&quot;</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Kaitai\Struct\Error\ValidationNotEqualError</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\x41\x46\x73\x70</span><span class="s2">&quot;</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">magic</span><span class="p">(),</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">(),</span> <span class="s2">&quot;/types/afsp_chunk_type/seq/0&quot;</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoRecords</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+            <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoRecords</span><span class="p">[]</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesTerm</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="k">false</span><span class="p">,</span> <span class="k">true</span><span class="p">,</span> <span class="k">true</span><span class="p">),</span> <span class="s2">&quot;ASCII&quot;</span><span class="p">);</span>
+                <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_magic</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_infoRecords</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">magic</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_magic</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * An array of AFsp information records, in the `&lt;field_name&gt;: &lt;value&gt;`</span>
+<span class="sd">         * format (e.g. &quot;`program: CopyAudio`&quot;). The list of existing information</span>
+<span class="sd">         * record types are available in the `doc-ref` links.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">infoRecords</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_infoRecords</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">AxmlChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav\ChunkType</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span> <span class="o">=</span> <span class="nx">\Kaitai\Struct\Stream</span><span class="o">::</span><span class="na">bytesToStr</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readBytesFull</span><span class="p">(),</span> <span class="s2">&quot;UTF-8&quot;</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_data</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">data</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_data</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">ChunkType</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
         <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Wav</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
@@ -743,17 +875,32 @@ the actual sample data.</p>
             <span class="nv">$_pos</span> <span class="o">=</span> <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">pos</span><span class="p">();</span>
             <span class="nv">$io</span><span class="o">-&gt;</span><span class="na">seek</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
             <span class="k">switch</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">chunkId</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">FACT</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\FactChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">LIST</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\ListChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">FMT</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\FormatChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">AFSP</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\AfspChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">BEXT</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\BextChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">CUE</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\CueChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">IXML</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\IxmlChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">PMX</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\PmxChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">AXML</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\AxmlChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\Wav\Fourcc</span><span class="o">::</span><span class="na">DATA</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_chunkData</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Wav\DataChunkType</span><span class="p">(</span><span class="nv">$io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
@@ -1083,7 +1230,7 @@ the actual sample data.</p>
         <span class="k">const</span> <span class="no">VOCORD_G723_1</span> <span class="o">=</span> <span class="mi">41248</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">VOCORD_LBC</span> <span class="o">=</span> <span class="mi">41249</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">NICE_G728</span> <span class="o">=</span> <span class="mi">41250</span><span class="p">;</span>
-        <span class="k">const</span> <span class="no">FRACE_TELECOM_G729</span> <span class="o">=</span> <span class="mi">41251</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FRANCE_TELECOM_G729</span> <span class="o">=</span> <span class="mi">41251</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">CODIAN</span> <span class="o">=</span> <span class="mi">41252</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">FLAC</span> <span class="o">=</span> <span class="mi">61868</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">EXTENSIBLE</span> <span class="o">=</span> <span class="mi">65534</span><span class="p">;</span>
@@ -1093,16 +1240,32 @@ the actual sample data.</p>
 
 <span class="k">namespace</span> <span class="nx">Wav</span> <span class="p">{</span>
     <span class="k">class</span> <span class="nc">Fourcc</span> <span class="p">{</span>
+        <span class="k">const</span> <span class="no">ID3</span> <span class="o">=</span> <span class="mi">540238953</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">CUE</span> <span class="o">=</span> <span class="mi">543520099</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">FMT</span> <span class="o">=</span> <span class="mi">544501094</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">WAVE</span> <span class="o">=</span> <span class="mi">1163280727</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">RIFF</span> <span class="o">=</span> <span class="mi">1179011410</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PEAK</span> <span class="o">=</span> <span class="mi">1262568784</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">IXML</span> <span class="o">=</span> <span class="mi">1280137321</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">INFO</span> <span class="o">=</span> <span class="mi">1330007625</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">LIST</span> <span class="o">=</span> <span class="mi">1414744396</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">PMX</span> <span class="o">=</span> <span class="mi">1481461855</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * Audio definition model</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">CHNA</span> <span class="o">=</span> <span class="mi">1634625635</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">DATA</span> <span class="o">=</span> <span class="mi">1635017060</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">UMID</span> <span class="o">=</span> <span class="mi">1684630901</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">MINF</span> <span class="o">=</span> <span class="mi">1718511981</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">AXML</span> <span class="o">=</span> <span class="mi">1819113569</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">REGN</span> <span class="o">=</span> <span class="mi">1852269938</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * AFsp metadata</span>
+<span class="sd">         */</span>
+        <span class="k">const</span> <span class="no">AFSP</span> <span class="o">=</span> <span class="mi">1886611041</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">FACT</span> <span class="o">=</span> <span class="mi">1952670054</span><span class="p">;</span>
         <span class="k">const</span> <span class="no">BEXT</span> <span class="o">=</span> <span class="mi">1954047330</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>

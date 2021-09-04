@@ -15,11 +15,18 @@
  * followed by a sequence of data chunks. A WAVE file is often just a RIFF
  * file with a single "WAVE" chunk which consists of two sub-chunks --
  * a "fmt " chunk specifying the data format and a "data" chunk containing
- * the actual sample data.
+ * the actual sample data, although other chunks exist and are used.
+ * 
+ * An extension of the file format is the Broadcast Wave Format (BWF) for radio
+ * broadcasts. Sample files can be found at:
+ * 
+ * https://www.bbc.co.uk/rd/publications/saqas
  * 
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
  * @see {@link http://soundfile.sapp.org/doc/WaveFormat/|Source}
+ * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/WAVE.html|Source}
+ * @see {@link https://web.archive.org/web/20101031101749/http://www.ebu.ch/fr/technical/publications/userguides/bwf_user_guide.php|Source}
  */
 
 var Wav = (function() {
@@ -284,7 +291,7 @@ var Wav = (function() {
     VOCORD_G723_1: 41248,
     VOCORD_LBC: 41249,
     NICE_G728: 41250,
-    FRACE_TELECOM_G729: 41251,
+    FRANCE_TELECOM_G729: 41251,
     CODIAN: 41252,
     FLAC: 61868,
     EXTENSIBLE: 65534,
@@ -550,7 +557,7 @@ var Wav = (function() {
     41248: "VOCORD_G723_1",
     41249: "VOCORD_LBC",
     41250: "NICE_G728",
-    41251: "FRACE_TELECOM_G729",
+    41251: "FRANCE_TELECOM_G729",
     41252: "CODIAN",
     61868: "FLAC",
     65534: "EXTENSIBLE",
@@ -558,28 +565,44 @@ var Wav = (function() {
   });
 
   Wav.Fourcc = Object.freeze({
+    ID3: 540238953,
     CUE: 543520099,
     FMT: 544501094,
     WAVE: 1163280727,
     RIFF: 1179011410,
+    PEAK: 1262568784,
+    IXML: 1280137321,
     INFO: 1330007625,
     LIST: 1414744396,
+    PMX: 1481461855,
+    CHNA: 1634625635,
     DATA: 1635017060,
     UMID: 1684630901,
     MINF: 1718511981,
+    AXML: 1819113569,
     REGN: 1852269938,
+    AFSP: 1886611041,
+    FACT: 1952670054,
     BEXT: 1954047330,
 
+    540238953: "ID3",
     543520099: "CUE",
     544501094: "FMT",
     1163280727: "WAVE",
     1179011410: "RIFF",
+    1262568784: "PEAK",
+    1280137321: "IXML",
     1330007625: "INFO",
     1414744396: "LIST",
+    1481461855: "PMX",
+    1634625635: "CHNA",
     1635017060: "DATA",
     1684630901: "UMID",
     1718511981: "MINF",
+    1819113569: "AXML",
     1852269938: "REGN",
+    1886611041: "AFSP",
+    1952670054: "FACT",
     1954047330: "BEXT",
   });
 
@@ -670,6 +693,47 @@ var Wav = (function() {
     return FormatChunkType;
   })();
 
+  var PmxChunkType = Wav.PmxChunkType = (function() {
+    function PmxChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    PmxChunkType.prototype._read = function() {
+      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    /**
+     * XMP data
+     * @see {@link https://wwwimages2.adobe.com/content/dam/acom/en/devnet/xmp/pdfs/XMP%20SDK%20Release%20cc-2016-08/XMPSpecificationPart3.pdf|Source}
+     */
+
+    return PmxChunkType;
+  })();
+
+  /**
+   * required for all non-PCM formats
+   * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+   * `format_chunk_type` context)
+   */
+
+  var FactChunkType = Wav.FactChunkType = (function() {
+    function FactChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    FactChunkType.prototype._read = function() {
+      this.numSamplesPerChannel = this._io.readU4le();
+    }
+
+    return FactChunkType;
+  })();
+
   var GuidType = Wav.GuidType = (function() {
     function GuidType(_io, _parent, _root) {
       this._io = _io;
@@ -687,6 +751,25 @@ var Wav = (function() {
     }
 
     return GuidType;
+  })();
+
+  /**
+   * @see {@link https://en.wikipedia.org/wiki/IXML|Source}
+   */
+
+  var IxmlChunkType = Wav.IxmlChunkType = (function() {
+    function IxmlChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    IxmlChunkType.prototype._read = function() {
+      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    return IxmlChunkType;
   })();
 
   var InfoChunkType = Wav.InfoChunkType = (function() {
@@ -879,6 +962,61 @@ var Wav = (function() {
     return ChannelMaskType;
   })();
 
+  /**
+   * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/Downloads/AFsp/|Source}
+   */
+
+  var AfspChunkType = Wav.AfspChunkType = (function() {
+    function AfspChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    AfspChunkType.prototype._read = function() {
+      this.magic = this._io.readBytes(4);
+      if (!((KaitaiStream.byteArrayCompare(this.magic, [65, 70, 115, 112]) == 0))) {
+        throw new KaitaiStream.ValidationNotEqualError([65, 70, 115, 112], this.magic, this._io, "/types/afsp_chunk_type/seq/0");
+      }
+      this.infoRecords = [];
+      var i = 0;
+      while (!this._io.isEof()) {
+        this.infoRecords.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+        i++;
+      }
+    }
+
+    /**
+     * An array of AFsp information records, in the `<field_name>: <value>`
+     * format (e.g. "`program: CopyAudio`"). The list of existing information
+     * record types are available in the `doc-ref` links.
+     * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFsetInfo.html|Source}
+     * @see {@link http://www-mmsp.ece.mcgill.ca/Documents/Software/Packages/AFsp/libtsp/AFprintInfoRecs.html|Source}
+     */
+
+    return AfspChunkType;
+  })();
+
+  /**
+   * @see {@link https://tech.ebu.ch/docs/tech/tech3285s5.pdf|Source}
+   */
+
+  var AxmlChunkType = Wav.AxmlChunkType = (function() {
+    function AxmlChunkType(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    AxmlChunkType.prototype._read = function() {
+      this.data = KaitaiStream.bytesToStr(this._io.readBytesFull(), "UTF-8");
+    }
+
+    return AxmlChunkType;
+  })();
+
   var ChunkType = Wav.ChunkType = (function() {
     function ChunkType(_io, _parent, _root) {
       this._io = _io;
@@ -906,17 +1044,32 @@ var Wav = (function() {
         var _pos = io.pos;
         io.seek(0);
         switch (this.chunkId) {
+        case Wav.Fourcc.FACT:
+          this._m_chunkData = new FactChunkType(io, this, this._root);
+          break;
         case Wav.Fourcc.LIST:
           this._m_chunkData = new ListChunkType(io, this, this._root);
           break;
         case Wav.Fourcc.FMT:
           this._m_chunkData = new FormatChunkType(io, this, this._root);
           break;
+        case Wav.Fourcc.AFSP:
+          this._m_chunkData = new AfspChunkType(io, this, this._root);
+          break;
         case Wav.Fourcc.BEXT:
           this._m_chunkData = new BextChunkType(io, this, this._root);
           break;
         case Wav.Fourcc.CUE:
           this._m_chunkData = new CueChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.IXML:
+          this._m_chunkData = new IxmlChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.PMX:
+          this._m_chunkData = new PmxChunkType(io, this, this._root);
+          break;
+        case Wav.Fourcc.AXML:
+          this._m_chunkData = new AxmlChunkType(io, this, this._root);
           break;
         case Wav.Fourcc.DATA:
           this._m_chunkData = new DataChunkType(io, this, this._root);
@@ -929,6 +1082,10 @@ var Wav = (function() {
 
     return ChunkType;
   })();
+
+  /**
+   * @see {@link https://en.wikipedia.org/wiki/Broadcast_Wave_Format|Source}
+   */
 
   var BextChunkType = Wav.BextChunkType = (function() {
     function BextChunkType(_io, _parent, _root) {

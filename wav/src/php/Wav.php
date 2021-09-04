@@ -7,7 +7,12 @@
  * followed by a sequence of data chunks. A WAVE file is often just a RIFF
  * file with a single "WAVE" chunk which consists of two sub-chunks --
  * a "fmt " chunk specifying the data format and a "data" chunk containing
- * the actual sample data.
+ * the actual sample data, although other chunks exist and are used.
+ * 
+ * An extension of the file format is the Broadcast Wave Format (BWF) for radio
+ * broadcasts. Sample files can be found at:
+ * 
+ * https://www.bbc.co.uk/rd/publications/saqas
  * 
  * This Kaitai implementation was written by John Byrd of Gigantic Software
  * (jbyrd@giganticsoftware.com), and it is likely to contain bugs.
@@ -176,6 +181,46 @@ namespace Wav {
 }
 
 namespace Wav {
+    class PmxChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+        }
+        protected $_m_data;
+
+        /**
+         * XMP data
+         */
+        public function data() { return $this->_m_data; }
+    }
+}
+
+/**
+ * required for all non-PCM formats
+ * (`w_format_tag != w_format_tag_type::pcm` or `not is_basic_pcm` in
+ * `format_chunk_type` context)
+ */
+
+namespace Wav {
+    class FactChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_numSamplesPerChannel = $this->_io->readU4le();
+        }
+        protected $_m_numSamplesPerChannel;
+        public function numSamplesPerChannel() { return $this->_m_numSamplesPerChannel; }
+    }
+}
+
+namespace Wav {
     class GuidType extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChannelMaskAndSubformatType $_parent = null, \Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -199,6 +244,21 @@ namespace Wav {
         public function data3() { return $this->_m_data3; }
         public function data4() { return $this->_m_data4; }
         public function data4a() { return $this->_m_data4a; }
+    }
+}
+
+namespace Wav {
+    class IxmlChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
     }
 }
 
@@ -443,6 +503,53 @@ namespace Wav {
 }
 
 namespace Wav {
+    class AfspChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_magic = $this->_io->readBytes(4);
+            if (!($this->magic() == "\x41\x46\x73\x70")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x41\x46\x73\x70", $this->magic(), $this->_io(), "/types/afsp_chunk_type/seq/0");
+            }
+            $this->_m_infoRecords = [];
+            $i = 0;
+            while (!$this->_io->isEof()) {
+                $this->_m_infoRecords[] = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesTerm(0, false, true, true), "ASCII");
+                $i++;
+            }
+        }
+        protected $_m_magic;
+        protected $_m_infoRecords;
+        public function magic() { return $this->_m_magic; }
+
+        /**
+         * An array of AFsp information records, in the `<field_name>: <value>`
+         * format (e.g. "`program: CopyAudio`"). The list of existing information
+         * record types are available in the `doc-ref` links.
+         */
+        public function infoRecords() { return $this->_m_infoRecords; }
+    }
+}
+
+namespace Wav {
+    class AxmlChunkType extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Wav\ChunkType $_parent = null, \Wav $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
+            $this->_m_data = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytesFull(), "UTF-8");
+        }
+        protected $_m_data;
+        public function data() { return $this->_m_data; }
+    }
+}
+
+namespace Wav {
     class ChunkType extends \Kaitai\Struct\Struct {
         public function __construct(\Kaitai\Struct\Stream $_io, \Wav $_parent = null, \Wav $_root = null) {
             parent::__construct($_io, $_parent, $_root);
@@ -467,17 +574,32 @@ namespace Wav {
             $_pos = $io->pos();
             $io->seek(0);
             switch ($this->chunkId()) {
+                case \Wav\Fourcc::FACT:
+                    $this->_m_chunkData = new \Wav\FactChunkType($io, $this, $this->_root);
+                    break;
                 case \Wav\Fourcc::LIST:
                     $this->_m_chunkData = new \Wav\ListChunkType($io, $this, $this->_root);
                     break;
                 case \Wav\Fourcc::FMT:
                     $this->_m_chunkData = new \Wav\FormatChunkType($io, $this, $this->_root);
                     break;
+                case \Wav\Fourcc::AFSP:
+                    $this->_m_chunkData = new \Wav\AfspChunkType($io, $this, $this->_root);
+                    break;
                 case \Wav\Fourcc::BEXT:
                     $this->_m_chunkData = new \Wav\BextChunkType($io, $this, $this->_root);
                     break;
                 case \Wav\Fourcc::CUE:
                     $this->_m_chunkData = new \Wav\CueChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::IXML:
+                    $this->_m_chunkData = new \Wav\IxmlChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::PMX:
+                    $this->_m_chunkData = new \Wav\PmxChunkType($io, $this, $this->_root);
+                    break;
+                case \Wav\Fourcc::AXML:
+                    $this->_m_chunkData = new \Wav\AxmlChunkType($io, $this, $this->_root);
                     break;
                 case \Wav\Fourcc::DATA:
                     $this->_m_chunkData = new \Wav\DataChunkType($io, $this, $this->_root);
@@ -807,7 +929,7 @@ namespace Wav {
         const VOCORD_G723_1 = 41248;
         const VOCORD_LBC = 41249;
         const NICE_G728 = 41250;
-        const FRACE_TELECOM_G729 = 41251;
+        const FRANCE_TELECOM_G729 = 41251;
         const CODIAN = 41252;
         const FLAC = 61868;
         const EXTENSIBLE = 65534;
@@ -817,16 +939,32 @@ namespace Wav {
 
 namespace Wav {
     class Fourcc {
+        const ID3 = 540238953;
         const CUE = 543520099;
         const FMT = 544501094;
         const WAVE = 1163280727;
         const RIFF = 1179011410;
+        const PEAK = 1262568784;
+        const IXML = 1280137321;
         const INFO = 1330007625;
         const LIST = 1414744396;
+        const PMX = 1481461855;
+
+        /**
+         * Audio definition model
+         */
+        const CHNA = 1634625635;
         const DATA = 1635017060;
         const UMID = 1684630901;
         const MINF = 1718511981;
+        const AXML = 1819113569;
         const REGN = 1852269938;
+
+        /**
+         * AFsp metadata
+         */
+        const AFSP = 1886611041;
+        const FACT = 1952670054;
         const BEXT = 1954047330;
     }
 }
