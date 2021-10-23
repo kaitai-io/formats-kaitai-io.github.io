@@ -244,14 +244,23 @@ sub _read {
     $self->{len_body} = $self->{_io}->read_u4le();
 }
 
+sub is_used {
+    my ($self) = @_;
+    return $self->{is_used} if ($self->{is_used});
+    $self->{is_used} =  (($self->ofs_body() != 0) && ($self->len_body() != 0)) ;
+    return $self->{is_used};
+}
+
 sub body {
     my ($self) = @_;
     return $self->{body} if ($self->{body});
-    my $io = $self->_root()->_io();
-    my $_pos = $io->pos();
-    $io->seek($self->ofs_body());
-    $self->{body} = $io->read_bytes($self->len_body());
-    $io->seek($_pos);
+    if ($self->is_used()) {
+        my $io = $self->_root()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->ofs_body());
+        $self->{body} = $io->read_bytes($self->len_body());
+        $io->seek($_pos);
+    }
     return $self->{body};
 }
 

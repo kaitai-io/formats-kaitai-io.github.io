@@ -98,6 +98,7 @@ void android_bootldr_huawei_t::image_hdr_t::_clean_up() {
 android_bootldr_huawei_t::image_hdr_entry_t::image_hdr_entry_t(kaitai::kstream* p__io, android_bootldr_huawei_t::image_hdr_t* p__parent, android_bootldr_huawei_t* p__root) : kaitai::kstruct(p__io) {
     m__parent = p__parent;
     m__root = p__root;
+    f_is_used = false;
     f_body = false;
     _read();
 }
@@ -113,18 +114,30 @@ android_bootldr_huawei_t::image_hdr_entry_t::~image_hdr_entry_t() {
 }
 
 void android_bootldr_huawei_t::image_hdr_entry_t::_clean_up() {
-    if (f_body) {
+    if (f_body && !n_body) {
     }
+}
+
+bool android_bootldr_huawei_t::image_hdr_entry_t::is_used() {
+    if (f_is_used)
+        return m_is_used;
+    m_is_used =  ((ofs_body() != 0) && (len_body() != 0)) ;
+    f_is_used = true;
+    return m_is_used;
 }
 
 std::string android_bootldr_huawei_t::image_hdr_entry_t::body() {
     if (f_body)
         return m_body;
-    kaitai::kstream *io = _root()->_io();
-    std::streampos _pos = io->pos();
-    io->seek(ofs_body());
-    m_body = io->read_bytes(len_body());
-    io->seek(_pos);
-    f_body = true;
+    n_body = true;
+    if (is_used()) {
+        n_body = false;
+        kaitai::kstream *io = _root()->_io();
+        std::streampos _pos = io->pos();
+        io->seek(ofs_body());
+        m_body = io->read_bytes(len_body());
+        io->seek(_pos);
+        f_body = true;
+    }
     return m_body;
 }

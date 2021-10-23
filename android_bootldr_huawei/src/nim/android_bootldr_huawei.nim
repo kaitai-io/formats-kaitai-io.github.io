@@ -27,6 +27,7 @@ type
     `ofsBody`*: uint32
     `lenBody`*: uint32
     `parent`*: AndroidBootldrHuawei_ImageHdr
+    `isUsedInst`*: bool
     `bodyInst`*: seq[byte]
 
 proc read*(_: typedesc[AndroidBootldrHuawei], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrHuawei
@@ -35,6 +36,7 @@ proc read*(_: typedesc[AndroidBootldrHuawei_Version], io: KaitaiStream, root: Ka
 proc read*(_: typedesc[AndroidBootldrHuawei_ImageHdr], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrHuawei): AndroidBootldrHuawei_ImageHdr
 proc read*(_: typedesc[AndroidBootldrHuawei_ImageHdrEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrHuawei_ImageHdr): AndroidBootldrHuawei_ImageHdrEntry
 
+proc isUsed*(this: AndroidBootldrHuawei_ImageHdrEntry): bool
 proc body*(this: AndroidBootldrHuawei_ImageHdrEntry): seq[byte]
 
 
@@ -56,6 +58,8 @@ tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list
 members in the archive and then to download only the file you want.
 
 @see <a href="https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py">Source</a>
+@see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
+@see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
 ]##
 proc read*(_: typedesc[AndroidBootldrHuawei], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrHuawei =
   template this: untyped = result
@@ -124,6 +128,20 @@ proc read*(_: typedesc[AndroidBootldrHuawei_ImageHdr], io: KaitaiStream, root: K
   this.root = root
   this.parent = parent
 
+
+  ##[
+  The C generator program defines `img_header` as a [fixed size
+array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+defined as `16`).
+
+This means that technically there will always be 16 `image_hdr`
+entries, the first *n* entries being used (filled with real values)
+and the rest left unused with all bytes zero.
+
+To check if an entry is used, use the `is_used` attribute.
+
+  ]##
   block:
     var i: int
     while not this.io.isEof:
@@ -153,15 +171,28 @@ proc read*(_: typedesc[AndroidBootldrHuawei_ImageHdrEntry], io: KaitaiStream, ro
   let lenBodyExpr = this.io.readU4le()
   this.lenBody = lenBodyExpr
 
+proc isUsed(this: AndroidBootldrHuawei_ImageHdrEntry): bool = 
+
+  ##[
+  @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
+  ]##
+  if this.isUsedInst != nil:
+    return this.isUsedInst
+  let isUsedInstExpr = bool( ((this.ofsBody != 0) and (this.lenBody != 0)) )
+  this.isUsedInst = isUsedInstExpr
+  if this.isUsedInst != nil:
+    return this.isUsedInst
+
 proc body(this: AndroidBootldrHuawei_ImageHdrEntry): seq[byte] = 
   if this.bodyInst.len != 0:
     return this.bodyInst
-  let io = AndroidBootldrHuawei(this.root).io
-  let pos = io.pos()
-  io.seek(int(this.ofsBody))
-  let bodyInstExpr = io.readBytes(int(this.lenBody))
-  this.bodyInst = bodyInstExpr
-  io.seek(pos)
+  if this.isUsed:
+    let io = AndroidBootldrHuawei(this.root).io
+    let pos = io.pos()
+    io.seek(int(this.ofsBody))
+    let bodyInstExpr = io.readBytes(int(this.lenBody))
+    this.bodyInst = bodyInstExpr
+    io.seek(pos)
   if this.bodyInst.len != 0:
     return this.bodyInst
 

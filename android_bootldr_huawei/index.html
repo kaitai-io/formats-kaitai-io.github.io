@@ -268,7 +268,10 @@ members in the archive and then to download only the file you want.</p>
   <span class="no">tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
   <span class="no">members in the archive and then to download only the file you want.</span>
 
-<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85</span>
 <span class="nt">seq</span><span class="p">:</span>
   <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">meta_header</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">meta_hdr</span>
@@ -304,8 +307,19 @@ members in the archive and then to download only the file you want.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">image_hdr_entry</span>
         <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">The C generator program defines `img_header` as a [fixed size</span>
+          <span class="no">array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n42)</span>
+          <span class="no">of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+          <span class="no">defined as `16`).</span>
+
+          <span class="no">This means that technically there will always be 16 `image_hdr`</span>
+          <span class="no">entries, the first *n* entries being used (filled with real values)</span>
+          <span class="no">and the rest left unused with all bytes zero.</span>
+
+          <span class="no">To check if an entry is used, use the `is_used` attribute.</span>
   <span class="nt">image_hdr_entry</span><span class="p">:</span>
-    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">o:{ofs_body},</span><span class="nv"> </span><span class="s">s:{len_body}&#39;</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{name}</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">o:{ofs_body},</span><span class="nv"> </span><span class="s">s:{len_body}</span><span class="nv"> </span><span class="s">(used:</span><span class="nv"> </span><span class="s">{is_used})&#39;</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">72</span>
@@ -316,10 +330,14 @@ members in the archive and then to download only the file you want.</p>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
     <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_used</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_body != 0 and len_body != 0</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119</span>
       <span class="nt">body</span><span class="p">:</span>
         <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_root._io</span>
         <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_body</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_body</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_used</span>
 </pre></div>
     </div>
 </section>

@@ -278,6 +278,7 @@ members in the archive and then to download only the file you want.</p>
     <span class="p">`</span><span class="n">ofsBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">lenBody</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">AndroidBootldrHuawei_ImageHdr</span>
+    <span class="p">`</span><span class="n">isUsedInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
     <span class="p">`</span><span class="n">bodyInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrHuawei], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrHuawei</span>
@@ -286,6 +287,7 @@ members in the archive and then to download only the file you want.</p>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrHuawei_ImageHdr], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrHuawei): AndroidBootldrHuawei_ImageHdr</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrHuawei_ImageHdrEntry], io: KaitaiStream, root: KaitaiStruct, parent: AndroidBootldrHuawei_ImageHdr): AndroidBootldrHuawei_ImageHdrEntry</span>
 
+<span class="k">proc </span><span class="nf">isUsed</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidBootldrHuawei_ImageHdrEntry</span><span class="p">):</span> <span class="kt">bool</span>
 <span class="k">proc </span><span class="nf">body</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidBootldrHuawei_ImageHdrEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
 
 
@@ -307,6 +309,8 @@ members in the archive and then to download only the file you want.</p>
 <span class="n">members</span> <span class="ow">in</span> <span class="n">the</span> <span class="n">archive</span> <span class="ow">and</span> <span class="n">then</span> <span class="n">to</span> <span class="n">download</span> <span class="n">only</span> <span class="n">the</span> <span class="n">file</span> <span class="n">you</span> <span class="n">want</span><span class="p">.</span>
 
 <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
 <span class="o">]</span><span class="sd">##</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[AndroidBootldrHuawei], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): AndroidBootldrHuawei =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
@@ -375,6 +379,20 @@ members in the archive and then to download only the file you want.</p>
   <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
   <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
 
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">C</span> <span class="n">generator</span> <span class="n">program</span> <span class="n">defines</span> <span class="p">`</span><span class="n">img_header</span><span class="p">`</span> <span class="k">as</span> <span class="n">a</span> <span class="o">[</span><span class="n">fixed</span> <span class="n">size</span>
+<span class="kt">array</span><span class="o">]</span><span class="p">(</span><span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">source</span><span class="p">.</span><span class="n">codeaurora</span><span class="p">.</span><span class="n">org</span><span class="o">/</span><span class="n">quic</span><span class="o">/</span><span class="n">la</span><span class="o">/</span><span class="n">device</span><span class="o">/</span><span class="n">qcom</span><span class="o">/</span><span class="n">common</span><span class="o">/</span><span class="n">tree</span><span class="o">/</span><span class="n">meta_image</span><span class="o">/</span><span class="n">meta_image</span><span class="p">.</span><span class="n">c</span><span class="o">?</span><span class="n">h</span><span class="o">=</span><span class="n">LA</span><span class="p">.</span><span class="n">UM</span><span class="p">.</span><span class="mf">6.1.1</span><span class="o">&amp;</span><span class="n">id</span><span class="o">=</span><span class="n">a68d284aee85</span><span class="c">#n42)</span>
+<span class="k">of</span> <span class="p">`</span><span class="n">img_header_entry_t</span><span class="p">`</span> <span class="n">structs</span> <span class="n">with</span> <span class="n">length</span> <span class="p">`</span><span class="n">MAX_IMAGES</span><span class="p">`</span> <span class="p">(</span><span class="n">which</span> <span class="ow">is</span>
+<span class="n">defined</span> <span class="k">as</span> <span class="p">`</span><span class="mi">16</span><span class="p">`).</span>
+
+<span class="n">This</span> <span class="n">means</span> <span class="n">that</span> <span class="n">technically</span> <span class="n">there</span> <span class="n">will</span> <span class="n">always</span> <span class="n">be</span> <span class="mi">16</span> <span class="p">`</span><span class="n">image_hdr</span><span class="p">`</span>
+<span class="n">entries</span><span class="p">,</span> <span class="n">the</span> <span class="n">first</span> <span class="o">*</span><span class="n">n</span><span class="o">*</span> <span class="n">entries</span> <span class="n">being</span> <span class="n">used</span> <span class="p">(</span><span class="n">filled</span> <span class="n">with</span> <span class="n">real</span> <span class="n">values</span><span class="p">)</span>
+<span class="ow">and</span> <span class="n">the</span> <span class="n">rest</span> <span class="n">left</span> <span class="n">unused</span> <span class="n">with</span> <span class="n">all</span> <span class="n">bytes</span> <span class="n">zero</span><span class="p">.</span>
+
+<span class="n">To</span> <span class="n">check</span> <span class="k">if</span> <span class="n">an</span> <span class="n">entry</span> <span class="ow">is</span> <span class="n">used</span><span class="p">,</span> <span class="n">use</span> <span class="n">the</span> <span class="p">`</span><span class="n">is_used</span><span class="p">`</span> <span class="n">attribute</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
   <span class="k">block</span><span class="p">:</span>
     <span class="kd">var</span> <span class="n">i</span><span class="p">:</span> <span class="kt">int</span>
     <span class="k">while</span> <span class="ow">not</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">:</span>
@@ -404,15 +422,28 @@ members in the archive and then to download only the file you want.</p>
   <span class="k">let</span> <span class="n">lenBodyExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">lenBody</span> <span class="o">=</span> <span class="n">lenBodyExpr</span>
 
+<span class="k">proc </span><span class="nf">isUsed</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidBootldrHuawei_ImageHdrEntry</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n119&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span>
+  <span class="k">let</span> <span class="n">isUsedInstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span> <span class="o">=</span> <span class="n">isUsedInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsedInst</span>
+
 <span class="k">proc </span><span class="nf">body</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">AndroidBootldrHuawei_ImageHdrEntry</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
-  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">AndroidBootldrHuawei</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
-  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
-  <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
-  <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
-  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isUsed</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">AndroidBootldrHuawei</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
+    <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsBody</span><span class="p">))</span>
+    <span class="k">let</span> <span class="n">bodyInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenBody</span><span class="p">))</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span> <span class="o">=</span> <span class="n">bodyInstExpr</span>
+    <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">bodyInst</span>
 

@@ -24,6 +24,8 @@ import (
  * tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list
  * members in the archive and then to download only the file you want.
  * @see <a href="https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py">Source</a>
+ * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
+ * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
  */
 type AndroidBootldrHuawei struct {
 	MetaHeader *AndroidBootldrHuawei_MetaHdr
@@ -186,6 +188,19 @@ func (this *AndroidBootldrHuawei_ImageHdr) Read(io *kaitai.Stream, parent *Andro
 	}
 	return err
 }
+
+/**
+ * The C generator program defines `img_header` as a [fixed size
+ * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+ * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+ * defined as `16`).
+ * 
+ * This means that technically there will always be 16 `image_hdr`
+ * entries, the first *n* entries being used (filled with real values)
+ * and the rest left unused with all bytes zero.
+ * 
+ * To check if an entry is used, use the `is_used` attribute.
+ */
 type AndroidBootldrHuawei_ImageHdrEntry struct {
 	Name string
 	OfsBody uint32
@@ -193,6 +208,8 @@ type AndroidBootldrHuawei_ImageHdrEntry struct {
 	_io *kaitai.Stream
 	_root *AndroidBootldrHuawei
 	_parent *AndroidBootldrHuawei_ImageHdr
+	_f_isUsed bool
+	isUsed bool
 	_f_body bool
 	body []byte
 }
@@ -224,30 +241,48 @@ func (this *AndroidBootldrHuawei_ImageHdrEntry) Read(io *kaitai.Stream, parent *
 	this.LenBody = uint32(tmp16)
 	return err
 }
+
+/**
+ * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
+ */
+func (this *AndroidBootldrHuawei_ImageHdrEntry) IsUsed() (v bool, err error) {
+	if (this._f_isUsed) {
+		return this.isUsed, nil
+	}
+	this.isUsed = bool( ((this.OfsBody != 0) && (this.LenBody != 0)) )
+	this._f_isUsed = true
+	return this.isUsed, nil
+}
 func (this *AndroidBootldrHuawei_ImageHdrEntry) Body() (v []byte, err error) {
 	if (this._f_body) {
 		return this.body, nil
 	}
-	thisIo := this._root._io
-	_pos, err := thisIo.Pos()
+	tmp17, err := this.IsUsed()
 	if err != nil {
 		return nil, err
 	}
-	_, err = thisIo.Seek(int64(this.OfsBody), io.SeekStart)
-	if err != nil {
-		return nil, err
+	if (tmp17) {
+		thisIo := this._root._io
+		_pos, err := thisIo.Pos()
+		if err != nil {
+			return nil, err
+		}
+		_, err = thisIo.Seek(int64(this.OfsBody), io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		tmp18, err := thisIo.ReadBytes(int(this.LenBody))
+		if err != nil {
+			return nil, err
+		}
+		tmp18 = tmp18
+		this.body = tmp18
+		_, err = thisIo.Seek(_pos, io.SeekStart)
+		if err != nil {
+			return nil, err
+		}
+		this._f_body = true
 	}
-	tmp17, err := thisIo.ReadBytes(int(this.LenBody))
-	if err != nil {
-		return nil, err
-	}
-	tmp17 = tmp17
-	this.body = tmp17
-	_, err = thisIo.Seek(_pos, io.SeekStart)
-	if err != nil {
-		return nil, err
-	}
-	this._f_body = true
 	this._f_body = true
 	return this.body, nil
 }

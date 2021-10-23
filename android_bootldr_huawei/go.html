@@ -275,6 +275,8 @@ members in the archive and then to download only the file you want.</p>
 <span class="cm"> * tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
 <span class="cm"> * members in the archive and then to download only the file you want.</span>
 <span class="cm"> * @see &lt;a href=&quot;https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">AndroidBootldrHuawei</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">MetaHeader</span> <span class="o">*</span><span class="nx">AndroidBootldrHuawei_MetaHdr</span>
@@ -437,6 +439,19 @@ members in the archive and then to download only the file you want.</p>
 	<span class="p">}</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The C generator program defines `img_header` as a [fixed size</span>
+<span class="cm"> * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n42)</span>
+<span class="cm"> * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+<span class="cm"> * defined as `16`).</span>
+<span class="cm"> * </span>
+<span class="cm"> * This means that technically there will always be 16 `image_hdr`</span>
+<span class="cm"> * entries, the first *n* entries being used (filled with real values)</span>
+<span class="cm"> * and the rest left unused with all bytes zero.</span>
+<span class="cm"> * </span>
+<span class="cm"> * To check if an entry is used, use the `is_used` attribute.</span>
+<span class="cm"> */</span>
 <span class="kd">type</span> <span class="nx">AndroidBootldrHuawei_ImageHdrEntry</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Name</span> <span class="kt">string</span>
 	<span class="nx">OfsBody</span> <span class="kt">uint32</span>
@@ -444,6 +459,8 @@ members in the archive and then to download only the file you want.</p>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">AndroidBootldrHuawei</span>
 	<span class="nx">_parent</span> <span class="o">*</span><span class="nx">AndroidBootldrHuawei_ImageHdr</span>
+	<span class="nx">_f_isUsed</span> <span class="kt">bool</span>
+	<span class="nx">isUsed</span> <span class="kt">bool</span>
 	<span class="nx">_f_body</span> <span class="kt">bool</span>
 	<span class="nx">body</span> <span class="p">[]</span><span class="kt">byte</span>
 <span class="p">}</span>
@@ -475,30 +492,48 @@ members in the archive and then to download only the file you want.</p>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span> <span class="p">=</span> <span class="nb">uint32</span><span class="p">(</span><span class="nx">tmp16</span><span class="p">)</span>
 	<span class="k">return</span> <span class="nx">err</span>
 <span class="p">}</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * @see &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n119&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> */</span>
+<span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidBootldrHuawei_ImageHdrEntry</span><span class="p">)</span> <span class="nx">IsUsed</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="kt">bool</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_isUsed</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isUsed</span><span class="p">,</span> <span class="kc">nil</span>
+	<span class="p">}</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">isUsed</span> <span class="p">=</span> <span class="nb">bool</span><span class="p">(</span> <span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsBody</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_isUsed</span> <span class="p">=</span> <span class="kc">true</span>
+	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">isUsed</span><span class="p">,</span> <span class="kc">nil</span>
+<span class="p">}</span>
 <span class="kd">func</span> <span class="p">(</span><span class="nx">this</span> <span class="o">*</span><span class="nx">AndroidBootldrHuawei_ImageHdrEntry</span><span class="p">)</span> <span class="nx">Body</span><span class="p">()</span> <span class="p">(</span><span class="nx">v</span> <span class="p">[]</span><span class="kt">byte</span><span class="p">,</span> <span class="nx">err</span> <span class="kt">error</span><span class="p">)</span> <span class="p">{</span>
 	<span class="k">if</span> <span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span><span class="p">)</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="kc">nil</span>
 	<span class="p">}</span>
-	<span class="nx">thisIo</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span>
-	<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">IsUsed</span><span class="p">()</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsBody</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nx">tmp17</span><span class="p">)</span> <span class="p">{</span>
+		<span class="nx">thisIo</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">.</span><span class="nx">_io</span>
+		<span class="nx">_pos</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Pos</span><span class="p">()</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nb">int64</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">OfsBody</span><span class="p">),</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp18</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="p">))</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">tmp18</span> <span class="p">=</span> <span class="nx">tmp18</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">body</span> <span class="p">=</span> <span class="nx">tmp18</span>
+		<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
+		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
+		<span class="p">}</span>
+		<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="p">}</span>
-	<span class="nx">tmp17</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">LenBody</span><span class="p">))</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">tmp17</span> <span class="p">=</span> <span class="nx">tmp17</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">body</span> <span class="p">=</span> <span class="nx">tmp17</span>
-	<span class="nx">_</span><span class="p">,</span> <span class="nx">err</span> <span class="p">=</span> <span class="nx">thisIo</span><span class="p">.</span><span class="nx">Seek</span><span class="p">(</span><span class="nx">_pos</span><span class="p">,</span> <span class="nx">io</span><span class="p">.</span><span class="nx">SeekStart</span><span class="p">)</span>
-	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
-		<span class="k">return</span> <span class="kc">nil</span><span class="p">,</span> <span class="nx">err</span>
-	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="nx">this</span><span class="p">.</span><span class="nx">_f_body</span> <span class="p">=</span> <span class="kc">true</span>
 	<span class="k">return</span> <span class="nx">this</span><span class="p">.</span><span class="nx">body</span><span class="p">,</span> <span class="kc">nil</span>
 <span class="p">}</span>

@@ -108,6 +108,19 @@ namespace AndroidBootldrHuawei {
             }
         }
         protected $_m_entries;
+
+        /**
+         * The C generator program defines `img_header` as a [fixed size
+         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+         * defined as `16`).
+         * 
+         * This means that technically there will always be 16 `image_hdr`
+         * entries, the first *n* entries being used (filled with real values)
+         * and the rest left unused with all bytes zero.
+         * 
+         * To check if an entry is used, use the `is_used` attribute.
+         */
         public function entries() { return $this->_m_entries; }
     }
 }
@@ -124,15 +137,24 @@ namespace AndroidBootldrHuawei {
             $this->_m_ofsBody = $this->_io->readU4le();
             $this->_m_lenBody = $this->_io->readU4le();
         }
+        protected $_m_isUsed;
+        public function isUsed() {
+            if ($this->_m_isUsed !== null)
+                return $this->_m_isUsed;
+            $this->_m_isUsed =  (($this->ofsBody() != 0) && ($this->lenBody() != 0)) ;
+            return $this->_m_isUsed;
+        }
         protected $_m_body;
         public function body() {
             if ($this->_m_body !== null)
                 return $this->_m_body;
-            $io = $this->_root()->_io();
-            $_pos = $io->pos();
-            $io->seek($this->ofsBody());
-            $this->_m_body = $io->readBytes($this->lenBody());
-            $io->seek($_pos);
+            if ($this->isUsed()) {
+                $io = $this->_root()->_io();
+                $_pos = $io->pos();
+                $io->seek($this->ofsBody());
+                $this->_m_body = $io->readBytes($this->lenBody());
+                $io->seek($_pos);
+            }
             return $this->_m_body;
         }
         protected $_m_name;

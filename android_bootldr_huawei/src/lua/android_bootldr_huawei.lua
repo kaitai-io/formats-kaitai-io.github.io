@@ -24,6 +24,8 @@ local str_decode = require("string_decode")
 -- tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list
 -- members in the archive and then to download only the file you want.
 -- See also: Source (https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py)
+-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&id=a68d284aee85)
+-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85)
 AndroidBootldrHuawei = class.class(KaitaiStruct)
 
 function AndroidBootldrHuawei:_init(io, parent, root)
@@ -96,6 +98,17 @@ function AndroidBootldrHuawei.ImageHdr:_read()
   end
 end
 
+-- 
+-- The C generator program defines `img_header` as a [fixed size
+-- array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+-- of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+-- defined as `16`).
+-- 
+-- This means that technically there will always be 16 `image_hdr`
+-- entries, the first *n* entries being used (filled with real values)
+-- and the rest left unused with all bytes zero.
+-- 
+-- To check if an entry is used, use the `is_used` attribute.
 
 AndroidBootldrHuawei.ImageHdrEntry = class.class(KaitaiStruct)
 
@@ -112,17 +125,31 @@ function AndroidBootldrHuawei.ImageHdrEntry:_read()
   self.len_body = self._io:read_u4le()
 end
 
+-- 
+-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119)
+AndroidBootldrHuawei.ImageHdrEntry.property.is_used = {}
+function AndroidBootldrHuawei.ImageHdrEntry.property.is_used:get()
+  if self._m_is_used ~= nil then
+    return self._m_is_used
+  end
+
+  self._m_is_used =  ((self.ofs_body ~= 0) and (self.len_body ~= 0)) 
+  return self._m_is_used
+end
+
 AndroidBootldrHuawei.ImageHdrEntry.property.body = {}
 function AndroidBootldrHuawei.ImageHdrEntry.property.body:get()
   if self._m_body ~= nil then
     return self._m_body
   end
 
-  local _io = self._root._io
-  local _pos = _io:pos()
-  _io:seek(self.ofs_body)
-  self._m_body = _io:read_bytes(self.len_body)
-  _io:seek(_pos)
+  if self.is_used then
+    local _io = self._root._io
+    local _pos = _io:pos()
+    _io:seek(self.ofs_body)
+    self._m_body = _io:read_bytes(self.len_body)
+    _io:seek(_pos)
+  end
   return self._m_body
 end
 

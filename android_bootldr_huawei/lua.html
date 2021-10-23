@@ -275,6 +275,8 @@ members in the archive and then to download only the file you want.</p>
 <span class="c1">-- tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
 <span class="c1">-- members in the archive and then to download only the file you want.</span>
 <span class="c1">-- See also: Source (https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py)</span>
+<span class="c1">-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85)</span>
+<span class="c1">-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85)</span>
 <span class="n">AndroidBootldrHuawei</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
 <span class="kr">function</span> <span class="nc">AndroidBootldrHuawei</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
@@ -347,6 +349,17 @@ members in the archive and then to download only the file you want.</p>
   <span class="kr">end</span>
 <span class="kr">end</span>
 
+<span class="c1">-- </span>
+<span class="c1">-- The C generator program defines `img_header` as a [fixed size</span>
+<span class="c1">-- array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n42)</span>
+<span class="c1">-- of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+<span class="c1">-- defined as `16`).</span>
+<span class="c1">-- </span>
+<span class="c1">-- This means that technically there will always be 16 `image_hdr`</span>
+<span class="c1">-- entries, the first *n* entries being used (filled with real values)</span>
+<span class="c1">-- and the rest left unused with all bytes zero.</span>
+<span class="c1">-- </span>
+<span class="c1">-- To check if an entry is used, use the `is_used` attribute.</span>
 
 <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdrEntry</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
 
@@ -363,17 +376,31 @@ members in the archive and then to download only the file you want.</p>
   <span class="n">self</span><span class="p">.</span><span class="n">len_body</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
 <span class="kr">end</span>
 
+<span class="c1">-- </span>
+<span class="c1">-- See also: Source (https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119)</span>
+<span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdrEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_used</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">AndroidBootldrHuawei</span><span class="p">.</span><span class="nc">ImageHdrEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_used</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+    <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span>
+  <span class="kr">end</span>
+
+  <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span> <span class="o">~=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span> <span class="o">~=</span> <span class="mi">0</span><span class="p">))</span> 
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_used</span>
+<span class="kr">end</span>
+
 <span class="n">AndroidBootldrHuawei</span><span class="p">.</span><span class="n">ImageHdrEntry</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">body</span> <span class="o">=</span> <span class="p">{}</span>
 <span class="kr">function</span> <span class="nc">AndroidBootldrHuawei</span><span class="p">.</span><span class="nc">ImageHdrEntry</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">body</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
   <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
     <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
   <span class="kr">end</span>
 
-  <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
-  <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
-  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span><span class="p">)</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
-  <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_used</span> <span class="kr">then</span>
+    <span class="kd">local</span> <span class="n">_io</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">.</span><span class="n">_io</span>
+    <span class="kd">local</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">pos</span><span class="p">()</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">ofs_body</span><span class="p">)</span>
+    <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span> <span class="o">=</span> <span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">len_body</span><span class="p">)</span>
+    <span class="n">_io</span><span class="p">:</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+  <span class="kr">end</span>
   <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_body</span>
 <span class="kr">end</span>
 

@@ -358,6 +358,8 @@ and build them along with your project.</p>
 <span class="cm"> * tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
 <span class="cm"> * members in the archive and then to download only the file you want.</span>
 <span class="cm"> * \sa https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py Source</span>
+<span class="cm"> * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85 Source</span>
+<span class="cm"> * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85 Source</span>
 <span class="cm"> */</span>
 
 <span class="k">class</span> <span class="nc">android_bootldr_huawei_t</span> <span class="o">:</span> <span class="k">public</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span> <span class="p">{</span>
@@ -454,6 +456,19 @@ and build them along with your project.</p>
         <span class="n">android_bootldr_huawei_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
 
     <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The C generator program defines `img_header` as a [fixed size</span>
+<span class="cm">         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n42)</span>
+<span class="cm">         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+<span class="cm">         * defined as `16`).</span>
+<span class="cm">         * </span>
+<span class="cm">         * This means that technically there will always be 16 `image_hdr`</span>
+<span class="cm">         * entries, the first *n* entries being used (filled with real values)</span>
+<span class="cm">         * and the rest left unused with all bytes zero.</span>
+<span class="cm">         * </span>
+<span class="cm">         * To check if an entry is used, use the `is_used` attribute.</span>
+<span class="cm">         */</span>
         <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">image_hdr_entry_t</span><span class="o">*&gt;*</span> <span class="n">entries</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_entries</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">android_bootldr_huawei_t</span><span class="o">*</span> <span class="n">_root</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__root</span><span class="p">;</span> <span class="p">}</span>
         <span class="n">android_bootldr_huawei_t</span><span class="o">*</span> <span class="n">_parent</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m__parent</span><span class="p">;</span> <span class="p">}</span>
@@ -473,8 +488,25 @@ and build them along with your project.</p>
         <span class="o">~</span><span class="n">image_hdr_entry_t</span><span class="p">();</span>
 
     <span class="k">private</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">f_is_used</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">m_is_used</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119 Source</span>
+<span class="cm">         */</span>
+        <span class="kt">bool</span> <span class="n">is_used</span><span class="p">();</span>
+
+    <span class="k">private</span><span class="o">:</span>
         <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_body</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">n_body</span><span class="p">;</span>
+
+    <span class="k">public</span><span class="o">:</span>
+        <span class="kt">bool</span> <span class="n">_is_null_body</span><span class="p">()</span> <span class="p">{</span> <span class="n">body</span><span class="p">();</span> <span class="k">return</span> <span class="n">n_body</span><span class="p">;</span> <span class="p">};</span>
+
+    <span class="k">private</span><span class="o">:</span>
 
     <span class="k">public</span><span class="o">:</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">body</span><span class="p">();</span>
@@ -676,6 +708,7 @@ and build them along with your project.</p>
 <span class="n">android_bootldr_huawei_t</span><span class="o">::</span><span class="n">image_hdr_entry_t</span><span class="o">::</span><span class="n">image_hdr_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">android_bootldr_huawei_t</span><span class="o">::</span><span class="n">image_hdr_t</span><span class="o">*</span> <span class="n">p__parent</span><span class="p">,</span> <span class="n">android_bootldr_huawei_t</span><span class="o">*</span> <span class="n">p__root</span><span class="p">)</span> <span class="o">:</span> <span class="n">kaitai</span><span class="o">::</span><span class="n">kstruct</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span> <span class="p">{</span>
     <span class="n">m__parent</span> <span class="o">=</span> <span class="n">p__parent</span><span class="p">;</span>
     <span class="n">m__root</span> <span class="o">=</span> <span class="n">p__root</span><span class="p">;</span>
+    <span class="n">f_is_used</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
     <span class="n">f_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
 
     <span class="k">try</span> <span class="p">{</span>
@@ -697,19 +730,31 @@ and build them along with your project.</p>
 <span class="p">}</span>
 
 <span class="kt">void</span> <span class="n">android_bootldr_huawei_t</span><span class="o">::</span><span class="n">image_hdr_entry_t</span><span class="o">::</span><span class="n">_clean_up</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">n_body</span><span class="p">)</span> <span class="p">{</span>
     <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">android_bootldr_huawei_t</span><span class="o">::</span><span class="n">image_hdr_entry_t</span><span class="o">::</span><span class="n">is_used</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">f_is_used</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">m_is_used</span><span class="p">;</span>
+    <span class="n">m_is_used</span> <span class="o">=</span>  <span class="p">((</span><span class="n">ofs_body</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">len_body</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">;</span>
+    <span class="n">f_is_used</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">m_is_used</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">android_bootldr_huawei_t</span><span class="o">::</span><span class="n">image_hdr_entry_t</span><span class="o">::</span><span class="n">body</span><span class="p">()</span> <span class="p">{</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span>
-    <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
-    <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
-    <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_body</span><span class="p">());</span>
-    <span class="n">m_body</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_body</span><span class="p">());</span>
-    <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-    <span class="n">f_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="n">n_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">is_used</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">n_body</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span> <span class="o">*</span><span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">_io</span><span class="p">();</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">streampos</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">pos</span><span class="p">();</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_body</span><span class="p">());</span>
+        <span class="n">m_body</span> <span class="o">=</span> <span class="n">io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_body</span><span class="p">());</span>
+        <span class="n">io</span><span class="o">-&gt;</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+        <span class="n">f_body</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
     <span class="k">return</span> <span class="n">m_body</span><span class="p">;</span>
 <span class="p">}</span>
 </pre></div>

@@ -26,6 +26,8 @@ import java.util.ArrayList;
  * tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list
  * members in the archive and then to download only the file you want.
  * @see <a href="https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py">Source</a>
+ * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
+ * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
  */
 public class AndroidBootldrHuawei extends KaitaiStruct {
     public static AndroidBootldrHuawei fromFile(String fileName) throws IOException {
@@ -161,6 +163,19 @@ public class AndroidBootldrHuawei extends KaitaiStruct {
         private ArrayList<ImageHdrEntry> entries;
         private AndroidBootldrHuawei _root;
         private AndroidBootldrHuawei _parent;
+
+        /**
+         * The C generator program defines `img_header` as a [fixed size
+         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+         * defined as `16`).
+         * 
+         * This means that technically there will always be 16 `image_hdr`
+         * entries, the first *n* entries being used (filled with real values)
+         * and the rest left unused with all bytes zero.
+         * 
+         * To check if an entry is used, use the `is_used` attribute.
+         */
         public ArrayList<ImageHdrEntry> entries() { return entries; }
         public AndroidBootldrHuawei _root() { return _root; }
         public AndroidBootldrHuawei _parent() { return _parent; }
@@ -189,15 +204,29 @@ public class AndroidBootldrHuawei extends KaitaiStruct {
             this.ofsBody = this._io.readU4le();
             this.lenBody = this._io.readU4le();
         }
+        private Boolean isUsed;
+
+        /**
+         * @see <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
+         */
+        public Boolean isUsed() {
+            if (this.isUsed != null)
+                return this.isUsed;
+            boolean _tmp = (boolean) ( ((ofsBody() != 0) && (lenBody() != 0)) );
+            this.isUsed = _tmp;
+            return this.isUsed;
+        }
         private byte[] body;
         public byte[] body() {
             if (this.body != null)
                 return this.body;
-            KaitaiStream io = _root._io();
-            long _pos = io.pos();
-            io.seek(ofsBody());
-            this.body = io.readBytes(lenBody());
-            io.seek(_pos);
+            if (isUsed()) {
+                KaitaiStream io = _root._io();
+                long _pos = io.pos();
+                io.seek(ofsBody());
+                this.body = io.readBytes(lenBody());
+                io.seek(_pos);
+            }
             return this.body;
         }
         private String name;

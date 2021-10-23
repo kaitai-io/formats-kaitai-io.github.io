@@ -25,6 +25,12 @@ namespace Kaitai
     /// <remarks>
     /// Reference: <a href="https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py">Source</a>
     /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85">Source</a>
+    /// </remarks>
     public partial class AndroidBootldrHuawei : KaitaiStruct
     {
         public static AndroidBootldrHuawei FromFile(string fileName)
@@ -140,6 +146,19 @@ namespace Kaitai
             private List<ImageHdrEntry> _entries;
             private AndroidBootldrHuawei m_root;
             private AndroidBootldrHuawei m_parent;
+
+            /// <summary>
+            /// The C generator program defines `img_header` as a [fixed size
+            /// array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n42)
+            /// of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+            /// defined as `16`).
+            /// 
+            /// This means that technically there will always be 16 `image_hdr`
+            /// entries, the first *n* entries being used (filled with real values)
+            /// and the rest left unused with all bytes zero.
+            /// 
+            /// To check if an entry is used, use the `is_used` attribute.
+            /// </summary>
             public List<ImageHdrEntry> Entries { get { return _entries; } }
             public AndroidBootldrHuawei M_Root { get { return m_root; } }
             public AndroidBootldrHuawei M_Parent { get { return m_parent; } }
@@ -155,6 +174,7 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_isUsed = false;
                 f_body = false;
                 _read();
             }
@@ -164,6 +184,23 @@ namespace Kaitai
                 _ofsBody = m_io.ReadU4le();
                 _lenBody = m_io.ReadU4le();
             }
+            private bool f_isUsed;
+            private bool _isUsed;
+
+            /// <remarks>
+            /// Reference: <a href="https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n119">Source</a>
+            /// </remarks>
+            public bool IsUsed
+            {
+                get
+                {
+                    if (f_isUsed)
+                        return _isUsed;
+                    _isUsed = (bool) ( ((OfsBody != 0) && (LenBody != 0)) );
+                    f_isUsed = true;
+                    return _isUsed;
+                }
+            }
             private bool f_body;
             private byte[] _body;
             public byte[] Body
@@ -172,12 +209,14 @@ namespace Kaitai
                 {
                     if (f_body)
                         return _body;
-                    KaitaiStream io = M_Root.M_Io;
-                    long _pos = io.Pos;
-                    io.Seek(OfsBody);
-                    _body = io.ReadBytes(LenBody);
-                    io.Seek(_pos);
-                    f_body = true;
+                    if (IsUsed) {
+                        KaitaiStream io = M_Root.M_Io;
+                        long _pos = io.Pos;
+                        io.Seek(OfsBody);
+                        _body = io.ReadBytes(LenBody);
+                        io.Seek(_pos);
+                        f_body = true;
+                    }
                     return _body;
                 }
             }

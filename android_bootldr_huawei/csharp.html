@@ -318,6 +318,12 @@ can also be found there.</p>
     <span class="c1">/// &lt;remarks&gt;</span>
     <span class="c1">/// Reference: &lt;a href=&quot;https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py&quot;&gt;Source&lt;/a&gt;</span>
     <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
+    <span class="c1">/// &lt;remarks&gt;</span>
+    <span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
+    <span class="c1">/// &lt;/remarks&gt;</span>
     <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">AndroidBootldrHuawei</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
     <span class="p">{</span>
         <span class="k">public</span> <span class="k">static</span> <span class="n">AndroidBootldrHuawei</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
@@ -433,6 +439,19 @@ can also be found there.</p>
             <span class="k">private</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ImageHdrEntry</span><span class="p">&gt;</span> <span class="n">_entries</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_root</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The C generator program defines `img_header` as a [fixed size</span>
+            <span class="c1">/// array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n42)</span>
+            <span class="c1">/// of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+            <span class="c1">/// defined as `16`).</span>
+            <span class="c1">/// </span>
+            <span class="c1">/// This means that technically there will always be 16 `image_hdr`</span>
+            <span class="c1">/// entries, the first *n* entries being used (filled with real values)</span>
+            <span class="c1">/// and the rest left unused with all bytes zero.</span>
+            <span class="c1">/// </span>
+            <span class="c1">/// To check if an entry is used, use the `is_used` attribute.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
             <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">ImageHdrEntry</span><span class="p">&gt;</span> <span class="n">Entries</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_entries</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
@@ -448,6 +467,7 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_isUsed</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">f_body</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
@@ -457,6 +477,23 @@ can also be found there.</p>
                 <span class="n">_ofsBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
                 <span class="n">_lenBody</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU4le</span><span class="p">();</span>
             <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isUsed</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isUsed</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;remarks&gt;</span>
+            <span class="c1">/// Reference: &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n119&quot;&gt;Source&lt;/a&gt;</span>
+            <span class="c1">/// &lt;/remarks&gt;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsUsed</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isUsed</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isUsed</span><span class="p">;</span>
+                    <span class="n">_isUsed</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">OfsBody</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">LenBody</span> <span class="p">!=</span> <span class="m">0</span><span class="p">))</span> <span class="p">);</span>
+                    <span class="n">f_isUsed</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isUsed</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
             <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_body</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_body</span><span class="p">;</span>
             <span class="k">public</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">Body</span>
@@ -465,12 +502,14 @@ can also be found there.</p>
                 <span class="p">{</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">f_body</span><span class="p">)</span>
                         <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
-                    <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
-                    <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
-                    <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
-                    <span class="n">_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
-                    <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
-                    <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">IsUsed</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="p">=</span> <span class="n">M_Root</span><span class="p">.</span><span class="n">M_Io</span><span class="p">;</span>
+                        <span class="kt">long</span> <span class="n">_pos</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">Pos</span><span class="p">;</span>
+                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">OfsBody</span><span class="p">);</span>
+                        <span class="n">_body</span> <span class="p">=</span> <span class="n">io</span><span class="p">.</span><span class="n">ReadBytes</span><span class="p">(</span><span class="n">LenBody</span><span class="p">);</span>
+                        <span class="n">io</span><span class="p">.</span><span class="n">Seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+                        <span class="n">f_body</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">return</span> <span class="n">_body</span><span class="p">;</span>
                 <span class="p">}</span>
             <span class="p">}</span>

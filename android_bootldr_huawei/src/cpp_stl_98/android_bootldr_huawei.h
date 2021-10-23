@@ -28,6 +28,8 @@
  * tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list
  * members in the archive and then to download only the file you want.
  * \sa https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py Source
+ * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&id=a68d284aee85 Source
+ * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85 Source
  */
 
 class android_bootldr_huawei_t : public kaitai::kstruct {
@@ -124,6 +126,19 @@ public:
         android_bootldr_huawei_t* m__parent;
 
     public:
+
+        /**
+         * The C generator program defines `img_header` as a [fixed size
+         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+         * defined as `16`).
+         * 
+         * This means that technically there will always be 16 `image_hdr`
+         * entries, the first *n* entries being used (filled with real values)
+         * and the rest left unused with all bytes zero.
+         * 
+         * To check if an entry is used, use the `is_used` attribute.
+         */
         std::vector<image_hdr_entry_t*>* entries() const { return m_entries; }
         android_bootldr_huawei_t* _root() const { return m__root; }
         android_bootldr_huawei_t* _parent() const { return m__parent; }
@@ -143,8 +158,25 @@ public:
         ~image_hdr_entry_t();
 
     private:
+        bool f_is_used;
+        bool m_is_used;
+
+    public:
+
+        /**
+         * \sa https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119 Source
+         */
+        bool is_used();
+
+    private:
         bool f_body;
         std::string m_body;
+        bool n_body;
+
+    public:
+        bool _is_null_body() { body(); return n_body; };
+
+    private:
 
     public:
         std::string body();

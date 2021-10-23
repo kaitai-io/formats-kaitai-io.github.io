@@ -24,6 +24,8 @@ end
 # tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list
 # members in the archive and then to download only the file you want.
 # @see https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py Source
+# @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&id=a68d284aee85 Source
+# @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85 Source
 class AndroidBootldrHuawei < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)
@@ -88,6 +90,18 @@ class AndroidBootldrHuawei < Kaitai::Struct::Struct
       end
       self
     end
+
+    ##
+    # The C generator program defines `img_header` as a [fixed size
+    # array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n42)
+    # of `img_header_entry_t` structs with length `MAX_IMAGES` (which is
+    # defined as `16`).
+    # 
+    # This means that technically there will always be 16 `image_hdr`
+    # entries, the first *n* entries being used (filled with real values)
+    # and the rest left unused with all bytes zero.
+    # 
+    # To check if an entry is used, use the `is_used` attribute.
     attr_reader :entries
   end
   class ImageHdrEntry < Kaitai::Struct::Struct
@@ -102,13 +116,23 @@ class AndroidBootldrHuawei < Kaitai::Struct::Struct
       @len_body = @_io.read_u4le
       self
     end
+
+    ##
+    # @see https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119 Source
+    def is_used
+      return @is_used unless @is_used.nil?
+      @is_used =  ((ofs_body != 0) && (len_body != 0)) 
+      @is_used
+    end
     def body
       return @body unless @body.nil?
-      io = _root._io
-      _pos = io.pos
-      io.seek(ofs_body)
-      @body = io.read_bytes(len_body)
-      io.seek(_pos)
+      if is_used
+        io = _root._io
+        _pos = io.pos
+        io.seek(ofs_body)
+        @body = io.read_bytes(len_body)
+        io.seek(_pos)
+      end
       @body
     end
 

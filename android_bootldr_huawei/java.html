@@ -321,6 +321,8 @@ for instructions how to add it into your project with the build tool that you us
 <span class="cm"> * tool](https://github.com/gtsystem/python-remotezip#command-line-tool) to list</span>
 <span class="cm"> * members in the archive and then to download only the file you want.</span>
 <span class="cm"> * @see &lt;a href=&quot;https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm"> * @see &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85&quot;&gt;Source&lt;/a&gt;</span>
 <span class="cm"> */</span>
 <span class="kd">public</span> <span class="kd">class</span> <span class="nc">AndroidBootldrHuawei</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="n">AndroidBootldrHuawei</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
@@ -456,6 +458,19 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">private</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ImageHdrEntry</span><span class="o">&gt;</span> <span class="n">entries</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">_root</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">AndroidBootldrHuawei</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The C generator program defines `img_header` as a [fixed size</span>
+<span class="cm">         * array](https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;id=a68d284aee85#n42)</span>
+<span class="cm">         * of `img_header_entry_t` structs with length `MAX_IMAGES` (which is</span>
+<span class="cm">         * defined as `16`).</span>
+<span class="cm">         * </span>
+<span class="cm">         * This means that technically there will always be 16 `image_hdr`</span>
+<span class="cm">         * entries, the first *n* entries being used (filled with real values)</span>
+<span class="cm">         * and the rest left unused with all bytes zero.</span>
+<span class="cm">         * </span>
+<span class="cm">         * To check if an entry is used, use the `is_used` attribute.</span>
+<span class="cm">         */</span>
         <span class="kd">public</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">ImageHdrEntry</span><span class="o">&gt;</span> <span class="nf">entries</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">entries</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">AndroidBootldrHuawei</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
@@ -484,15 +499,29 @@ for instructions how to add it into your project with the build tool that you us
             <span class="k">this</span><span class="p">.</span><span class="na">ofsBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">lenBody</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU4le</span><span class="p">();</span>
         <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isUsed</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @see &lt;a href=&quot;https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&amp;amp;id=a68d284aee85#n119&quot;&gt;Source&lt;/a&gt;</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isUsed</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isUsed</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isUsed</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">ofsBody</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">lenBody</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">))</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isUsed</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isUsed</span><span class="p">;</span>
+        <span class="p">}</span>
         <span class="kd">private</span> <span class="kt">byte</span><span class="o">[]</span> <span class="n">body</span><span class="p">;</span>
         <span class="kd">public</span> <span class="kt">byte</span><span class="o">[]</span> <span class="nf">body</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
                 <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">;</span>
-            <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
-            <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
-            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsBody</span><span class="p">());</span>
-            <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
-            <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">isUsed</span><span class="p">())</span> <span class="p">{</span>
+                <span class="n">KaitaiStream</span> <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="p">.</span><span class="na">_io</span><span class="p">();</span>
+                <span class="kt">long</span> <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">pos</span><span class="p">();</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">ofsBody</span><span class="p">());</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">body</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="na">readBytes</span><span class="p">(</span><span class="n">lenBody</span><span class="p">());</span>
+                <span class="n">io</span><span class="p">.</span><span class="na">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">);</span>
+            <span class="p">}</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">body</span><span class="p">;</span>
         <span class="p">}</span>
         <span class="kd">private</span> <span class="n">String</span> <span class="n">name</span><span class="p">;</span>

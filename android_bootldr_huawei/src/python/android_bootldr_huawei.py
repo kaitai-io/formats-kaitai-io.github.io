@@ -27,6 +27,14 @@ class AndroidBootldrHuawei(KaitaiStruct):
     
     .. seealso::
        Source - https://android.googlesource.com/device/huawei/angler/+/673cfb9/releasetools.py
+    
+    
+    .. seealso::
+       Source - https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_format.h?h=LA.UM.6.1.1&id=a68d284aee85
+    
+    
+    .. seealso::
+       Source - https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -99,15 +107,29 @@ class AndroidBootldrHuawei(KaitaiStruct):
             self.len_body = self._io.read_u4le()
 
         @property
+        def is_used(self):
+            """
+            .. seealso::
+               Source - https://source.codeaurora.org/quic/la/device/qcom/common/tree/meta_image/meta_image.c?h=LA.UM.6.1.1&id=a68d284aee85#n119
+            """
+            if hasattr(self, '_m_is_used'):
+                return self._m_is_used if hasattr(self, '_m_is_used') else None
+
+            self._m_is_used =  ((self.ofs_body != 0) and (self.len_body != 0)) 
+            return self._m_is_used if hasattr(self, '_m_is_used') else None
+
+        @property
         def body(self):
             if hasattr(self, '_m_body'):
                 return self._m_body if hasattr(self, '_m_body') else None
 
-            io = self._root._io
-            _pos = io.pos()
-            io.seek(self.ofs_body)
-            self._m_body = io.read_bytes(self.len_body)
-            io.seek(_pos)
+            if self.is_used:
+                io = self._root._io
+                _pos = io.pos()
+                io.seek(self.ofs_body)
+                self._m_body = io.read_bytes(self.len_body)
+                io.seek(_pos)
+
             return self._m_body if hasattr(self, '_m_body') else None
 
 
