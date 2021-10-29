@@ -2309,7 +2309,7 @@ namespace Elf {
         /**
          * DEC Alpha
          */
-        const ALPHA = 41;
+        const OLD_ALPHA = 41;
 
         /**
          * Hitachi SH
@@ -3175,6 +3175,74 @@ namespace Elf {
          * ChipON KungFu32
          */
         const KF32 = 259;
+        const AVR_OLD = 4183;
+        const MSP430_OLD = 4185;
+
+        /**
+         * Adapteva's Epiphany architecture.
+         */
+        const ADAPTEVA_EPIPHANY = 4643;
+
+        /**
+         * Morpho MT
+         */
+        const MT = 9520;
+        const CYGNUS_FR30 = 13104;
+
+        /**
+         * Unofficial value for Web Assembly binaries, as used by LLVM.
+         */
+        const WEBASSEMBLY = 16727;
+
+        /**
+         * Infineon Technologies 16-bit microcontroller with C166-V2 core
+         */
+        const XC16X = 18056;
+
+        /**
+         * The Freescale toolchain generates elf files with this value.
+         */
+        const S12Z = 19951;
+        const CYGNUS_FRV = 21569;
+
+        /**
+         * openDLX
+         */
+        const DLX = 23205;
+        const CYGNUS_D10V = 30288;
+        const CYGNUS_D30V = 30326;
+        const IP2K_OLD = 33303;
+        const CYGNUS_POWERPC = 36901;
+        const ALPHA = 36902;
+        const CYGNUS_M32R = 36929;
+        const CYGNUS_V850 = 36992;
+        const S390_OLD = 41872;
+        const XTENSA_OLD = 43975;
+        const XSTORMY16 = 44357;
+        const MICROBLAZE_OLD = 47787;
+        const CYGNUS_MN10300 = 48879;
+        const CYGNUS_MN10200 = 57005;
+
+        /**
+         * Toshiba MeP
+         */
+        const CYGNUS_MEP = 61453;
+
+        /**
+         * Renesas M32C and M16C
+         */
+        const M32C_OLD = 65200;
+
+        /**
+         * Vitesse IQ2000
+         */
+        const IQ2000 = 65210;
+        const NIOS32 = 65211;
+
+        /**
+         * Old, unofficial value for Moxie
+         */
+        const MOXIE_OLD = 65261;
     }
 }
 

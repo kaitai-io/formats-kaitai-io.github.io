@@ -189,7 +189,7 @@ public class Elf extends KaitaiStruct {
         RH32(38),
         RCE(39),
         ARM(40),
-        ALPHA(41),
+        OLD_ALPHA(41),
         SUPERH(42),
         SPARC_V9(43),
         TRICORE(44),
@@ -362,12 +362,40 @@ public class Elf extends KaitaiStruct {
         KVX(256),
         WDC65816(257),
         LOONGARCH(258),
-        KF32(259);
+        KF32(259),
+        AVR_OLD(4183),
+        MSP430_OLD(4185),
+        ADAPTEVA_EPIPHANY(4643),
+        MT(9520),
+        CYGNUS_FR30(13104),
+        WEBASSEMBLY(16727),
+        XC16X(18056),
+        S12Z(19951),
+        CYGNUS_FRV(21569),
+        DLX(23205),
+        CYGNUS_D10V(30288),
+        CYGNUS_D30V(30326),
+        IP2K_OLD(33303),
+        CYGNUS_POWERPC(36901),
+        ALPHA(36902),
+        CYGNUS_M32R(36929),
+        CYGNUS_V850(36992),
+        S390_OLD(41872),
+        XTENSA_OLD(43975),
+        XSTORMY16(44357),
+        MICROBLAZE_OLD(47787),
+        CYGNUS_MN10300(48879),
+        CYGNUS_MN10200(57005),
+        CYGNUS_MEP(61453),
+        M32C_OLD(65200),
+        IQ2000(65210),
+        NIOS32(65211),
+        MOXIE_OLD(65261);
 
         private final long id;
         Machine(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(198);
+        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(226);
         static {
             for (Machine e : Machine.values())
                 byId.put(e.id(), e);
