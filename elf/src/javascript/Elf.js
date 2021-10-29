@@ -927,6 +927,9 @@ var Elf = (function() {
     this.abi = this._io.readU1();
     this.abiVersion = this._io.readU1();
     this.pad = this._io.readBytes(7);
+    if (!((KaitaiStream.byteArrayCompare(this.pad, [0, 0, 0, 0, 0, 0, 0]) == 0))) {
+      throw new KaitaiStream.ValidationNotEqualError([0, 0, 0, 0, 0, 0, 0], this.pad, this._io, "/seq/6");
+    }
     this.header = new EndianElf(this._io, this, this._root);
   }
 

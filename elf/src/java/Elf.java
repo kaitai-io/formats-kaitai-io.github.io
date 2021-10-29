@@ -626,6 +626,9 @@ public class Elf extends KaitaiStruct {
         this.abi = OsAbi.byId(this._io.readU1());
         this.abiVersion = this._io.readU1();
         this.pad = this._io.readBytes(7);
+        if (!(Arrays.equals(pad(), new byte[] { 0, 0, 0, 0, 0, 0, 0 }))) {
+            throw new KaitaiStream.ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0 }, pad(), _io(), "/seq/6");
+        }
         this.header = new EndianElf(this._io, this, _root);
     }
     public static class EndianElf extends KaitaiStruct {

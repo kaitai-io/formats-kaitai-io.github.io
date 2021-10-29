@@ -496,6 +496,7 @@ class Elf < Kaitai::Struct::Struct
     @abi = Kaitai::Struct::Stream::resolve_enum(OS_ABI, @_io.read_u1)
     @abi_version = @_io.read_u1
     @pad = @_io.read_bytes(7)
+    raise Kaitai::Struct::ValidationNotEqualError.new([0, 0, 0, 0, 0, 0, 0].pack('C*'), pad, _io, "/seq/6") if not pad == [0, 0, 0, 0, 0, 0, 0].pack('C*')
     @header = EndianElf.new(@_io, self, @_root)
     self
   end

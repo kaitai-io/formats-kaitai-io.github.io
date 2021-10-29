@@ -36,6 +36,9 @@ void elf_t::_read() {
     m_abi = static_cast<elf_t::os_abi_t>(m__io->read_u1());
     m_abi_version = m__io->read_u1();
     m_pad = m__io->read_bytes(7);
+    if (!(pad() == std::string("\x00\x00\x00\x00\x00\x00\x00", 7))) {
+        throw kaitai::validation_not_equal_error<std::string>(std::string("\x00\x00\x00\x00\x00\x00\x00", 7), pad(), _io(), std::string("/seq/6"));
+    }
     m_header = new endian_elf_t(m__io, this, m__root);
 }
 

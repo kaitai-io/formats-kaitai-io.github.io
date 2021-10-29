@@ -520,6 +520,10 @@ namespace Kaitai
             _abi = ((OsAbi) m_io.ReadU1());
             _abiVersion = m_io.ReadU1();
             _pad = m_io.ReadBytes(7);
+            if (!((KaitaiStream.ByteArrayCompare(Pad, new byte[] { 0, 0, 0, 0, 0, 0, 0 }) == 0)))
+            {
+                throw new ValidationNotEqualError(new byte[] { 0, 0, 0, 0, 0, 0, 0 }, Pad, M_Io, "/seq/6");
+            }
             _header = new EndianElf(m_io, this, m_root);
         }
         public partial class EndianElf : KaitaiStruct

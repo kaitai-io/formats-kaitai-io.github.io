@@ -485,6 +485,8 @@ class Elf(KaitaiStruct):
         self.abi = KaitaiStream.resolve_enum(Elf.OsAbi, self._io.read_u1())
         self.abi_version = self._io.read_u1()
         self.pad = self._io.read_bytes(7)
+        if not self.pad == b"\x00\x00\x00\x00\x00\x00\x00":
+            raise kaitaistruct.ValidationNotEqualError(b"\x00\x00\x00\x00\x00\x00\x00", self.pad, self._io, u"/seq/6")
         self.header = Elf.EndianElf(self._io, self, self._root)
 
     class EndianElf(KaitaiStruct):

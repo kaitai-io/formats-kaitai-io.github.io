@@ -22,6 +22,9 @@ namespace {
             $this->_m_abi = $this->_io->readU1();
             $this->_m_abiVersion = $this->_io->readU1();
             $this->_m_pad = $this->_io->readBytes(7);
+            if (!($this->pad() == "\x00\x00\x00\x00\x00\x00\x00")) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError("\x00\x00\x00\x00\x00\x00\x00", $this->pad(), $this->_io(), "/seq/6");
+            }
             $this->_m_header = new \Elf\EndianElf($this->_io, $this, $this->_root);
         }
         protected $_m_shIdxLoOs;

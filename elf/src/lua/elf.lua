@@ -493,6 +493,9 @@ function Elf:_read()
   self.abi = Elf.OsAbi(self._io:read_u1())
   self.abi_version = self._io:read_u1()
   self.pad = self._io:read_bytes(7)
+  if not(self.pad == "\000\000\000\000\000\000\000") then
+    error("not equal, expected " ..  "\000\000\000\000\000\000\000" .. ", but got " .. self.pad)
+  end
   self.header = Elf.EndianElf(self._io, self, self._root)
 end
 
