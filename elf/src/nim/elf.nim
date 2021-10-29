@@ -1987,10 +1987,10 @@ proc name(this: Elf_EndianElf_DynsymSectionEntry): string =
     let pos = io.pos()
     io.seek(int(this.ofsName))
     if this.isLe:
-      let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
+      let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
       this.nameInst = nameInstExpr
     else:
-      let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "ASCII")
+      let nameInstExpr = encode(io.readBytesTerm(0, false, true, true), "UTF-8")
       this.nameInst = nameInstExpr
     io.seek(pos)
   if this.nameInst.len != 0:
@@ -2085,7 +2085,7 @@ proc readLe(this: Elf_EndianElf_StringsStruct) =
   block:
     var i: int
     while not this.io.isEof:
-      let it = encode(this.io.readBytesTerm(0, false, true, true), "ASCII")
+      let it = encode(this.io.readBytesTerm(0, false, true, true), "UTF-8")
       this.entries.add(it)
       inc i
 
@@ -2094,7 +2094,7 @@ proc readBe(this: Elf_EndianElf_StringsStruct) =
   block:
     var i: int
     while not this.io.isEof:
-      let it = encode(this.io.readBytesTerm(0, false, true, true), "ASCII")
+      let it = encode(this.io.readBytesTerm(0, false, true, true), "UTF-8")
       this.entries.add(it)
       inc i
 

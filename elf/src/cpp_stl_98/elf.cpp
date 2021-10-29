@@ -1663,9 +1663,9 @@ std::string elf_t::endian_elf_t::dynsym_section_entry_t::name() {
         std::streampos _pos = io->pos();
         io->seek(ofs_name());
         if (m__is_le == 1) {
-            m_name = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("ASCII"));
+            m_name = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("UTF-8"));
         } else {
-            m_name = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("ASCII"));
+            m_name = kaitai::kstream::bytes_to_str(io->read_bytes_term(0, false, true, true), std::string("UTF-8"));
         }
         io->seek(_pos);
         f_name = true;
@@ -1762,7 +1762,7 @@ void elf_t::endian_elf_t::strings_struct_t::_read_le() {
     {
         int i = 0;
         while (!m__io->is_eof()) {
-            m_entries->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII")));
+            m_entries->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8")));
             i++;
         }
     }
@@ -1773,7 +1773,7 @@ void elf_t::endian_elf_t::strings_struct_t::_read_be() {
     {
         int i = 0;
         while (!m__io->is_eof()) {
-            m_entries->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("ASCII")));
+            m_entries->push_back(kaitai::kstream::bytes_to_str(m__io->read_bytes_term(0, false, true, true), std::string("UTF-8")));
             i++;
         }
     }

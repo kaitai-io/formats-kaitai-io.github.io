@@ -1966,9 +1966,9 @@ var Elf = (function() {
             var _pos = io.pos;
             io.seek(this.ofsName);
             if (this._is_le) {
-              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
             } else {
-              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "ASCII");
+              this._m_name = KaitaiStream.bytesToStr(io.readBytesTerm(0, false, true, true), "UTF-8");
             }
             io.seek(_pos);
           }
@@ -2071,7 +2071,7 @@ var Elf = (function() {
         this.entries = [];
         var i = 0;
         while (!this._io.isEof()) {
-          this.entries.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+          this.entries.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
           i++;
         }
       }
@@ -2079,7 +2079,7 @@ var Elf = (function() {
         this.entries = [];
         var i = 0;
         while (!this._io.isEof()) {
-          this.entries.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "ASCII"));
+          this.entries.push(KaitaiStream.bytesToStr(this._io.readBytesTerm(0, false, true, true), "UTF-8"));
           i++;
         }
       }

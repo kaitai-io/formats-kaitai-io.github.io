@@ -1408,9 +1408,9 @@ class Elf < Kaitai::Struct::Struct
           _pos = io.pos
           io.seek(ofs_name)
           if @_is_le
-            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
           else
-            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+            @name = (io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
           end
           io.seek(_pos)
         end
@@ -1518,7 +1518,7 @@ class Elf < Kaitai::Struct::Struct
         @entries = []
         i = 0
         while not @_io.eof?
-          @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
           i += 1
         end
         self
@@ -1528,7 +1528,7 @@ class Elf < Kaitai::Struct::Struct
         @entries = []
         i = 0
         while not @_io.eof?
-          @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("ASCII")
+          @entries << (@_io.read_bytes_term(0, false, true, true)).force_encoding("UTF-8")
           i += 1
         end
         self

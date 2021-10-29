@@ -1634,9 +1634,9 @@ function Elf.EndianElf.DynsymSectionEntry.property.name:get()
     local _pos = _io:pos()
     _io:seek(self.ofs_name)
     if self._is_le then
-      self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+      self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "UTF-8")
     else
-      self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "ASCII")
+      self._m_name = str_decode.decode(_io:read_bytes_term(0, false, true, true), "UTF-8")
     end
     _io:seek(_pos)
   end
@@ -1733,7 +1733,7 @@ function Elf.EndianElf.StringsStruct:_read_le()
   self.entries = {}
   local i = 0
   while not self._io:is_eof() do
-    self.entries[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+    self.entries[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
     i = i + 1
   end
 end
@@ -1742,7 +1742,7 @@ function Elf.EndianElf.StringsStruct:_read_be()
   self.entries = {}
   local i = 0
   while not self._io:is_eof() do
-    self.entries[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "ASCII")
+    self.entries[i + 1] = str_decode.decode(self._io:read_bytes_term(0, false, true, true), "UTF-8")
     i = i + 1
   end
 end

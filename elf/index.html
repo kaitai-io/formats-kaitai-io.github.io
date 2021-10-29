@@ -734,7 +734,9 @@ section#format-index .row {
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
             <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eos</span>
-            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+            <span class="c1"># For an explanation of why UTF-8 instead of ASCII, see the comment</span>
+            <span class="c1"># on the `name` attribute in the `dynsym_section_entry` type.</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
       <span class="nt">dynamic_section</span><span class="p">:</span>
         <span class="nt">seq</span><span class="p">:</span>
           <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">entries</span>
@@ -860,7 +862,15 @@ section#format-index .row {
             <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent._parent.linked_section.body.as&lt;strings_struct&gt;._io</span>
             <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name</span>
             <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
-            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
+            <span class="c1"># UTF-8 is used (instead of ASCII) because Golang binaries may</span>
+            <span class="c1"># contain specific Unicode code points in symbol identifiers.</span>
+            <span class="c1">#</span>
+            <span class="c1"># See</span>
+            <span class="c1"># * &lt;https://golang.org/doc/asm#symbols&gt;: &quot;the assembler allows the</span>
+            <span class="c1">#   middle dot character U+00B7 and the division slash U+2215 in</span>
+            <span class="c1">#   identifiers&quot;</span>
+            <span class="c1"># * &lt;https://github.com/kaitai-io/kaitai_struct_formats/issues/520&gt;</span>
+            <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
             <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_name != 0 and _parent.is_string_table_linked</span>
             <span class="nt">-webide-parse-mode</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">eager</span>
           <span class="nt">visibility</span><span class="p">:</span>

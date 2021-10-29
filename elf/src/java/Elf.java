@@ -2091,9 +2091,9 @@ public class Elf extends KaitaiStruct {
                     long _pos = io.pos();
                     io.seek(ofsName());
                     if (_is_le) {
-                        this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                        this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
                     } else {
-                        this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("ASCII"));
+                        this.name = new String(io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8"));
                     }
                     io.seek(_pos);
                 }
@@ -2231,7 +2231,7 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
                         i++;
                     }
                 }
@@ -2241,7 +2241,7 @@ public class Elf extends KaitaiStruct {
                 {
                     int i = 0;
                     while (!this._io.isEof()) {
-                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("ASCII")));
+                        this.entries.add(new String(this._io.readBytesTerm(0, false, true, true), Charset.forName("UTF-8")));
                         i++;
                     }
                 }

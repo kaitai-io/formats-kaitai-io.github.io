@@ -1953,9 +1953,9 @@ namespace Kaitai
                             long _pos = io.Pos;
                             io.Seek(OfsName);
                             if (m_isLe == true) {
-                                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(io.ReadBytesTerm(0, false, true, true));
+                                _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
                             } else {
-                                _name = System.Text.Encoding.GetEncoding("ASCII").GetString(io.ReadBytesTerm(0, false, true, true));
+                                _name = System.Text.Encoding.GetEncoding("UTF-8").GetString(io.ReadBytesTerm(0, false, true, true));
                             }
                             io.Seek(_pos);
                             f_name = true;
@@ -2120,7 +2120,7 @@ namespace Kaitai
                     {
                         var i = 0;
                         while (!m_io.IsEof) {
-                            _entries.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                            _entries.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
                             i++;
                         }
                     }
@@ -2131,7 +2131,7 @@ namespace Kaitai
                     {
                         var i = 0;
                         while (!m_io.IsEof) {
-                            _entries.Add(System.Text.Encoding.GetEncoding("ASCII").GetString(m_io.ReadBytesTerm(0, false, true, true)));
+                            _entries.Add(System.Text.Encoding.GetEncoding("UTF-8").GetString(m_io.ReadBytesTerm(0, false, true, true)));
                             i++;
                         }
                     }

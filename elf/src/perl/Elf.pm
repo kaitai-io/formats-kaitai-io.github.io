@@ -2038,9 +2038,9 @@ sub name {
         my $_pos = $io->pos();
         $io->seek($self->ofs_name());
         if ($self->{_is_le}) {
-            $self->{name} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+            $self->{name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
         } else {
-            $self->{name} = Encode::decode("ASCII", $io->read_bytes_term(0, 0, 1, 1));
+            $self->{name} = Encode::decode("UTF-8", $io->read_bytes_term(0, 0, 1, 1));
         }
         $io->seek($_pos);
     }
@@ -2243,7 +2243,7 @@ sub _read_le {
 
     $self->{entries} = ();
     while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{entries}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
 
@@ -2252,7 +2252,7 @@ sub _read_be {
 
     $self->{entries} = ();
     while (!$self->{_io}->is_eof()) {
-        push @{$self->{entries}}, Encode::decode("ASCII", $self->{_io}->read_bytes_term(0, 0, 1, 1));
+        push @{$self->{entries}}, Encode::decode("UTF-8", $self->{_io}->read_bytes_term(0, 0, 1, 1));
     }
 }
 
