@@ -68,7 +68,7 @@ class PythonPickle(KaitaiStruct):
         empty_list = 93
         append = 97
         build = 98
-        global = 99
+        global_opcode = 99
         dict = 100
         appends = 101
         get = 103
@@ -478,6 +478,8 @@ class PythonPickle(KaitaiStruct):
                 self.arg = PythonPickle.Floatnl(self._io, self, self._root)
             elif _on == PythonPickle.Opcode.reduce:
                 self.arg = PythonPickle.NoArg(self._io, self, self._root)
+            elif _on == PythonPickle.Opcode.global_opcode:
+                self.arg = PythonPickle.StringnlNoescapePair(self._io, self, self._root)
             elif _on == PythonPickle.Opcode.binput:
                 self.arg = self._io.read_u1()
             elif _on == PythonPickle.Opcode.memoize:
@@ -504,8 +506,6 @@ class PythonPickle(KaitaiStruct):
                 self.arg = PythonPickle.Unicodestring8(self._io, self, self._root)
             elif _on == PythonPickle.Opcode.binget:
                 self.arg = self._io.read_u1()
-            elif _on == PythonPickle.Opcode.global:
-                self.arg = PythonPickle.StringnlNoescapePair(self._io, self, self._root)
             elif _on == PythonPickle.Opcode.dict:
                 self.arg = PythonPickle.NoArg(self._io, self, self._root)
             elif _on == PythonPickle.Opcode.binstring:

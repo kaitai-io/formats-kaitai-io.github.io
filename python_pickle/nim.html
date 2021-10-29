@@ -322,7 +322,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
     <span class="n">empty_list</span> <span class="o">=</span> <span class="mi">93</span>
     <span class="n">append</span> <span class="o">=</span> <span class="mi">97</span>
     <span class="n">build</span> <span class="o">=</span> <span class="mi">98</span>
-    <span class="n">global</span> <span class="o">=</span> <span class="mi">99</span>
+    <span class="n">global_opcode</span> <span class="o">=</span> <span class="mi">99</span>
     <span class="n">dict</span> <span class="o">=</span> <span class="mi">100</span>
     <span class="n">appends</span> <span class="o">=</span> <span class="mi">101</span>
     <span class="n">get</span> <span class="o">=</span> <span class="mi">103</span>
@@ -1024,6 +1024,9 @@ https://www.python.org/dev/peps/pep-0574/</li>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">python_pickle</span><span class="p">.</span><span class="n">reduce</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">argExpr</span> <span class="o">=</span> <span class="n">PythonPickle_NoArg</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">argExpr</span>
+    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">python_pickle</span><span class="p">.</span><span class="n">global_opcode</span><span class="p">:</span>
+      <span class="k">let</span> <span class="n">argExpr</span> <span class="o">=</span> <span class="n">PythonPickle_StringnlNoescapePair</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+      <span class="n">this</span><span class="p">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">argExpr</span>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">python_pickle</span><span class="p">.</span><span class="n">binput</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">argExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
       <span class="n">this</span><span class="p">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">argExpr</span>
@@ -1062,9 +1065,6 @@ https://www.python.org/dev/peps/pep-0574/</li>
       <span class="n">this</span><span class="p">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">argExpr</span>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">python_pickle</span><span class="p">.</span><span class="n">binget</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">argExpr</span> <span class="o">=</span> <span class="n">KaitaiStruct</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">())</span>
-      <span class="n">this</span><span class="p">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">argExpr</span>
-    <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">python_pickle</span><span class="p">.</span><span class="n">global</span><span class="p">:</span>
-      <span class="k">let</span> <span class="n">argExpr</span> <span class="o">=</span> <span class="n">PythonPickle_StringnlNoescapePair</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">arg</span> <span class="o">=</span> <span class="n">argExpr</span>
     <span class="k">elif</span> <span class="n">on</span> <span class="o">==</span> <span class="n">python_pickle</span><span class="p">.</span><span class="n">dict</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">argExpr</span> <span class="o">=</span> <span class="n">PythonPickle_NoArg</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>

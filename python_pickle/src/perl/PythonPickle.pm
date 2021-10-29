@@ -46,7 +46,7 @@ our $OPCODE_BINUNICODE = 88;
 our $OPCODE_EMPTY_LIST = 93;
 our $OPCODE_APPEND = 97;
 our $OPCODE_BUILD = 98;
-our $OPCODE_GLOBAL = 99;
+our $OPCODE_GLOBAL_OPCODE = 99;
 our $OPCODE_DICT = 100;
 our $OPCODE_APPENDS = 101;
 our $OPCODE_GET = 103;
@@ -997,6 +997,9 @@ sub _read {
     elsif ($_on == $PythonPickle::OPCODE_REDUCE) {
         $self->{arg} = PythonPickle::NoArg->new($self->{_io}, $self, $self->{_root});
     }
+    elsif ($_on == $PythonPickle::OPCODE_GLOBAL_OPCODE) {
+        $self->{arg} = PythonPickle::StringnlNoescapePair->new($self->{_io}, $self, $self->{_root});
+    }
     elsif ($_on == $PythonPickle::OPCODE_BINPUT) {
         $self->{arg} = $self->{_io}->read_u1();
     }
@@ -1035,9 +1038,6 @@ sub _read {
     }
     elsif ($_on == $PythonPickle::OPCODE_BINGET) {
         $self->{arg} = $self->{_io}->read_u1();
-    }
-    elsif ($_on == $PythonPickle::OPCODE_GLOBAL) {
-        $self->{arg} = PythonPickle::StringnlNoescapePair->new($self->{_io}, $self, $self->{_root});
     }
     elsif ($_on == $PythonPickle::OPCODE_DICT) {
         $self->{arg} = PythonPickle::NoArg->new($self->{_io}, $self, $self->{_root});

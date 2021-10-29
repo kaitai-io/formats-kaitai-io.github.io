@@ -395,7 +395,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
     <span class="nx">EMPTY_LIST</span><span class="o">:</span> <span class="mf">93</span><span class="p">,</span>
     <span class="nx">APPEND</span><span class="o">:</span> <span class="mf">97</span><span class="p">,</span>
     <span class="nx">BUILD</span><span class="o">:</span> <span class="mf">98</span><span class="p">,</span>
-    <span class="nx">GLOBAL</span><span class="o">:</span> <span class="mf">99</span><span class="p">,</span>
+    <span class="nx">GLOBAL_OPCODE</span><span class="o">:</span> <span class="mf">99</span><span class="p">,</span>
     <span class="nx">DICT</span><span class="o">:</span> <span class="mf">100</span><span class="p">,</span>
     <span class="nx">APPENDS</span><span class="o">:</span> <span class="mf">101</span><span class="p">,</span>
     <span class="nx">GET</span><span class="o">:</span> <span class="mf">103</span><span class="p">,</span>
@@ -464,7 +464,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
     <span class="mf">93</span><span class="o">:</span> <span class="s2">&quot;EMPTY_LIST&quot;</span><span class="p">,</span>
     <span class="mf">97</span><span class="o">:</span> <span class="s2">&quot;APPEND&quot;</span><span class="p">,</span>
     <span class="mf">98</span><span class="o">:</span> <span class="s2">&quot;BUILD&quot;</span><span class="p">,</span>
-    <span class="mf">99</span><span class="o">:</span> <span class="s2">&quot;GLOBAL&quot;</span><span class="p">,</span>
+    <span class="mf">99</span><span class="o">:</span> <span class="s2">&quot;GLOBAL_OPCODE&quot;</span><span class="p">,</span>
     <span class="mf">100</span><span class="o">:</span> <span class="s2">&quot;DICT&quot;</span><span class="p">,</span>
     <span class="mf">101</span><span class="o">:</span> <span class="s2">&quot;APPENDS&quot;</span><span class="p">,</span>
     <span class="mf">103</span><span class="o">:</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span>
@@ -1024,6 +1024,9 @@ https://www.python.org/dev/peps/pep-0574/</li>
       <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">REDUCE</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
+      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">GLOBAL_OPCODE</span><span class="o">:</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescapePair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINPUT</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
         <span class="k">break</span><span class="p">;</span>
@@ -1062,9 +1065,6 @@ https://www.python.org/dev/peps/pep-0574/</li>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">BINGET</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU1</span><span class="p">();</span>
-        <span class="k">break</span><span class="p">;</span>
-      <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">GLOBAL</span><span class="o">:</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">StringnlNoescapePair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
         <span class="k">break</span><span class="p">;</span>
       <span class="k">case</span> <span class="nx">PythonPickle</span><span class="p">.</span><span class="nx">Opcode</span><span class="p">.</span><span class="nx">DICT</span><span class="o">:</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>

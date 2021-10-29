@@ -64,7 +64,7 @@ class PythonPickle < Kaitai::Struct::Struct
     93 => :opcode_empty_list,
     97 => :opcode_append,
     98 => :opcode_build,
-    99 => :opcode_global,
+    99 => :opcode_global_opcode,
     100 => :opcode_dict,
     101 => :opcode_appends,
     103 => :opcode_get,
@@ -526,6 +526,8 @@ class PythonPickle < Kaitai::Struct::Struct
         @arg = Floatnl.new(@_io, self, @_root)
       when :opcode_reduce
         @arg = NoArg.new(@_io, self, @_root)
+      when :opcode_global_opcode
+        @arg = StringnlNoescapePair.new(@_io, self, @_root)
       when :opcode_binput
         @arg = @_io.read_u1
       when :opcode_memoize
@@ -552,8 +554,6 @@ class PythonPickle < Kaitai::Struct::Struct
         @arg = Unicodestring8.new(@_io, self, @_root)
       when :opcode_binget
         @arg = @_io.read_u1
-      when :opcode_global
-        @arg = StringnlNoescapePair.new(@_io, self, @_root)
       when :opcode_dict
         @arg = NoArg.new(@_io, self, @_root)
       when :opcode_binstring

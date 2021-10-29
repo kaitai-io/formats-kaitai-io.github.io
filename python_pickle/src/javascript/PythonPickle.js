@@ -67,7 +67,7 @@ var PythonPickle = (function() {
     EMPTY_LIST: 93,
     APPEND: 97,
     BUILD: 98,
-    GLOBAL: 99,
+    GLOBAL_OPCODE: 99,
     DICT: 100,
     APPENDS: 101,
     GET: 103,
@@ -136,7 +136,7 @@ var PythonPickle = (function() {
     93: "EMPTY_LIST",
     97: "APPEND",
     98: "BUILD",
-    99: "GLOBAL",
+    99: "GLOBAL_OPCODE",
     100: "DICT",
     101: "APPENDS",
     103: "GET",
@@ -696,6 +696,9 @@ var PythonPickle = (function() {
       case PythonPickle.Opcode.REDUCE:
         this.arg = new NoArg(this._io, this, this._root);
         break;
+      case PythonPickle.Opcode.GLOBAL_OPCODE:
+        this.arg = new StringnlNoescapePair(this._io, this, this._root);
+        break;
       case PythonPickle.Opcode.BINPUT:
         this.arg = this._io.readU1();
         break;
@@ -734,9 +737,6 @@ var PythonPickle = (function() {
         break;
       case PythonPickle.Opcode.BINGET:
         this.arg = this._io.readU1();
-        break;
-      case PythonPickle.Opcode.GLOBAL:
-        this.arg = new StringnlNoescapePair(this._io, this, this._root);
         break;
       case PythonPickle.Opcode.DICT:
         this.arg = new NoArg(this._io, this, this._root);

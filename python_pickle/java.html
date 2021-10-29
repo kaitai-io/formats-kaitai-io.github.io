@@ -404,7 +404,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="n">EMPTY_LIST</span><span class="p">(</span><span class="mi">93</span><span class="p">),</span>
         <span class="n">APPEND</span><span class="p">(</span><span class="mi">97</span><span class="p">),</span>
         <span class="n">BUILD</span><span class="p">(</span><span class="mi">98</span><span class="p">),</span>
-        <span class="n">GLOBAL</span><span class="p">(</span><span class="mi">99</span><span class="p">),</span>
+        <span class="n">GLOBAL_OPCODE</span><span class="p">(</span><span class="mi">99</span><span class="p">),</span>
         <span class="n">DICT</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span>
         <span class="n">APPENDS</span><span class="p">(</span><span class="mi">101</span><span class="p">),</span>
         <span class="n">GET</span><span class="p">(</span><span class="mi">103</span><span class="p">),</span>
@@ -1304,6 +1304,10 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="k">this</span><span class="p">.</span><span class="na">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
+                    <span class="k">case</span> <span class="n">GLOBAL_OPCODE</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="k">this</span><span class="p">.</span><span class="na">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+                        <span class="k">break</span><span class="p">;</span>
+                    <span class="p">}</span>
                     <span class="k">case</span> <span class="n">BINPUT</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">arg</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
                         <span class="k">break</span><span class="p">;</span>
@@ -1354,10 +1358,6 @@ for instructions how to add it into your project with the build tool that you us
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">BINGET</span><span class="p">:</span> <span class="p">{</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">arg</span> <span class="o">=</span> <span class="p">(</span><span class="n">Object</span><span class="p">)</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU1</span><span class="p">());</span>
-                        <span class="k">break</span><span class="p">;</span>
-                    <span class="p">}</span>
-                    <span class="k">case</span> <span class="n">GLOBAL</span><span class="p">:</span> <span class="p">{</span>
-                        <span class="k">this</span><span class="p">.</span><span class="na">arg</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">break</span><span class="p">;</span>
                     <span class="p">}</span>
                     <span class="k">case</span> <span class="n">DICT</span><span class="p">:</span> <span class="p">{</span>

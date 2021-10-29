@@ -71,7 +71,7 @@ public class PythonPickle extends KaitaiStruct {
         EMPTY_LIST(93),
         APPEND(97),
         BUILD(98),
-        GLOBAL(99),
+        GLOBAL_OPCODE(99),
         DICT(100),
         APPENDS(101),
         GET(103),
@@ -971,6 +971,10 @@ public class PythonPickle extends KaitaiStruct {
                         this.arg = new NoArg(this._io, this, _root);
                         break;
                     }
+                    case GLOBAL_OPCODE: {
+                        this.arg = new StringnlNoescapePair(this._io, this, _root);
+                        break;
+                    }
                     case BINPUT: {
                         this.arg = (Object) (this._io.readU1());
                         break;
@@ -1021,10 +1025,6 @@ public class PythonPickle extends KaitaiStruct {
                     }
                     case BINGET: {
                         this.arg = (Object) (this._io.readU1());
-                        break;
-                    }
-                    case GLOBAL: {
-                        this.arg = new StringnlNoescapePair(this._io, this, _root);
                         break;
                     }
                     case DICT: {

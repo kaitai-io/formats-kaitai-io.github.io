@@ -569,6 +569,9 @@ namespace PythonPickle {
                 case \PythonPickle\Opcode::REDUCE:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
                     break;
+                case \PythonPickle\Opcode::GLOBAL_OPCODE:
+                    $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
+                    break;
                 case \PythonPickle\Opcode::BINPUT:
                     $this->_m_arg = $this->_io->readU1();
                     break;
@@ -607,9 +610,6 @@ namespace PythonPickle {
                     break;
                 case \PythonPickle\Opcode::BINGET:
                     $this->_m_arg = $this->_io->readU1();
-                    break;
-                case \PythonPickle\Opcode::GLOBAL:
-                    $this->_m_arg = new \PythonPickle\StringnlNoescapePair($this->_io, $this, $this->_root);
                     break;
                 case \PythonPickle\Opcode::DICT:
                     $this->_m_arg = new \PythonPickle\NoArg($this->_io, $this, $this->_root);
@@ -854,8 +854,11 @@ namespace PythonPickle {
 
         /**
          * push self.find_class(modname, name); 2 string args
+         * 
+         * As of KSC 0.9, this enum key can't be called `global` because it would
+         * cause a syntax error in Python (it is a keyword).
          */
-        const GLOBAL = 99;
+        const GLOBAL_OPCODE = 99;
 
         /**
          * build a dict from stack items

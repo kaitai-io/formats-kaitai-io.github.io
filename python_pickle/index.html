@@ -388,7 +388,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
             <span class="s">&#39;opcode::ext1&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
             <span class="s">&#39;opcode::ext2&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
             <span class="s">&#39;opcode::ext4&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
-            <span class="s">&#39;opcode::global&#39;</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape_pair</span>
+            <span class="s">&#39;opcode::global_opcode&#39;</span><span class="p p-Indicator">:</span>  <span class="l l-Scalar l-Scalar-Plain">stringnl_noescape_pair</span>
             <span class="s">&#39;opcode::stack_global&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
             <span class="s">&#39;opcode::reduce&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
             <span class="s">&#39;opcode::build&#39;</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arg</span>
@@ -701,9 +701,14 @@ https://www.python.org/dev/peps/pep-0574/</li>
       <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">BUILD</span>
       <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">call __setstate__ or __dict__.update()</span>
     <span class="nt">0x63</span><span class="p">:</span> <span class="c1"># &quot;c&quot;</span>
-      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;global&quot;</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;global_opcode&quot;</span>
       <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GLOBAL</span>
-      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">push self.find_class(modname, name); 2 string args</span>
+      <span class="nt">-affected-by</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">90</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">push self.find_class(modname, name); 2 string args</span>
+
+        <span class="no">As of KSC 0.9, this enum key can&#39;t be called `global` because it would</span>
+        <span class="no">cause a syntax error in Python (it is a keyword).</span>
     <span class="nt">0x64</span><span class="p">:</span> <span class="c1"># &quot;d&quot;</span>
       <span class="nt">id</span><span class="p">:</span> <span class="s">&quot;dict&quot;</span>
       <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">DICT</span>

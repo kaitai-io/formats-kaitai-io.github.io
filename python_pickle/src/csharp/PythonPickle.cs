@@ -72,7 +72,7 @@ namespace Kaitai
             EmptyList = 93,
             Append = 97,
             Build = 98,
-            Global = 99,
+            GlobalOpcode = 99,
             Dict = 100,
             Appends = 101,
             Get = 103,
@@ -860,6 +860,10 @@ namespace Kaitai
                     _arg = new NoArg(m_io, this, m_root);
                     break;
                 }
+                case PythonPickle.Opcode.GlobalOpcode: {
+                    _arg = new StringnlNoescapePair(m_io, this, m_root);
+                    break;
+                }
                 case PythonPickle.Opcode.Binput: {
                     _arg = m_io.ReadU1();
                     break;
@@ -910,10 +914,6 @@ namespace Kaitai
                 }
                 case PythonPickle.Opcode.Binget: {
                     _arg = m_io.ReadU1();
-                    break;
-                }
-                case PythonPickle.Opcode.Global: {
-                    _arg = new StringnlNoescapePair(m_io, this, m_root);
                     break;
                 }
                 case PythonPickle.Opcode.Dict: {

@@ -395,7 +395,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
     <span class="mi">93</span> <span class="o">=&gt;</span> <span class="ss">:opcode_empty_list</span><span class="p">,</span>
     <span class="mi">97</span> <span class="o">=&gt;</span> <span class="ss">:opcode_append</span><span class="p">,</span>
     <span class="mi">98</span> <span class="o">=&gt;</span> <span class="ss">:opcode_build</span><span class="p">,</span>
-    <span class="mi">99</span> <span class="o">=&gt;</span> <span class="ss">:opcode_global</span><span class="p">,</span>
+    <span class="mi">99</span> <span class="o">=&gt;</span> <span class="ss">:opcode_global_opcode</span><span class="p">,</span>
     <span class="mi">100</span> <span class="o">=&gt;</span> <span class="ss">:opcode_dict</span><span class="p">,</span>
     <span class="mi">101</span> <span class="o">=&gt;</span> <span class="ss">:opcode_appends</span><span class="p">,</span>
     <span class="mi">103</span> <span class="o">=&gt;</span> <span class="ss">:opcode_get</span><span class="p">,</span>
@@ -857,6 +857,8 @@ https://www.python.org/dev/peps/pep-0574/</li>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Floatnl</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_reduce</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">when</span> <span class="ss">:opcode_global_opcode</span>
+        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_binput</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
       <span class="k">when</span> <span class="ss">:opcode_memoize</span>
@@ -883,8 +885,6 @@ https://www.python.org/dev/peps/pep-0574/</li>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">Unicodestring8</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_binget</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
-      <span class="k">when</span> <span class="ss">:opcode_global</span>
-        <span class="vi">@arg</span> <span class="o">=</span> <span class="no">StringnlNoescapePair</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_dict</span>
         <span class="vi">@arg</span> <span class="o">=</span> <span class="no">NoArg</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="k">when</span> <span class="ss">:opcode_binstring</span>

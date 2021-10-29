@@ -64,7 +64,7 @@ PythonPickle.Opcode = enum.Enum {
   empty_list = 93,
   append = 97,
   build = 98,
-  global = 99,
+  global_opcode = 99,
   dict = 100,
   appends = 101,
   get = 103,
@@ -542,6 +542,8 @@ elseif _on == PythonPickle.Opcode.float then
   self.arg = PythonPickle.Floatnl(self._io, self, self._root)
 elseif _on == PythonPickle.Opcode.reduce then
   self.arg = PythonPickle.NoArg(self._io, self, self._root)
+elseif _on == PythonPickle.Opcode.global_opcode then
+  self.arg = PythonPickle.StringnlNoescapePair(self._io, self, self._root)
 elseif _on == PythonPickle.Opcode.binput then
   self.arg = self._io:read_u1()
 elseif _on == PythonPickle.Opcode.memoize then
@@ -568,8 +570,6 @@ elseif _on == PythonPickle.Opcode.binunicode8 then
   self.arg = PythonPickle.Unicodestring8(self._io, self, self._root)
 elseif _on == PythonPickle.Opcode.binget then
   self.arg = self._io:read_u1()
-elseif _on == PythonPickle.Opcode.global then
-  self.arg = PythonPickle.StringnlNoescapePair(self._io, self, self._root)
 elseif _on == PythonPickle.Opcode.dict then
   self.arg = PythonPickle.NoArg(self._io, self, self._root)
 elseif _on == PythonPickle.Opcode.binstring then

@@ -61,7 +61,7 @@ const (
 	PythonPickle_Opcode__EmptyList PythonPickle_Opcode = 93
 	PythonPickle_Opcode__Append PythonPickle_Opcode = 97
 	PythonPickle_Opcode__Build PythonPickle_Opcode = 98
-	PythonPickle_Opcode__Global PythonPickle_Opcode = 99
+	PythonPickle_Opcode__GlobalOpcode PythonPickle_Opcode = 99
 	PythonPickle_Opcode__Dict PythonPickle_Opcode = 100
 	PythonPickle_Opcode__Appends PythonPickle_Opcode = 101
 	PythonPickle_Opcode__Get PythonPickle_Opcode = 103
@@ -985,96 +985,96 @@ func (this *PythonPickle_Op) Read(io *kaitai.Stream, parent *PythonPickle, root 
 			return err
 		}
 		this.Arg = tmp64
-	case PythonPickle_Opcode__Binput:
-		tmp65, err := this._io.ReadU1()
+	case PythonPickle_Opcode__GlobalOpcode:
+		tmp65 := NewPythonPickle_StringnlNoescapePair()
+		err = tmp65.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp65
-	case PythonPickle_Opcode__Memoize:
-		tmp66 := NewPythonPickle_NoArg()
-		err = tmp66.Read(this._io, this, this._root)
+	case PythonPickle_Opcode__Binput:
+		tmp66, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp66
-	case PythonPickle_Opcode__Persid:
-		tmp67 := NewPythonPickle_StringnlNoescape()
+	case PythonPickle_Opcode__Memoize:
+		tmp67 := NewPythonPickle_NoArg()
 		err = tmp67.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp67
-	case PythonPickle_Opcode__Ext1:
-		tmp68, err := this._io.ReadU1()
+	case PythonPickle_Opcode__Persid:
+		tmp68 := NewPythonPickle_StringnlNoescape()
+		err = tmp68.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp68
-	case PythonPickle_Opcode__None:
-		tmp69 := NewPythonPickle_NoArg()
-		err = tmp69.Read(this._io, this, this._root)
+	case PythonPickle_Opcode__Ext1:
+		tmp69, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp69
-	case PythonPickle_Opcode__ShortBinunicode:
-		tmp70 := NewPythonPickle_Unicodestring1()
+	case PythonPickle_Opcode__None:
+		tmp70 := NewPythonPickle_NoArg()
 		err = tmp70.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp70
-	case PythonPickle_Opcode__Obj:
-		tmp71 := NewPythonPickle_NoArg()
+	case PythonPickle_Opcode__ShortBinunicode:
+		tmp71 := NewPythonPickle_Unicodestring1()
 		err = tmp71.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp71
-	case PythonPickle_Opcode__Binfloat:
-		tmp72, err := this._io.ReadF8be()
+	case PythonPickle_Opcode__Obj:
+		tmp72 := NewPythonPickle_NoArg()
+		err = tmp72.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp72
-	case PythonPickle_Opcode__NewobjEx:
-		tmp73 := NewPythonPickle_NoArg()
-		err = tmp73.Read(this._io, this, this._root)
+	case PythonPickle_Opcode__Binfloat:
+		tmp73, err := this._io.ReadF8be()
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp73
-	case PythonPickle_Opcode__EmptyList:
+	case PythonPickle_Opcode__NewobjEx:
 		tmp74 := NewPythonPickle_NoArg()
 		err = tmp74.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp74
-	case PythonPickle_Opcode__Tuple:
+	case PythonPickle_Opcode__EmptyList:
 		tmp75 := NewPythonPickle_NoArg()
 		err = tmp75.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp75
-	case PythonPickle_Opcode__Binunicode8:
-		tmp76 := NewPythonPickle_Unicodestring8()
+	case PythonPickle_Opcode__Tuple:
+		tmp76 := NewPythonPickle_NoArg()
 		err = tmp76.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp76
-	case PythonPickle_Opcode__Binget:
-		tmp77, err := this._io.ReadU1()
+	case PythonPickle_Opcode__Binunicode8:
+		tmp77 := NewPythonPickle_Unicodestring8()
+		err = tmp77.Read(this._io, this, this._root)
 		if err != nil {
 			return err
 		}
 		this.Arg = tmp77
-	case PythonPickle_Opcode__Global:
-		tmp78 := NewPythonPickle_StringnlNoescapePair()
-		err = tmp78.Read(this._io, this, this._root)
+	case PythonPickle_Opcode__Binget:
+		tmp78, err := this._io.ReadU1()
 		if err != nil {
 			return err
 		}

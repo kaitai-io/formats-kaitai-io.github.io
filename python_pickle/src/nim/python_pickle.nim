@@ -33,7 +33,7 @@ type
     empty_list = 93
     append = 97
     build = 98
-    global = 99
+    global_opcode = 99
     dict = 100
     appends = 101
     get = 103
@@ -735,6 +735,9 @@ are determined by the value of the opcode.
     elif on == python_pickle.reduce:
       let argExpr = PythonPickle_NoArg.read(this.io, this.root, this)
       this.arg = argExpr
+    elif on == python_pickle.global_opcode:
+      let argExpr = PythonPickle_StringnlNoescapePair.read(this.io, this.root, this)
+      this.arg = argExpr
     elif on == python_pickle.binput:
       let argExpr = KaitaiStruct(this.io.readU1())
       this.arg = argExpr
@@ -773,9 +776,6 @@ are determined by the value of the opcode.
       this.arg = argExpr
     elif on == python_pickle.binget:
       let argExpr = KaitaiStruct(this.io.readU1())
-      this.arg = argExpr
-    elif on == python_pickle.global:
-      let argExpr = PythonPickle_StringnlNoescapePair.read(this.io, this.root, this)
       this.arg = argExpr
     elif on == python_pickle.dict:
       let argExpr = PythonPickle_NoArg.read(this.io, this.root, this)

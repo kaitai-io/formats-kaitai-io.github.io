@@ -858,6 +858,9 @@ https://www.python.org/dev/peps/pep-0574/</li>
                 <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">REDUCE</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
+                <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">GLOBAL_OPCODE</span><span class="o">:</span>
+                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescapePair</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINPUT</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
@@ -896,9 +899,6 @@ https://www.python.org/dev/peps/pep-0574/</li>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">BINGET</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">GLOBAL</span><span class="o">:</span>
-                    <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\StringnlNoescapePair</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="k">case</span> <span class="nx">\PythonPickle\Opcode</span><span class="o">::</span><span class="na">DICT</span><span class="o">:</span>
                     <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_arg</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\PythonPickle\NoArg</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
@@ -1143,8 +1143,11 @@ https://www.python.org/dev/peps/pep-0574/</li>
 
         <span class="sd">/**</span>
 <span class="sd">         * push self.find_class(modname, name); 2 string args</span>
+<span class="sd">         * </span>
+<span class="sd">         * As of KSC 0.9, this enum key can&#39;t be called `global` because it would</span>
+<span class="sd">         * cause a syntax error in Python (it is a keyword).</span>
 <span class="sd">         */</span>
-        <span class="k">const</span> <span class="no">GLOBAL</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+        <span class="k">const</span> <span class="no">GLOBAL_OPCODE</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
 
         <span class="sd">/**</span>
 <span class="sd">         * build a dict from stack items</span>

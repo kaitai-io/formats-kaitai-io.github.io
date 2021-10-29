@@ -350,7 +350,7 @@ https://www.python.org/dev/peps/pep-0574/</li>
 	<span class="nx">PythonPickle_Opcode__EmptyList</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">93</span>
 	<span class="nx">PythonPickle_Opcode__Append</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">97</span>
 	<span class="nx">PythonPickle_Opcode__Build</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">98</span>
-	<span class="nx">PythonPickle_Opcode__Global</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">99</span>
+	<span class="nx">PythonPickle_Opcode__GlobalOpcode</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">99</span>
 	<span class="nx">PythonPickle_Opcode__Dict</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">100</span>
 	<span class="nx">PythonPickle_Opcode__Appends</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">101</span>
 	<span class="nx">PythonPickle_Opcode__Get</span> <span class="nx">PythonPickle_Opcode</span> <span class="p">=</span> <span class="mi">103</span>
@@ -1274,96 +1274,96 @@ https://www.python.org/dev/peps/pep-0574/</li>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp64</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binput</span><span class="p">:</span>
-		<span class="nx">tmp65</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__GlobalOpcode</span><span class="p">:</span>
+		<span class="nx">tmp65</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_StringnlNoescapePair</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp65</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp65</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Memoize</span><span class="p">:</span>
-		<span class="nx">tmp66</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp66</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binput</span><span class="p">:</span>
+		<span class="nx">tmp66</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp66</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Persid</span><span class="p">:</span>
-		<span class="nx">tmp67</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_StringnlNoescape</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Memoize</span><span class="p">:</span>
+		<span class="nx">tmp67</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp67</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp67</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Ext1</span><span class="p">:</span>
-		<span class="nx">tmp68</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Persid</span><span class="p">:</span>
+		<span class="nx">tmp68</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_StringnlNoescape</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp68</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp68</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__None</span><span class="p">:</span>
-		<span class="nx">tmp69</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp69</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Ext1</span><span class="p">:</span>
+		<span class="nx">tmp69</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp69</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__ShortBinunicode</span><span class="p">:</span>
-		<span class="nx">tmp70</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_Unicodestring1</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__None</span><span class="p">:</span>
+		<span class="nx">tmp70</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp70</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp70</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Obj</span><span class="p">:</span>
-		<span class="nx">tmp71</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__ShortBinunicode</span><span class="p">:</span>
+		<span class="nx">tmp71</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_Unicodestring1</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp71</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp71</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binfloat</span><span class="p">:</span>
-		<span class="nx">tmp72</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadF8be</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Obj</span><span class="p">:</span>
+		<span class="nx">tmp72</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp72</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp72</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__NewobjEx</span><span class="p">:</span>
-		<span class="nx">tmp73</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp73</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binfloat</span><span class="p">:</span>
+		<span class="nx">tmp73</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadF8be</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp73</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__EmptyList</span><span class="p">:</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__NewobjEx</span><span class="p">:</span>
 		<span class="nx">tmp74</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp74</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp74</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Tuple</span><span class="p">:</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__EmptyList</span><span class="p">:</span>
 		<span class="nx">tmp75</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp75</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp75</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binunicode8</span><span class="p">:</span>
-		<span class="nx">tmp76</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_Unicodestring8</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Tuple</span><span class="p">:</span>
+		<span class="nx">tmp76</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_NoArg</span><span class="p">()</span>
 		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp76</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp76</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binget</span><span class="p">:</span>
-		<span class="nx">tmp77</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binunicode8</span><span class="p">:</span>
+		<span class="nx">tmp77</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_Unicodestring8</span><span class="p">()</span>
+		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp77</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>
 		<span class="nx">this</span><span class="p">.</span><span class="nx">Arg</span> <span class="p">=</span> <span class="nx">tmp77</span>
-	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Global</span><span class="p">:</span>
-		<span class="nx">tmp78</span> <span class="o">:=</span> <span class="nx">NewPythonPickle_StringnlNoescapePair</span><span class="p">()</span>
-		<span class="nx">err</span> <span class="p">=</span> <span class="nx">tmp78</span><span class="p">.</span><span class="nx">Read</span><span class="p">(</span><span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">this</span><span class="p">,</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">)</span>
+	<span class="k">case</span> <span class="nx">PythonPickle_Opcode__Binget</span><span class="p">:</span>
+		<span class="nx">tmp78</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadU1</span><span class="p">()</span>
 		<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 			<span class="k">return</span> <span class="nx">err</span>
 		<span class="p">}</span>

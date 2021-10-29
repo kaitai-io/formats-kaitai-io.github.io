@@ -403,7 +403,7 @@ can also be found there.</p>
             <span class="n">EmptyList</span> <span class="p">=</span> <span class="m">93</span><span class="p">,</span>
             <span class="n">Append</span> <span class="p">=</span> <span class="m">97</span><span class="p">,</span>
             <span class="n">Build</span> <span class="p">=</span> <span class="m">98</span><span class="p">,</span>
-            <span class="n">Global</span> <span class="p">=</span> <span class="m">99</span><span class="p">,</span>
+            <span class="n">GlobalOpcode</span> <span class="p">=</span> <span class="m">99</span><span class="p">,</span>
             <span class="n">Dict</span> <span class="p">=</span> <span class="m">100</span><span class="p">,</span>
             <span class="n">Appends</span> <span class="p">=</span> <span class="m">101</span><span class="p">,</span>
             <span class="n">Get</span> <span class="p">=</span> <span class="m">103</span><span class="p">,</span>
@@ -1191,6 +1191,10 @@ can also be found there.</p>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">NoArg</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
+                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">GlobalOpcode</span><span class="p">:</span> <span class="p">{</span>
+                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binput</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
                     <span class="k">break</span><span class="p">;</span>
@@ -1241,10 +1245,6 @@ can also be found there.</p>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Binget</span><span class="p">:</span> <span class="p">{</span>
                     <span class="n">_arg</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU1</span><span class="p">();</span>
-                    <span class="k">break</span><span class="p">;</span>
-                <span class="p">}</span>
-                <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Global</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="n">_arg</span> <span class="p">=</span> <span class="k">new</span> <span class="n">StringnlNoescapePair</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                     <span class="k">break</span><span class="p">;</span>
                 <span class="p">}</span>
                 <span class="k">case</span> <span class="n">PythonPickle</span><span class="p">.</span><span class="n">Opcode</span><span class="p">.</span><span class="n">Dict</span><span class="p">:</span> <span class="p">{</span>
