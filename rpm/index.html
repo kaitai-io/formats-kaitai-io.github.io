@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>RPM package file format spec for Kaitai Struct</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">RPM package file</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>RPM package file:
+            
+            format specification
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>This parser is for the RPM version 3 file format which is the current version
+of the file format used by RPM 2.1 and later (including RPM version 4.x, which
+is the current version of the RPM tool). There are historical versions of the
+RPM file format, as well as a currently abandoned fork (rpm5). These formats
+are not covered by this specification.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Application</h3>
+                    </div>
+                    <div class="panel-body">
+                        RPM Package Manager
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">File extension</h3>
+                    </div>
+                    <div class="panel-body">
+                        ["rpm", "srpm", "src.rpm", "drpm"]
+                    </div>
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.nationalarchives.gov.uk/pronom/fmt/795">PRONOM fmt/795</a></li>
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q492650">Wikidata Q492650</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/RPM">RPM in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of RPM package file
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li class="active">
+                
+                <a href="index.html" title="RPM package file parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="RPM package file parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="RPM package file parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="RPM package file parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="RPM package file parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="RPM package file parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="RPM package file parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="RPM package file parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="RPM package file parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="RPM package file parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="RPM package file parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="RPM package file parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="RPM package file parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="format-diagram" class="format">
+    <div class="container">
+        <h2>Block diagram</h2>
+        <a href="rpm.svg">
+            <img class="diagram-img" src="rpm.svg" />
+        </a>
+    </div>
+</section>
+
+<section id="format-ksy" class="format">
+    <div class="container">
+        <h2>Format specification in Kaitai Struct YAML</h2>
+
+        <div class="highlight"><pre><span></span><span class="nt">meta</span><span class="p">:</span>
+  <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpm</span>
+  <span class="nt">title</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPM package file</span>
+  <span class="nt">application</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPM Package Manager</span>
+  <span class="nt">file-extension</span><span class="p">:</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">rpm</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">srpm</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">src.rpm</span>
+    <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">drpm</span>
+  <span class="nt">xref</span><span class="p">:</span>
+    <span class="nt">justsolve</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPM</span>
+    <span class="nt">mime</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">application/x-rpm</span>
+    <span class="nt">pronom</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fmt/795</span> <span class="c1"># v3</span>
+    <span class="nt">wikidata</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Q492650</span>
+  <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">UTF-8</span>
+  <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">be</span>
+<span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+  <span class="no">This parser is for the RPM version 3 file format which is the current version</span>
+  <span class="no">of the file format used by RPM 2.1 and later (including RPM version 4.x, which</span>
+  <span class="no">is the current version of the RPM tool). There are historical versions of the</span>
+  <span class="no">RPM file format, as well as a currently abandoned fork (rpm5). These formats</span>
+  <span class="no">are not covered by this specification.</span>
+<span class="nt">doc-ref</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/format.md</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://refspecs.linuxbase.org/LSB_5.0.0/LSB-Core-generic/LSB-Core-generic/pkgformat.html</span>
+  <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">http://ftp.rpm.org/max-rpm/</span>
+<span class="nt">seq</span><span class="p">:</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lead</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">lead</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header(true)</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_padding</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">(- _io.pos) % 8</span>
+  <span class="p p-Indicator">-</span> <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_header &lt; 0</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header(false)</span>
+  <span class="p p-Indicator">-</span> <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_payload &lt; 0</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_tags_steps</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="s">&#39;signature_tags_step(_index,</span><span class="nv"> </span><span class="s">_index</span><span class="nv"> </span><span class="s">&lt;</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">-1</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">signature_tags_steps[_index</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1].size_tag_idx)&#39;</span>
+    <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature.header_record.num_index_records</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">payload</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_payload</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_payload</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_signature_size_tag</span>
+  <span class="nt">len_payload</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;signature_size_tag.body.as&lt;record_type_uint32&gt;.values[0]</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">len_header&#39;</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_signature_size_tag</span>
+  <span class="nt">len_header</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_payload - ofs_header</span>
+  <span class="nt">ofs_header</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_io.pos</span>
+  <span class="nt">ofs_payload</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_io.pos</span>
+  <span class="nt">has_signature_size_tag</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_tags_steps.last.size_tag_idx != -1</span>
+  <span class="nt">signature_size_tag</span><span class="p">:</span>
+    <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature.index_records[signature_tags_steps.last.size_tag_idx]</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">has_signature_size_tag</span>
+<span class="nt">types</span><span class="p">:</span>
+  <span class="nt">signature_tags_step</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">idx</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prev_size_tag_idx</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s4</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">size_tag_idx</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">prev_size_tag_idx != -1 ? prev_size_tag_idx :</span>
+            <span class="no">(_parent.signature.index_records[idx].signature_tag == signature_tags::size</span>
+            <span class="no">and _parent.signature.index_records[idx].record_type == record_types::uint32</span>
+            <span class="no">and _parent.signature.index_records[idx].num_values &gt;= 1 ? idx : -1)</span>
+  <span class="nt">dummy</span><span class="p">:</span> <span class="p p-Indicator">{}</span>
+  <span class="nt">lead</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">In 2021, Panu Matilainen (a RPM developer) [described this</span>
+      <span class="no">structure](https://github.com/kaitai-io/kaitai_struct_formats/pull/469#discussion_r718288192)</span>
+      <span class="no">as follows:</span>
+
+      <span class="no">&gt; The lead as a structure is 25 years obsolete, the data there is</span>
+      <span class="no">&gt; meaningless. Seriously. Except to check for the magic to detect that</span>
+      <span class="no">&gt; it&#39;s an rpm file in the first place, just ignore everything in it.</span>
+      <span class="no">&gt; Literally everything.</span>
+
+      <span class="no">The fields with `valid` constraints are important, because these are the</span>
+      <span class="no">same validations that RPM does (which means that any valid `.rpm` file</span>
+      <span class="no">must pass them), but otherwise you should not make decisions based on the</span>
+      <span class="no">values given here.</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0xed</span><span class="p p-Indicator">,</span> <span class="nv">0xab</span><span class="p p-Indicator">,</span> <span class="nv">0xee</span><span class="p p-Indicator">,</span> <span class="nv">0xdb</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpm_version</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpm_types</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">architecture</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">archnum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">architectures</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">package_name</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">66</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">osnum</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">operating_systems</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">valid</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">5</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">16</span>
+  <span class="nt">rpm_version</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">major</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">valid</span><span class="p">:</span>
+          <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">3</span>
+          <span class="nt">max</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">4</span>
+        <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmlead.c#L102</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">minor</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+  <span class="nt">header</span><span class="p">:</span>
+    <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+      <span class="no">header structure used for both the &quot;header&quot; and &quot;signature&quot;, but some tag</span>
+      <span class="no">values have different meanings in signature and header (hence they use</span>
+      <span class="no">different enums)</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">is_signature</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bool</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_record</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_record</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">index_records</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_index_record</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_record.num_index_records</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">storage_section</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_record.len_storage_section</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dummy</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">is_header</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not is_signature</span>
+  <span class="nt">header_index_record</span><span class="p">:</span>
+    <span class="nt">-webide-representation</span><span class="p">:</span> <span class="s">&#39;{signature_tag}</span><span class="nv"> </span><span class="s">{header_tag}</span><span class="nv"> </span><span class="s">[{record_type}]&#39;</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_raw</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prefer to access `signature_tag` and `header_tag` instead</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_types</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_body</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">internal; access `num_values` and `len_value` instead</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">signature_tag</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_raw</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signature_tags</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.is_signature</span>
+      <span class="nt">header_tag</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">tag_raw</span>
+        <span class="nt">enum</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_tags</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.is_header</span>
+      <span class="nt">num_values</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type != record_types::bin</span>
+      <span class="nt">len_value</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">count</span>
+        <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type == record_types::bin</span>
+      <span class="nt">body</span><span class="p">:</span>
+        <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">_parent.storage_section._io</span>
+        <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs_body</span>
+        <span class="nt">type</span><span class="p">:</span>
+          <span class="nt">switch-on</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type</span>
+          <span class="nt">cases</span><span class="p">:</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::char</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_uint8(num_values)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::uint8</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_uint8(num_values)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::uint16</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_uint16(num_values)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::uint32</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_uint32(num_values)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::uint64</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_uint64(num_values)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::string</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_string</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::bin</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_bin(len_value)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::string_array</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_string_array(num_values)</span>
+            <span class="l l-Scalar l-Scalar-Plain">record_types::i18n_string</span><span class="p p-Indicator">:</span> <span class="l l-Scalar l-Scalar-Plain">record_type_string_array(num_values)</span>
+  <span class="nt">record_type_uint8</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u1</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+  <span class="nt">record_type_uint16</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+  <span class="nt">record_type_uint32</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+  <span class="nt">record_type_uint64</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u8</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+  <span class="nt">record_type_string</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+  <span class="nt">record_type_bin</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_value</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_value</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+  <span class="nt">record_type_string_array</span><span class="p">:</span>
+    <span class="nt">params</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">values</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">strz</span>
+        <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
+        <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_values</span>
+  <span class="nt">header_record</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0x8e</span><span class="p p-Indicator">,</span> <span class="nv">0xad</span><span class="p p-Indicator">,</span> <span class="nv">0xe8</span><span class="p p-Indicator">,</span> <span class="nv">0x01</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved</span>
+        <span class="nt">contents</span><span class="p">:</span> <span class="p p-Indicator">[</span><span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">,</span> <span class="nv">0</span><span class="p p-Indicator">]</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_index_records</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nindex</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">valid</span><span class="p">:</span>
+          <span class="nt">min</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">1</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">len_storage_section</span>
+        <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hsize</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u4</span>
+        <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+          <span class="no">Size of the storage area for the data</span>
+          <span class="no">pointed to by the Index Records.</span>
+<span class="nt">enums</span><span class="p">:</span>
+  <span class="nt">rpm_types</span><span class="p">:</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">binary</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source</span>
+
+  <span class="c1"># these come (mostly) from &lt;https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L159&gt;</span>
+  <span class="c1"># (see &lt;https://ftp.osuosl.org/pub/rpm/max-rpm/s1-rpm-multi-build-install-detection.html#S3-RPM-MULTI-XXX-CANON&gt;</span>
+  <span class="c1"># for `arch_canon` entry explanation)</span>
+  <span class="c1">#</span>
+  <span class="c1"># See also</span>
+  <span class="c1">#   - &lt;https://github.com/eclipse/packager/blob/51ccdd3/rpm/src/main/java/org/eclipse/packager/rpm/Architecture.java&gt;</span>
+  <span class="c1">#   - &lt;https://github.com/craigwblake/redline/blob/15afff5/src/main/java/org/redline_rpm/header/Architecture.java&gt;</span>
+  <span class="c1">#   - &lt;https://docs.fedoraproject.org/en-US/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch01s03.html&gt;</span>
+  <span class="nt">architectures</span><span class="p">:</span>
+    <span class="nt">1</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">x86 or x86_64</span>
+    <span class="nt">2</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">alpha</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Alpha or Sparc64</span>
+      <span class="nt">doc-ref</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/eclipse/packager/blob/51ccdd3/rpm/src/main/java/org/eclipse/packager/rpm/Architecture.java#L24</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L14</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L174-L183</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppc</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m68k</span>
+    <span class="nt">7</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sgi</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">IP</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">SGI Inhouse Processors (IP)</span>
+      <span class="nt">doc-ref</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L19</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L205</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rs6000</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ia64</span>
+    <span class="nt">10</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sparc64</span>
+      <span class="nt">doc-ref</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L22</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/craigwblake/redline/blob/15afff5/src/main/java/org/redline_rpm/header/Architecture.java#L15</span>
+    <span class="nt">11</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips64</span>
+    <span class="nt">12</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arm</span>
+    <span class="nt">13</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m68k_mint</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">m68kmint</span>
+      <span class="nt">doc-ref</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/craigwblake/redline/blob/15afff5/src/main/java/org/redline_rpm/header/Architecture.java#L18</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L226-L233</span>
+    <span class="nt">14</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s390</span>
+    <span class="nt">15</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">s390x</span>
+    <span class="nt">16</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ppc64</span>
+    <span class="nt">17</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sh</span>
+    <span class="nt">18</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xtensa</span>
+    <span class="nt">19</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">aarch64</span>
+    <span class="nt">20</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips_r6</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mipsr6</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L252-L253</span>
+    <span class="nt">21</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips64_r6</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mips64r6</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L254-L255</span>
+    <span class="nt">22</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">riscv</span>
+    <span class="nt">255</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_arch</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noarch</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">can be installed on any architecture</span>
+      <span class="nt">doc-ref</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/file/file/blob/9b2538d/magic/Magdir/rpm#L31</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmrc.c#L1466</span>
+  <span class="nt">operating_systems</span><span class="p">:</span>
+    <span class="c1"># these come from &lt;https://github.com/rpm-software-management/rpm/blob/911448f2/rpmrc.in#L261&gt;</span>
+    <span class="c1"># in practice it will almost always be 1</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">linux</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">irix</span>
+    <span class="nt">255</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_os</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">noos</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">This value is pretty much a guess, based on that `archnum` and `osnum`</span>
+        <span class="no">values are handled by the same function `getMachineInfo()` (see</span>
+        <span class="no">`doc-ref` link) which uses 255 for an unknown value. Value</span>
+        <span class="no">`architectures::no_arch` can be verified with the magic file of</span>
+        <span class="no">`file(1)` and `.rpm` files that have `noarch` in their name, so it seems</span>
+        <span class="no">reasonable that `no_os` (or &quot;`noos`&quot; originally) follows the same</span>
+        <span class="no">pattern.</span>
+
+        <span class="no">Moreover, this value is actually used in practice, see this sample file:</span>
+        <span class="no">&lt;https://github.com/craigwblake/redline/blob/15afff5/src/test/resources/rpm-3-1.0-1.somearch.rpm&gt;</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmrc.c#L1466</span>
+
+  <span class="nt">signature_tags</span><span class="p">:</span>
+    <span class="c1"># Tags from [lib/rpmtag.h](https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmtag.h#L412).</span>
+    <span class="c1"># the first three are shared with header_tags</span>
+    <span class="nt">62</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signatures</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HEADER_SIGNATURES</span>
+    <span class="nt">63</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_immutable</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HEADER_IMMUTABLE</span>
+    <span class="nt">100</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i18n_table</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HEADER_I18NTABLE</span>
+    <span class="c1"># RPMSIGTAG_*</span>
+    <span class="c1"># 256: RPMTAG_SIG_BASE</span>
+    <span class="nt">264</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bad_sha1_1_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_BADSHA1_1</span>
+    <span class="nt">265</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bad_sha1_2_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_BADSHA1_2</span>
+    <span class="c1"># 266:</span>
+    <span class="c1">#   id: pubkeys_obsolete</span>
+    <span class="c1">#   -orig-id: RPMTAG_PUBKEYS</span>
+    <span class="c1">#   doc-ref: https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">267</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dsa</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_DSA</span>
+    <span class="nt">268</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rsa</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_RSA</span>
+    <span class="nt">269</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha1</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_SHA1</span>
+    <span class="nt">270</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">long_size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_LONGSIZE</span>
+    <span class="nt">271</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">long_archive_size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_LONGARCHIVESIZE</span>
+    <span class="c1"># 272 - reserved</span>
+    <span class="nt">273</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha256</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SHA256HEADER</span>
+    <span class="nt">274</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_signatures</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_FILESIGNATURES</span>
+    <span class="nt">275</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_signature_length</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_FILESIGNATURELENGTH</span>
+    <span class="nt">276</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verity_signatures</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERITYSIGNATURES</span>
+    <span class="nt">277</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verity_signature_algo</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERITYSIGNATUREALGO</span>
+    <span class="nt">1000</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_SIZE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Header + payload size (32bit) in bytes.</span>
+    <span class="nt">1001</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le_md5_1_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_LEMD5_1</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MD5 broken on big-endian machines, take 1</span>
+    <span class="nt">1002</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pgp</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_PGP</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">PGP 2.6.3 signature.</span>
+    <span class="nt">1003</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le_md5_2_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_LEMD5_2</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MD5 broken on big-endian machines, take 2</span>
+    <span class="nt">1004</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">md5</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_MD5</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">MD5 signature</span>
+    <span class="nt">1005</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gpg</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_GPG</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">GnuPG signature</span>
+    <span class="nt">1006</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pgp5_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_PGP5</span>
+    <span class="nt">1007</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_PAYLOADSIZE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Uncompressed payload size (32bit) in bytes.</span>
+    <span class="nt">1008</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">reserved_space</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMSIGTAG_RESERVEDSPACE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Space reserved for signatures</span>
+  <span class="nt">header_tags</span><span class="p">:</span>
+    <span class="c1"># Tags from [lib/rpmtag.h](https://github.com/rpm-software-management/rpm/blob/911448f2/lib/rpmtag.h).</span>
+    <span class="c1"># This includes (almost) all tags. Some have `_unimplemented`, `_internal`</span>
+    <span class="c1"># or `_obsolete` suffix (if more than one applies, the first applicable in</span>
+    <span class="c1"># this order is used).</span>
+    <span class="nt">62</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">signatures</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HEADER_SIGNATURES</span>
+    <span class="nt">63</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_immutable</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HEADER_IMMUTABLE</span>
+    <span class="nt">100</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i18n_table</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">HEADER_I18NTABLE</span>
+    <span class="c1"># RPMTAG_*</span>
+    <span class="nt">1000</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the name of the package.</span>
+    <span class="nt">1001</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERSION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the version of the package.</span>
+    <span class="nt">1002</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">release</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RELEASE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the release of the package.</span>
+    <span class="nt">1003</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">epoch</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EPOCH</span>
+    <span class="nt">1004</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">summary</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUMMARY</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the summary description of the package. The summary</span>
+        <span class="no">value pointed to by this index record contains a one line</span>
+        <span class="no">description of the package.</span>
+    <span class="nt">1005</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">description</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DESCRIPTION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the description of the package. The description value</span>
+        <span class="no">pointed to by this index record contains a full desription of</span>
+        <span class="no">the package.</span>
+    <span class="nt">1006</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_time</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDTIME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the time as seconds since the epoch</span>
+        <span class="no">at which the package was built.</span>
+    <span class="nt">1007</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_host</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDHOST</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the hostname of the system on which the package was built.</span>
+    <span class="nt">1008</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_time</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_INSTALLTIME</span>
+    <span class="nt">1009</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SIZE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the sum of the sizes of the regular files in the archive.</span>
+    <span class="nt">1010</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">distribution</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DISTRIBUTION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Contains the name of the distribution on which the package was built.</span>
+    <span class="nt">1011</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vendor</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VENDOR</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Contains the name of the organization that produced the package.</span>
+    <span class="nt">1012</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">gif_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_GIF</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1013</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xpm_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_XPM</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1014</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">license</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_LICENSE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the license which applies to this package.</span>
+    <span class="nt">1015</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">packager</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PACKAGER</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Identifies the tool used to build the package.</span>
+    <span class="nt">1016</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">group</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_GROUP</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the administrative group to which this package belongs.</span>
+    <span class="nt">1017</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">changelog_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CHANGELOG</span>
+    <span class="nt">1018</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCE</span>
+    <span class="nt">1019</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patch</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PATCH</span>
+    <span class="nt">1020</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">url</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_URL</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Generic package information URL.</span>
+    <span class="nt">1021</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">os</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the OS of the package.</span>
+    <span class="nt">1022</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">arch</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ARCH</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the architecture of the package.</span>
+    <span class="nt">1023</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_install_scriptlet</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREIN</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the preinstall scriptlet. If present, then</span>
+        <span class="no">`::pre_install_interpreter` shall also be present.</span>
+    <span class="nt">1024</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_install_scriptlet</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTIN</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the postinstall scriptlet. If present, then</span>
+        <span class="no">`::post_install_interpreter` shall also be present.</span>
+    <span class="nt">1025</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_uninstall_scriptlet</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREUN</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the preuninstall scriptlet. If present, then</span>
+        <span class="no">`::pre_uninstall_interpreter` shall also be present.</span>
+    <span class="nt">1026</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_uninstall_scriptlet</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTUN</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the postuninstall scriptlet. If present, then</span>
+        <span class="no">`::post_uninstall_interpreter` shall also be present.</span>
+    <span class="nt">1027</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_file_names_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDFILENAMES</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1028</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_sizes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILESIZES</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the size of each file in the archive.</span>
+    <span class="nt">1029</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_states</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILESTATES</span>
+    <span class="nt">1030</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_modes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEMODES</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The mode of each file in the archive.</span>
+    <span class="nt">1031</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_uids_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEUIDS</span>
+    <span class="nt">1032</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_gids_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEGIDS</span>
+    <span class="nt">1033</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">device_number</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILERDEVS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The device number from which the file was copied.</span>
+    <span class="nt">1034</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mtimes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEMTIMES</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">The modification time in seconds since the epoch</span>
+        <span class="no">of each file in the archive.</span>
+    <span class="nt">1035</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_digests</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEDIGESTS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">The ASCII representation of the MD5 sum of the corresponding</span>
+        <span class="no">file contents. This value is empty if the corresponding archive</span>
+        <span class="no">entry is not a regular file.</span>
+    <span class="nt">1036</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">link_tos</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILELINKTOS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The target for a symlink, otherwise NULL.</span>
+    <span class="nt">1037</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEFLAGS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the bit(s) to classify and control how files</span>
+        <span class="no">are to be installed.</span>
+    <span class="nt">1038</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">root_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ROOT</span>
+    <span class="nt">1039</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_owner</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEUSERNAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the owner of the corresponding file.</span>
+    <span class="nt">1040</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_group</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEGROUPNAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the group of the corresponding file.</span>
+    <span class="nt">1041</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exclude_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EXCLUDE</span>
+    <span class="nt">1042</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exclusive_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EXCLUSIVE</span>
+    <span class="nt">1043</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">icon_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ICON</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1044</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_rpm</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCERPM</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the name of the source RPM.</span>
+    <span class="nt">1045</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_verify_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEVERIFYFLAGS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the bit(s) to control how files are to be verified</span>
+        <span class="no">after install, specifying which checks should be performed.</span>
+    <span class="nt">1046</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">archive_size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ARCHIVESIZE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the uncompressed size of the Payload archive,</span>
+        <span class="no">including the cpio headers.</span>
+    <span class="nt">1047</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">provide_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PROVIDENAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">The name of the dependency provided by this package.</span>
+    <span class="nt">1048</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">require_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REQUIREFLAGS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bits(s) to specify the dependency range and context.</span>
+    <span class="nt">1049</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">require_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REQUIRENAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates the dependencies for this package.</span>
+    <span class="nt">1050</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">require_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REQUIREVERSION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Indicates the versions associated with the values found</span>
+        <span class="no">in the require_name index.</span>
+    <span class="nt">1051</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_source</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NOSOURCE</span>
+    <span class="nt">1052</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">no_patch</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NOPATCH</span>
+    <span class="nt">1053</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conflict_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CONFLICTFLAGS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bits(s) to specify the conflict range and context.</span>
+    <span class="nt">1054</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conflict_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CONFLICTNAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates the conflicting dependencies for this package.</span>
+    <span class="nt">1055</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conflict_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CONFLICTVERSION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Indicates the versions associated with the</span>
+        <span class="no">values found in the conflict_name index.</span>
+    <span class="nt">1056</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">default_prefix_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DEFAULTPREFIX</span>
+    <span class="nt">1057</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_root_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDROOT</span>
+    <span class="nt">1058</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_prefix_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_INSTALLPREFIX</span>
+    <span class="nt">1059</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exclude_arch</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EXCLUDEARCH</span>
+    <span class="nt">1060</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exclude_os</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EXCLUDEOS</span>
+    <span class="nt">1061</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exclusive_arch</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EXCLUSIVEARCH</span>
+    <span class="nt">1063</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">autoreqprov_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_AUTOREQPROV</span>
+    <span class="nt">1062</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exclusive_os</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EXCLUSIVEOS</span>
+    <span class="nt">1064</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rpm_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RPMVERSION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates the version of RPM tool used to build this package.</span>
+    <span class="nt">1065</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_scripts</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERSCRIPTS</span>
+    <span class="nt">1066</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_name</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERNAME</span>
+    <span class="nt">1067</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_version</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERVERSION</span>
+    <span class="nt">1068</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_flags</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERFLAGS</span>
+    <span class="nt">1069</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_index</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERINDEX</span>
+    <span class="c1"># 1070..1078 - unassigned (missing in lib/rpmtag.h)</span>
+    <span class="nt">1079</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verify_script</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERIFYSCRIPT</span>
+    <span class="nt">1080</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">changelog_time</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CHANGELOGTIME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the Unix time in seconds since the epoch</span>
+        <span class="no">associated with each entry in the Changelog file.</span>
+    <span class="nt">1081</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">changelog_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CHANGELOGNAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the name of who made a change to this package.</span>
+    <span class="nt">1082</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">changelog_text</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CHANGELOGTEXT</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the changes asssociated with a changelog entry.</span>
+    <span class="nt">1083</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">broken_md5_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BROKENMD5</span>
+    <span class="nt">1084</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prereq_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREREQ</span>
+    <span class="nt">1085</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_install_interpreter</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREINPROG</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the name of the interpreter to which the preinstall</span>
+        <span class="no">scriptlet will be passed. The interpreter pointed to by this</span>
+        <span class="no">index record shall be `/bin/sh`.</span>
+    <span class="nt">1086</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_install_interpreter</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTINPROG</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the name of the interpreter to which the postinstall</span>
+        <span class="no">scriptlet will be passed. The intepreter pointed to by this</span>
+        <span class="no">index record shall be `/bin/sh`.</span>
+    <span class="nt">1087</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_uninstall_interpreter</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREUNPROG</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the name of the interpreter to which the preuninstall</span>
+        <span class="no">scriptlet will be passed. The interpreter pointed to by this index</span>
+        <span class="no">record shall be `/bin/sh`.</span>
+    <span class="nt">1088</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_uninstall_interpreter</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTUNPROG</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the name of the interpreter to which the postuninstall</span>
+        <span class="no">scriptlet will be passed. The interpreter pointed to by this index</span>
+        <span class="no">record shall be `/bin/sh`.</span>
+    <span class="nt">1089</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_archs</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDARCHS</span>
+    <span class="nt">1090</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">obsolete_name</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OBSOLETENAME</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Indicates the obsoleted dependencies for this package.</span>
+    <span class="nt">1091</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verify_script_prog</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERIFYSCRIPTPROG</span>
+    <span class="nt">1092</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_script_prog</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERSCRIPTPROG</span>
+    <span class="nt">1093</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">doc_dir_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DOCDIR</span>
+    <span class="nt">1094</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cookie</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_COOKIE</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Contains an opaque string whose contents are undefined.</span>
+    <span class="nt">1095</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_devices</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEDEVICES</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Specifies the 16 bit device number from which the file was copied.</span>
+    <span class="nt">1096</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_inodes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEINODES</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies the inode value from the original file system</span>
+        <span class="no">on the the system on which it was built.</span>
+    <span class="nt">1097</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_langs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILELANGS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Specifies a per-file locale marker used to install only locale</span>
+        <span class="no">specific subsets of files when the package is installed.</span>
+    <span class="nt">1098</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">prefixes</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREFIXES</span>
+    <span class="nt">1099</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_prefixes</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_INSTPREFIXES</span>
+    <span class="nt">1100</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_install_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERIN</span>
+    <span class="nt">1101</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_uninstall_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERUN</span>
+    <span class="nt">1102</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_post_uninstall_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERPOSTUN</span>
+    <span class="nt">1103</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">autoreq_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_AUTOREQ</span>
+    <span class="nt">1104</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">autoprov_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_AUTOPROV</span>
+    <span class="nt">1105</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">capability_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CAPABILITY</span>
+    <span class="nt">1106</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_package</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCEPACKAGE</span>
+    <span class="nt">1107</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_orig_filenames_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDORIGFILENAMES</span>
+    <span class="nt">1108</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_prereq_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDPREREQ</span>
+    <span class="nt">1109</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_requires_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDREQUIRES</span>
+    <span class="nt">1110</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_conflicts_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDCONFLICTS</span>
+    <span class="nt">1111</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_macros_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDMACROS</span>
+    <span class="nt">1112</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">provide_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PROVIDEFLAGS</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Bits(s) to specify the conflict range and context.</span>
+    <span class="nt">1113</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">provide_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PROVIDEVERSION</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
+        <span class="no">Indicates the versions associated with the values found</span>
+        <span class="no">in the provide_name index.</span>
+    <span class="nt">1114</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">obsolete_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OBSOLETEFLAGS</span>
+    <span class="nt">1115</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">obsolete_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OBSOLETEVERSION</span>
+    <span class="nt">1116</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dir_indexes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DIRINDEXES</span>
+    <span class="nt">1117</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">base_names</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BASENAMES</span>
+    <span class="nt">1118</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dir_names</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DIRNAMES</span>
+    <span class="nt">1119</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orig_dir_indexes</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORIGDIRINDEXES</span>
+    <span class="nt">1120</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orig_base_names</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORIGBASENAMES</span>
+    <span class="nt">1121</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orig_dir_names</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORIGDIRNAMES</span>
+    <span class="nt">1122</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">opt_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OPTFLAGS</span>
+    <span class="nt">1123</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dist_url</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DISTURL</span>
+    <span class="nt">1124</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_format</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADFORMAT</span>
+    <span class="nt">1125</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_compressor</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADCOMPRESSOR</span>
+    <span class="nt">1126</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADFLAGS</span>
+    <span class="nt">1127</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_color</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_INSTALLCOLOR</span>
+    <span class="nt">1128</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">install_tid</span> <span class="c1"># from lib/rpmtag.h</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_INSTALLTID</span>
+    <span class="nt">1129</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remove_tid_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REMOVETID</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1130</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">sha1_rhn_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SHA1RHN</span>
+    <span class="nt">1131</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rhn_platform_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RHNPLATFORM</span>
+    <span class="nt">1132</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">platform</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PLATFORM</span>
+    <span class="c1"># below are all from lib/rpmtag.h</span>
+    <span class="nt">1133</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patches_name_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PATCHESNAME</span>
+    <span class="nt">1134</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patches_flags_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PATCHESFLAGS</span>
+    <span class="nt">1135</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">patches_version_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PATCHESVERSION</span>
+    <span class="nt">1136</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cache_ctime_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CACHECTIME</span>
+    <span class="nt">1137</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cache_pkg_path_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CACHEPKGPATH</span>
+    <span class="nt">1138</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cache_pkg_size_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CACHEPKGSIZE</span>
+    <span class="nt">1139</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cache_pkg_mtime_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CACHEPKGMTIME</span>
+    <span class="nt">1140</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_colors</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILECOLORS</span>
+    <span class="nt">1141</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_class</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILECLASS</span>
+    <span class="nt">1142</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">class_dict</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CLASSDICT</span>
+    <span class="nt">1143</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_depends_idx</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEDEPENDSX</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Index into `::depends_dict` denoting start of this file&#39;s dependencies.</span>
+    <span class="nt">1144</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_depends_num</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEDEPENDSN</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">Number of file dependencies in `::depends_dict`, starting from `::file_depends_idx`</span>
+    <span class="nt">1145</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">depends_dict</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DEPENDSDICT</span>
+    <span class="nt">1146</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">source_pkgid</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SOURCEPKGID</span>
+    <span class="nt">1147</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_contexts_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILECONTEXTS</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1148</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fs_contexts_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FSCONTEXTS</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1149</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">re_contexts_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RECONTEXTS</span>
+      <span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">https://github.com/rpm-software-management/rpm/blob/911448f2/doc/manual/tags.md#deprecated--obsolete</span>
+    <span class="nt">1150</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">policies</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POLICIES</span>
+    <span class="nt">1151</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_trans</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PRETRANS</span>
+    <span class="nt">1152</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_trans</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTTRANS</span>
+    <span class="nt">1153</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_trans_prog</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PRETRANSPROG</span>
+    <span class="nt">1154</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_trans_prog</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTTRANSPROG</span>
+    <span class="nt">1155</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dist_tag</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DISTTAG</span>
+    <span class="nt">1156</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_suggests_name_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDSUGGESTSNAME</span>
+    <span class="nt">1157</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_suggests_version_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDSUGGESTSVERSION</span>
+    <span class="nt">1158</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_suggests_flags_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDSUGGESTSFLAGS</span>
+    <span class="nt">1159</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_enhances_name_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDENHANCESNAME</span>
+    <span class="nt">1160</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_enhances_version_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDENHANCESVERSION</span>
+    <span class="nt">1161</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">old_enhances_flags_obsolete</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OLDENHANCESFLAGS</span>
+    <span class="nt">1162</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">priority_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PRIORITY</span>
+    <span class="nt">1163</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">cvsid_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CVSID</span>
+        <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SVNID</span>
+    <span class="nt">1164</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blink_pkgid_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BLINKPKGID</span>
+    <span class="nt">1165</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blink_hdrid_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BLINKHDRID</span>
+    <span class="nt">1166</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">blink_nevra_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BLINKNEVRA</span>
+    <span class="nt">1167</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flink_pkgid_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FLINKPKGID</span>
+    <span class="nt">1168</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flink_hdrid_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FLINKHDRID</span>
+    <span class="nt">1169</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">flink_nevra_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FLINKNEVRA</span>
+    <span class="nt">1170</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">package_origin_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PACKAGEORIGIN</span>
+    <span class="nt">1171</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_pre_install_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERPREIN</span>
+    <span class="nt">1172</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_suggests_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDSUGGESTS</span>
+    <span class="nt">1173</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_enhances_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDENHANCES</span>
+    <span class="nt">1174</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script_states_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SCRIPTSTATES</span>
+    <span class="nt">1175</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">script_metrics_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SCRIPTMETRICS</span>
+    <span class="nt">1176</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_cpu_clock_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDCPUCLOCK</span>
+    <span class="nt">1177</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_digest_algos_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEDIGESTALGOS</span>
+    <span class="nt">1178</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">variants_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VARIANTS</span>
+    <span class="nt">1179</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xmajor_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_XMAJOR</span>
+    <span class="nt">1180</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xminor_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_XMINOR</span>
+    <span class="nt">1181</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">repo_tag_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REPOTAG</span>
+    <span class="nt">1182</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">keywords_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_KEYWORDS</span>
+    <span class="nt">1183</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_platforms_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDPLATFORMS</span>
+    <span class="nt">1184</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">package_color_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PACKAGECOLOR</span>
+    <span class="nt">1185</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">package_pref_color_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PACKAGEPREFCOLOR</span>
+    <span class="nt">1186</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">xattrs_dict_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_XATTRSDICT</span>
+    <span class="nt">1187</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">filex_attrsx_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEXATTRSX</span>
+    <span class="nt">1188</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">dep_attrs_dict_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DEPATTRSDICT</span>
+    <span class="nt">1189</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conflict_attrsx_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CONFLICTATTRSX</span>
+    <span class="nt">1190</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">obsolete_attrsx_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OBSOLETEATTRSX</span>
+    <span class="nt">1191</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">provide_attrsx_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PROVIDEATTRSX</span>
+    <span class="nt">1192</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">require_attrsx_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REQUIREATTRSX</span>
+    <span class="nt">1193</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_provides_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDPROVIDES</span>
+    <span class="nt">1194</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">build_obsoletes_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUILDOBSOLETES</span>
+    <span class="nt">1195</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">db_instance</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_DBINSTANCE</span>
+    <span class="nt">1196</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nvra</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NVRA</span>
+    <span class="c1"># 1997..4999 - reserved</span>
+    <span class="nt">5000</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_names</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILENAMES</span>
+    <span class="nt">5001</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_provide</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEPROVIDE</span>
+    <span class="nt">5002</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_require</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEREQUIRE</span>
+    <span class="nt">5003</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fs_names_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FSNAMES</span>
+    <span class="nt">5004</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">fs_sizes_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FSSIZES</span>
+    <span class="nt">5005</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_conds</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERCONDS</span>
+    <span class="nt">5006</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_type</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERTYPE</span>
+    <span class="nt">5007</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">orig_file_names</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORIGFILENAMES</span>
+    <span class="nt">5008</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">long_file_sizes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_LONGFILESIZES</span>
+    <span class="nt">5009</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">long_size</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_LONGSIZE</span>
+    <span class="nt">5010</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_caps</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILECAPS</span>
+    <span class="nt">5011</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_digest_algo</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILEDIGESTALGO</span>
+      <span class="nt">doc</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">File digest algorithm</span>
+    <span class="nt">5012</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bug_url</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_BUGURL</span>
+    <span class="nt">5013</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">evr</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EVR</span>
+    <span class="nt">5014</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nvr</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NVR</span>
+    <span class="nt">5015</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nevr</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NEVR</span>
+    <span class="nt">5016</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">nevra</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_NEVRA</span>
+    <span class="nt">5017</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_color</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_HEADERCOLOR</span>
+    <span class="nt">5018</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verbose</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERBOSE</span>
+    <span class="nt">5019</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">epoch_num</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_EPOCHNUM</span>
+    <span class="nt">5020</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_install_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREINFLAGS</span>
+    <span class="nt">5021</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_install_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTINFLAGS</span>
+    <span class="nt">5022</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_uninstall_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PREUNFLAGS</span>
+    <span class="nt">5023</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_uninstall_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTUNFLAGS</span>
+    <span class="nt">5024</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">pre_trans_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PRETRANSFLAGS</span>
+    <span class="nt">5025</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">post_trans_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POSTTRANSFLAGS</span>
+    <span class="nt">5026</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">verify_script_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VERIFYSCRIPTFLAGS</span>
+    <span class="nt">5027</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trigger_script_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRIGGERSCRIPTFLAGS</span>
+    <span class="c1"># 5028 - unassigned (removed from lib/rpmtag.h in commit &lt;https://github.com/rpm-software-management/rpm/commit/dc2ee980&gt;)</span>
+    <span class="nt">5029</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">collections_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_COLLECTIONS</span>
+    <span class="nt">5030</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">policy_names</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POLICYNAMES</span>
+    <span class="nt">5031</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">policy_types</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POLICYTYPES</span>
+    <span class="nt">5032</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">policy_types_indexes</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POLICYTYPESINDEXES</span>
+    <span class="nt">5033</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">policy_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_POLICYFLAGS</span>
+    <span class="nt">5034</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">vcs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_VCS</span>
+    <span class="nt">5035</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">order_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORDERNAME</span>
+    <span class="nt">5036</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">order_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORDERVERSION</span>
+    <span class="nt">5037</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">order_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ORDERFLAGS</span>
+    <span class="nt">5038</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mssf_manifest_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_MSSFMANIFEST</span>
+    <span class="nt">5039</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mssf_domain_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_MSSFDOMAIN</span>
+    <span class="nt">5040</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">inst_file_names</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_INSTFILENAMES</span>
+    <span class="nt">5041</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">require_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REQUIRENEVRS</span>
+    <span class="nt">5042</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">provide_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PROVIDENEVRS</span>
+    <span class="nt">5043</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">obsolete_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_OBSOLETENEVRS</span>
+    <span class="nt">5044</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">conflict_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_CONFLICTNEVRS</span>
+    <span class="nt">5045</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_nlinks</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILENLINKS</span>
+    <span class="nt">5046</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">recommend_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RECOMMENDNAME</span>
+    <span class="nt">5047</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">recommend_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RECOMMENDVERSION</span>
+    <span class="nt">5048</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">recommend_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RECOMMENDFLAGS</span>
+    <span class="nt">5049</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suggest_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUGGESTNAME</span>
+    <span class="nt">5050</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suggest_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUGGESTVERSION</span>
+    <span class="nt">5051</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suggest_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUGGESTFLAGS</span>
+    <span class="nt">5052</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">supplement_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUPPLEMENTNAME</span>
+    <span class="nt">5053</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">supplement_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUPPLEMENTVERSION</span>
+    <span class="nt">5054</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">supplement_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUPPLEMENTFLAGS</span>
+    <span class="nt">5055</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enhance_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ENHANCENAME</span>
+    <span class="nt">5056</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enhance_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ENHANCEVERSION</span>
+    <span class="nt">5057</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enhance_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ENHANCEFLAGS</span>
+    <span class="nt">5058</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">recommend_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_RECOMMENDNEVRS</span>
+    <span class="nt">5059</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">suggest_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUGGESTNEVRS</span>
+    <span class="nt">5060</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">supplement_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_SUPPLEMENTNEVRS</span>
+    <span class="nt">5061</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">enhance_nevrs</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ENHANCENEVRS</span>
+    <span class="nt">5062</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">encoding</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_ENCODING</span>
+    <span class="nt">5063</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_install_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERIN</span>
+    <span class="nt">5064</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_uninstall_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERUN</span>
+    <span class="nt">5065</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_post_uninstall_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERPOSTUN</span>
+    <span class="nt">5066</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_scripts</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERSCRIPTS</span>
+    <span class="nt">5067</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_script_prog</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERSCRIPTPROG</span>
+    <span class="nt">5068</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_script_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERSCRIPTFLAGS</span>
+    <span class="nt">5069</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERNAME</span>
+    <span class="nt">5070</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_index</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERINDEX</span>
+    <span class="nt">5071</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERVERSION</span>
+    <span class="nt">5072</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERFLAGS</span>
+    <span class="nt">5073</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_install_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERIN</span>
+    <span class="nt">5074</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_uninstall_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERUN</span>
+    <span class="nt">5075</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_post_uninstall_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERPOSTUN</span>
+    <span class="nt">5076</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_scripts</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERSCRIPTS</span>
+    <span class="nt">5077</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_script_prog</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERSCRIPTPROG</span>
+    <span class="nt">5078</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_script_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERSCRIPTFLAGS</span>
+    <span class="nt">5079</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_name</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERNAME</span>
+    <span class="nt">5080</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_index</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERINDEX</span>
+    <span class="nt">5081</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_version</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERVERSION</span>
+    <span class="nt">5082</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_flags</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERFLAGS</span>
+    <span class="nt">5083</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">remove_path_postfixes_internal</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_REMOVEPATHPOSTFIXES</span>
+    <span class="nt">5084</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_priorities</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERPRIORITIES</span>
+    <span class="nt">5085</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_priorities</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERPRIORITIES</span>
+    <span class="nt">5086</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_conds</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERCONDS</span>
+    <span class="nt">5087</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_trigger_type</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILETRIGGERTYPE</span>
+    <span class="nt">5088</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_conds</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERCONDS</span>
+    <span class="nt">5089</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">trans_file_trigger_type</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_TRANSFILETRIGGERTYPE</span>
+    <span class="nt">5090</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_signatures</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILESIGNATURES</span>
+    <span class="nt">5091</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">file_signature_length</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_FILESIGNATURELENGTH</span>
+    <span class="nt">5092</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_digest</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGEST</span>
+    <span class="nt">5093</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_digest_algo</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGESTALGO</span>
+    <span class="nt">5094</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">auto_installed_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_AUTOINSTALLED</span>
+    <span class="nt">5095</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">identity_unimplemented</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_IDENTITY</span>
+    <span class="nt">5096</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">modularity_label</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_MODULARITYLABEL</span>
+    <span class="nt">5097</span><span class="p">:</span>
+      <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">payload_digest_alt</span>
+      <span class="nt">-orig-id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">RPMTAG_PAYLOADDIGESTALT</span>
+  <span class="nt">record_types</span><span class="p">:</span>
+    <span class="c1"># from LSB</span>
+    <span class="nt">0</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">not_implemented</span>
+    <span class="nt">1</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">char</span>
+    <span class="nt">2</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint8</span>
+    <span class="nt">3</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint16</span>
+    <span class="nt">4</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint32</span>
+    <span class="nt">5</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">uint64</span>
+    <span class="nt">6</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string</span> <span class="c1"># NUL terminated</span>
+    <span class="nt">7</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">bin</span>
+    <span class="nt">8</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">string_array</span> <span class="c1"># NUL terminated strings</span>
+    <span class="nt">9</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">i18n_string</span> <span class="c1"># NUL terminated strings</span>
+</pre></div>
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
