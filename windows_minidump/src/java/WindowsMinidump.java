@@ -50,7 +50,7 @@ public class WindowsMinidump extends KaitaiStruct {
         TOKEN(19),
         JAVA_SCRIPT_DATA(20),
         SYSTEM_MEMORY_INFO(21),
-        PROCESS_VM_VOUNTERS(22),
+        PROCESS_VM_COUNTERS(22),
         IPT_TRACE(23),
         THREAD_NAMES(24),
         CE_NULL(32768),

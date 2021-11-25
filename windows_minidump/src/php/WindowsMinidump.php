@@ -500,7 +500,7 @@ namespace WindowsMinidump {
         const TOKEN = 19;
         const JAVA_SCRIPT_DATA = 20;
         const SYSTEM_MEMORY_INFO = 21;
-        const PROCESS_VM_VOUNTERS = 22;
+        const PROCESS_VM_COUNTERS = 22;
         const IPT_TRACE = 23;
         const THREAD_NAMES = 24;
         const CE_NULL = 32768;

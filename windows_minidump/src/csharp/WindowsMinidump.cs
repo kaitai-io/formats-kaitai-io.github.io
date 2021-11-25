@@ -50,7 +50,7 @@ namespace Kaitai
             Token = 19,
             JavaScriptData = 20,
             SystemMemoryInfo = 21,
-            ProcessVmVounters = 22,
+            ProcessVmCounters = 22,
             IptTrace = 23,
             ThreadNames = 24,
             CeNull = 32768,

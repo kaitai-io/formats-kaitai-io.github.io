@@ -42,7 +42,7 @@ class WindowsMinidump < Kaitai::Struct::Struct
     19 => :stream_types_token,
     20 => :stream_types_java_script_data,
     21 => :stream_types_system_memory_info,
-    22 => :stream_types_process_vm_vounters,
+    22 => :stream_types_process_vm_counters,
     23 => :stream_types_ipt_trace,
     24 => :stream_types_thread_names,
     32768 => :stream_types_ce_null,
