@@ -966,7 +966,7 @@ namespace Kaitai
 
             /// <summary>
             /// Text contents (&quot;value&quot; of this key-value pair), written in
-            /// language specified in `language_tag`. Linke breaks are
+            /// language specified in `language_tag`. Line breaks are
             /// allowed.
             /// </summary>
             public string Text { get { return _text; } }

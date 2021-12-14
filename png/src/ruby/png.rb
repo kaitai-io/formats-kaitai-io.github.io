@@ -575,7 +575,7 @@ class Png < Kaitai::Struct::Struct
 
     ##
     # Text contents ("value" of this key-value pair), written in
-    # language specified in `language_tag`. Linke breaks are
+    # language specified in `language_tag`. Line breaks are
     # allowed.
     attr_reader :text
   end

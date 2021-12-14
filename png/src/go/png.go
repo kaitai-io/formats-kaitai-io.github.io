@@ -1198,7 +1198,7 @@ func (this *Png_InternationalTextChunk) Read(io *kaitai.Stream, parent *Png_Chun
 
 /**
  * Text contents ("value" of this key-value pair), written in
- * language specified in `language_tag`. Linke breaks are
+ * language specified in `language_tag`. Line breaks are
  * allowed.
  */
 

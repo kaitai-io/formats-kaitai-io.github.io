@@ -765,7 +765,7 @@ public:
 
         /**
          * Text contents ("value" of this key-value pair), written in
-         * language specified in `language_tag`. Linke breaks are
+         * language specified in `language_tag`. Line breaks are
          * allowed.
          */
         std::string text() const { return m_text; }
