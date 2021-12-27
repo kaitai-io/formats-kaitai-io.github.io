@@ -6,6 +6,11 @@ unless Gem::Version.new(Kaitai::Struct::VERSION) >= Gem::Version.new('0.9')
   raise "Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have #{Kaitai::Struct::VERSION}"
 end
 
+
+##
+# @see http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics) Source
+# @see http://mrclick.zophar.net/TilEd/download/timgfx.txt Source
+# @see https://www.romhacking.net/documents/31/ Source
 class PsxTim < Kaitai::Struct::Struct
 
   BPP_TYPE = {

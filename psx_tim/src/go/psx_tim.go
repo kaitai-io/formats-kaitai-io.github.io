@@ -6,6 +6,12 @@ import (
 )
 
 
+/**
+ * @see <a href="http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)">Source</a>
+ * @see <a href="http://mrclick.zophar.net/TilEd/download/timgfx.txt">Source</a>
+ * @see <a href="https://www.romhacking.net/documents/31/">Source</a>
+ */
+
 type PsxTim_BppType int
 const (
 	PsxTim_BppType__Bpp4 PsxTim_BppType = 0

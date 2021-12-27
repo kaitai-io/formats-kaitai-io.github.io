@@ -4,6 +4,16 @@
 
 namespace Kaitai
 {
+
+    /// <remarks>
+    /// Reference: <a href="http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="http://mrclick.zophar.net/TilEd/download/timgfx.txt">Source</a>
+    /// </remarks>
+    /// <remarks>
+    /// Reference: <a href="https://www.romhacking.net/documents/31/">Source</a>
+    /// </remarks>
     public partial class PsxTim : KaitaiStruct
     {
         public static PsxTim FromFile(string fileName)

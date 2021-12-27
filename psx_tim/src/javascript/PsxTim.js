@@ -9,6 +9,12 @@
     root.PsxTim = factory(root.KaitaiStream);
   }
 }(this, function (KaitaiStream) {
+/**
+ * @see {@link http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics)|Source}
+ * @see {@link http://mrclick.zophar.net/TilEd/download/timgfx.txt|Source}
+ * @see {@link https://www.romhacking.net/documents/31/|Source}
+ */
+
 var PsxTim = (function() {
   PsxTim.BppType = Object.freeze({
     BPP_4: 0,

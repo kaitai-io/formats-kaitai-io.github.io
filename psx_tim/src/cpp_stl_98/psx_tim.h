@@ -10,6 +10,12 @@
 #error "Incompatible Kaitai Struct C++/STL API: version 0.9 or later is required"
 #endif
 
+/**
+ * \sa http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics) Source
+ * \sa http://mrclick.zophar.net/TilEd/download/timgfx.txt Source
+ * \sa https://www.romhacking.net/documents/31/ Source
+ */
+
 class psx_tim_t : public kaitai::kstruct {
 
 public:

@@ -6,6 +6,10 @@ local class = require("class")
 require("kaitaistruct")
 local enum = require("enum")
 
+-- 
+-- See also: Source (http://fileformats.archiveteam.org/wiki/TIM_(PlayStation_graphics))
+-- See also: Source (http://mrclick.zophar.net/TilEd/download/timgfx.txt)
+-- See also: Source (https://www.romhacking.net/documents/31/)
 PsxTim = class.class(KaitaiStruct)
 
 PsxTim.BppType = enum.Enum {
