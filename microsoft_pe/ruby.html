@@ -358,13 +358,13 @@ section#format-index .row {
     <span class="p">}</span>
     <span class="no">I__CERTIFICATE_REVISION</span> <span class="o">=</span> <span class="no">CERTIFICATE_REVISION</span><span class="o">.</span><span class="n">invert</span>
 
-    <span class="no">CERTIFICATE_TYPE</span> <span class="o">=</span> <span class="p">{</span>
-      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_x509</span><span class="p">,</span>
-      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_pkcs_signed_data</span><span class="p">,</span>
-      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_reserved_1</span><span class="p">,</span>
-      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_ts_stack_signed</span><span class="p">,</span>
+    <span class="no">CERTIFICATE_TYPE_ENUM</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="mi">1</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_enum_x509</span><span class="p">,</span>
+      <span class="mi">2</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_enum_pkcs_signed_data</span><span class="p">,</span>
+      <span class="mi">3</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_enum_reserved_1</span><span class="p">,</span>
+      <span class="mi">4</span> <span class="o">=&gt;</span> <span class="ss">:certificate_type_enum_ts_stack_signed</span><span class="p">,</span>
     <span class="p">}</span>
-    <span class="no">I__CERTIFICATE_TYPE</span> <span class="o">=</span> <span class="no">CERTIFICATE_TYPE</span><span class="o">.</span><span class="n">invert</span>
+    <span class="no">I__CERTIFICATE_TYPE_ENUM</span> <span class="o">=</span> <span class="no">CERTIFICATE_TYPE_ENUM</span><span class="o">.</span><span class="n">invert</span>
     <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
       <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
       <span class="n">_read</span>
@@ -373,7 +373,7 @@ section#format-index .row {
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@length</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
       <span class="vi">@revision</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CERTIFICATE_REVISION</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
-      <span class="vi">@certificate_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CERTIFICATE_TYPE</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
+      <span class="vi">@certificate_type</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">::</span><span class="n">resolve_enum</span><span class="p">(</span><span class="no">CERTIFICATE_TYPE_ENUM</span><span class="p">,</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2le</span><span class="p">)</span>
       <span class="vi">@certificate_bytes</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
       <span class="nb">self</span>
     <span class="k">end</span>

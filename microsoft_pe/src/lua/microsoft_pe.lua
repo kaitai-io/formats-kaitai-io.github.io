@@ -53,7 +53,7 @@ MicrosoftPe.CertificateEntry.CertificateRevision = enum.Enum {
   revision_2_0 = 512,
 }
 
-MicrosoftPe.CertificateEntry.CertificateType = enum.Enum {
+MicrosoftPe.CertificateEntry.CertificateTypeEnum = enum.Enum {
   x509 = 1,
   pkcs_signed_data = 2,
   reserved_1 = 3,
@@ -70,7 +70,7 @@ end
 function MicrosoftPe.CertificateEntry:_read()
   self.length = self._io:read_u4le()
   self.revision = MicrosoftPe.CertificateEntry.CertificateRevision(self._io:read_u2le())
-  self.certificate_type = MicrosoftPe.CertificateEntry.CertificateType(self._io:read_u2le())
+  self.certificate_type = MicrosoftPe.CertificateEntry.CertificateTypeEnum(self._io:read_u2le())
   self.certificate_bytes = self._io:read_bytes((self.length - 8))
 end
 

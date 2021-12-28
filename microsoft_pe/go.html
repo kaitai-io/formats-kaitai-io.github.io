@@ -359,17 +359,17 @@ section#format-index .row {
 	<span class="nx">MicrosoftPe_CertificateEntry_CertificateRevision__Revision20</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateRevision</span> <span class="p">=</span> <span class="mi">512</span>
 <span class="p">)</span>
 
-<span class="kd">type</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span> <span class="kt">int</span>
+<span class="kd">type</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span> <span class="kt">int</span>
 <span class="kd">const</span> <span class="p">(</span>
-	<span class="nx">MicrosoftPe_CertificateEntry_CertificateType__X509</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span> <span class="p">=</span> <span class="mi">1</span>
-	<span class="nx">MicrosoftPe_CertificateEntry_CertificateType__PkcsSignedData</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span> <span class="p">=</span> <span class="mi">2</span>
-	<span class="nx">MicrosoftPe_CertificateEntry_CertificateType__Reserved1</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span> <span class="p">=</span> <span class="mi">3</span>
-	<span class="nx">MicrosoftPe_CertificateEntry_CertificateType__TsStackSigned</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span> <span class="p">=</span> <span class="mi">4</span>
+	<span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum__X509</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span> <span class="p">=</span> <span class="mi">1</span>
+	<span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum__PkcsSignedData</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span> <span class="p">=</span> <span class="mi">2</span>
+	<span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum__Reserved1</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span> <span class="p">=</span> <span class="mi">3</span>
+	<span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum__TsStackSigned</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span> <span class="p">=</span> <span class="mi">4</span>
 <span class="p">)</span>
 <span class="kd">type</span> <span class="nx">MicrosoftPe_CertificateEntry</span> <span class="kd">struct</span> <span class="p">{</span>
 	<span class="nx">Length</span> <span class="kt">uint32</span>
 	<span class="nx">Revision</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateRevision</span>
-	<span class="nx">CertificateType</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span>
+	<span class="nx">CertificateType</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span>
 	<span class="nx">CertificateBytes</span> <span class="p">[]</span><span class="kt">byte</span>
 	<span class="nx">_io</span> <span class="o">*</span><span class="nx">kaitai</span><span class="p">.</span><span class="nx">Stream</span>
 	<span class="nx">_root</span> <span class="o">*</span><span class="nx">MicrosoftPe</span>
@@ -399,7 +399,7 @@ section#format-index .row {
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>
 	<span class="p">}</span>
-	<span class="nx">this</span><span class="p">.</span><span class="nx">CertificateType</span> <span class="p">=</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateType</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
+	<span class="nx">this</span><span class="p">.</span><span class="nx">CertificateType</span> <span class="p">=</span> <span class="nx">MicrosoftPe_CertificateEntry_CertificateTypeEnum</span><span class="p">(</span><span class="nx">tmp5</span><span class="p">)</span>
 	<span class="nx">tmp6</span><span class="p">,</span> <span class="nx">err</span> <span class="o">:=</span> <span class="nx">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">ReadBytes</span><span class="p">(</span><span class="nb">int</span><span class="p">((</span><span class="nx">this</span><span class="p">.</span><span class="nx">Length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)))</span>
 	<span class="k">if</span> <span class="nx">err</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
 		<span class="k">return</span> <span class="nx">err</span>

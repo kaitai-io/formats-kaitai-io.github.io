@@ -418,11 +418,11 @@ and build them along with your project.</p>
             <span class="n">CERTIFICATE_REVISION_REVISION_2_0</span> <span class="o">=</span> <span class="mi">512</span>
         <span class="p">};</span>
 
-        <span class="k">enum</span> <span class="nc">certificate_type_t</span> <span class="p">{</span>
-            <span class="n">CERTIFICATE_TYPE_X509</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
-            <span class="n">CERTIFICATE_TYPE_PKCS_SIGNED_DATA</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-            <span class="n">CERTIFICATE_TYPE_RESERVED_1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
-            <span class="n">CERTIFICATE_TYPE_TS_STACK_SIGNED</span> <span class="o">=</span> <span class="mi">4</span>
+        <span class="k">enum</span> <span class="nc">certificate_type_enum_t</span> <span class="p">{</span>
+            <span class="n">CERTIFICATE_TYPE_ENUM_X509</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="n">CERTIFICATE_TYPE_ENUM_PKCS_SIGNED_DATA</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="n">CERTIFICATE_TYPE_ENUM_RESERVED_1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+            <span class="n">CERTIFICATE_TYPE_ENUM_TS_STACK_SIGNED</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="p">};</span>
 
         <span class="n">certificate_entry_t</span><span class="p">(</span><span class="n">kaitai</span><span class="o">::</span><span class="n">kstream</span><span class="o">*</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">microsoft_pe_t</span><span class="o">::</span><span class="n">certificate_table_t</span><span class="o">*</span> <span class="n">p__parent</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">microsoft_pe_t</span><span class="o">*</span> <span class="n">p__root</span> <span class="o">=</span> <span class="mi">0</span><span class="p">);</span>
@@ -437,7 +437,7 @@ and build them along with your project.</p>
     <span class="k">private</span><span class="o">:</span>
         <span class="kt">uint32_t</span> <span class="n">m_length</span><span class="p">;</span>
         <span class="n">certificate_revision_t</span> <span class="n">m_revision</span><span class="p">;</span>
-        <span class="n">certificate_type_t</span> <span class="n">m_certificate_type</span><span class="p">;</span>
+        <span class="n">certificate_type_enum_t</span> <span class="n">m_certificate_type</span><span class="p">;</span>
         <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">m_certificate_bytes</span><span class="p">;</span>
         <span class="n">microsoft_pe_t</span><span class="o">*</span> <span class="n">m__root</span><span class="p">;</span>
         <span class="n">microsoft_pe_t</span><span class="o">::</span><span class="n">certificate_table_t</span><span class="o">*</span> <span class="n">m__parent</span><span class="p">;</span>
@@ -457,7 +457,7 @@ and build them along with your project.</p>
         <span class="cm">/**</span>
 <span class="cm">         * Specifies the type of content in bCertificate</span>
 <span class="cm">         */</span>
-        <span class="n">certificate_type_t</span> <span class="n">certificate_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_certificate_type</span><span class="p">;</span> <span class="p">}</span>
+        <span class="n">certificate_type_enum_t</span> <span class="n">certificate_type</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_certificate_type</span><span class="p">;</span> <span class="p">}</span>
 
         <span class="cm">/**</span>
 <span class="cm">         * Contains a certificate, such as an Authenticode signature.</span>
@@ -1237,7 +1237,7 @@ and build them along with your project.</p>
 <span class="kt">void</span> <span class="n">microsoft_pe_t</span><span class="o">::</span><span class="n">certificate_entry_t</span><span class="o">::</span><span class="n">_read</span><span class="p">()</span> <span class="p">{</span>
     <span class="n">m_length</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u4le</span><span class="p">();</span>
     <span class="n">m_revision</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">microsoft_pe_t</span><span class="o">::</span><span class="n">certificate_entry_t</span><span class="o">::</span><span class="n">certificate_revision_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
-    <span class="n">m_certificate_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">microsoft_pe_t</span><span class="o">::</span><span class="n">certificate_entry_t</span><span class="o">::</span><span class="n">certificate_type_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
+    <span class="n">m_certificate_type</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="n">microsoft_pe_t</span><span class="o">::</span><span class="n">certificate_entry_t</span><span class="o">::</span><span class="n">certificate_type_enum_t</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_u2le</span><span class="p">());</span>
     <span class="n">m_certificate_bytes</span> <span class="o">=</span> <span class="n">m__io</span><span class="o">-&gt;</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">length</span><span class="p">()</span> <span class="o">-</span> <span class="mi">8</span><span class="p">));</span>
 <span class="p">}</span>
 

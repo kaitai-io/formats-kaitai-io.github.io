@@ -83,7 +83,7 @@ namespace MicrosoftPe\CertificateEntry {
 }
 
 namespace MicrosoftPe\CertificateEntry {
-    class CertificateType {
+    class CertificateTypeEnum {
 
         /**
          * bCertificate contains an X.509 Certificate

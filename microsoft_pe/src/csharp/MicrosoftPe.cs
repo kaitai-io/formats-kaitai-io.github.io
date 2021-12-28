@@ -51,7 +51,7 @@ namespace Kaitai
                 Revision20 = 512,
             }
 
-            public enum CertificateType
+            public enum CertificateTypeEnum
             {
                 X509 = 1,
                 PkcsSignedData = 2,
@@ -68,12 +68,12 @@ namespace Kaitai
             {
                 _length = m_io.ReadU4le();
                 _revision = ((CertificateRevision) m_io.ReadU2le());
-                _certificateType = ((CertificateType) m_io.ReadU2le());
+                _certificateType = ((CertificateTypeEnum) m_io.ReadU2le());
                 _certificateBytes = m_io.ReadBytes((Length - 8));
             }
             private uint _length;
             private CertificateRevision _revision;
-            private CertificateType _certificateType;
+            private CertificateTypeEnum _certificateType;
             private byte[] _certificateBytes;
             private MicrosoftPe m_root;
             private MicrosoftPe.CertificateTable m_parent;
@@ -91,7 +91,7 @@ namespace Kaitai
             /// <summary>
             /// Specifies the type of content in bCertificate
             /// </summary>
-            public CertificateType CertificateType { get { return _certificateType; } }
+            public CertificateTypeEnum CertificateType { get { return _certificateType; } }
 
             /// <summary>
             /// Contains a certificate, such as an Authenticode signature.

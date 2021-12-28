@@ -80,17 +80,17 @@ const (
 	MicrosoftPe_CertificateEntry_CertificateRevision__Revision20 MicrosoftPe_CertificateEntry_CertificateRevision = 512
 )
 
-type MicrosoftPe_CertificateEntry_CertificateType int
+type MicrosoftPe_CertificateEntry_CertificateTypeEnum int
 const (
-	MicrosoftPe_CertificateEntry_CertificateType__X509 MicrosoftPe_CertificateEntry_CertificateType = 1
-	MicrosoftPe_CertificateEntry_CertificateType__PkcsSignedData MicrosoftPe_CertificateEntry_CertificateType = 2
-	MicrosoftPe_CertificateEntry_CertificateType__Reserved1 MicrosoftPe_CertificateEntry_CertificateType = 3
-	MicrosoftPe_CertificateEntry_CertificateType__TsStackSigned MicrosoftPe_CertificateEntry_CertificateType = 4
+	MicrosoftPe_CertificateEntry_CertificateTypeEnum__X509 MicrosoftPe_CertificateEntry_CertificateTypeEnum = 1
+	MicrosoftPe_CertificateEntry_CertificateTypeEnum__PkcsSignedData MicrosoftPe_CertificateEntry_CertificateTypeEnum = 2
+	MicrosoftPe_CertificateEntry_CertificateTypeEnum__Reserved1 MicrosoftPe_CertificateEntry_CertificateTypeEnum = 3
+	MicrosoftPe_CertificateEntry_CertificateTypeEnum__TsStackSigned MicrosoftPe_CertificateEntry_CertificateTypeEnum = 4
 )
 type MicrosoftPe_CertificateEntry struct {
 	Length uint32
 	Revision MicrosoftPe_CertificateEntry_CertificateRevision
-	CertificateType MicrosoftPe_CertificateEntry_CertificateType
+	CertificateType MicrosoftPe_CertificateEntry_CertificateTypeEnum
 	CertificateBytes []byte
 	_io *kaitai.Stream
 	_root *MicrosoftPe
@@ -120,7 +120,7 @@ func (this *MicrosoftPe_CertificateEntry) Read(io *kaitai.Stream, parent *Micros
 	if err != nil {
 		return err
 	}
-	this.CertificateType = MicrosoftPe_CertificateEntry_CertificateType(tmp5)
+	this.CertificateType = MicrosoftPe_CertificateEntry_CertificateTypeEnum(tmp5)
 	tmp6, err := this._io.ReadBytes(int((this.Length - 8)))
 	if err != nil {
 		return err

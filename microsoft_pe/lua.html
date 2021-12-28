@@ -332,7 +332,7 @@ section#format-index .row {
   <span class="n">revision_2_0</span> <span class="o">=</span> <span class="mi">512</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateType</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
+<span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateTypeEnum</span> <span class="o">=</span> <span class="n">enum</span><span class="p">.</span><span class="n">Enum</span> <span class="p">{</span>
   <span class="n">x509</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
   <span class="n">pkcs_signed_data</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
   <span class="n">reserved_1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
@@ -349,7 +349,7 @@ section#format-index .row {
 <span class="kr">function</span> <span class="nc">MicrosoftPe</span><span class="p">.</span><span class="nc">CertificateEntry</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u4le</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">revision</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateRevision</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
-  <span class="n">self</span><span class="p">.</span><span class="n">certificate_type</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateType</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">certificate_type</span> <span class="o">=</span> <span class="n">MicrosoftPe</span><span class="p">.</span><span class="n">CertificateEntry</span><span class="p">.</span><span class="n">CertificateTypeEnum</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2le</span><span class="p">())</span>
   <span class="n">self</span><span class="p">.</span><span class="n">certificate_bytes</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_bytes</span><span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">length</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
 <span class="kr">end</span>
 

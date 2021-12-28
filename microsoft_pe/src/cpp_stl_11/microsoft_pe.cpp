@@ -34,7 +34,7 @@ microsoft_pe_t::certificate_entry_t::certificate_entry_t(kaitai::kstream* p__io,
 void microsoft_pe_t::certificate_entry_t::_read() {
     m_length = m__io->read_u4le();
     m_revision = static_cast<microsoft_pe_t::certificate_entry_t::certificate_revision_t>(m__io->read_u2le());
-    m_certificate_type = static_cast<microsoft_pe_t::certificate_entry_t::certificate_type_t>(m__io->read_u2le());
+    m_certificate_type = static_cast<microsoft_pe_t::certificate_entry_t::certificate_type_enum_t>(m__io->read_u2le());
     m_certificate_bytes = m__io->read_bytes((length() - 8));
 }
 

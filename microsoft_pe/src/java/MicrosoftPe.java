@@ -76,21 +76,21 @@ public class MicrosoftPe extends KaitaiStruct {
             public static CertificateRevision byId(long id) { return byId.get(id); }
         }
 
-        public enum CertificateType {
+        public enum CertificateTypeEnum {
             X509(1),
             PKCS_SIGNED_DATA(2),
             RESERVED_1(3),
             TS_STACK_SIGNED(4);
 
             private final long id;
-            CertificateType(long id) { this.id = id; }
+            CertificateTypeEnum(long id) { this.id = id; }
             public long id() { return id; }
-            private static final Map<Long, CertificateType> byId = new HashMap<Long, CertificateType>(4);
+            private static final Map<Long, CertificateTypeEnum> byId = new HashMap<Long, CertificateTypeEnum>(4);
             static {
-                for (CertificateType e : CertificateType.values())
+                for (CertificateTypeEnum e : CertificateTypeEnum.values())
                     byId.put(e.id(), e);
             }
-            public static CertificateType byId(long id) { return byId.get(id); }
+            public static CertificateTypeEnum byId(long id) { return byId.get(id); }
         }
 
         public CertificateEntry(KaitaiStream _io) {
@@ -110,12 +110,12 @@ public class MicrosoftPe extends KaitaiStruct {
         private void _read() {
             this.length = this._io.readU4le();
             this.revision = CertificateRevision.byId(this._io.readU2le());
-            this.certificateType = CertificateType.byId(this._io.readU2le());
+            this.certificateType = CertificateTypeEnum.byId(this._io.readU2le());
             this.certificateBytes = this._io.readBytes((length() - 8));
         }
         private long length;
         private CertificateRevision revision;
-        private CertificateType certificateType;
+        private CertificateTypeEnum certificateType;
         private byte[] certificateBytes;
         private MicrosoftPe _root;
         private MicrosoftPe.CertificateTable _parent;
@@ -133,7 +133,7 @@ public class MicrosoftPe extends KaitaiStruct {
         /**
          * Specifies the type of content in bCertificate
          */
-        public CertificateType certificateType() { return certificateType; }
+        public CertificateTypeEnum certificateType() { return certificateType; }
 
         /**
          * Contains a certificate, such as an Authenticode signature.

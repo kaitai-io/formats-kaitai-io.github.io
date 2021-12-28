@@ -48,7 +48,7 @@ var MicrosoftPe = (function() {
       512: "REVISION_2_0",
     });
 
-    CertificateEntry.CertificateType = Object.freeze({
+    CertificateEntry.CertificateTypeEnum = Object.freeze({
       X509: 1,
       PKCS_SIGNED_DATA: 2,
       RESERVED_1: 3,

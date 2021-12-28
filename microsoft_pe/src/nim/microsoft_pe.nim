@@ -13,13 +13,13 @@ type
   MicrosoftPe_CertificateEntry* = ref object of KaitaiStruct
     `length`*: uint32
     `revision`*: MicrosoftPe_CertificateEntry_CertificateRevision
-    `certificateType`*: MicrosoftPe_CertificateEntry_CertificateType
+    `certificateType`*: MicrosoftPe_CertificateEntry_CertificateTypeEnum
     `certificateBytes`*: seq[byte]
     `parent`*: MicrosoftPe_CertificateTable
   MicrosoftPe_CertificateEntry_CertificateRevision* = enum
     revision_1_0 = 256
     revision_2_0 = 512
-  MicrosoftPe_CertificateEntry_CertificateType* = enum
+  MicrosoftPe_CertificateEntry_CertificateTypeEnum* = enum
     x509 = 1
     pkcs_signed_data = 2
     reserved_1 = 3
@@ -278,7 +278,7 @@ proc read*(_: typedesc[MicrosoftPe_CertificateEntry], io: KaitaiStream, root: Ka
   ##[
   Specifies the type of content in bCertificate
   ]##
-  let certificateTypeExpr = MicrosoftPe_CertificateEntry_CertificateType(this.io.readU2le())
+  let certificateTypeExpr = MicrosoftPe_CertificateEntry_CertificateTypeEnum(this.io.readU2le())
   this.certificateType = certificateTypeExpr
 
   ##[

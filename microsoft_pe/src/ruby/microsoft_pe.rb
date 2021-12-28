@@ -37,13 +37,13 @@ class MicrosoftPe < Kaitai::Struct::Struct
     }
     I__CERTIFICATE_REVISION = CERTIFICATE_REVISION.invert
 
-    CERTIFICATE_TYPE = {
-      1 => :certificate_type_x509,
-      2 => :certificate_type_pkcs_signed_data,
-      3 => :certificate_type_reserved_1,
-      4 => :certificate_type_ts_stack_signed,
+    CERTIFICATE_TYPE_ENUM = {
+      1 => :certificate_type_enum_x509,
+      2 => :certificate_type_enum_pkcs_signed_data,
+      3 => :certificate_type_enum_reserved_1,
+      4 => :certificate_type_enum_ts_stack_signed,
     }
-    I__CERTIFICATE_TYPE = CERTIFICATE_TYPE.invert
+    I__CERTIFICATE_TYPE_ENUM = CERTIFICATE_TYPE_ENUM.invert
     def initialize(_io, _parent = nil, _root = self)
       super(_io, _parent, _root)
       _read
@@ -52,7 +52,7 @@ class MicrosoftPe < Kaitai::Struct::Struct
     def _read
       @length = @_io.read_u4le
       @revision = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_REVISION, @_io.read_u2le)
-      @certificate_type = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_TYPE, @_io.read_u2le)
+      @certificate_type = Kaitai::Struct::Stream::resolve_enum(CERTIFICATE_TYPE_ENUM, @_io.read_u2le)
       @certificate_bytes = @_io.read_bytes((length - 8))
       self
     end

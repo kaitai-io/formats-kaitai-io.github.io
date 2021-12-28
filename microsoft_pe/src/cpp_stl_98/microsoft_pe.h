@@ -60,11 +60,11 @@ public:
             CERTIFICATE_REVISION_REVISION_2_0 = 512
         };
 
-        enum certificate_type_t {
-            CERTIFICATE_TYPE_X509 = 1,
-            CERTIFICATE_TYPE_PKCS_SIGNED_DATA = 2,
-            CERTIFICATE_TYPE_RESERVED_1 = 3,
-            CERTIFICATE_TYPE_TS_STACK_SIGNED = 4
+        enum certificate_type_enum_t {
+            CERTIFICATE_TYPE_ENUM_X509 = 1,
+            CERTIFICATE_TYPE_ENUM_PKCS_SIGNED_DATA = 2,
+            CERTIFICATE_TYPE_ENUM_RESERVED_1 = 3,
+            CERTIFICATE_TYPE_ENUM_TS_STACK_SIGNED = 4
         };
 
         certificate_entry_t(kaitai::kstream* p__io, microsoft_pe_t::certificate_table_t* p__parent = 0, microsoft_pe_t* p__root = 0);
@@ -79,7 +79,7 @@ public:
     private:
         uint32_t m_length;
         certificate_revision_t m_revision;
-        certificate_type_t m_certificate_type;
+        certificate_type_enum_t m_certificate_type;
         std::string m_certificate_bytes;
         microsoft_pe_t* m__root;
         microsoft_pe_t::certificate_table_t* m__parent;
@@ -99,7 +99,7 @@ public:
         /**
          * Specifies the type of content in bCertificate
          */
-        certificate_type_t certificate_type() const { return m_certificate_type; }
+        certificate_type_enum_t certificate_type() const { return m_certificate_type; }
 
         /**
          * Contains a certificate, such as an Authenticode signature.
