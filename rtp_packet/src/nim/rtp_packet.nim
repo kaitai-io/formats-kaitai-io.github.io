@@ -27,7 +27,7 @@ type
     dvi4_1 = 5
     dvi4_2 = 6
     lpc = 7
-    pama = 8
+    pcma = 8
     g722 = 9
     l16_1 = 10
     l16_2 = 11

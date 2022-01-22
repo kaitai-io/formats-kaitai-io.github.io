@@ -119,7 +119,7 @@ namespace RtpPacket {
         const DVI4_1 = 5;
         const DVI4_2 = 6;
         const LPC = 7;
-        const PAMA = 8;
+        const PCMA = 8;
         const G722 = 9;
         const L16_1 = 10;
         const L16_2 = 11;

@@ -28,7 +28,7 @@ public class RtpPacket extends KaitaiStruct {
         DVI4_1(5),
         DVI4_2(6),
         LPC(7),
-        PAMA(8),
+        PCMA(8),
         G722(9),
         L16_1(10),
         L16_2(11),

@@ -23,7 +23,7 @@ const (
 	RtpPacket_PayloadTypeEnum__Dvi41 RtpPacket_PayloadTypeEnum = 5
 	RtpPacket_PayloadTypeEnum__Dvi42 RtpPacket_PayloadTypeEnum = 6
 	RtpPacket_PayloadTypeEnum__Lpc RtpPacket_PayloadTypeEnum = 7
-	RtpPacket_PayloadTypeEnum__Pama RtpPacket_PayloadTypeEnum = 8
+	RtpPacket_PayloadTypeEnum__Pcma RtpPacket_PayloadTypeEnum = 8
 	RtpPacket_PayloadTypeEnum__G722 RtpPacket_PayloadTypeEnum = 9
 	RtpPacket_PayloadTypeEnum__L161 RtpPacket_PayloadTypeEnum = 10
 	RtpPacket_PayloadTypeEnum__L162 RtpPacket_PayloadTypeEnum = 11

@@ -29,7 +29,7 @@ namespace Kaitai
             Dvi41 = 5,
             Dvi42 = 6,
             Lpc = 7,
-            Pama = 8,
+            Pcma = 8,
             G722 = 9,
             L161 = 10,
             L162 = 11,

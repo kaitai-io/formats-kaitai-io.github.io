@@ -23,7 +23,7 @@ class RtpPacket < Kaitai::Struct::Struct
     5 => :payload_type_enum_dvi4_1,
     6 => :payload_type_enum_dvi4_2,
     7 => :payload_type_enum_lpc,
-    8 => :payload_type_enum_pama,
+    8 => :payload_type_enum_pcma,
     9 => :payload_type_enum_g722,
     10 => :payload_type_enum_l16_1,
     11 => :payload_type_enum_l16_2,
