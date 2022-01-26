@@ -77,10 +77,11 @@ public class Pcap extends KaitaiStruct {
         GPF_T(170),
         GPF_F(171),
         LINUX_LAPD(177),
+        MFR(182),
         BLUETOOTH_HCI_H4(187),
         USB_LINUX(189),
         PPI(192),
-        IEEE802_15_4(195),
+        IEEE802_15_4_WITHFCS(195),
         SITA(196),
         ERF(197),
         BLUETOOTH_HCI_H4_WITH_PHDR(201),
@@ -89,7 +90,10 @@ public class Pcap extends KaitaiStruct {
         PPP_WITH_DIR(204),
         C_HDLC_WITH_DIR(205),
         FRELAY_WITH_DIR(206),
+        LAPB_WITH_DIR(207),
         IPMB_LINUX(209),
+        FLEXRAY(210),
+        LIN(212),
         IEEE802_15_4_NONASK_PHY(215),
         USB_LINUX_MMAPPED(220),
         FC_2(224),
@@ -126,12 +130,36 @@ public class Pcap extends KaitaiStruct {
         ZWAVE_R1_R2(261),
         ZWAVE_R3(262),
         WATTSTOPPER_DLM(263),
-        ISO_14443(264);
+        ISO_14443(264),
+        RDS(265),
+        USB_DARWIN(266),
+        SDLC(268),
+        LORATAP(270),
+        VSOCK(271),
+        NORDIC_BLE(272),
+        DOCSIS31_XRA31(273),
+        ETHERNET_MPACKET(274),
+        DISPLAYPORT_AUX(275),
+        LINUX_SLL2(276),
+        OPENVIZSLA(278),
+        EBHSCR(279),
+        VPP_DISPATCH(280),
+        DSA_TAG_BRCM(281),
+        DSA_TAG_BRCM_PREPEND(282),
+        IEEE802_15_4_TAP(283),
+        DSA_TAG_DSA(284),
+        DSA_TAG_EDSA(285),
+        ELEE(286),
+        ZWAVE_SERIAL(287),
+        USB_2_0(288),
+        ATSC_ALP(289),
+        ETW(290),
+        ZBOSS_NCP(292);
 
         private final long id;
         Linktype(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(104);
+        private static final Map<Long, Linktype> byId = new HashMap<Long, Linktype>(132);
         static {
             for (Linktype e : Linktype.values())
                 byId.put(e.id(), e);
@@ -193,6 +221,9 @@ public class Pcap extends KaitaiStruct {
                 throw new KaitaiStream.ValidationNotEqualError(new byte[] { -44, -61, -78, -95 }, magicNumber(), _io(), "/types/header/seq/0");
             }
             this.versionMajor = this._io.readU2le();
+            if (!(versionMajor() == 2)) {
+                throw new KaitaiStream.ValidationNotEqualError(2, versionMajor(), _io(), "/types/header/seq/1");
+            }
             this.versionMinor = this._io.readU2le();
             this.thiszone = this._io.readS4le();
             this.sigfigs = this._io.readU4le();

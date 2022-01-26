@@ -44,6 +44,9 @@ namespace Pcap {
                 throw new \Kaitai\Struct\Error\ValidationNotEqualError("\xD4\xC3\xB2\xA1", $this->magicNumber(), $this->_io(), "/types/header/seq/0");
             }
             $this->_m_versionMajor = $this->_io->readU2le();
+            if (!($this->versionMajor() == 2)) {
+                throw new \Kaitai\Struct\Error\ValidationNotEqualError(2, $this->versionMajor(), $this->_io(), "/types/header/seq/1");
+            }
             $this->_m_versionMinor = $this->_io->readU2le();
             $this->_m_thiszone = $this->_io->readS4le();
             $this->_m_sigfigs = $this->_io->readU4le();
@@ -195,10 +198,11 @@ namespace Pcap {
         const GPF_T = 170;
         const GPF_F = 171;
         const LINUX_LAPD = 177;
+        const MFR = 182;
         const BLUETOOTH_HCI_H4 = 187;
         const USB_LINUX = 189;
         const PPI = 192;
-        const IEEE802_15_4 = 195;
+        const IEEE802_15_4_WITHFCS = 195;
         const SITA = 196;
         const ERF = 197;
         const BLUETOOTH_HCI_H4_WITH_PHDR = 201;
@@ -207,7 +211,10 @@ namespace Pcap {
         const PPP_WITH_DIR = 204;
         const C_HDLC_WITH_DIR = 205;
         const FRELAY_WITH_DIR = 206;
+        const LAPB_WITH_DIR = 207;
         const IPMB_LINUX = 209;
+        const FLEXRAY = 210;
+        const LIN = 212;
         const IEEE802_15_4_NONASK_PHY = 215;
         const USB_LINUX_MMAPPED = 220;
         const FC_2 = 224;
@@ -245,5 +252,29 @@ namespace Pcap {
         const ZWAVE_R3 = 262;
         const WATTSTOPPER_DLM = 263;
         const ISO_14443 = 264;
+        const RDS = 265;
+        const USB_DARWIN = 266;
+        const SDLC = 268;
+        const LORATAP = 270;
+        const VSOCK = 271;
+        const NORDIC_BLE = 272;
+        const DOCSIS31_XRA31 = 273;
+        const ETHERNET_MPACKET = 274;
+        const DISPLAYPORT_AUX = 275;
+        const LINUX_SLL2 = 276;
+        const OPENVIZSLA = 278;
+        const EBHSCR = 279;
+        const VPP_DISPATCH = 280;
+        const DSA_TAG_BRCM = 281;
+        const DSA_TAG_BRCM_PREPEND = 282;
+        const IEEE802_15_4_TAP = 283;
+        const DSA_TAG_DSA = 284;
+        const DSA_TAG_EDSA = 285;
+        const ELEE = 286;
+        const ZWAVE_SERIAL = 287;
+        const USB_2_0 = 288;
+        const ATSC_ALP = 289;
+        const ETW = 290;
+        const ZBOSS_NCP = 292;
     }
 }

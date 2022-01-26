@@ -70,10 +70,11 @@ class Pcap < Kaitai::Struct::Struct
     170 => :linktype_gpf_t,
     171 => :linktype_gpf_f,
     177 => :linktype_linux_lapd,
+    182 => :linktype_mfr,
     187 => :linktype_bluetooth_hci_h4,
     189 => :linktype_usb_linux,
     192 => :linktype_ppi,
-    195 => :linktype_ieee802_15_4,
+    195 => :linktype_ieee802_15_4_withfcs,
     196 => :linktype_sita,
     197 => :linktype_erf,
     201 => :linktype_bluetooth_hci_h4_with_phdr,
@@ -82,7 +83,10 @@ class Pcap < Kaitai::Struct::Struct
     204 => :linktype_ppp_with_dir,
     205 => :linktype_c_hdlc_with_dir,
     206 => :linktype_frelay_with_dir,
+    207 => :linktype_lapb_with_dir,
     209 => :linktype_ipmb_linux,
+    210 => :linktype_flexray,
+    212 => :linktype_lin,
     215 => :linktype_ieee802_15_4_nonask_phy,
     220 => :linktype_usb_linux_mmapped,
     224 => :linktype_fc_2,
@@ -120,6 +124,30 @@ class Pcap < Kaitai::Struct::Struct
     262 => :linktype_zwave_r3,
     263 => :linktype_wattstopper_dlm,
     264 => :linktype_iso_14443,
+    265 => :linktype_rds,
+    266 => :linktype_usb_darwin,
+    268 => :linktype_sdlc,
+    270 => :linktype_loratap,
+    271 => :linktype_vsock,
+    272 => :linktype_nordic_ble,
+    273 => :linktype_docsis31_xra31,
+    274 => :linktype_ethernet_mpacket,
+    275 => :linktype_displayport_aux,
+    276 => :linktype_linux_sll2,
+    278 => :linktype_openvizsla,
+    279 => :linktype_ebhscr,
+    280 => :linktype_vpp_dispatch,
+    281 => :linktype_dsa_tag_brcm,
+    282 => :linktype_dsa_tag_brcm_prepend,
+    283 => :linktype_ieee802_15_4_tap,
+    284 => :linktype_dsa_tag_dsa,
+    285 => :linktype_dsa_tag_edsa,
+    286 => :linktype_elee,
+    287 => :linktype_zwave_serial,
+    288 => :linktype_usb_2_0,
+    289 => :linktype_atsc_alp,
+    290 => :linktype_etw,
+    292 => :linktype_zboss_ncp,
   }
   I__LINKTYPE = LINKTYPE.invert
   def initialize(_io, _parent = nil, _root = self)
@@ -150,6 +178,7 @@ class Pcap < Kaitai::Struct::Struct
       @magic_number = @_io.read_bytes(4)
       raise Kaitai::Struct::ValidationNotEqualError.new([212, 195, 178, 161].pack('C*'), magic_number, _io, "/types/header/seq/0") if not magic_number == [212, 195, 178, 161].pack('C*')
       @version_major = @_io.read_u2le
+      raise Kaitai::Struct::ValidationNotEqualError.new(2, version_major, _io, "/types/header/seq/1") if not version_major == 2
       @version_minor = @_io.read_u2le
       @thiszone = @_io.read_s4le
       @sigfigs = @_io.read_u4le

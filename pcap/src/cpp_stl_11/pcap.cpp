@@ -42,6 +42,9 @@ void pcap_t::header_t::_read() {
         throw kaitai::validation_not_equal_error<std::string>(std::string("\xD4\xC3\xB2\xA1", 4), magic_number(), _io(), std::string("/types/header/seq/0"));
     }
     m_version_major = m__io->read_u2le();
+    if (!(version_major() == 2)) {
+        throw kaitai::validation_not_equal_error<uint16_t>(2, version_major(), _io(), std::string("/types/header/seq/1"));
+    }
     m_version_minor = m__io->read_u2le();
     m_thiszone = m__io->read_s4le();
     m_sigfigs = m__io->read_u4le();

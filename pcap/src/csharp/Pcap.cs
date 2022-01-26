@@ -78,10 +78,11 @@ namespace Kaitai
             GpfT = 170,
             GpfF = 171,
             LinuxLapd = 177,
+            Mfr = 182,
             BluetoothHciH4 = 187,
             UsbLinux = 189,
             Ppi = 192,
-            Ieee802154 = 195,
+            Ieee802154Withfcs = 195,
             Sita = 196,
             Erf = 197,
             BluetoothHciH4WithPhdr = 201,
@@ -90,7 +91,10 @@ namespace Kaitai
             PppWithDir = 204,
             CHdlcWithDir = 205,
             FrelayWithDir = 206,
+            LapbWithDir = 207,
             IpmbLinux = 209,
+            Flexray = 210,
+            Lin = 212,
             Ieee802154NonaskPhy = 215,
             UsbLinuxMmapped = 220,
             Fc2 = 224,
@@ -128,6 +132,30 @@ namespace Kaitai
             ZwaveR3 = 262,
             WattstopperDlm = 263,
             Iso14443 = 264,
+            Rds = 265,
+            UsbDarwin = 266,
+            Sdlc = 268,
+            Loratap = 270,
+            Vsock = 271,
+            NordicBle = 272,
+            Docsis31Xra31 = 273,
+            EthernetMpacket = 274,
+            DisplayportAux = 275,
+            LinuxSll2 = 276,
+            Openvizsla = 278,
+            Ebhscr = 279,
+            VppDispatch = 280,
+            DsaTagBrcm = 281,
+            DsaTagBrcmPrepend = 282,
+            Ieee802154Tap = 283,
+            DsaTagDsa = 284,
+            DsaTagEdsa = 285,
+            Elee = 286,
+            ZwaveSerial = 287,
+            Usb20 = 288,
+            AtscAlp = 289,
+            Etw = 290,
+            ZbossNcp = 292,
         }
         public Pcap(KaitaiStream p__io, KaitaiStruct p__parent = null, Pcap p__root = null) : base(p__io)
         {
@@ -172,6 +200,10 @@ namespace Kaitai
                     throw new ValidationNotEqualError(new byte[] { 212, 195, 178, 161 }, MagicNumber, M_Io, "/types/header/seq/0");
                 }
                 _versionMajor = m_io.ReadU2le();
+                if (!(VersionMajor == 2))
+                {
+                    throw new ValidationNotEqualError(2, VersionMajor, M_Io, "/types/header/seq/1");
+                }
                 _versionMinor = m_io.ReadU2le();
                 _thiszone = m_io.ReadS4le();
                 _sigfigs = m_io.ReadU4le();

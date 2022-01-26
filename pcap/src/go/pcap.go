@@ -70,10 +70,11 @@ const (
 	Pcap_Linktype__GpfT Pcap_Linktype = 170
 	Pcap_Linktype__GpfF Pcap_Linktype = 171
 	Pcap_Linktype__LinuxLapd Pcap_Linktype = 177
+	Pcap_Linktype__Mfr Pcap_Linktype = 182
 	Pcap_Linktype__BluetoothHciH4 Pcap_Linktype = 187
 	Pcap_Linktype__UsbLinux Pcap_Linktype = 189
 	Pcap_Linktype__Ppi Pcap_Linktype = 192
-	Pcap_Linktype__Ieee802154 Pcap_Linktype = 195
+	Pcap_Linktype__Ieee802154Withfcs Pcap_Linktype = 195
 	Pcap_Linktype__Sita Pcap_Linktype = 196
 	Pcap_Linktype__Erf Pcap_Linktype = 197
 	Pcap_Linktype__BluetoothHciH4WithPhdr Pcap_Linktype = 201
@@ -82,7 +83,10 @@ const (
 	Pcap_Linktype__PppWithDir Pcap_Linktype = 204
 	Pcap_Linktype__CHdlcWithDir Pcap_Linktype = 205
 	Pcap_Linktype__FrelayWithDir Pcap_Linktype = 206
+	Pcap_Linktype__LapbWithDir Pcap_Linktype = 207
 	Pcap_Linktype__IpmbLinux Pcap_Linktype = 209
+	Pcap_Linktype__Flexray Pcap_Linktype = 210
+	Pcap_Linktype__Lin Pcap_Linktype = 212
 	Pcap_Linktype__Ieee802154NonaskPhy Pcap_Linktype = 215
 	Pcap_Linktype__UsbLinuxMmapped Pcap_Linktype = 220
 	Pcap_Linktype__Fc2 Pcap_Linktype = 224
@@ -120,6 +124,30 @@ const (
 	Pcap_Linktype__ZwaveR3 Pcap_Linktype = 262
 	Pcap_Linktype__WattstopperDlm Pcap_Linktype = 263
 	Pcap_Linktype__Iso14443 Pcap_Linktype = 264
+	Pcap_Linktype__Rds Pcap_Linktype = 265
+	Pcap_Linktype__UsbDarwin Pcap_Linktype = 266
+	Pcap_Linktype__Sdlc Pcap_Linktype = 268
+	Pcap_Linktype__Loratap Pcap_Linktype = 270
+	Pcap_Linktype__Vsock Pcap_Linktype = 271
+	Pcap_Linktype__NordicBle Pcap_Linktype = 272
+	Pcap_Linktype__Docsis31Xra31 Pcap_Linktype = 273
+	Pcap_Linktype__EthernetMpacket Pcap_Linktype = 274
+	Pcap_Linktype__DisplayportAux Pcap_Linktype = 275
+	Pcap_Linktype__LinuxSll2 Pcap_Linktype = 276
+	Pcap_Linktype__Openvizsla Pcap_Linktype = 278
+	Pcap_Linktype__Ebhscr Pcap_Linktype = 279
+	Pcap_Linktype__VppDispatch Pcap_Linktype = 280
+	Pcap_Linktype__DsaTagBrcm Pcap_Linktype = 281
+	Pcap_Linktype__DsaTagBrcmPrepend Pcap_Linktype = 282
+	Pcap_Linktype__Ieee802154Tap Pcap_Linktype = 283
+	Pcap_Linktype__DsaTagDsa Pcap_Linktype = 284
+	Pcap_Linktype__DsaTagEdsa Pcap_Linktype = 285
+	Pcap_Linktype__Elee Pcap_Linktype = 286
+	Pcap_Linktype__ZwaveSerial Pcap_Linktype = 287
+	Pcap_Linktype__Usb20 Pcap_Linktype = 288
+	Pcap_Linktype__AtscAlp Pcap_Linktype = 289
+	Pcap_Linktype__Etw Pcap_Linktype = 290
+	Pcap_Linktype__ZbossNcp Pcap_Linktype = 292
 )
 type Pcap struct {
 	Hdr *Pcap_Header
@@ -201,6 +229,9 @@ func (this *Pcap_Header) Read(io *kaitai.Stream, parent *Pcap, root *Pcap) (err 
 		return err
 	}
 	this.VersionMajor = uint16(tmp5)
+	if !(this.VersionMajor == 2) {
+		return kaitai.NewValidationNotEqualError(2, this.VersionMajor, this._io, "/types/header/seq/1")
+	}
 	tmp6, err := this._io.ReadU2le()
 	if err != nil {
 		return err
