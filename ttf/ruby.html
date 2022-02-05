@@ -371,7 +371,7 @@ an outline font.</p>
           <span class="n">_</span> <span class="o">=</span> <span class="no">PascalString</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
           <span class="vi">@glyph_names</span> <span class="o">&lt;&lt;</span> <span class="n">_</span>
           <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="k">end</span> <span class="k">until</span> <span class="n">_</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">end</span> <span class="k">until</span>  <span class="p">((</span><span class="n">_</span><span class="o">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_io</span><span class="o">.</span><span class="n">eof?</span><span class="p">))</span> 
         <span class="nb">self</span>
       <span class="k">end</span>
       <span class="k">class</span> <span class="nc">PascalString</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
@@ -1552,6 +1552,33 @@ an outline font.</p>
     <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@table_version_number</span> <span class="o">=</span> <span class="no">Fixed</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
       <span class="vi">@num_glyphs</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
+      <span class="k">if</span> <span class="n">is_version10</span>
+        <span class="vi">@version10_body</span> <span class="o">=</span> <span class="no">MaxpVersion10Body</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">is_version10</span>
+      <span class="k">return</span> <span class="vi">@is_version10</span> <span class="k">unless</span> <span class="vi">@is_version10</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@is_version10</span> <span class="o">=</span>  <span class="p">((</span><span class="n">table_version_number</span><span class="o">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">table_version_number</span><span class="o">.</span><span class="n">minor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> 
+      <span class="vi">@is_version10</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># 0x00010000 for version 1.0.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:table_version_number</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># The number of glyphs in the font.</span>
+    <span class="kp">attr_reader</span> <span class="ss">:num_glyphs</span>
+    <span class="kp">attr_reader</span> <span class="ss">:version10_body</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">MaxpVersion10Body</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
       <span class="vi">@max_points</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@max_contours</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="vi">@max_composite_points</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
@@ -1567,14 +1594,6 @@ an outline font.</p>
       <span class="vi">@max_component_depth</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u2be</span>
       <span class="nb">self</span>
     <span class="k">end</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># 0x00010000 for version 1.0.</span>
-    <span class="kp">attr_reader</span> <span class="ss">:table_version_number</span>
-
-    <span class="c1">##</span>
-    <span class="c1"># The number of glyphs in the font.</span>
-    <span class="kp">attr_reader</span> <span class="ss">:num_glyphs</span>
 
     <span class="c1">##</span>
     <span class="c1"># Maximum points in a non-composite glyph.</span>

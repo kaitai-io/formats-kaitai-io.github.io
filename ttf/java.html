@@ -418,7 +418,7 @@ for instructions how to add it into your project with the build tool that you us
                         <span class="n">_it</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PascalString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
                         <span class="k">this</span><span class="p">.</span><span class="na">glyphNames</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">_it</span><span class="p">);</span>
                         <span class="n">i</span><span class="o">++</span><span class="p">;</span>
-                    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">_it</span><span class="p">.</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+                    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="n">_it</span><span class="p">.</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">_io</span><span class="p">().</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">));</span>
                 <span class="p">}</span>
             <span class="p">}</span>
             <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PascalString</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
@@ -2443,6 +2443,57 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">tableVersionNumber</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Fixed</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
             <span class="k">this</span><span class="p">.</span><span class="na">numGlyphs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">isVersion10</span><span class="p">())</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="na">version10Body</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MaxpVersion10Body</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Boolean</span> <span class="n">isVersion10</span><span class="p">;</span>
+        <span class="kd">public</span> <span class="n">Boolean</span> <span class="nf">isVersion10</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="na">isVersion10</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isVersion10</span><span class="p">;</span>
+            <span class="kt">boolean</span> <span class="n">_tmp</span> <span class="o">=</span> <span class="p">(</span><span class="kt">boolean</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">tableVersionNumber</span><span class="p">().</span><span class="na">major</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">tableVersionNumber</span><span class="p">().</span><span class="na">minor</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">isVersion10</span> <span class="o">=</span> <span class="n">_tmp</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="na">isVersion10</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Fixed</span> <span class="n">tableVersionNumber</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numGlyphs</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">MaxpVersion10Body</span> <span class="n">version10Body</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Ttf</span> <span class="n">_root</span><span class="p">;</span>
+        <span class="kd">private</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">DirTableEntry</span> <span class="n">_parent</span><span class="p">;</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * 0x00010000 for version 1.0.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="n">Fixed</span> <span class="nf">tableVersionNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tableVersionNumber</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * The number of glyphs in the font.</span>
+<span class="cm">         */</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numGlyphs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numGlyphs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">MaxpVersion10Body</span> <span class="nf">version10Body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">version10Body</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Ttf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">DirTableEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MaxpVersion10Body</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="n">MaxpVersion10Body</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">MaxpVersion10Body</span><span class="p">(</span><span class="k">new</span> <span class="n">ByteBufferKaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MaxpVersion10Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="kc">null</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MaxpVersion10Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">Maxp</span> <span class="n">_parent</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="kd">public</span> <span class="nf">MaxpVersion10Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">_io</span><span class="p">,</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">Maxp</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">Ttf</span> <span class="n">_root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">super</span><span class="p">(</span><span class="n">_io</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_parent</span> <span class="o">=</span> <span class="n">_parent</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">_root</span> <span class="o">=</span> <span class="n">_root</span><span class="p">;</span>
+            <span class="n">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="kd">private</span> <span class="kt">void</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="k">this</span><span class="p">.</span><span class="na">maxPoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">maxContours</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">maxCompositePoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
@@ -2457,8 +2508,6 @@ for instructions how to add it into your project with the build tool that you us
             <span class="k">this</span><span class="p">.</span><span class="na">maxComponentElements</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="k">this</span><span class="p">.</span><span class="na">maxComponentDepth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="na">_io</span><span class="p">.</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="kd">private</span> <span class="n">Fixed</span> <span class="n">tableVersionNumber</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="kt">int</span> <span class="n">numGlyphs</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">maxPoints</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">maxContours</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">maxCompositePoints</span><span class="p">;</span>
@@ -2473,17 +2522,7 @@ for instructions how to add it into your project with the build tool that you us
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">maxComponentElements</span><span class="p">;</span>
         <span class="kd">private</span> <span class="kt">int</span> <span class="n">maxComponentDepth</span><span class="p">;</span>
         <span class="kd">private</span> <span class="n">Ttf</span> <span class="n">_root</span><span class="p">;</span>
-        <span class="kd">private</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">DirTableEntry</span> <span class="n">_parent</span><span class="p">;</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * 0x00010000 for version 1.0.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="n">Fixed</span> <span class="nf">tableVersionNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">tableVersionNumber</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="cm">/**</span>
-<span class="cm">         * The number of glyphs in the font.</span>
-<span class="cm">         */</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">numGlyphs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">numGlyphs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">private</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">Maxp</span> <span class="n">_parent</span><span class="p">;</span>
 
         <span class="cm">/**</span>
 <span class="cm">         * Maximum points in a non-composite glyph.</span>
@@ -2550,7 +2589,7 @@ for instructions how to add it into your project with the build tool that you us
 <span class="cm">         */</span>
         <span class="kd">public</span> <span class="kt">int</span> <span class="nf">maxComponentDepth</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">maxComponentDepth</span><span class="p">;</span> <span class="p">}</span>
         <span class="kd">public</span> <span class="n">Ttf</span> <span class="nf">_root</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_root</span><span class="p">;</span> <span class="p">}</span>
-        <span class="kd">public</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">DirTableEntry</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
+        <span class="kd">public</span> <span class="n">Ttf</span><span class="p">.</span><span class="na">Maxp</span> <span class="nf">_parent</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_parent</span><span class="p">;</span> <span class="p">}</span>
     <span class="p">}</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">OffsetTable</span> <span class="kd">extends</span> <span class="n">KaitaiStruct</span> <span class="p">{</span>
         <span class="kd">public</span> <span class="kd">static</span> <span class="n">OffsetTable</span> <span class="nf">fromFile</span><span class="p">(</span><span class="n">String</span> <span class="n">fileName</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>

@@ -357,7 +357,7 @@ an outline font.</p>
                 <span class="nv">$_</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Ttf\Post\Format20\PascalString</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_glyphNames</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$_</span><span class="p">;</span>
                 <span class="nv">$i</span><span class="o">++</span><span class="p">;</span>
-            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">));</span>
+            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nv">$_</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">isEof</span><span class="p">()))</span> <span class="p">));</span>
         <span class="p">}</span>
         <span class="k">protected</span> <span class="nv">$_m_numberOfGlyphs</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_glyphNameIndex</span><span class="p">;</span>
@@ -1892,6 +1892,42 @@ an outline font.</p>
         <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tableVersionNumber</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Ttf\Fixed</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numGlyphs</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isVersion10</span><span class="p">())</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version10Body</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">\Ttf\MaxpVersion10Body</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="p">,</span> <span class="nv">$this</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_root</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_isVersion10</span><span class="p">;</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">isVersion10</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isVersion10</span> <span class="o">!==</span> <span class="k">null</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isVersion10</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isVersion10</span> <span class="o">=</span>  <span class="p">((</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tableVersionNumber</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">major</span><span class="p">()</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">tableVersionNumber</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">minor</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_isVersion10</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="nv">$_m_tableVersionNumber</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_numGlyphs</span><span class="p">;</span>
+        <span class="k">protected</span> <span class="nv">$_m_version10Body</span><span class="p">;</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * 0x00010000 for version 1.0.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">tableVersionNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tableVersionNumber</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="sd">/**</span>
+<span class="sd">         * The number of glyphs in the font.</span>
+<span class="sd">         */</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">numGlyphs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numGlyphs</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="nf">version10Body</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_version10Body</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">namespace</span> <span class="nx">Ttf</span> <span class="p">{</span>
+    <span class="k">class</span> <span class="nc">MaxpVersion10Body</span> <span class="k">extends</span> <span class="nx">\Kaitai\Struct\Struct</span> <span class="p">{</span>
+        <span class="k">public</span> <span class="k">function</span> <span class="fm">__construct</span><span class="p">(</span><span class="nx">\Kaitai\Struct\Stream</span> <span class="nv">$_io</span><span class="p">,</span> <span class="nx">\Ttf\Maxp</span> <span class="nv">$_parent</span> <span class="o">=</span> <span class="k">null</span><span class="p">,</span> <span class="nx">\Ttf</span> <span class="nv">$_root</span> <span class="o">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">(</span><span class="nv">$_io</span><span class="p">,</span> <span class="nv">$_parent</span><span class="p">,</span> <span class="nv">$_root</span><span class="p">);</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_read</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">function</span> <span class="nf">_read</span><span class="p">()</span> <span class="p">{</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxPoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxContours</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxCompositePoints</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
@@ -1906,8 +1942,6 @@ an outline font.</p>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxComponentElements</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
             <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_maxComponentDepth</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_io</span><span class="o">-&gt;</span><span class="na">readU2be</span><span class="p">();</span>
         <span class="p">}</span>
-        <span class="k">protected</span> <span class="nv">$_m_tableVersionNumber</span><span class="p">;</span>
-        <span class="k">protected</span> <span class="nv">$_m_numGlyphs</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_maxPoints</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_maxContours</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_maxCompositePoints</span><span class="p">;</span>
@@ -1921,16 +1955,6 @@ an outline font.</p>
         <span class="k">protected</span> <span class="nv">$_m_maxSizeOfInstructions</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_maxComponentElements</span><span class="p">;</span>
         <span class="k">protected</span> <span class="nv">$_m_maxComponentDepth</span><span class="p">;</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * 0x00010000 for version 1.0.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">tableVersionNumber</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_tableVersionNumber</span><span class="p">;</span> <span class="p">}</span>
-
-        <span class="sd">/**</span>
-<span class="sd">         * The number of glyphs in the font.</span>
-<span class="sd">         */</span>
-        <span class="k">public</span> <span class="k">function</span> <span class="nf">numGlyphs</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_m_numGlyphs</span><span class="p">;</span> <span class="p">}</span>
 
         <span class="sd">/**</span>
 <span class="sd">         * Maximum points in a non-composite glyph.</span>

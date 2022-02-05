@@ -64,7 +64,7 @@ class Ttf < Kaitai::Struct::Struct
           _ = PascalString.new(@_io, self, @_root)
           @glyph_names << _
           i += 1
-        end until _.length == 0
+        end until  ((_.length == 0) || (_io.eof?)) 
         self
       end
       class PascalString < Kaitai::Struct::Struct
@@ -1245,6 +1245,33 @@ class Ttf < Kaitai::Struct::Struct
     def _read
       @table_version_number = Fixed.new(@_io, self, @_root)
       @num_glyphs = @_io.read_u2be
+      if is_version10
+        @version10_body = MaxpVersion10Body.new(@_io, self, @_root)
+      end
+      self
+    end
+    def is_version10
+      return @is_version10 unless @is_version10.nil?
+      @is_version10 =  ((table_version_number.major == 1) && (table_version_number.minor == 0)) 
+      @is_version10
+    end
+
+    ##
+    # 0x00010000 for version 1.0.
+    attr_reader :table_version_number
+
+    ##
+    # The number of glyphs in the font.
+    attr_reader :num_glyphs
+    attr_reader :version10_body
+  end
+  class MaxpVersion10Body < Kaitai::Struct::Struct
+    def initialize(_io, _parent = nil, _root = self)
+      super(_io, _parent, _root)
+      _read
+    end
+
+    def _read
       @max_points = @_io.read_u2be
       @max_contours = @_io.read_u2be
       @max_composite_points = @_io.read_u2be
@@ -1260,14 +1287,6 @@ class Ttf < Kaitai::Struct::Struct
       @max_component_depth = @_io.read_u2be
       self
     end
-
-    ##
-    # 0x00010000 for version 1.0.
-    attr_reader :table_version_number
-
-    ##
-    # The number of glyphs in the font.
-    attr_reader :num_glyphs
 
     ##
     # Maximum points in a non-composite glyph.

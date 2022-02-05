@@ -33,6 +33,7 @@ public:
     class glyf_t;
     class cvt_t;
     class maxp_t;
+    class maxp_version10_body_t;
     class offset_table_t;
     class cmap_t;
 
@@ -1515,21 +1516,22 @@ public:
         ~maxp_t();
 
     private:
+        bool f_is_version10;
+        bool m_is_version10;
+
+    public:
+        bool is_version10();
+
+    private:
         fixed_t* m_table_version_number;
         uint16_t m_num_glyphs;
-        uint16_t m_max_points;
-        uint16_t m_max_contours;
-        uint16_t m_max_composite_points;
-        uint16_t m_max_composite_contours;
-        uint16_t m_max_zones;
-        uint16_t m_max_twilight_points;
-        uint16_t m_max_storage;
-        uint16_t m_max_function_defs;
-        uint16_t m_max_instruction_defs;
-        uint16_t m_max_stack_elements;
-        uint16_t m_max_size_of_instructions;
-        uint16_t m_max_component_elements;
-        uint16_t m_max_component_depth;
+        maxp_version10_body_t* m_version10_body;
+        bool n_version10_body;
+
+    public:
+        bool _is_null_version10_body() { version10_body(); return n_version10_body; };
+
+    private:
         ttf_t* m__root;
         ttf_t::dir_table_entry_t* m__parent;
 
@@ -1544,6 +1546,42 @@ public:
          * The number of glyphs in the font.
          */
         uint16_t num_glyphs() const { return m_num_glyphs; }
+        maxp_version10_body_t* version10_body() const { return m_version10_body; }
+        ttf_t* _root() const { return m__root; }
+        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+    };
+
+    class maxp_version10_body_t : public kaitai::kstruct {
+
+    public:
+
+        maxp_version10_body_t(kaitai::kstream* p__io, ttf_t::maxp_t* p__parent = 0, ttf_t* p__root = 0);
+
+    private:
+        void _read();
+        void _clean_up();
+
+    public:
+        ~maxp_version10_body_t();
+
+    private:
+        uint16_t m_max_points;
+        uint16_t m_max_contours;
+        uint16_t m_max_composite_points;
+        uint16_t m_max_composite_contours;
+        uint16_t m_max_zones;
+        uint16_t m_max_twilight_points;
+        uint16_t m_max_storage;
+        uint16_t m_max_function_defs;
+        uint16_t m_max_instruction_defs;
+        uint16_t m_max_stack_elements;
+        uint16_t m_max_size_of_instructions;
+        uint16_t m_max_component_elements;
+        uint16_t m_max_component_depth;
+        ttf_t* m__root;
+        ttf_t::maxp_t* m__parent;
+
+    public:
 
         /**
          * Maximum points in a non-composite glyph.
@@ -1610,7 +1648,7 @@ public:
          */
         uint16_t max_component_depth() const { return m_max_component_depth; }
         ttf_t* _root() const { return m__root; }
-        ttf_t::dir_table_entry_t* _parent() const { return m__parent; }
+        ttf_t::maxp_t* _parent() const { return m__parent; }
     };
 
     class offset_table_t : public kaitai::kstruct {

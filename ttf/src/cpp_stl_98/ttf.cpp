@@ -124,7 +124,7 @@ void ttf_t::post_t::format20_t::_read() {
             _ = new pascal_string_t(m__io, this, m__root);
             m_glyph_names->push_back(_);
             i++;
-        } while (!(_->length() == 0));
+        } while (!( ((_->length() == 0) || (_io()->is_eof())) ));
     }
 }
 
@@ -1116,6 +1116,8 @@ ttf_t::maxp_t::maxp_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__paren
     m__parent = p__parent;
     m__root = p__root;
     m_table_version_number = 0;
+    m_version10_body = 0;
+    f_is_version10 = false;
 
     try {
         _read();
@@ -1128,6 +1130,49 @@ ttf_t::maxp_t::maxp_t(kaitai::kstream* p__io, ttf_t::dir_table_entry_t* p__paren
 void ttf_t::maxp_t::_read() {
     m_table_version_number = new fixed_t(m__io, this, m__root);
     m_num_glyphs = m__io->read_u2be();
+    n_version10_body = true;
+    if (is_version10()) {
+        n_version10_body = false;
+        m_version10_body = new maxp_version10_body_t(m__io, this, m__root);
+    }
+}
+
+ttf_t::maxp_t::~maxp_t() {
+    _clean_up();
+}
+
+void ttf_t::maxp_t::_clean_up() {
+    if (m_table_version_number) {
+        delete m_table_version_number; m_table_version_number = 0;
+    }
+    if (!n_version10_body) {
+        if (m_version10_body) {
+            delete m_version10_body; m_version10_body = 0;
+        }
+    }
+}
+
+bool ttf_t::maxp_t::is_version10() {
+    if (f_is_version10)
+        return m_is_version10;
+    m_is_version10 =  ((table_version_number()->major() == 1) && (table_version_number()->minor() == 0)) ;
+    f_is_version10 = true;
+    return m_is_version10;
+}
+
+ttf_t::maxp_version10_body_t::maxp_version10_body_t(kaitai::kstream* p__io, ttf_t::maxp_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {
+    m__parent = p__parent;
+    m__root = p__root;
+
+    try {
+        _read();
+    } catch(...) {
+        _clean_up();
+        throw;
+    }
+}
+
+void ttf_t::maxp_version10_body_t::_read() {
     m_max_points = m__io->read_u2be();
     m_max_contours = m__io->read_u2be();
     m_max_composite_points = m__io->read_u2be();
@@ -1143,14 +1188,11 @@ void ttf_t::maxp_t::_read() {
     m_max_component_depth = m__io->read_u2be();
 }
 
-ttf_t::maxp_t::~maxp_t() {
+ttf_t::maxp_version10_body_t::~maxp_version10_body_t() {
     _clean_up();
 }
 
-void ttf_t::maxp_t::_clean_up() {
-    if (m_table_version_number) {
-        delete m_table_version_number; m_table_version_number = 0;
-    }
+void ttf_t::maxp_version10_body_t::_clean_up() {
 }
 
 ttf_t::offset_table_t::offset_table_t(kaitai::kstream* p__io, ttf_t* p__parent, ttf_t* p__root) : kaitai::kstruct(p__io) {

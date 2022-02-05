@@ -68,7 +68,7 @@ class Ttf(KaitaiStruct):
                 while True:
                     _ = Ttf.Post.Format20.PascalString(self._io, self, self._root)
                     self.glyph_names.append(_)
-                    if _.length == 0:
+                    if  ((_.length == 0) or (self._io.is_eof())) :
                         break
                     i += 1
 
@@ -879,6 +879,27 @@ class Ttf(KaitaiStruct):
         def _read(self):
             self.table_version_number = Ttf.Fixed(self._io, self, self._root)
             self.num_glyphs = self._io.read_u2be()
+            if self.is_version10:
+                self.version10_body = Ttf.MaxpVersion10Body(self._io, self, self._root)
+
+
+        @property
+        def is_version10(self):
+            if hasattr(self, '_m_is_version10'):
+                return self._m_is_version10 if hasattr(self, '_m_is_version10') else None
+
+            self._m_is_version10 =  ((self.table_version_number.major == 1) and (self.table_version_number.minor == 0)) 
+            return self._m_is_version10 if hasattr(self, '_m_is_version10') else None
+
+
+    class MaxpVersion10Body(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
             self.max_points = self._io.read_u2be()
             self.max_contours = self._io.read_u2be()
             self.max_composite_points = self._io.read_u2be()

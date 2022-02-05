@@ -109,7 +109,7 @@ public class Ttf extends KaitaiStruct {
                         _it = new PascalString(this._io, this, _root);
                         this.glyphNames.add(_it);
                         i++;
-                    } while (!(_it.length() == 0));
+                    } while (!( ((_it.length() == 0) || (_io().isEof())) ));
                 }
             }
             public static class PascalString extends KaitaiStruct {
@@ -2134,6 +2134,57 @@ public class Ttf extends KaitaiStruct {
         private void _read() {
             this.tableVersionNumber = new Fixed(this._io, this, _root);
             this.numGlyphs = this._io.readU2be();
+            if (isVersion10()) {
+                this.version10Body = new MaxpVersion10Body(this._io, this, _root);
+            }
+        }
+        private Boolean isVersion10;
+        public Boolean isVersion10() {
+            if (this.isVersion10 != null)
+                return this.isVersion10;
+            boolean _tmp = (boolean) ( ((tableVersionNumber().major() == 1) && (tableVersionNumber().minor() == 0)) );
+            this.isVersion10 = _tmp;
+            return this.isVersion10;
+        }
+        private Fixed tableVersionNumber;
+        private int numGlyphs;
+        private MaxpVersion10Body version10Body;
+        private Ttf _root;
+        private Ttf.DirTableEntry _parent;
+
+        /**
+         * 0x00010000 for version 1.0.
+         */
+        public Fixed tableVersionNumber() { return tableVersionNumber; }
+
+        /**
+         * The number of glyphs in the font.
+         */
+        public int numGlyphs() { return numGlyphs; }
+        public MaxpVersion10Body version10Body() { return version10Body; }
+        public Ttf _root() { return _root; }
+        public Ttf.DirTableEntry _parent() { return _parent; }
+    }
+    public static class MaxpVersion10Body extends KaitaiStruct {
+        public static MaxpVersion10Body fromFile(String fileName) throws IOException {
+            return new MaxpVersion10Body(new ByteBufferKaitaiStream(fileName));
+        }
+
+        public MaxpVersion10Body(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public MaxpVersion10Body(KaitaiStream _io, Ttf.Maxp _parent) {
+            this(_io, _parent, null);
+        }
+
+        public MaxpVersion10Body(KaitaiStream _io, Ttf.Maxp _parent, Ttf _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
             this.maxPoints = this._io.readU2be();
             this.maxContours = this._io.readU2be();
             this.maxCompositePoints = this._io.readU2be();
@@ -2148,8 +2199,6 @@ public class Ttf extends KaitaiStruct {
             this.maxComponentElements = this._io.readU2be();
             this.maxComponentDepth = this._io.readU2be();
         }
-        private Fixed tableVersionNumber;
-        private int numGlyphs;
         private int maxPoints;
         private int maxContours;
         private int maxCompositePoints;
@@ -2164,17 +2213,7 @@ public class Ttf extends KaitaiStruct {
         private int maxComponentElements;
         private int maxComponentDepth;
         private Ttf _root;
-        private Ttf.DirTableEntry _parent;
-
-        /**
-         * 0x00010000 for version 1.0.
-         */
-        public Fixed tableVersionNumber() { return tableVersionNumber; }
-
-        /**
-         * The number of glyphs in the font.
-         */
-        public int numGlyphs() { return numGlyphs; }
+        private Ttf.Maxp _parent;
 
         /**
          * Maximum points in a non-composite glyph.
@@ -2241,7 +2280,7 @@ public class Ttf extends KaitaiStruct {
          */
         public int maxComponentDepth() { return maxComponentDepth; }
         public Ttf _root() { return _root; }
-        public Ttf.DirTableEntry _parent() { return _parent; }
+        public Ttf.Maxp _parent() { return _parent; }
     }
     public static class OffsetTable extends KaitaiStruct {
         public static OffsetTable fromFile(String fileName) throws IOException {

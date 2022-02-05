@@ -341,7 +341,7 @@ an outline font.</p>
   <span class="kr">while</span> <span class="kc">true</span> <span class="kr">do</span>
     <span class="n">_</span> <span class="o">=</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">Post</span><span class="p">.</span><span class="n">Format20</span><span class="p">.</span><span class="n">PascalString</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
     <span class="n">self</span><span class="p">.</span><span class="n">glyph_names</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">_</span>
-    <span class="kr">if</span> <span class="n">_</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span> <span class="kr">then</span>
+    <span class="kr">if</span>  <span class="p">((</span><span class="n">_</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">is_eof</span><span class="p">()))</span>  <span class="kr">then</span>
       <span class="kr">break</span>
     <span class="kr">end</span>
     <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
@@ -1313,6 +1313,36 @@ an outline font.</p>
 <span class="kr">function</span> <span class="nc">Ttf</span><span class="p">.</span><span class="nc">Maxp</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="n">self</span><span class="p">.</span><span class="n">table_version_number</span> <span class="o">=</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">Fixed</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
 <span class="n">self</span><span class="p">.</span><span class="n">num_glyphs</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">is_version10</span> <span class="kr">then</span>
+  <span class="n">self</span><span class="p">.</span><span class="n">version10_body</span> <span class="o">=</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">MaxpVersion10Body</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">,</span> <span class="n">self</span><span class="p">,</span> <span class="n">self</span><span class="p">.</span><span class="n">_root</span><span class="p">)</span>
+<span class="kr">end</span>
+<span class="kr">end</span>
+
+<span class="n">Ttf</span><span class="p">.</span><span class="n">Maxp</span><span class="p">.</span><span class="n">property</span><span class="p">.</span><span class="n">is_version10</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kr">function</span> <span class="nc">Ttf</span><span class="p">.</span><span class="nc">Maxp</span><span class="p">.</span><span class="nc">property</span><span class="p">.</span><span class="nc">is_version10</span><span class="p">:</span><span class="nf">get</span><span class="p">()</span>
+<span class="kr">if</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_version10</span> <span class="o">~=</span> <span class="kc">nil</span> <span class="kr">then</span>
+  <span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_version10</span>
+<span class="kr">end</span>
+
+<span class="n">self</span><span class="p">.</span><span class="n">_m_is_version10</span> <span class="o">=</span>  <span class="p">((</span><span class="n">self</span><span class="p">.</span><span class="n">table_version_number</span><span class="p">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">table_version_number</span><span class="p">.</span><span class="n">minor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> 
+<span class="kr">return</span> <span class="n">self</span><span class="p">.</span><span class="n">_m_is_version10</span>
+<span class="kr">end</span>
+
+<span class="c1">-- </span>
+<span class="c1">-- 0x00010000 for version 1.0.</span>
+<span class="c1">-- </span>
+<span class="c1">-- The number of glyphs in the font.</span>
+
+<span class="n">Ttf</span><span class="p">.</span><span class="n">MaxpVersion10Body</span> <span class="o">=</span> <span class="n">class</span><span class="p">.</span><span class="n">class</span><span class="p">(</span><span class="n">KaitaiStruct</span><span class="p">)</span>
+
+<span class="kr">function</span> <span class="nc">Ttf</span><span class="p">.</span><span class="nc">MaxpVersion10Body</span><span class="p">:</span><span class="nf">_init</span><span class="p">(</span><span class="n">io</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">root</span><span class="p">)</span>
+<span class="n">KaitaiStruct</span><span class="p">.</span><span class="n">_init</span><span class="p">(</span><span class="n">self</span><span class="p">,</span> <span class="n">io</span><span class="p">)</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+<span class="n">self</span><span class="p">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">root</span> <span class="ow">or</span> <span class="n">self</span>
+<span class="n">self</span><span class="p">:</span><span class="n">_read</span><span class="p">()</span>
+<span class="kr">end</span>
+
+<span class="kr">function</span> <span class="nc">Ttf</span><span class="p">.</span><span class="nc">MaxpVersion10Body</span><span class="p">:</span><span class="nf">_read</span><span class="p">()</span>
 <span class="n">self</span><span class="p">.</span><span class="n">max_points</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="n">self</span><span class="p">.</span><span class="n">max_contours</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="n">self</span><span class="p">.</span><span class="n">max_composite_points</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
@@ -1328,10 +1358,6 @@ an outline font.</p>
 <span class="n">self</span><span class="p">.</span><span class="n">max_component_depth</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
 <span class="kr">end</span>
 
-<span class="c1">-- </span>
-<span class="c1">-- 0x00010000 for version 1.0.</span>
-<span class="c1">-- </span>
-<span class="c1">-- The number of glyphs in the font.</span>
 <span class="c1">-- </span>
 <span class="c1">-- Maximum points in a non-composite glyph.</span>
 <span class="c1">-- </span>

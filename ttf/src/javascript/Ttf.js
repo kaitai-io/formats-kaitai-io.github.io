@@ -74,7 +74,7 @@ var Ttf = (function() {
           var _ = new PascalString(this._io, this, this._root);
           this.glyphNames.push(_);
           i++;
-        } while (!(_.length == 0));
+        } while (!( ((_.length == 0) || (this._io.isEof())) ));
       }
 
       var PascalString = Format20.PascalString = (function() {
@@ -1335,6 +1335,39 @@ var Ttf = (function() {
     Maxp.prototype._read = function() {
       this.tableVersionNumber = new Fixed(this._io, this, this._root);
       this.numGlyphs = this._io.readU2be();
+      if (this.isVersion10) {
+        this.version10Body = new MaxpVersion10Body(this._io, this, this._root);
+      }
+    }
+    Object.defineProperty(Maxp.prototype, 'isVersion10', {
+      get: function() {
+        if (this._m_isVersion10 !== undefined)
+          return this._m_isVersion10;
+        this._m_isVersion10 =  ((this.tableVersionNumber.major == 1) && (this.tableVersionNumber.minor == 0)) ;
+        return this._m_isVersion10;
+      }
+    });
+
+    /**
+     * 0x00010000 for version 1.0.
+     */
+
+    /**
+     * The number of glyphs in the font.
+     */
+
+    return Maxp;
+  })();
+
+  var MaxpVersion10Body = Ttf.MaxpVersion10Body = (function() {
+    function MaxpVersion10Body(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    MaxpVersion10Body.prototype._read = function() {
       this.maxPoints = this._io.readU2be();
       this.maxContours = this._io.readU2be();
       this.maxCompositePoints = this._io.readU2be();
@@ -1349,14 +1382,6 @@ var Ttf = (function() {
       this.maxComponentElements = this._io.readU2be();
       this.maxComponentDepth = this._io.readU2be();
     }
-
-    /**
-     * 0x00010000 for version 1.0.
-     */
-
-    /**
-     * The number of glyphs in the font.
-     */
 
     /**
      * Maximum points in a non-composite glyph.
@@ -1410,7 +1435,7 @@ var Ttf = (function() {
      * Maximum levels of recursion; 1 for simple components.
      */
 
-    return Maxp;
+    return MaxpVersion10Body;
   })();
 
   var OffsetTable = Ttf.OffsetTable = (function() {

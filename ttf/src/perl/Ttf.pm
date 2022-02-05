@@ -188,7 +188,7 @@ sub _read {
     do {
         $_ = Ttf::Post::Format20::PascalString->new($self->{_io}, $self, $self->{_root});
         push @{$self->{glyph_names}}, $_;
-    } until ($_->length() == 0);
+    } until ( (($_->length() == 0) || ($self->_io()->is_eof())) );
 }
 
 sub number_of_glyphs {
@@ -2647,6 +2647,63 @@ sub _read {
 
     $self->{table_version_number} = Ttf::Fixed->new($self->{_io}, $self, $self->{_root});
     $self->{num_glyphs} = $self->{_io}->read_u2be();
+    if ($self->is_version10()) {
+        $self->{version10_body} = Ttf::MaxpVersion10Body->new($self->{_io}, $self, $self->{_root});
+    }
+}
+
+sub is_version10 {
+    my ($self) = @_;
+    return $self->{is_version10} if ($self->{is_version10});
+    $self->{is_version10} =  (($self->table_version_number()->major() == 1) && ($self->table_version_number()->minor() == 0)) ;
+    return $self->{is_version10};
+}
+
+sub table_version_number {
+    my ($self) = @_;
+    return $self->{table_version_number};
+}
+
+sub num_glyphs {
+    my ($self) = @_;
+    return $self->{num_glyphs};
+}
+
+sub version10_body {
+    my ($self) = @_;
+    return $self->{version10_body};
+}
+
+########################################################################
+package Ttf::MaxpVersion10Body;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
     $self->{max_points} = $self->{_io}->read_u2be();
     $self->{max_contours} = $self->{_io}->read_u2be();
     $self->{max_composite_points} = $self->{_io}->read_u2be();
@@ -2660,16 +2717,6 @@ sub _read {
     $self->{max_size_of_instructions} = $self->{_io}->read_u2be();
     $self->{max_component_elements} = $self->{_io}->read_u2be();
     $self->{max_component_depth} = $self->{_io}->read_u2be();
-}
-
-sub table_version_number {
-    my ($self) = @_;
-    return $self->{table_version_number};
-}
-
-sub num_glyphs {
-    my ($self) = @_;
-    return $self->{num_glyphs};
 }
 
 sub max_points {

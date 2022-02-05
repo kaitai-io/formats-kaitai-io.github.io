@@ -76,7 +76,7 @@ function Ttf.Post.Format20:_read()
   while true do
     _ = Ttf.Post.Format20.PascalString(self._io, self, self._root)
     self.glyph_names[i + 1] = _
-    if _.length == 0 then
+    if  ((_.length == 0) or (self._io:is_eof()))  then
       break
     end
     i = i + 1
@@ -1048,6 +1048,36 @@ end
 function Ttf.Maxp:_read()
 self.table_version_number = Ttf.Fixed(self._io, self, self._root)
 self.num_glyphs = self._io:read_u2be()
+if self.is_version10 then
+  self.version10_body = Ttf.MaxpVersion10Body(self._io, self, self._root)
+end
+end
+
+Ttf.Maxp.property.is_version10 = {}
+function Ttf.Maxp.property.is_version10:get()
+if self._m_is_version10 ~= nil then
+  return self._m_is_version10
+end
+
+self._m_is_version10 =  ((self.table_version_number.major == 1) and (self.table_version_number.minor == 0)) 
+return self._m_is_version10
+end
+
+-- 
+-- 0x00010000 for version 1.0.
+-- 
+-- The number of glyphs in the font.
+
+Ttf.MaxpVersion10Body = class.class(KaitaiStruct)
+
+function Ttf.MaxpVersion10Body:_init(io, parent, root)
+KaitaiStruct._init(self, io)
+self._parent = parent
+self._root = root or self
+self:_read()
+end
+
+function Ttf.MaxpVersion10Body:_read()
 self.max_points = self._io:read_u2be()
 self.max_contours = self._io:read_u2be()
 self.max_composite_points = self._io:read_u2be()
@@ -1063,10 +1093,6 @@ self.max_component_elements = self._io:read_u2be()
 self.max_component_depth = self._io:read_u2be()
 end
 
--- 
--- 0x00010000 for version 1.0.
--- 
--- The number of glyphs in the font.
 -- 
 -- Maximum points in a non-composite glyph.
 -- 

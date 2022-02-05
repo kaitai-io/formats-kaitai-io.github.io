@@ -38,7 +38,7 @@ digraph {
 					<TR><TD PORT="glyph_name_index_pos">2</TD><TD PORT="glyph_name_index_size">2</TD><TD>u2be</TD><TD PORT="glyph_name_index_type">glyph_name_index</TD></TR>
 					<TR><TD COLSPAN="4" PORT="glyph_name_index__repeat">repeat number_of_glyphs times</TD></TR>
 					<TR><TD PORT="glyph_names_pos">...</TD><TD PORT="glyph_names_size">...</TD><TD>PascalString</TD><TD PORT="glyph_names_type">glyph_names</TD></TR>
-					<TR><TD COLSPAN="4" PORT="glyph_names__repeat">repeat until _.length == 0</TD></TR>
+					<TR><TD COLSPAN="4" PORT="glyph_names__repeat">repeat until  ((_.length == 0) || (_io.eof?)) </TD></TR>
 				</TABLE>>];
 				subgraph cluster__pascal_string {
 					label="Ttf::Post::Format20::PascalString";
@@ -489,19 +489,32 @@ dir_table_entry__inst__value_value_switch [label=<<TABLE BORDER="0" CELLBORDER="
 				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 				<TR><TD PORT="table_version_number_pos">0</TD><TD PORT="table_version_number_size">4</TD><TD>Fixed</TD><TD PORT="table_version_number_type">table_version_number</TD></TR>
 				<TR><TD PORT="num_glyphs_pos">4</TD><TD PORT="num_glyphs_size">2</TD><TD>u2be</TD><TD PORT="num_glyphs_type">num_glyphs</TD></TR>
-				<TR><TD PORT="max_points_pos">6</TD><TD PORT="max_points_size">2</TD><TD>u2be</TD><TD PORT="max_points_type">max_points</TD></TR>
-				<TR><TD PORT="max_contours_pos">8</TD><TD PORT="max_contours_size">2</TD><TD>u2be</TD><TD PORT="max_contours_type">max_contours</TD></TR>
-				<TR><TD PORT="max_composite_points_pos">10</TD><TD PORT="max_composite_points_size">2</TD><TD>u2be</TD><TD PORT="max_composite_points_type">max_composite_points</TD></TR>
-				<TR><TD PORT="max_composite_contours_pos">12</TD><TD PORT="max_composite_contours_size">2</TD><TD>u2be</TD><TD PORT="max_composite_contours_type">max_composite_contours</TD></TR>
-				<TR><TD PORT="max_zones_pos">14</TD><TD PORT="max_zones_size">2</TD><TD>u2be</TD><TD PORT="max_zones_type">max_zones</TD></TR>
-				<TR><TD PORT="max_twilight_points_pos">16</TD><TD PORT="max_twilight_points_size">2</TD><TD>u2be</TD><TD PORT="max_twilight_points_type">max_twilight_points</TD></TR>
-				<TR><TD PORT="max_storage_pos">18</TD><TD PORT="max_storage_size">2</TD><TD>u2be</TD><TD PORT="max_storage_type">max_storage</TD></TR>
-				<TR><TD PORT="max_function_defs_pos">20</TD><TD PORT="max_function_defs_size">2</TD><TD>u2be</TD><TD PORT="max_function_defs_type">max_function_defs</TD></TR>
-				<TR><TD PORT="max_instruction_defs_pos">22</TD><TD PORT="max_instruction_defs_size">2</TD><TD>u2be</TD><TD PORT="max_instruction_defs_type">max_instruction_defs</TD></TR>
-				<TR><TD PORT="max_stack_elements_pos">24</TD><TD PORT="max_stack_elements_size">2</TD><TD>u2be</TD><TD PORT="max_stack_elements_type">max_stack_elements</TD></TR>
-				<TR><TD PORT="max_size_of_instructions_pos">26</TD><TD PORT="max_size_of_instructions_size">2</TD><TD>u2be</TD><TD PORT="max_size_of_instructions_type">max_size_of_instructions</TD></TR>
-				<TR><TD PORT="max_component_elements_pos">28</TD><TD PORT="max_component_elements_size">2</TD><TD>u2be</TD><TD PORT="max_component_elements_type">max_component_elements</TD></TR>
-				<TR><TD PORT="max_component_depth_pos">30</TD><TD PORT="max_component_depth_size">2</TD><TD>u2be</TD><TD PORT="max_component_depth_type">max_component_depth</TD></TR>
+				<TR><TD PORT="version10_body_pos">6</TD><TD PORT="version10_body_size">26</TD><TD>MaxpVersion10Body</TD><TD PORT="version10_body_type">version10_body</TD></TR>
+			</TABLE>>];
+			maxp__inst__is_version10 [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+				<TR><TD>is_version10</TD><TD> ((table_version_number.major == 1) &amp;&amp; (table_version_number.minor == 0)) </TD></TR>
+			</TABLE>>];
+		}
+		subgraph cluster__maxp_version10_body {
+			label="Ttf::MaxpVersion10Body";
+			graph[style=dotted];
+
+			maxp_version10_body__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+				<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+				<TR><TD PORT="max_points_pos">0</TD><TD PORT="max_points_size">2</TD><TD>u2be</TD><TD PORT="max_points_type">max_points</TD></TR>
+				<TR><TD PORT="max_contours_pos">2</TD><TD PORT="max_contours_size">2</TD><TD>u2be</TD><TD PORT="max_contours_type">max_contours</TD></TR>
+				<TR><TD PORT="max_composite_points_pos">4</TD><TD PORT="max_composite_points_size">2</TD><TD>u2be</TD><TD PORT="max_composite_points_type">max_composite_points</TD></TR>
+				<TR><TD PORT="max_composite_contours_pos">6</TD><TD PORT="max_composite_contours_size">2</TD><TD>u2be</TD><TD PORT="max_composite_contours_type">max_composite_contours</TD></TR>
+				<TR><TD PORT="max_zones_pos">8</TD><TD PORT="max_zones_size">2</TD><TD>u2be</TD><TD PORT="max_zones_type">max_zones</TD></TR>
+				<TR><TD PORT="max_twilight_points_pos">10</TD><TD PORT="max_twilight_points_size">2</TD><TD>u2be</TD><TD PORT="max_twilight_points_type">max_twilight_points</TD></TR>
+				<TR><TD PORT="max_storage_pos">12</TD><TD PORT="max_storage_size">2</TD><TD>u2be</TD><TD PORT="max_storage_type">max_storage</TD></TR>
+				<TR><TD PORT="max_function_defs_pos">14</TD><TD PORT="max_function_defs_size">2</TD><TD>u2be</TD><TD PORT="max_function_defs_type">max_function_defs</TD></TR>
+				<TR><TD PORT="max_instruction_defs_pos">16</TD><TD PORT="max_instruction_defs_size">2</TD><TD>u2be</TD><TD PORT="max_instruction_defs_type">max_instruction_defs</TD></TR>
+				<TR><TD PORT="max_stack_elements_pos">18</TD><TD PORT="max_stack_elements_size">2</TD><TD>u2be</TD><TD PORT="max_stack_elements_type">max_stack_elements</TD></TR>
+				<TR><TD PORT="max_size_of_instructions_pos">20</TD><TD PORT="max_size_of_instructions_size">2</TD><TD>u2be</TD><TD PORT="max_size_of_instructions_type">max_size_of_instructions</TD></TR>
+				<TR><TD PORT="max_component_elements_pos">22</TD><TD PORT="max_component_elements_size">2</TD><TD>u2be</TD><TD PORT="max_component_elements_type">max_component_elements</TD></TR>
+				<TR><TD PORT="max_component_depth_pos">24</TD><TD PORT="max_component_depth_size">2</TD><TD>u2be</TD><TD PORT="max_component_depth_type">max_component_depth</TD></TR>
 			</TABLE>>];
 		}
 		subgraph cluster__offset_table {
@@ -673,6 +686,9 @@ subtable__seq_value_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING=
 	simple_glyph__inst__point_count:point_count_type -> simple_glyph__seq:flags__repeat [color="#404040"];
 	simple_glyph__seq:end_pts_of_contours_type -> simple_glyph__inst__point_count [color="#404040"];
 	maxp__seq:table_version_number_type -> fixed__seq [style=bold];
+	maxp__seq:version10_body_type -> maxp_version10_body__seq [style=bold];
+	fixed__seq:major_type -> maxp__inst__is_version10 [color="#404040"];
+	fixed__seq:minor_type -> maxp__inst__is_version10 [color="#404040"];
 	offset_table__seq:sfnt_version_type -> fixed__seq [style=bold];
 	cmap__seq:tables_type -> subtable_header__seq [style=bold];
 	cmap__seq:number_of_encoding_tables_type -> cmap__seq:tables__repeat [color="#404040"];

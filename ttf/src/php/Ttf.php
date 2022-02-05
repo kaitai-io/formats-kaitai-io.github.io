@@ -92,7 +92,7 @@ namespace Ttf\Post {
                 $_ = new \Ttf\Post\Format20\PascalString($this->_io, $this, $this->_root);
                 $this->_m_glyphNames[] = $_;
                 $i++;
-            } while (!($_->length() == 0));
+            } while (!( (($_->length() == 0) || ($this->_io()->isEof())) ));
         }
         protected $_m_numberOfGlyphs;
         protected $_m_glyphNameIndex;
@@ -1627,6 +1627,42 @@ namespace Ttf {
         private function _read() {
             $this->_m_tableVersionNumber = new \Ttf\Fixed($this->_io, $this, $this->_root);
             $this->_m_numGlyphs = $this->_io->readU2be();
+            if ($this->isVersion10()) {
+                $this->_m_version10Body = new \Ttf\MaxpVersion10Body($this->_io, $this, $this->_root);
+            }
+        }
+        protected $_m_isVersion10;
+        public function isVersion10() {
+            if ($this->_m_isVersion10 !== null)
+                return $this->_m_isVersion10;
+            $this->_m_isVersion10 =  (($this->tableVersionNumber()->major() == 1) && ($this->tableVersionNumber()->minor() == 0)) ;
+            return $this->_m_isVersion10;
+        }
+        protected $_m_tableVersionNumber;
+        protected $_m_numGlyphs;
+        protected $_m_version10Body;
+
+        /**
+         * 0x00010000 for version 1.0.
+         */
+        public function tableVersionNumber() { return $this->_m_tableVersionNumber; }
+
+        /**
+         * The number of glyphs in the font.
+         */
+        public function numGlyphs() { return $this->_m_numGlyphs; }
+        public function version10Body() { return $this->_m_version10Body; }
+    }
+}
+
+namespace Ttf {
+    class MaxpVersion10Body extends \Kaitai\Struct\Struct {
+        public function __construct(\Kaitai\Struct\Stream $_io, \Ttf\Maxp $_parent = null, \Ttf $_root = null) {
+            parent::__construct($_io, $_parent, $_root);
+            $this->_read();
+        }
+
+        private function _read() {
             $this->_m_maxPoints = $this->_io->readU2be();
             $this->_m_maxContours = $this->_io->readU2be();
             $this->_m_maxCompositePoints = $this->_io->readU2be();
@@ -1641,8 +1677,6 @@ namespace Ttf {
             $this->_m_maxComponentElements = $this->_io->readU2be();
             $this->_m_maxComponentDepth = $this->_io->readU2be();
         }
-        protected $_m_tableVersionNumber;
-        protected $_m_numGlyphs;
         protected $_m_maxPoints;
         protected $_m_maxContours;
         protected $_m_maxCompositePoints;
@@ -1656,16 +1690,6 @@ namespace Ttf {
         protected $_m_maxSizeOfInstructions;
         protected $_m_maxComponentElements;
         protected $_m_maxComponentDepth;
-
-        /**
-         * 0x00010000 for version 1.0.
-         */
-        public function tableVersionNumber() { return $this->_m_tableVersionNumber; }
-
-        /**
-         * The number of glyphs in the font.
-         */
-        public function numGlyphs() { return $this->_m_numGlyphs; }
 
         /**
          * Maximum points in a non-composite glyph.

@@ -399,7 +399,7 @@ can also be found there.</p>
                             <span class="n">M_</span> <span class="p">=</span> <span class="k">new</span> <span class="n">PascalString</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                             <span class="n">_glyphNames</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">M_</span><span class="p">);</span>
                             <span class="n">i</span><span class="p">++;</span>
-                        <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span><span class="n">M_</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">));</span>
+                        <span class="p">}</span> <span class="k">while</span> <span class="p">(!(</span> <span class="p">((</span><span class="n">M_</span><span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">0</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">M_Io</span><span class="p">.</span><span class="n">IsEof</span><span class="p">))</span> <span class="p">));</span>
                     <span class="p">}</span>
                 <span class="p">}</span>
                 <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">PascalString</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
@@ -2182,12 +2182,64 @@ can also be found there.</p>
             <span class="p">{</span>
                 <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
                 <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">f_isVersion10</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
                 <span class="n">_read</span><span class="p">();</span>
             <span class="p">}</span>
             <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
             <span class="p">{</span>
                 <span class="n">_tableVersionNumber</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Fixed</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
                 <span class="n">_numGlyphs</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">IsVersion10</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">_version10Body</span> <span class="p">=</span> <span class="k">new</span> <span class="n">MaxpVersion10Body</span><span class="p">(</span><span class="n">m_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="n">m_root</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">f_isVersion10</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">bool</span> <span class="n">_isVersion10</span><span class="p">;</span>
+            <span class="k">public</span> <span class="kt">bool</span> <span class="n">IsVersion10</span>
+            <span class="p">{</span>
+                <span class="k">get</span>
+                <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">f_isVersion10</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">_isVersion10</span><span class="p">;</span>
+                    <span class="n">_isVersion10</span> <span class="p">=</span> <span class="p">(</span><span class="kt">bool</span><span class="p">)</span> <span class="p">(</span> <span class="p">((</span><span class="n">TableVersionNumber</span><span class="p">.</span><span class="n">Major</span> <span class="p">==</span> <span class="m">1</span><span class="p">)</span> <span class="p">&amp;&amp;</span> <span class="p">(</span><span class="n">TableVersionNumber</span><span class="p">.</span><span class="n">Minor</span> <span class="p">==</span> <span class="m">0</span><span class="p">))</span> <span class="p">);</span>
+                    <span class="n">f_isVersion10</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+                    <span class="k">return</span> <span class="n">_isVersion10</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Fixed</span> <span class="n">_tableVersionNumber</span><span class="p">;</span>
+            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numGlyphs</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">MaxpVersion10Body</span> <span class="n">_version10Body</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Ttf</span> <span class="n">m_root</span><span class="p">;</span>
+            <span class="k">private</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">DirTableEntry</span> <span class="n">m_parent</span><span class="p">;</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// 0x00010000 for version 1.0.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="n">Fixed</span> <span class="n">TableVersionNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tableVersionNumber</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+
+            <span class="c1">/// &lt;summary&gt;</span>
+            <span class="c1">/// The number of glyphs in the font.</span>
+            <span class="c1">/// &lt;/summary&gt;</span>
+            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumGlyphs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numGlyphs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">MaxpVersion10Body</span> <span class="n">Version10Body</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_version10Body</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ttf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">DirTableEntry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MaxpVersion10Body</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">static</span> <span class="n">MaxpVersion10Body</span> <span class="nf">FromFile</span><span class="p">(</span><span class="kt">string</span> <span class="n">fileName</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="nf">MaxpVersion10Body</span><span class="p">(</span><span class="k">new</span> <span class="n">KaitaiStream</span><span class="p">(</span><span class="n">fileName</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="nf">MaxpVersion10Body</span><span class="p">(</span><span class="n">KaitaiStream</span> <span class="n">p__io</span><span class="p">,</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">Maxp</span> <span class="n">p__parent</span> <span class="p">=</span> <span class="k">null</span><span class="p">,</span> <span class="n">Ttf</span> <span class="n">p__root</span> <span class="p">=</span> <span class="k">null</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">p__io</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">m_parent</span> <span class="p">=</span> <span class="n">p__parent</span><span class="p">;</span>
+                <span class="n">m_root</span> <span class="p">=</span> <span class="n">p__root</span><span class="p">;</span>
+                <span class="n">_read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">private</span> <span class="k">void</span> <span class="nf">_read</span><span class="p">()</span>
+            <span class="p">{</span>
                 <span class="n">_maxPoints</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="n">_maxContours</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="n">_maxCompositePoints</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
@@ -2202,8 +2254,6 @@ can also be found there.</p>
                 <span class="n">_maxComponentElements</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
                 <span class="n">_maxComponentDepth</span> <span class="p">=</span> <span class="n">m_io</span><span class="p">.</span><span class="n">ReadU2be</span><span class="p">();</span>
             <span class="p">}</span>
-            <span class="k">private</span> <span class="n">Fixed</span> <span class="n">_tableVersionNumber</span><span class="p">;</span>
-            <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_numGlyphs</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxPoints</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxContours</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxCompositePoints</span><span class="p">;</span>
@@ -2218,17 +2268,7 @@ can also be found there.</p>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxComponentElements</span><span class="p">;</span>
             <span class="k">private</span> <span class="kt">ushort</span> <span class="n">_maxComponentDepth</span><span class="p">;</span>
             <span class="k">private</span> <span class="n">Ttf</span> <span class="n">m_root</span><span class="p">;</span>
-            <span class="k">private</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">DirTableEntry</span> <span class="n">m_parent</span><span class="p">;</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// 0x00010000 for version 1.0.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="n">Fixed</span> <span class="n">TableVersionNumber</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_tableVersionNumber</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-
-            <span class="c1">/// &lt;summary&gt;</span>
-            <span class="c1">/// The number of glyphs in the font.</span>
-            <span class="c1">/// &lt;/summary&gt;</span>
-            <span class="k">public</span> <span class="kt">ushort</span> <span class="n">NumGlyphs</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_numGlyphs</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">private</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">Maxp</span> <span class="n">m_parent</span><span class="p">;</span>
 
             <span class="c1">/// &lt;summary&gt;</span>
             <span class="c1">/// Maximum points in a non-composite glyph.</span>
@@ -2295,7 +2335,7 @@ can also be found there.</p>
             <span class="c1">/// &lt;/summary&gt;</span>
             <span class="k">public</span> <span class="kt">ushort</span> <span class="n">MaxComponentDepth</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">_maxComponentDepth</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
             <span class="k">public</span> <span class="n">Ttf</span> <span class="n">M_Root</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_root</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
-            <span class="k">public</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">DirTableEntry</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
+            <span class="k">public</span> <span class="n">Ttf</span><span class="p">.</span><span class="n">Maxp</span> <span class="n">M_Parent</span> <span class="p">{</span> <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">m_parent</span><span class="p">;</span> <span class="p">}</span> <span class="p">}</span>
         <span class="p">}</span>
         <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">OffsetTable</span> <span class="p">:</span> <span class="n">KaitaiStruct</span>
         <span class="p">{</span>

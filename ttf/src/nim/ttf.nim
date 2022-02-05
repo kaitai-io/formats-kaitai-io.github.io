@@ -498,6 +498,10 @@ type
   Ttf_Maxp* = ref object of KaitaiStruct
     `tableVersionNumber`*: Ttf_Fixed
     `numGlyphs`*: uint16
+    `version10Body`*: Ttf_MaxpVersion10Body
+    `parent`*: Ttf_DirTableEntry
+    `isVersion10Inst`*: bool
+  Ttf_MaxpVersion10Body* = ref object of KaitaiStruct
     `maxPoints`*: uint16
     `maxContours`*: uint16
     `maxCompositePoints`*: uint16
@@ -511,7 +515,7 @@ type
     `maxSizeOfInstructions`*: uint16
     `maxComponentElements`*: uint16
     `maxComponentDepth`*: uint16
-    `parent`*: Ttf_DirTableEntry
+    `parent`*: Ttf_Maxp
   Ttf_OffsetTable* = ref object of KaitaiStruct
     `sfntVersion`*: Ttf_Fixed
     `numTables`*: uint16
@@ -592,6 +596,7 @@ proc read*(_: typedesc[Ttf_Glyf_SimpleGlyph], io: KaitaiStream, root: KaitaiStru
 proc read*(_: typedesc[Ttf_Glyf_SimpleGlyph_Flag], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Glyf_SimpleGlyph): Ttf_Glyf_SimpleGlyph_Flag
 proc read*(_: typedesc[Ttf_Cvt], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_DirTableEntry): Ttf_Cvt
 proc read*(_: typedesc[Ttf_Maxp], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_DirTableEntry): Ttf_Maxp
+proc read*(_: typedesc[Ttf_MaxpVersion10Body], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Maxp): Ttf_MaxpVersion10Body
 proc read*(_: typedesc[Ttf_OffsetTable], io: KaitaiStream, root: KaitaiStruct, parent: Ttf): Ttf_OffsetTable
 proc read*(_: typedesc[Ttf_Cmap], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_DirTableEntry): Ttf_Cmap
 proc read*(_: typedesc[Ttf_Cmap_SubtableHeader], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Cmap): Ttf_Cmap_SubtableHeader
@@ -605,6 +610,7 @@ proc asciiValue*(this: Ttf_Name_NameRecord): string
 proc unicodeValue*(this: Ttf_Name_NameRecord): string
 proc value*(this: Ttf_DirTableEntry): KaitaiStruct
 proc pointCount*(this: Ttf_Glyf_SimpleGlyph): int
+proc isVersion10*(this: Ttf_Maxp): bool
 proc table*(this: Ttf_Cmap_SubtableHeader): Ttf_Cmap_Subtable
 proc segCount*(this: Ttf_Cmap_Subtable_SegmentMappingToDeltaValues): int
 
@@ -683,7 +689,7 @@ proc read*(_: typedesc[Ttf_Post_Format20], io: KaitaiStream, root: KaitaiStruct,
     while true:
       let it = Ttf_Post_Format20_PascalString.read(this.io, this.root, this)
       this.glyphNames.add(it)
-      if it.length == 0:
+      if  ((it.length == 0) or (this.io.isEof)) :
         break
       inc i
 
@@ -1721,6 +1727,29 @@ proc read*(_: typedesc[Ttf_Maxp], io: KaitaiStream, root: KaitaiStruct, parent: 
   ]##
   let numGlyphsExpr = this.io.readU2be()
   this.numGlyphs = numGlyphsExpr
+  if this.isVersion10:
+    let version10BodyExpr = Ttf_MaxpVersion10Body.read(this.io, this.root, this)
+    this.version10Body = version10BodyExpr
+
+proc isVersion10(this: Ttf_Maxp): bool = 
+  if this.isVersion10Inst != nil:
+    return this.isVersion10Inst
+  let isVersion10InstExpr = bool( ((this.tableVersionNumber.major == 1) and (this.tableVersionNumber.minor == 0)) )
+  this.isVersion10Inst = isVersion10InstExpr
+  if this.isVersion10Inst != nil:
+    return this.isVersion10Inst
+
+proc fromFile*(_: typedesc[Ttf_Maxp], filename: string): Ttf_Maxp =
+  Ttf_Maxp.read(newKaitaiFileStream(filename), nil, nil)
+
+proc read*(_: typedesc[Ttf_MaxpVersion10Body], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Maxp): Ttf_MaxpVersion10Body =
+  template this: untyped = result
+  this = new(Ttf_MaxpVersion10Body)
+  let root = if root == nil: cast[Ttf](this) else: cast[Ttf](root)
+  this.io = io
+  this.root = root
+  this.parent = parent
+
 
   ##[
   Maximum points in a non-composite glyph.
@@ -1800,8 +1829,8 @@ proc read*(_: typedesc[Ttf_Maxp], io: KaitaiStream, root: KaitaiStruct, parent: 
   let maxComponentDepthExpr = this.io.readU2be()
   this.maxComponentDepth = maxComponentDepthExpr
 
-proc fromFile*(_: typedesc[Ttf_Maxp], filename: string): Ttf_Maxp =
-  Ttf_Maxp.read(newKaitaiFileStream(filename), nil, nil)
+proc fromFile*(_: typedesc[Ttf_MaxpVersion10Body], filename: string): Ttf_MaxpVersion10Body =
+  Ttf_MaxpVersion10Body.read(newKaitaiFileStream(filename), nil, nil)
 
 proc read*(_: typedesc[Ttf_OffsetTable], io: KaitaiStream, root: KaitaiStruct, parent: Ttf): Ttf_OffsetTable =
   template this: untyped = result

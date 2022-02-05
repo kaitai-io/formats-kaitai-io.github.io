@@ -763,6 +763,10 @@ an outline font.</p>
   <span class="n">Ttf_Maxp</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">tableVersionNumber</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ttf_Fixed</span>
     <span class="p">`</span><span class="n">numGlyphs</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">version10Body</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ttf_MaxpVersion10Body</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ttf_DirTableEntry</span>
+    <span class="p">`</span><span class="n">isVersion10Inst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">bool</span>
+  <span class="n">Ttf_MaxpVersion10Body</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">maxPoints</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">maxContours</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">maxCompositePoints</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -776,7 +780,7 @@ an outline font.</p>
     <span class="p">`</span><span class="n">maxSizeOfInstructions</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">maxComponentElements</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">maxComponentDepth</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
-    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ttf_DirTableEntry</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ttf_Maxp</span>
   <span class="n">Ttf_OffsetTable</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">sfntVersion</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Ttf_Fixed</span>
     <span class="p">`</span><span class="n">numTables</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
@@ -857,6 +861,7 @@ an outline font.</p>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Glyf_SimpleGlyph_Flag], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Glyf_SimpleGlyph): Ttf_Glyf_SimpleGlyph_Flag</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Cvt], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_DirTableEntry): Ttf_Cvt</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Maxp], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_DirTableEntry): Ttf_Maxp</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_MaxpVersion10Body], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Maxp): Ttf_MaxpVersion10Body</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_OffsetTable], io: KaitaiStream, root: KaitaiStruct, parent: Ttf): Ttf_OffsetTable</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Cmap], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_DirTableEntry): Ttf_Cmap</span>
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Cmap_SubtableHeader], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Cmap): Ttf_Cmap_SubtableHeader</span>
@@ -870,6 +875,7 @@ an outline font.</p>
 <span class="k">proc </span><span class="nf">unicodeValue</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_Name_NameRecord</span><span class="p">):</span> <span class="kt">string</span>
 <span class="k">proc </span><span class="nf">value</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_DirTableEntry</span><span class="p">):</span> <span class="n">KaitaiStruct</span>
 <span class="k">proc </span><span class="nf">pointCount</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_Glyf_SimpleGlyph</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">isVersion10</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_Maxp</span><span class="p">):</span> <span class="kt">bool</span>
 <span class="k">proc </span><span class="nf">table</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_Cmap_SubtableHeader</span><span class="p">):</span> <span class="n">Ttf_Cmap_Subtable</span>
 <span class="k">proc </span><span class="nf">segCount</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_Cmap_Subtable_SegmentMappingToDeltaValues</span><span class="p">):</span> <span class="kt">int</span>
 
@@ -948,7 +954,7 @@ an outline font.</p>
     <span class="k">while</span> <span class="kp">true</span><span class="p">:</span>
       <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Ttf_Post_Format20_PascalString</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
       <span class="n">this</span><span class="p">.</span><span class="n">glyphNames</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-      <span class="k">if</span> <span class="n">it</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">if</span>  <span class="p">((</span><span class="n">it</span><span class="p">.</span><span class="n">length</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">isEof</span><span class="p">))</span> <span class="p">:</span>
         <span class="k">break</span>
       <span class="n">inc</span> <span class="n">i</span>
 
@@ -1986,6 +1992,29 @@ an outline font.</p>
   <span class="o">]</span><span class="sd">##</span>
   <span class="k">let</span> <span class="n">numGlyphsExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numGlyphs</span> <span class="o">=</span> <span class="n">numGlyphsExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isVersion10</span><span class="p">:</span>
+    <span class="k">let</span> <span class="n">version10BodyExpr</span> <span class="o">=</span> <span class="n">Ttf_MaxpVersion10Body</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">version10Body</span> <span class="o">=</span> <span class="n">version10BodyExpr</span>
+
+<span class="k">proc </span><span class="nf">isVersion10</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Ttf_Maxp</span><span class="p">):</span> <span class="kt">bool</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isVersion10Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isVersion10Inst</span>
+  <span class="k">let</span> <span class="n">isVersion10InstExpr</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span> <span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">tableVersionNumber</span><span class="p">.</span><span class="n">major</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">tableVersionNumber</span><span class="p">.</span><span class="n">minor</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span> <span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">isVersion10Inst</span> <span class="o">=</span> <span class="n">isVersion10InstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">isVersion10Inst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">isVersion10Inst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Maxp], filename: string): Ttf_Maxp =</span>
+  <span class="n">Ttf_Maxp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_MaxpVersion10Body], io: KaitaiStream, root: KaitaiStruct, parent: Ttf_Maxp): Ttf_MaxpVersion10Body =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Ttf_MaxpVersion10Body</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ttf</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Ttf</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
 
   <span class="sd">##[</span>
   <span class="n">Maximum</span> <span class="n">points</span> <span class="ow">in</span> <span class="n">a</span> <span class="n">non</span><span class="o">-</span><span class="n">composite</span> <span class="n">glyph</span><span class="p">.</span>
@@ -2065,8 +2094,8 @@ an outline font.</p>
   <span class="k">let</span> <span class="n">maxComponentDepthExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">maxComponentDepth</span> <span class="o">=</span> <span class="n">maxComponentDepthExpr</span>
 
-<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_Maxp], filename: string): Ttf_Maxp =</span>
-  <span class="n">Ttf_Maxp</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_MaxpVersion10Body], filename: string): Ttf_MaxpVersion10Body =</span>
+  <span class="n">Ttf_MaxpVersion10Body</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
 
 <span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Ttf_OffsetTable], io: KaitaiStream, root: KaitaiStruct, parent: Ttf): Ttf_OffsetTable =</span>
   <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>

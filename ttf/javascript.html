@@ -378,7 +378,7 @@ an outline font.</p>
           <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">PascalString</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
           <span class="k">this</span><span class="p">.</span><span class="nx">glyphNames</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">_</span><span class="p">);</span>
           <span class="nx">i</span><span class="o">++</span><span class="p">;</span>
-        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mf">0</span><span class="p">));</span>
+        <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span> <span class="p">((</span><span class="nx">_</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mf">0</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">isEof</span><span class="p">()))</span> <span class="p">));</span>
       <span class="p">}</span>
 
       <span class="kd">var</span> <span class="nx">PascalString</span> <span class="o">=</span> <span class="nx">Format20</span><span class="p">.</span><span class="nx">PascalString</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -1639,6 +1639,39 @@ an outline font.</p>
     <span class="nx">Maxp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">tableVersionNumber</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">Fixed</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">numGlyphs</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">isVersion10</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">version10Body</span> <span class="o">=</span> <span class="ow">new</span> <span class="nx">MaxpVersion10Body</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">_root</span><span class="p">);</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">Object</span><span class="p">.</span><span class="nx">defineProperty</span><span class="p">(</span><span class="nx">Maxp</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="s1">&#39;isVersion10&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_m_isVersion10</span> <span class="o">!==</span> <span class="kc">undefined</span><span class="p">)</span>
+          <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isVersion10</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_m_isVersion10</span> <span class="o">=</span>  <span class="p">((</span><span class="k">this</span><span class="p">.</span><span class="nx">tableVersionNumber</span><span class="p">.</span><span class="nx">major</span> <span class="o">==</span> <span class="mf">1</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">tableVersionNumber</span><span class="p">.</span><span class="nx">minor</span> <span class="o">==</span> <span class="mf">0</span><span class="p">))</span> <span class="p">;</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_m_isVersion10</span><span class="p">;</span>
+      <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * 0x00010000 for version 1.0.</span>
+<span class="cm">     */</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * The number of glyphs in the font.</span>
+<span class="cm">     */</span>
+
+    <span class="k">return</span> <span class="nx">Maxp</span><span class="p">;</span>
+  <span class="p">})();</span>
+
+  <span class="kd">var</span> <span class="nx">MaxpVersion10Body</span> <span class="o">=</span> <span class="nx">Ttf</span><span class="p">.</span><span class="nx">MaxpVersion10Body</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">function</span> <span class="nx">MaxpVersion10Body</span><span class="p">(</span><span class="nx">_io</span><span class="p">,</span> <span class="nx">_parent</span><span class="p">,</span> <span class="nx">_root</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_io</span> <span class="o">=</span> <span class="nx">_io</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_parent</span> <span class="o">=</span> <span class="nx">_parent</span><span class="p">;</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">_root</span> <span class="o">=</span> <span class="nx">_root</span> <span class="o">||</span> <span class="k">this</span><span class="p">;</span>
+
+      <span class="k">this</span><span class="p">.</span><span class="nx">_read</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="nx">MaxpVersion10Body</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">_read</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">maxPoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">maxContours</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">maxCompositePoints</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
@@ -1653,14 +1686,6 @@ an outline font.</p>
       <span class="k">this</span><span class="p">.</span><span class="nx">maxComponentElements</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
       <span class="k">this</span><span class="p">.</span><span class="nx">maxComponentDepth</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_io</span><span class="p">.</span><span class="nx">readU2be</span><span class="p">();</span>
     <span class="p">}</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * 0x00010000 for version 1.0.</span>
-<span class="cm">     */</span>
-
-    <span class="cm">/**</span>
-<span class="cm">     * The number of glyphs in the font.</span>
-<span class="cm">     */</span>
 
     <span class="cm">/**</span>
 <span class="cm">     * Maximum points in a non-composite glyph.</span>
@@ -1714,7 +1739,7 @@ an outline font.</p>
 <span class="cm">     * Maximum levels of recursion; 1 for simple components.</span>
 <span class="cm">     */</span>
 
-    <span class="k">return</span> <span class="nx">Maxp</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">MaxpVersion10Body</span><span class="p">;</span>
   <span class="p">})();</span>
 
   <span class="kd">var</span> <span class="nx">OffsetTable</span> <span class="o">=</span> <span class="nx">Ttf</span><span class="p">.</span><span class="nx">OffsetTable</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>

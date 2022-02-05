@@ -92,7 +92,7 @@ namespace Kaitai
                             M_ = new PascalString(m_io, this, m_root);
                             _glyphNames.Add(M_);
                             i++;
-                        } while (!(M_.Length == 0));
+                        } while (!( ((M_.Length == 0) || (M_Io.IsEof)) ));
                     }
                 }
                 public partial class PascalString : KaitaiStruct
@@ -1875,12 +1875,64 @@ namespace Kaitai
             {
                 m_parent = p__parent;
                 m_root = p__root;
+                f_isVersion10 = false;
                 _read();
             }
             private void _read()
             {
                 _tableVersionNumber = new Fixed(m_io, this, m_root);
                 _numGlyphs = m_io.ReadU2be();
+                if (IsVersion10) {
+                    _version10Body = new MaxpVersion10Body(m_io, this, m_root);
+                }
+            }
+            private bool f_isVersion10;
+            private bool _isVersion10;
+            public bool IsVersion10
+            {
+                get
+                {
+                    if (f_isVersion10)
+                        return _isVersion10;
+                    _isVersion10 = (bool) ( ((TableVersionNumber.Major == 1) && (TableVersionNumber.Minor == 0)) );
+                    f_isVersion10 = true;
+                    return _isVersion10;
+                }
+            }
+            private Fixed _tableVersionNumber;
+            private ushort _numGlyphs;
+            private MaxpVersion10Body _version10Body;
+            private Ttf m_root;
+            private Ttf.DirTableEntry m_parent;
+
+            /// <summary>
+            /// 0x00010000 for version 1.0.
+            /// </summary>
+            public Fixed TableVersionNumber { get { return _tableVersionNumber; } }
+
+            /// <summary>
+            /// The number of glyphs in the font.
+            /// </summary>
+            public ushort NumGlyphs { get { return _numGlyphs; } }
+            public MaxpVersion10Body Version10Body { get { return _version10Body; } }
+            public Ttf M_Root { get { return m_root; } }
+            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+        }
+        public partial class MaxpVersion10Body : KaitaiStruct
+        {
+            public static MaxpVersion10Body FromFile(string fileName)
+            {
+                return new MaxpVersion10Body(new KaitaiStream(fileName));
+            }
+
+            public MaxpVersion10Body(KaitaiStream p__io, Ttf.Maxp p__parent = null, Ttf p__root = null) : base(p__io)
+            {
+                m_parent = p__parent;
+                m_root = p__root;
+                _read();
+            }
+            private void _read()
+            {
                 _maxPoints = m_io.ReadU2be();
                 _maxContours = m_io.ReadU2be();
                 _maxCompositePoints = m_io.ReadU2be();
@@ -1895,8 +1947,6 @@ namespace Kaitai
                 _maxComponentElements = m_io.ReadU2be();
                 _maxComponentDepth = m_io.ReadU2be();
             }
-            private Fixed _tableVersionNumber;
-            private ushort _numGlyphs;
             private ushort _maxPoints;
             private ushort _maxContours;
             private ushort _maxCompositePoints;
@@ -1911,17 +1961,7 @@ namespace Kaitai
             private ushort _maxComponentElements;
             private ushort _maxComponentDepth;
             private Ttf m_root;
-            private Ttf.DirTableEntry m_parent;
-
-            /// <summary>
-            /// 0x00010000 for version 1.0.
-            /// </summary>
-            public Fixed TableVersionNumber { get { return _tableVersionNumber; } }
-
-            /// <summary>
-            /// The number of glyphs in the font.
-            /// </summary>
-            public ushort NumGlyphs { get { return _numGlyphs; } }
+            private Ttf.Maxp m_parent;
 
             /// <summary>
             /// Maximum points in a non-composite glyph.
@@ -1988,7 +2028,7 @@ namespace Kaitai
             /// </summary>
             public ushort MaxComponentDepth { get { return _maxComponentDepth; } }
             public Ttf M_Root { get { return m_root; } }
-            public Ttf.DirTableEntry M_Parent { get { return m_parent; } }
+            public Ttf.Maxp M_Parent { get { return m_parent; } }
         }
         public partial class OffsetTable : KaitaiStruct
         {
