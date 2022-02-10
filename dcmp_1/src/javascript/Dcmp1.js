@@ -33,7 +33,7 @@
  * The `'dcmp' (0)` format also appears to be generally preferred over `'dcmp' (1)`,
  * with the latter only being used in resource files that contain mostly unaligned data,
  * such as text.
- * @see {@link https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp1.py|Source}
+ * @see {@link https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp1.py|Source}
  */
 
 var Dcmp1 = (function() {

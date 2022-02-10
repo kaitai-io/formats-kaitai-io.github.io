@@ -31,7 +31,7 @@ namespace Kaitai
     /// such as text.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp1.py">Source</a>
+    /// Reference: <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp1.py">Source</a>
     /// </remarks>
     public partial class Dcmp1 : KaitaiStruct
     {

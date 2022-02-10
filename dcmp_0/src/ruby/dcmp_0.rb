@@ -34,7 +34,7 @@ end
 # 
 # The `'dcmp' (1)` compression format (see dcmp_1.ksy) is very similar to this format,
 # with the main difference that it operates mostly on single bytes rather than two-byte units.
-# @see https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp0.py Source
+# @see https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp0.py Source
 class Dcmp0 < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

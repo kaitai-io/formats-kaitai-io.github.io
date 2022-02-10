@@ -103,7 +103,7 @@ The `'dcmp' (0)` format also appears to be generally preferred over `'dcmp' (1)`
 with the latter only being used in resource files that contain mostly unaligned data,
 such as text.
 
-@see <a href="https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp1.py">Source</a>
+@see <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp1.py">Source</a>
 ]##
 proc read*(_: typedesc[Dcmp1], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dcmp1 =
   template this: untyped = result

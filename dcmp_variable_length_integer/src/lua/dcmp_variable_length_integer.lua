@@ -25,7 +25,7 @@ local utils = require("utils")
 -- In practice,
 -- values are always stored in the smallest possible format,
 -- but technically any of the larger formats could be used as well.
--- See also: Source (https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/common.py)
+-- See also: Source (https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/common.py)
 DcmpVariableLengthInteger = class.class(KaitaiStruct)
 
 function DcmpVariableLengthInteger:_init(io, parent, root)

@@ -32,7 +32,7 @@ require("dcmp_variable_length_integer")
 -- The `'dcmp' (0)` format also appears to be generally preferred over `'dcmp' (1)`,
 -- with the latter only being used in resource files that contain mostly unaligned data,
 -- such as text.
--- See also: Source (https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp1.py)
+-- See also: Source (https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp1.py)
 Dcmp1 = class.class(KaitaiStruct)
 
 function Dcmp1:_init(io, parent, root)

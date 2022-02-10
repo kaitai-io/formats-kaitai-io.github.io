@@ -40,7 +40,7 @@ class dcmp_variable_length_integer_t;
  * 
  * The `'dcmp' (1)` compression format (see dcmp_1.ksy) is very similar to this format,
  * with the main difference that it operates mostly on single bytes rather than two-byte units.
- * \sa https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp0.py Source
+ * \sa https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp0.py Source
  */
 
 class dcmp_0_t : public kaitai::kstruct {

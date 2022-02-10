@@ -36,7 +36,7 @@ class Dcmp1(KaitaiStruct):
     such as text.
     
     .. seealso::
-       Source - https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp1.py
+       Source - https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp1.py
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

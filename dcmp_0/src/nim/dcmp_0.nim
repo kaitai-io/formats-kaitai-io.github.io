@@ -141,7 +141,7 @@ as the real (odd) length of the resource is stored in the compressed resource he
 The `'dcmp' (1)` compression format (see dcmp_1.ksy) is very similar to this format,
 with the main difference that it operates mostly on single bytes rather than two-byte units.
 
-@see <a href="https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress/dcmp0.py">Source</a>
+@see <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp0.py">Source</a>
 ]##
 proc read*(_: typedesc[Dcmp0], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Dcmp0 =
   template this: untyped = result
