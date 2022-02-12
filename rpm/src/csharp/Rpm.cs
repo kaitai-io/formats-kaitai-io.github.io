@@ -403,6 +403,7 @@ namespace Kaitai
             MipsR6 = 20,
             Mips64R6 = 21,
             Riscv = 22,
+            Loongarch64 = 23,
             NoArch = 255,
         }
         public Rpm(KaitaiStream p__io, KaitaiStruct p__parent = null, Rpm p__root = null) : base(p__io)

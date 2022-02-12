@@ -30,7 +30,7 @@
  * along with some parameters for the decompressor.
  * @see {@link http://www.alysis.us/arctechnology.htm|Source}
  * @see {@link http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html|Source}
- * @see {@link https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress|Source}
+ * @see {@link https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress|Source}
  */
 
 var CompressedResource = (function() {

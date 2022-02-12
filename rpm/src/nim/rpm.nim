@@ -373,6 +373,7 @@ type
     mips_r6 = 20
     mips64_r6 = 21
     riscv = 22
+    loongarch64 = 23
     no_arch = 255
   Rpm_RecordTypeStringArray* = ref object of KaitaiStruct
     `values`*: seq[string]

@@ -27,7 +27,7 @@ local stringstream = require("string_stream")
 -- which allows using two-byte literals in addition to single-byte table references,
 -- at the cost of requiring an extra "tag" byte every 16 output bytes,
 -- to differentiate literals and table references.
--- See also: Source (https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp2.py)
+-- See also: Source (https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/dcmp2.py)
 Dcmp2 = class.class(KaitaiStruct)
 
 function Dcmp2:_init(len_decompressed, header_parameters_with_io, io, parent, root)

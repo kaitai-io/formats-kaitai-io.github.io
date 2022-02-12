@@ -38,7 +38,7 @@ class CompressedResource(KaitaiStruct):
     
     
     .. seealso::
-       Source - https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress
+       Source - https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

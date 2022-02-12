@@ -28,7 +28,7 @@ import java.util.Arrays;
  * along with some parameters for the decompressor.
  * @see <a href="http://www.alysis.us/arctechnology.htm">Source</a>
  * @see <a href="http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html">Source</a>
- * @see <a href="https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress">Source</a>
+ * @see <a href="https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress">Source</a>
  */
 public class CompressedResource extends KaitaiStruct {
     public static CompressedResource fromFile(String fileName) throws IOException {

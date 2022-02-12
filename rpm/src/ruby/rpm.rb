@@ -389,6 +389,7 @@ class Rpm < Kaitai::Struct::Struct
     20 => :architectures_mips_r6,
     21 => :architectures_mips64_r6,
     22 => :architectures_riscv,
+    23 => :architectures_loongarch64,
     255 => :architectures_no_arch,
   }
   I__ARCHITECTURES = ARCHITECTURES.invert

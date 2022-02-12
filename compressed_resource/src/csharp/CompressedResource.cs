@@ -32,7 +32,7 @@ namespace Kaitai
     /// Reference: <a href="http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html">Source</a>
     /// </remarks>
     /// <remarks>
-    /// Reference: <a href="https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress">Source</a>
+    /// Reference: <a href="https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress">Source</a>
     /// </remarks>
     public partial class CompressedResource : KaitaiStruct
     {

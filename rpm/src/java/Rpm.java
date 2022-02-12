@@ -442,12 +442,13 @@ public class Rpm extends KaitaiStruct {
         MIPS_R6(20),
         MIPS64_R6(21),
         RISCV(22),
+        LOONGARCH64(23),
         NO_ARCH(255);
 
         private final long id;
         Architectures(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Architectures> byId = new HashMap<Long, Architectures>(23);
+        private static final Map<Long, Architectures> byId = new HashMap<Long, Architectures>(24);
         static {
             for (Architectures e : Architectures.values())
                 byId.put(e.id(), e);

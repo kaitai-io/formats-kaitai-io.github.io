@@ -28,7 +28,7 @@ end
 # along with some parameters for the decompressor.
 # @see http://www.alysis.us/arctechnology.htm Source
 # @see http://preserve.mactech.com/articles/mactech/Vol.09/09.01/ResCompression/index.html Source
-# @see https://github.com/dgelessus/python-rsrcfork/tree/master/rsrcfork/compress Source
+# @see https://github.com/dgelessus/python-rsrcfork/tree/f891a6e/src/rsrcfork/compress Source
 class CompressedResource < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

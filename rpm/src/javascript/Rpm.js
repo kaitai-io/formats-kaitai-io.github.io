@@ -719,6 +719,7 @@ var Rpm = (function() {
     MIPS_R6: 20,
     MIPS64_R6: 21,
     RISCV: 22,
+    LOONGARCH64: 23,
     NO_ARCH: 255,
 
     1: "X86",
@@ -743,6 +744,7 @@ var Rpm = (function() {
     20: "MIPS_R6",
     21: "MIPS64_R6",
     22: "RISCV",
+    23: "LOONGARCH64",
     255: "NO_ARCH",
   });
 

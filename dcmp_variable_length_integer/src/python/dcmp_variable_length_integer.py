@@ -29,7 +29,7 @@ class DcmpVariableLengthInteger(KaitaiStruct):
     but technically any of the larger formats could be used as well.
     
     .. seealso::
-       Source - https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/common.py
+       Source - https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

@@ -25,7 +25,7 @@ import java.io.IOException;
  * In practice,
  * values are always stored in the smallest possible format,
  * but technically any of the larger formats could be used as well.
- * @see <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/common.py">Source</a>
+ * @see <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/common.py">Source</a>
  */
 public class DcmpVariableLengthInteger extends KaitaiStruct {
     public static DcmpVariableLengthInteger fromFile(String fileName) throws IOException {

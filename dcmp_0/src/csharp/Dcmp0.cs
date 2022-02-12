@@ -34,7 +34,7 @@ namespace Kaitai
     /// with the main difference that it operates mostly on single bytes rather than two-byte units.
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp0.py">Source</a>
+    /// Reference: <a href="https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/dcmp0.py">Source</a>
     /// </remarks>
     public partial class Dcmp0 : KaitaiStruct
     {

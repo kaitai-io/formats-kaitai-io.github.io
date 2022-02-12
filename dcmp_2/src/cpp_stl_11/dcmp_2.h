@@ -31,7 +31,7 @@
  * which allows using two-byte literals in addition to single-byte table references,
  * at the cost of requiring an extra "tag" byte every 16 output bytes,
  * to differentiate literals and table references.
- * \sa https://github.com/dgelessus/python-rsrcfork/blob/f891a6ee003b094bf4fc570832f90190260d795b/src/rsrcfork/compress/dcmp2.py Source
+ * \sa https://github.com/dgelessus/python-rsrcfork/blob/f891a6e/src/rsrcfork/compress/dcmp2.py Source
  */
 
 class dcmp_2_t : public kaitai::kstruct {

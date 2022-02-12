@@ -1258,6 +1258,7 @@ namespace Rpm {
         const MIPS_R6 = 20;
         const MIPS64_R6 = 21;
         const RISCV = 22;
+        const LOONGARCH64 = 23;
 
         /**
          * can be installed on any architecture
