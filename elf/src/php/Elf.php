@@ -3175,6 +3175,21 @@ namespace Elf {
          * ChipON KungFu32
          */
         const KF32 = 259;
+
+        /**
+         * LAPIS nX-U16/U8
+         */
+        const U16_U8CORE = 260;
+
+        /**
+         * Tachyum
+         */
+        const TACHYUM = 261;
+
+        /**
+         * NXP 56800EF Digital Signal Controller (DSC)
+         */
+        const NXP_56800EF = 262;
         const AVR_OLD = 4183;
         const MSP430_OLD = 4185;
 

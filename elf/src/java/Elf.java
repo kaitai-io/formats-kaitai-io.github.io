@@ -363,6 +363,9 @@ public class Elf extends KaitaiStruct {
         WDC65816(257),
         LOONGARCH(258),
         KF32(259),
+        U16_U8CORE(260),
+        TACHYUM(261),
+        NXP_56800EF(262),
         AVR_OLD(4183),
         MSP430_OLD(4185),
         ADAPTEVA_EPIPHANY(4643),
@@ -395,7 +398,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         Machine(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(226);
+        private static final Map<Long, Machine> byId = new HashMap<Long, Machine>(229);
         static {
             for (Machine e : Machine.values())
                 byId.put(e.id(), e);

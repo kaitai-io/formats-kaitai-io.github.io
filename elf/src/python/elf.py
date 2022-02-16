@@ -310,6 +310,9 @@ class Elf(KaitaiStruct):
         wdc65816 = 257
         loongarch = 258
         kf32 = 259
+        u16_u8core = 260
+        tachyum = 261
+        nxp_56800ef = 262
         avr_old = 4183
         msp430_old = 4185
         adapteva_epiphany = 4643
