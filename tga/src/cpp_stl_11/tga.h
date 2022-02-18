@@ -13,7 +13,7 @@
 
 /**
  * TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
- * \sa http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf Source
+ * \sa https://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf Source
  */
 
 class tga_t : public kaitai::kstruct {

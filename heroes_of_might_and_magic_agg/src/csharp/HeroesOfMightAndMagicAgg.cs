@@ -6,7 +6,7 @@ namespace Kaitai
 {
 
     /// <remarks>
-    /// Reference: <a href="http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
+    /// Reference: <a href="https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
     /// </remarks>
     public partial class HeroesOfMightAndMagicAgg : KaitaiStruct
     {

@@ -12,7 +12,7 @@ class Nitf(KaitaiStruct):
     """The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for
     storing imagery, e.g. from satellites.
     
-    According to the [foreword of the specification](https://gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf):
+    According to the [foreword of the specification](https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf):
     > The National Imagery Transmission Format Standard (NITFS) is the suite of standards for formatting digital
     > imagery and imagery-related products and exchanging them among members of the Intelligence Community (IC) as
     > defined by the Executive Order 12333, and other United States Government departments and agencies."
@@ -21,7 +21,7 @@ class Nitf(KaitaiStruct):
     It was implemented by [River Loop Security](https://riverloopsecurity.com).
     
     .. seealso::
-       Source - https://gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf
+       Source - https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

@@ -10,7 +10,7 @@
   }
 }(this, function (KaitaiStream) {
 /**
- * @see {@link http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)|Source}
+ * @see {@link https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)|Source}
  */
 
 var HeroesOfMightAndMagicAgg = (function() {

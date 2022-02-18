@@ -11,7 +11,7 @@ if parse_version(kaitaistruct.__version__) < parse_version('0.9'):
 class HeroesOfMightAndMagicAgg(KaitaiStruct):
     """
     .. seealso::
-       Source - http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)
+       Source - https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io

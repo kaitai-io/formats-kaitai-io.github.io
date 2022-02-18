@@ -33,7 +33,7 @@ local utils = require("utils")
 -- * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
 -- * http://oid-info.com/
 -- * https://www.alvestrand.no/objectid/top.html
--- See also: Source (https://www.itu.int/rec/T-REC-X.690-201508-I/en)
+-- See also: Source (https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&lang=en)
 Asn1Der = class.class(KaitaiStruct)
 
 Asn1Der.TypeTag = enum.Enum {

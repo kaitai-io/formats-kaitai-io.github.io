@@ -14,7 +14,6 @@ local utils = require("utils")
 -- Images for testing can be downloaded from
 --  * https://www.osboxes.org/virtualbox-images/
 --  * https://virtualboxes.org/images/
---  * https://virtualboximages.com/
 -- or you can convert images of other formats.
 -- See also: Source (https://github.com/qemu/qemu/blob/master/block/vdi.c)
 Vdi = class.class(KaitaiStruct)

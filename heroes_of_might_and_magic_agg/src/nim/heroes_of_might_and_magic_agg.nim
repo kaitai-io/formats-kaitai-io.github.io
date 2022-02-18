@@ -28,7 +28,7 @@ proc body*(this: HeroesOfMightAndMagicAgg_Entry): seq[byte]
 
 
 ##[
-@see <a href="http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
+@see <a href="https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
 ]##
 proc read*(_: typedesc[HeroesOfMightAndMagicAgg], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): HeroesOfMightAndMagicAgg =
   template this: untyped = result

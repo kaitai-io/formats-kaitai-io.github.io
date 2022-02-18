@@ -9,7 +9,7 @@ local str_decode = require("string_decode")
 
 -- 
 -- TGA (AKA Truevision TGA, AKA TARGA), is a raster image file format created by Truevision. It supports up to 32 bits per pixel (three 8-bit RGB channels + 8-bit alpha channel), color mapping and optional lossless RLE compression.
--- See also: Source (http://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf)
+-- See also: Source (https://www.dca.fee.unicamp.br/~martino/disciplinas/ea978/tgaffs.pdf)
 Tga = class.class(KaitaiStruct)
 
 Tga.ColorMapEnum = enum.Enum {

@@ -34,7 +34,7 @@ import java.nio.charset.Charset;
  * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
  * * http://oid-info.com/
  * * https://www.alvestrand.no/objectid/top.html
- * @see <a href="https://www.itu.int/rec/T-REC-X.690-201508-I/en">Source</a>
+ * @see <a href="https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&amp;lang=en">Source</a>
  */
 public class Asn1Der extends KaitaiStruct {
     public static Asn1Der fromFile(String fileName) throws IOException {

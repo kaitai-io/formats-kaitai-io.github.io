@@ -187,7 +187,7 @@ namespace Kaitai
             /// In practice always 0; if checksum writing is requested, a CRC32 chunk is written
             /// at the end of the file instead. The canonical `libsparse` implementation does this
             /// and other implementations tend to follow it, see
-            /// &lt;https://gitlab.com/ra_kete/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114&gt;
+            /// &lt;https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114&gt;
             /// </summary>
             public uint Checksum { get { return _checksum; } }
             public AndroidSparse M_Root { get { return m_root; } }

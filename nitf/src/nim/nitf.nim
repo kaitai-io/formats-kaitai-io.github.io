@@ -303,7 +303,7 @@ proc treOfl*(this: Nitf_DataSubHeader): bool
 The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for
 storing imagery, e.g. from satellites.
 
-According to the [foreword of the specification](https://gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf):
+According to the [foreword of the specification](https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf):
 > The National Imagery Transmission Format Standard (NITFS) is the suite of standards for formatting digital
 > imagery and imagery-related products and exchanging them among members of the Intelligence Community (IC) as
 > defined by the Executive Order 12333, and other United States Government departments and agencies."
@@ -311,7 +311,7 @@ According to the [foreword of the specification](https://gwg.nga.mil/ntb/baselin
 This implementation is set to version format (`file_version`) of 02.10 and `standard_type` of `BF01`.
 It was implemented by [River Loop Security](https://riverloopsecurity.com).
 
-@see <a href="https://gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf">Source</a>
+@see <a href="https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf">Source</a>
 ]##
 proc read*(_: typedesc[Nitf], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Nitf =
   template this: untyped = result

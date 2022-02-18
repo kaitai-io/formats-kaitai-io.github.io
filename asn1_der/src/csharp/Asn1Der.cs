@@ -31,7 +31,7 @@ namespace Kaitai
     /// * https://www.alvestrand.no/objectid/top.html
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://www.itu.int/rec/T-REC-X.690-201508-I/en">Source</a>
+    /// Reference: <a href="https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&amp;lang=en">Source</a>
     /// </remarks>
     public partial class Asn1Der : KaitaiStruct
     {

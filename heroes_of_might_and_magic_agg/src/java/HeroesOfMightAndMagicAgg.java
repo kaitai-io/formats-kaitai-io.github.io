@@ -9,7 +9,7 @@ import java.nio.charset.Charset;
 
 
 /**
- * @see <a href="http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
+ * @see <a href="https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic)">Source</a>
  */
 public class HeroesOfMightAndMagicAgg extends KaitaiStruct {
     public static HeroesOfMightAndMagicAgg fromFile(String fileName) throws IOException {

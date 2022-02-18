@@ -8,7 +8,7 @@ end
 
 
 ##
-# @see http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic) Source
+# @see https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic) Source
 class HeroesOfMightAndMagicAgg < Kaitai::Struct::Struct
   def initialize(_io, _parent = nil, _root = self)
     super(_io, _parent, _root)

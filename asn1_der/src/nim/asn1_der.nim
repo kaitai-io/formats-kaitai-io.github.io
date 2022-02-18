@@ -87,7 +87,7 @@ as:
 * http://oid-info.com/
 * https://www.alvestrand.no/objectid/top.html
 
-@see <a href="https://www.itu.int/rec/T-REC-X.690-201508-I/en">Source</a>
+@see <a href="https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&amp;lang=en">Source</a>
 ]##
 proc read*(_: typedesc[Asn1Der], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Asn1Der =
   template this: untyped = result

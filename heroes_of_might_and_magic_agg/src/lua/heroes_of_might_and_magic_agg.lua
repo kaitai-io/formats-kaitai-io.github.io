@@ -8,7 +8,7 @@ local stringstream = require("string_stream")
 local str_decode = require("string_decode")
 
 -- 
--- See also: Source (http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic))
+-- See also: Source (https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic))
 HeroesOfMightAndMagicAgg = class.class(KaitaiStruct)
 
 function HeroesOfMightAndMagicAgg:_init(io, parent, root)

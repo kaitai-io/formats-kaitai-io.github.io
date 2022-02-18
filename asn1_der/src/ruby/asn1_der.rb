@@ -31,7 +31,7 @@ end
 # * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
 # * http://oid-info.com/
 # * https://www.alvestrand.no/objectid/top.html
-# @see https://www.itu.int/rec/T-REC-X.690-201508-I/en Source
+# @see https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&lang=en Source
 class Asn1Der < Kaitai::Struct::Struct
 
   TYPE_TAG = {

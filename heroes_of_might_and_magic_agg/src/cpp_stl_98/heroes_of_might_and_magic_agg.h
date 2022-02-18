@@ -12,7 +12,7 @@
 #endif
 
 /**
- * \sa http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic) Source
+ * \sa https://web.archive.org/web/20170215190034/http://rewiki.regengedanken.de/wiki/.AGG_(Heroes_of_Might_and_Magic) Source
  */
 
 class heroes_of_might_and_magic_agg_t : public kaitai::kstruct {

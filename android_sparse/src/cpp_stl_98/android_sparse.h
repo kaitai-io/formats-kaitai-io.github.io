@@ -149,7 +149,7 @@ public:
          * In practice always 0; if checksum writing is requested, a CRC32 chunk is written
          * at the end of the file instead. The canonical `libsparse` implementation does this
          * and other implementations tend to follow it, see
-         * <https://gitlab.com/ra_kete/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114>
+         * <https://gitlab.com/teskje/android-sparse-rs/-/blob/57c2577/src/write.rs#L112-114>
          */
         uint32_t checksum() const { return m_checksum; }
         android_sparse_t* _root() const { return m__root; }

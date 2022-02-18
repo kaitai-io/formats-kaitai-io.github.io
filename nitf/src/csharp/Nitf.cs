@@ -10,7 +10,7 @@ namespace Kaitai
     /// The NITF (National Image Transition Format) format is a file format developed by the U.S. Government for
     /// storing imagery, e.g. from satellites.
     /// 
-    /// According to the [foreword of the specification](https://gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf):
+    /// According to the [foreword of the specification](https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf):
     /// &gt; The National Imagery Transmission Format Standard (NITFS) is the suite of standards for formatting digital
     /// &gt; imagery and imagery-related products and exchanging them among members of the Intelligence Community (IC) as
     /// &gt; defined by the Executive Order 12333, and other United States Government departments and agencies.&quot;
@@ -19,7 +19,7 @@ namespace Kaitai
     /// It was implemented by [River Loop Security](https://riverloopsecurity.com).
     /// </summary>
     /// <remarks>
-    /// Reference: <a href="https://gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf">Source</a>
+    /// Reference: <a href="https://web.archive.org/web/20181105050336/https://www.gwg.nga.mil/ntb/baseline/docs/2500c/2500C.pdf">Source</a>
     /// </remarks>
     public partial class Nitf : KaitaiStruct
     {

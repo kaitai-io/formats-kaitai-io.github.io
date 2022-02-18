@@ -33,7 +33,7 @@
  * * https://www.cs.auckland.ac.nz/~pgut001/dumpasn1.cfg
  * * http://oid-info.com/
  * * https://www.alvestrand.no/objectid/top.html
- * @see {@link https://www.itu.int/rec/T-REC-X.690-201508-I/en|Source}
+ * @see {@link https://www.itu.int/itu-t/recommendations/rec.aspx?rec=12483&lang=en|Source}
  */
 
 var Asn1Der = (function() {
