@@ -371,6 +371,7 @@ namespace Kaitai
             IdentityUnimplemented = 5095,
             ModularityLabel = 5096,
             PayloadDigestAlt = 5097,
+            ArchSuffix = 5098,
         }
 
         public enum RpmTypes

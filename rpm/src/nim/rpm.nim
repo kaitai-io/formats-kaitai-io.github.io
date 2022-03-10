@@ -347,6 +347,7 @@ type
     identity_unimplemented = 5095
     modularity_label = 5096
     payload_digest_alt = 5097
+    arch_suffix = 5098
   Rpm_RpmTypes* = enum
     binary = 0
     source = 1

@@ -357,6 +357,7 @@ class Rpm < Kaitai::Struct::Struct
     5095 => :header_tags_identity_unimplemented,
     5096 => :header_tags_modularity_label,
     5097 => :header_tags_payload_digest_alt,
+    5098 => :header_tags_arch_suffix,
   }
   I__HEADER_TAGS = HEADER_TAGS.invert
 

@@ -397,6 +397,7 @@ var Rpm = (function() {
     IDENTITY_UNIMPLEMENTED: 5095,
     MODULARITY_LABEL: 5096,
     PAYLOAD_DIGEST_ALT: 5097,
+    ARCH_SUFFIX: 5098,
 
     62: "SIGNATURES",
     63: "HEADER_IMMUTABLE",
@@ -686,6 +687,7 @@ var Rpm = (function() {
     5095: "IDENTITY_UNIMPLEMENTED",
     5096: "MODULARITY_LABEL",
     5097: "PAYLOAD_DIGEST_ALT",
+    5098: "ARCH_SUFFIX",
   });
 
   Rpm.RpmTypes = Object.freeze({

@@ -364,6 +364,7 @@ class Rpm(KaitaiStruct):
         identity_unimplemented = 5095
         modularity_label = 5096
         payload_digest_alt = 5097
+        arch_suffix = 5098
 
     class RpmTypes(Enum):
         binary = 0

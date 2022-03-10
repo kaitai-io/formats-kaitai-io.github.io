@@ -1212,6 +1212,7 @@ namespace Rpm {
         const IDENTITY_UNIMPLEMENTED = 5095;
         const MODULARITY_LABEL = 5096;
         const PAYLOAD_DIGEST_ALT = 5097;
+        const ARCH_SUFFIX = 5098;
     }
 }
 

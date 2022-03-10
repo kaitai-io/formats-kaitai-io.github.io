@@ -391,12 +391,13 @@ public class Rpm extends KaitaiStruct {
         AUTO_INSTALLED_UNIMPLEMENTED(5094),
         IDENTITY_UNIMPLEMENTED(5095),
         MODULARITY_LABEL(5096),
-        PAYLOAD_DIGEST_ALT(5097);
+        PAYLOAD_DIGEST_ALT(5097),
+        ARCH_SUFFIX(5098);
 
         private final long id;
         HeaderTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(288);
+        private static final Map<Long, HeaderTags> byId = new HashMap<Long, HeaderTags>(289);
         static {
             for (HeaderTags e : HeaderTags.values())
                 byId.put(e.id(), e);
