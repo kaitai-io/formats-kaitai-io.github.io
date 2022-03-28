@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use IO::KaitaiStruct 0.009_000;
+use Encode;
 
 ########################################################################
 package DosMz;
@@ -34,34 +35,86 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{hdr} = DosMz::MzHeader->new($self->{_io}, $self, $self->{_root});
-    $self->{mz_header2} = $self->{_io}->read_bytes(($self->hdr()->ofs_relocations() - 28));
-    $self->{relocations} = ();
-    my $n_relocations = $self->hdr()->num_relocations();
-    for (my $i = 0; $i < $n_relocations; $i++) {
-        $self->{relocations}[$i] = DosMz::Relocation->new($self->{_io}, $self, $self->{_root});
-    }
-    $self->{body} = $self->{_io}->read_bytes_full();
-}
-
-sub hdr {
-    my ($self) = @_;
-    return $self->{hdr};
-}
-
-sub mz_header2 {
-    my ($self) = @_;
-    return $self->{mz_header2};
+    $self->{header} = DosMz::ExeHeader->new($self->{_io}, $self, $self->{_root});
+    $self->{body} = $self->{_io}->read_bytes($self->header()->len_body());
 }
 
 sub relocations {
     my ($self) = @_;
+    return $self->{relocations} if ($self->{relocations});
+    if ($self->header()->mz()->ofs_relocations() != 0) {
+        my $io = $self->header()->_io();
+        my $_pos = $io->pos();
+        $io->seek($self->header()->mz()->ofs_relocations());
+        $self->{relocations} = ();
+        my $n_relocations = $self->header()->mz()->num_relocations();
+        for (my $i = 0; $i < $n_relocations; $i++) {
+            $self->{relocations}[$i] = DosMz::Relocation->new($io, $self, $self->{_root});
+        }
+        $io->seek($_pos);
+    }
     return $self->{relocations};
+}
+
+sub header {
+    my ($self) = @_;
+    return $self->{header};
 }
 
 sub body {
     my ($self) = @_;
     return $self->{body};
+}
+
+########################################################################
+package DosMz::ExeHeader;
+
+our @ISA = 'IO::KaitaiStruct::Struct';
+
+sub from_file {
+    my ($class, $filename) = @_;
+    my $fd;
+
+    open($fd, '<', $filename) or return undef;
+    binmode($fd);
+    return new($class, IO::KaitaiStruct::Stream->new($fd));
+}
+
+sub new {
+    my ($class, $_io, $_parent, $_root) = @_;
+    my $self = IO::KaitaiStruct::Struct->new($_io);
+
+    bless $self, $class;
+    $self->{_parent} = $_parent;
+    $self->{_root} = $_root || $self;;
+
+    $self->_read();
+
+    return $self;
+}
+
+sub _read {
+    my ($self) = @_;
+
+    $self->{mz} = DosMz::MzHeader->new($self->{_io}, $self, $self->{_root});
+    $self->{rest_of_header} = $self->{_io}->read_bytes(($self->mz()->len_header() - 28));
+}
+
+sub len_body {
+    my ($self) = @_;
+    return $self->{len_body} if ($self->{len_body});
+    $self->{len_body} = (($self->mz()->last_page_extra_bytes() == 0 ? ($self->mz()->num_pages() * 512) : ((($self->mz()->num_pages() - 1) * 512) + $self->mz()->last_page_extra_bytes())) - $self->mz()->len_header());
+    return $self->{len_body};
+}
+
+sub mz {
+    my ($self) = @_;
+    return $self->{mz};
+}
+
+sub rest_of_header {
+    my ($self) = @_;
+    return $self->{rest_of_header};
 }
 
 ########################################################################
@@ -94,7 +147,7 @@ sub new {
 sub _read {
     my ($self) = @_;
 
-    $self->{magic} = $self->{_io}->read_bytes(2);
+    $self->{magic} = Encode::decode("ASCII", $self->{_io}->read_bytes(2));
     $self->{last_page_extra_bytes} = $self->{_io}->read_u2le();
     $self->{num_pages} = $self->{_io}->read_u2le();
     $self->{num_relocations} = $self->{_io}->read_u2le();
@@ -108,6 +161,13 @@ sub _read {
     $self->{initial_cs} = $self->{_io}->read_u2le();
     $self->{ofs_relocations} = $self->{_io}->read_u2le();
     $self->{overlay_id} = $self->{_io}->read_u2le();
+}
+
+sub len_header {
+    my ($self) = @_;
+    return $self->{len_header} if ($self->{len_header});
+    $self->{len_header} = ($self->header_size() * 16);
+    return $self->{len_header};
 }
 
 sub magic {

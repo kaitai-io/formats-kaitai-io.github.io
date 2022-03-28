@@ -17,6 +17,9 @@ class DosMz(KaitaiStruct):
     segment of raw CPU instructions), DOS MZ .exe file format allowed
     more flexible memory management, loading of larger programs and
     added support for relocations.
+    
+    .. seealso::
+       Source - http://www.delorie.com/djgpp/doc/exe/
     """
     def __init__(self, _io, _parent=None, _root=None):
         self._io = _io
@@ -25,13 +28,28 @@ class DosMz(KaitaiStruct):
         self._read()
 
     def _read(self):
-        self.hdr = DosMz.MzHeader(self._io, self, self._root)
-        self.mz_header2 = self._io.read_bytes((self.hdr.ofs_relocations - 28))
-        self.relocations = [None] * (self.hdr.num_relocations)
-        for i in range(self.hdr.num_relocations):
-            self.relocations[i] = DosMz.Relocation(self._io, self, self._root)
+        self.header = DosMz.ExeHeader(self._io, self, self._root)
+        self.body = self._io.read_bytes(self.header.len_body)
 
-        self.body = self._io.read_bytes_full()
+    class ExeHeader(KaitaiStruct):
+        def __init__(self, _io, _parent=None, _root=None):
+            self._io = _io
+            self._parent = _parent
+            self._root = _root if _root else self
+            self._read()
+
+        def _read(self):
+            self.mz = DosMz.MzHeader(self._io, self, self._root)
+            self.rest_of_header = self._io.read_bytes((self.mz.len_header - 28))
+
+        @property
+        def len_body(self):
+            if hasattr(self, '_m_len_body'):
+                return self._m_len_body if hasattr(self, '_m_len_body') else None
+
+            self._m_len_body = (((self.mz.num_pages * 512) if self.mz.last_page_extra_bytes == 0 else (((self.mz.num_pages - 1) * 512) + self.mz.last_page_extra_bytes)) - self.mz.len_header)
+            return self._m_len_body if hasattr(self, '_m_len_body') else None
+
 
     class MzHeader(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -41,7 +59,9 @@ class DosMz(KaitaiStruct):
             self._read()
 
         def _read(self):
-            self.magic = self._io.read_bytes(2)
+            self.magic = (self._io.read_bytes(2)).decode(u"ASCII")
+            if not  ((self.magic == u"MZ") or (self.magic == u"ZM")) :
+                raise kaitaistruct.ValidationNotAnyOfError(self.magic, self._io, u"/types/mz_header/seq/0")
             self.last_page_extra_bytes = self._io.read_u2le()
             self.num_pages = self._io.read_u2le()
             self.num_relocations = self._io.read_u2le()
@@ -56,6 +76,14 @@ class DosMz(KaitaiStruct):
             self.ofs_relocations = self._io.read_u2le()
             self.overlay_id = self._io.read_u2le()
 
+        @property
+        def len_header(self):
+            if hasattr(self, '_m_len_header'):
+                return self._m_len_header if hasattr(self, '_m_len_header') else None
+
+            self._m_len_header = (self.header_size * 16)
+            return self._m_len_header if hasattr(self, '_m_len_header') else None
+
 
     class Relocation(KaitaiStruct):
         def __init__(self, _io, _parent=None, _root=None):
@@ -68,5 +96,22 @@ class DosMz(KaitaiStruct):
             self.ofs = self._io.read_u2le()
             self.seg = self._io.read_u2le()
 
+
+    @property
+    def relocations(self):
+        if hasattr(self, '_m_relocations'):
+            return self._m_relocations if hasattr(self, '_m_relocations') else None
+
+        if self.header.mz.ofs_relocations != 0:
+            io = self.header._io
+            _pos = io.pos()
+            io.seek(self.header.mz.ofs_relocations)
+            self._m_relocations = [None] * (self.header.mz.num_relocations)
+            for i in range(self.header.mz.num_relocations):
+                self._m_relocations[i] = DosMz.Relocation(io, self, self._root)
+
+            io.seek(_pos)
+
+        return self._m_relocations if hasattr(self, '_m_relocations') else None
 
 

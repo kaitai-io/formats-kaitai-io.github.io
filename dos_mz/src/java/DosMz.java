@@ -4,6 +4,7 @@ import io.kaitai.struct.ByteBufferKaitaiStream;
 import io.kaitai.struct.KaitaiStruct;
 import io.kaitai.struct.KaitaiStream;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 
@@ -16,6 +17,7 @@ import java.util.ArrayList;
  * segment of raw CPU instructions), DOS MZ .exe file format allowed
  * more flexible memory management, loading of larger programs and
  * added support for relocations.
+ * @see <a href="http://www.delorie.com/djgpp/doc/exe/">Source</a>
  */
 public class DosMz extends KaitaiStruct {
     public static DosMz fromFile(String fileName) throws IOException {
@@ -37,13 +39,48 @@ public class DosMz extends KaitaiStruct {
         _read();
     }
     private void _read() {
-        this.hdr = new MzHeader(this._io, this, _root);
-        this.mzHeader2 = this._io.readBytes((hdr().ofsRelocations() - 28));
-        relocations = new ArrayList<Relocation>(((Number) (hdr().numRelocations())).intValue());
-        for (int i = 0; i < hdr().numRelocations(); i++) {
-            this.relocations.add(new Relocation(this._io, this, _root));
+        this.header = new ExeHeader(this._io, this, _root);
+        this.body = this._io.readBytes(header().lenBody());
+    }
+    public static class ExeHeader extends KaitaiStruct {
+        public static ExeHeader fromFile(String fileName) throws IOException {
+            return new ExeHeader(new ByteBufferKaitaiStream(fileName));
         }
-        this.body = this._io.readBytesFull();
+
+        public ExeHeader(KaitaiStream _io) {
+            this(_io, null, null);
+        }
+
+        public ExeHeader(KaitaiStream _io, DosMz _parent) {
+            this(_io, _parent, null);
+        }
+
+        public ExeHeader(KaitaiStream _io, DosMz _parent, DosMz _root) {
+            super(_io);
+            this._parent = _parent;
+            this._root = _root;
+            _read();
+        }
+        private void _read() {
+            this.mz = new MzHeader(this._io, this, _root);
+            this.restOfHeader = this._io.readBytes((mz().lenHeader() - 28));
+        }
+        private Integer lenBody;
+        public Integer lenBody() {
+            if (this.lenBody != null)
+                return this.lenBody;
+            int _tmp = (int) (((mz().lastPageExtraBytes() == 0 ? (mz().numPages() * 512) : (((mz().numPages() - 1) * 512) + mz().lastPageExtraBytes())) - mz().lenHeader()));
+            this.lenBody = _tmp;
+            return this.lenBody;
+        }
+        private MzHeader mz;
+        private byte[] restOfHeader;
+        private DosMz _root;
+        private DosMz _parent;
+        public MzHeader mz() { return mz; }
+        public byte[] restOfHeader() { return restOfHeader; }
+        public DosMz _root() { return _root; }
+        public DosMz _parent() { return _parent; }
     }
     public static class MzHeader extends KaitaiStruct {
         public static MzHeader fromFile(String fileName) throws IOException {
@@ -54,18 +91,21 @@ public class DosMz extends KaitaiStruct {
             this(_io, null, null);
         }
 
-        public MzHeader(KaitaiStream _io, DosMz _parent) {
+        public MzHeader(KaitaiStream _io, DosMz.ExeHeader _parent) {
             this(_io, _parent, null);
         }
 
-        public MzHeader(KaitaiStream _io, DosMz _parent, DosMz _root) {
+        public MzHeader(KaitaiStream _io, DosMz.ExeHeader _parent, DosMz _root) {
             super(_io);
             this._parent = _parent;
             this._root = _root;
             _read();
         }
         private void _read() {
-            this.magic = this._io.readBytes(2);
+            this.magic = new String(this._io.readBytes(2), Charset.forName("ASCII"));
+            if (!( ((magic().equals("MZ")) || (magic().equals("ZM"))) )) {
+                throw new KaitaiStream.ValidationNotAnyOfError(magic(), _io(), "/types/mz_header/seq/0");
+            }
             this.lastPageExtraBytes = this._io.readU2le();
             this.numPages = this._io.readU2le();
             this.numRelocations = this._io.readU2le();
@@ -80,7 +120,15 @@ public class DosMz extends KaitaiStruct {
             this.ofsRelocations = this._io.readU2le();
             this.overlayId = this._io.readU2le();
         }
-        private byte[] magic;
+        private Integer lenHeader;
+        public Integer lenHeader() {
+            if (this.lenHeader != null)
+                return this.lenHeader;
+            int _tmp = (int) ((headerSize() * 16));
+            this.lenHeader = _tmp;
+            return this.lenHeader;
+        }
+        private String magic;
         private int lastPageExtraBytes;
         private int numPages;
         private int numRelocations;
@@ -95,8 +143,8 @@ public class DosMz extends KaitaiStruct {
         private int ofsRelocations;
         private int overlayId;
         private DosMz _root;
-        private DosMz _parent;
-        public byte[] magic() { return magic; }
+        private DosMz.ExeHeader _parent;
+        public String magic() { return magic; }
         public int lastPageExtraBytes() { return lastPageExtraBytes; }
         public int numPages() { return numPages; }
         public int numRelocations() { return numRelocations; }
@@ -111,7 +159,7 @@ public class DosMz extends KaitaiStruct {
         public int ofsRelocations() { return ofsRelocations; }
         public int overlayId() { return overlayId; }
         public DosMz _root() { return _root; }
-        public DosMz _parent() { return _parent; }
+        public DosMz.ExeHeader _parent() { return _parent; }
     }
     public static class Relocation extends KaitaiStruct {
         public static Relocation fromFile(String fileName) throws IOException {
@@ -145,15 +193,27 @@ public class DosMz extends KaitaiStruct {
         public DosMz _root() { return _root; }
         public DosMz _parent() { return _parent; }
     }
-    private MzHeader hdr;
-    private byte[] mzHeader2;
     private ArrayList<Relocation> relocations;
+    public ArrayList<Relocation> relocations() {
+        if (this.relocations != null)
+            return this.relocations;
+        if (header().mz().ofsRelocations() != 0) {
+            KaitaiStream io = header()._io();
+            long _pos = io.pos();
+            io.seek(header().mz().ofsRelocations());
+            relocations = new ArrayList<Relocation>(((Number) (header().mz().numRelocations())).intValue());
+            for (int i = 0; i < header().mz().numRelocations(); i++) {
+                this.relocations.add(new Relocation(io, this, _root));
+            }
+            io.seek(_pos);
+        }
+        return this.relocations;
+    }
+    private ExeHeader header;
     private byte[] body;
     private DosMz _root;
     private KaitaiStruct _parent;
-    public MzHeader hdr() { return hdr; }
-    public byte[] mzHeader2() { return mzHeader2; }
-    public ArrayList<Relocation> relocations() { return relocations; }
+    public ExeHeader header() { return header; }
     public byte[] body() { return body; }
     public DosMz _root() { return _root; }
     public KaitaiStruct _parent() { return _parent; }

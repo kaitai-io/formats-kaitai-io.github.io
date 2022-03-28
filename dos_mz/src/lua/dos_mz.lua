@@ -4,6 +4,8 @@
 
 local class = require("class")
 require("kaitaistruct")
+local utils = require("utils")
+local str_decode = require("string_decode")
 
 -- 
 -- DOS MZ file format is a traditional format for executables in MS-DOS
@@ -14,6 +16,7 @@ require("kaitaistruct")
 -- segment of raw CPU instructions), DOS MZ .exe file format allowed
 -- more flexible memory management, loading of larger programs and
 -- added support for relocations.
+-- See also: Source (http://www.delorie.com/djgpp/doc/exe/)
 DosMz = class.class(KaitaiStruct)
 
 function DosMz:_init(io, parent, root)
@@ -24,13 +27,52 @@ function DosMz:_init(io, parent, root)
 end
 
 function DosMz:_read()
-  self.hdr = DosMz.MzHeader(self._io, self, self._root)
-  self.mz_header2 = self._io:read_bytes((self.hdr.ofs_relocations - 28))
-  self.relocations = {}
-  for i = 0, self.hdr.num_relocations - 1 do
-    self.relocations[i + 1] = DosMz.Relocation(self._io, self, self._root)
+  self.header = DosMz.ExeHeader(self._io, self, self._root)
+  self.body = self._io:read_bytes(self.header.len_body)
+end
+
+DosMz.property.relocations = {}
+function DosMz.property.relocations:get()
+  if self._m_relocations ~= nil then
+    return self._m_relocations
   end
-  self.body = self._io:read_bytes_full()
+
+  if self.header.mz.ofs_relocations ~= 0 then
+    local _io = self.header._io
+    local _pos = _io:pos()
+    _io:seek(self.header.mz.ofs_relocations)
+    self._m_relocations = {}
+    for i = 0, self.header.mz.num_relocations - 1 do
+      self._m_relocations[i + 1] = DosMz.Relocation(_io, self, self._root)
+    end
+    _io:seek(_pos)
+  end
+  return self._m_relocations
+end
+
+
+DosMz.ExeHeader = class.class(KaitaiStruct)
+
+function DosMz.ExeHeader:_init(io, parent, root)
+  KaitaiStruct._init(self, io)
+  self._parent = parent
+  self._root = root or self
+  self:_read()
+end
+
+function DosMz.ExeHeader:_read()
+  self.mz = DosMz.MzHeader(self._io, self, self._root)
+  self.rest_of_header = self._io:read_bytes((self.mz.len_header - 28))
+end
+
+DosMz.ExeHeader.property.len_body = {}
+function DosMz.ExeHeader.property.len_body:get()
+  if self._m_len_body ~= nil then
+    return self._m_len_body
+  end
+
+  self._m_len_body = (utils.box_unwrap((self.mz.last_page_extra_bytes == 0) and utils.box_wrap((self.mz.num_pages * 512)) or ((((self.mz.num_pages - 1) * 512) + self.mz.last_page_extra_bytes))) - self.mz.len_header)
+  return self._m_len_body
 end
 
 
@@ -44,7 +86,10 @@ function DosMz.MzHeader:_init(io, parent, root)
 end
 
 function DosMz.MzHeader:_read()
-  self.magic = self._io:read_bytes(2)
+  self.magic = str_decode.decode(self._io:read_bytes(2), "ASCII")
+  if not( ((self.magic == "MZ") or (self.magic == "ZM")) ) then
+    error("ValidationNotAnyOfError")
+  end
   self.last_page_extra_bytes = self._io:read_u2le()
   self.num_pages = self._io:read_u2le()
   self.num_relocations = self._io:read_u2le()
@@ -58,6 +103,16 @@ function DosMz.MzHeader:_read()
   self.initial_cs = self._io:read_u2le()
   self.ofs_relocations = self._io:read_u2le()
   self.overlay_id = self._io:read_u2le()
+end
+
+DosMz.MzHeader.property.len_header = {}
+function DosMz.MzHeader.property.len_header:get()
+  if self._m_len_header ~= nil then
+    return self._m_len_header
+  end
+
+  self._m_len_header = (self.header_size * 16)
+  return self._m_len_header
 end
 
 

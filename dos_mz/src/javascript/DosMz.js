@@ -18,6 +18,7 @@
  * segment of raw CPU instructions), DOS MZ .exe file format allowed
  * more flexible memory management, loading of larger programs and
  * added support for relocations.
+ * @see {@link http://www.delorie.com/djgpp/doc/exe/|Source}
  */
 
 var DosMz = (function() {
@@ -29,14 +30,33 @@ var DosMz = (function() {
     this._read();
   }
   DosMz.prototype._read = function() {
-    this.hdr = new MzHeader(this._io, this, this._root);
-    this.mzHeader2 = this._io.readBytes((this.hdr.ofsRelocations - 28));
-    this.relocations = new Array(this.hdr.numRelocations);
-    for (var i = 0; i < this.hdr.numRelocations; i++) {
-      this.relocations[i] = new Relocation(this._io, this, this._root);
-    }
-    this.body = this._io.readBytesFull();
+    this.header = new ExeHeader(this._io, this, this._root);
+    this.body = this._io.readBytes(this.header.lenBody);
   }
+
+  var ExeHeader = DosMz.ExeHeader = (function() {
+    function ExeHeader(_io, _parent, _root) {
+      this._io = _io;
+      this._parent = _parent;
+      this._root = _root || this;
+
+      this._read();
+    }
+    ExeHeader.prototype._read = function() {
+      this.mz = new MzHeader(this._io, this, this._root);
+      this.restOfHeader = this._io.readBytes((this.mz.lenHeader - 28));
+    }
+    Object.defineProperty(ExeHeader.prototype, 'lenBody', {
+      get: function() {
+        if (this._m_lenBody !== undefined)
+          return this._m_lenBody;
+        this._m_lenBody = ((this.mz.lastPageExtraBytes == 0 ? (this.mz.numPages * 512) : (((this.mz.numPages - 1) * 512) + this.mz.lastPageExtraBytes)) - this.mz.lenHeader);
+        return this._m_lenBody;
+      }
+    });
+
+    return ExeHeader;
+  })();
 
   var MzHeader = DosMz.MzHeader = (function() {
     function MzHeader(_io, _parent, _root) {
@@ -47,7 +67,10 @@ var DosMz = (function() {
       this._read();
     }
     MzHeader.prototype._read = function() {
-      this.magic = this._io.readBytes(2);
+      this.magic = KaitaiStream.bytesToStr(this._io.readBytes(2), "ASCII");
+      if (!( ((this.magic == "MZ") || (this.magic == "ZM")) )) {
+        throw new KaitaiStream.ValidationNotAnyOfError(this.magic, this._io, "/types/mz_header/seq/0");
+      }
       this.lastPageExtraBytes = this._io.readU2le();
       this.numPages = this._io.readU2le();
       this.numRelocations = this._io.readU2le();
@@ -62,6 +85,14 @@ var DosMz = (function() {
       this.ofsRelocations = this._io.readU2le();
       this.overlayId = this._io.readU2le();
     }
+    Object.defineProperty(MzHeader.prototype, 'lenHeader', {
+      get: function() {
+        if (this._m_lenHeader !== undefined)
+          return this._m_lenHeader;
+        this._m_lenHeader = (this.headerSize * 16);
+        return this._m_lenHeader;
+      }
+    });
 
     return MzHeader;
   })();
@@ -81,6 +112,23 @@ var DosMz = (function() {
 
     return Relocation;
   })();
+  Object.defineProperty(DosMz.prototype, 'relocations', {
+    get: function() {
+      if (this._m_relocations !== undefined)
+        return this._m_relocations;
+      if (this.header.mz.ofsRelocations != 0) {
+        var io = this.header._io;
+        var _pos = io.pos;
+        io.seek(this.header.mz.ofsRelocations);
+        this._m_relocations = new Array(this.header.mz.numRelocations);
+        for (var i = 0; i < this.header.mz.numRelocations; i++) {
+          this._m_relocations[i] = new Relocation(io, this, this._root);
+        }
+        io.seek(_pos);
+      }
+      return this._m_relocations;
+    }
+  });
 
   return DosMz;
 })();

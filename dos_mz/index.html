@@ -134,6 +134,10 @@ added support for relocations.</p>
                     </div>
                     
                     
+                    <div class="panel-body">
+                        Minimal Kaitai Struct required: 0.9
+                    </div>
+                    
                     
                     
                     
@@ -199,11 +203,6 @@ added support for relocations.</p>
                 <li>
                 
                 <a href="go.html" title="DOS MZ executable parsing Go library">Go</a></li>
-                
-                
-                <li>
-                
-                <a href="graphviz.html" title="DOS MZ executable parsing GraphViz library">GraphViz</a></li>
                 
                 
                 <li>
@@ -276,6 +275,8 @@ added support for relocations.</p>
   <span class="nt">tags</span><span class="p">:</span>
     <span class="p p-Indicator">-</span> <span class="l l-Scalar l-Scalar-Plain">dos</span>
   <span class="nt">license</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">CC0-1.0</span>
+  <span class="nt">ks-version</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">0.9</span>
+  <span class="nt">encoding</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ASCII</span>
   <span class="nt">endian</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">le</span>
 <span class="nt">doc</span><span class="p">:</span> <span class="p p-Indicator">|</span>
   <span class="no">DOS MZ file format is a traditional format for executables in MS-DOS</span>
@@ -286,22 +287,39 @@ added support for relocations.</p>
   <span class="no">segment of raw CPU instructions), DOS MZ .exe file format allowed</span>
   <span class="no">more flexible memory management, loading of larger programs and</span>
   <span class="no">added support for relocations.</span>
+<span class="nt">doc-ref</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">http://www.delorie.com/djgpp/doc/exe/</span>
 <span class="nt">seq</span><span class="p">:</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hdr</span>
-    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mz_header</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mz_header2</span>
-    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hdr.ofs_relocations - 0x1c</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relocations</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header</span>
+    <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">exe_header</span>
+  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
+    <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.len_body</span>
+<span class="nt">instances</span><span class="p">:</span>
+  <span class="nt">relocations</span><span class="p">:</span>
+    <span class="nt">pos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.mz.ofs_relocations</span>
+    <span class="nt">io</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header._io</span>
     <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">relocation</span>
     <span class="nt">repeat</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">expr</span>
-    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">hdr.num_relocations</span>
-  <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">body</span>
-    <span class="nt">size-eos</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">true</span>
+    <span class="nt">repeat-expr</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.mz.num_relocations</span>
+    <span class="nt">if</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header.mz.ofs_relocations != 0</span>
 <span class="nt">types</span><span class="p">:</span>
+  <span class="nt">exe_header</span><span class="p">:</span>
+    <span class="nt">seq</span><span class="p">:</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mz</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mz_header</span>
+      <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">rest_of_header</span>
+        <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">mz.len_header - mz._sizeof</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">len_body</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="s">&#39;(mz.last_page_extra_bytes</span><span class="nv"> </span><span class="s">==</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">?</span><span class="nv"> </span><span class="s">mz.num_pages</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">512</span><span class="nv"> </span><span class="s">:</span><span class="nv"> </span><span class="s">(mz.num_pages</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">1)</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">512</span><span class="nv"> </span><span class="s">+</span><span class="nv"> </span><span class="s">mz.last_page_extra_bytes)</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">mz.len_header&#39;</span>
   <span class="nt">mz_header</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">magic</span>
         <span class="nt">size</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">2</span>
+        <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">str</span>
+        <span class="nt">valid</span><span class="p">:</span>
+          <span class="nt">any-of</span><span class="p">:</span>
+            <span class="p p-Indicator">-</span> <span class="s">&#39;&quot;MZ&quot;&#39;</span>
+            <span class="p p-Indicator">-</span> <span class="s">&#39;&quot;ZM&quot;&#39;</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">last_page_extra_bytes</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">num_pages</span>
@@ -328,18 +346,15 @@ added support for relocations.</p>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">overlay_id</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
+    <span class="nt">instances</span><span class="p">:</span>
+      <span class="nt">len_header</span><span class="p">:</span>
+        <span class="nt">value</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">header_size * 16</span>
   <span class="nt">relocation</span><span class="p">:</span>
     <span class="nt">seq</span><span class="p">:</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">ofs</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
       <span class="p p-Indicator">-</span> <span class="nt">id</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">seg</span>
         <span class="nt">type</span><span class="p">:</span> <span class="l l-Scalar l-Scalar-Plain">u2</span>
-<span class="c1">#instances:</span>
-<span class="c1">#  relocations:</span>
-<span class="c1">#    pos: ofs_relocations</span>
-<span class="c1">#    type: relocation</span>
-<span class="c1">#    repeat: expr</span>
-<span class="c1">#    repeat-expr: hdr.num_relocations</span>
 </pre></div>
     </div>
 </section>
