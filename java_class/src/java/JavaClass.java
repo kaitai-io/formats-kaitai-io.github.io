@@ -1153,7 +1153,7 @@ public class JavaClass extends KaitaiStruct {
         public Boolean isTwoEntries() {
             if (this.isTwoEntries != null)
                 return this.isTwoEntries;
-            boolean _tmp = (boolean) ( ((tag() == TagEnum.LONG) || (tag() == TagEnum.DOUBLE)) );
+            boolean _tmp = (boolean) ((isPrevTwoEntries() ? false :  ((tag() == TagEnum.LONG) || (tag() == TagEnum.DOUBLE)) ));
             this.isTwoEntries = _tmp;
             return this.isTwoEntries;
         }

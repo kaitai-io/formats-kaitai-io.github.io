@@ -768,7 +768,7 @@ void java_class_t::constant_pool_entry_t::_clean_up() {
 bool java_class_t::constant_pool_entry_t::is_two_entries() {
     if (f_is_two_entries)
         return m_is_two_entries;
-    m_is_two_entries =  ((tag() == java_class_t::constant_pool_entry_t::TAG_ENUM_LONG) || (tag() == java_class_t::constant_pool_entry_t::TAG_ENUM_DOUBLE)) ;
+    m_is_two_entries = ((is_prev_two_entries()) ? (false) : ( ((tag() == java_class_t::constant_pool_entry_t::TAG_ENUM_LONG) || (tag() == java_class_t::constant_pool_entry_t::TAG_ENUM_DOUBLE)) ));
     f_is_two_entries = true;
     return m_is_two_entries;
 }

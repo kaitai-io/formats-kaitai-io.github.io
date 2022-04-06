@@ -1371,7 +1371,7 @@ sub _read {
 sub is_two_entries {
     my ($self) = @_;
     return $self->{is_two_entries} if ($self->{is_two_entries});
-    $self->{is_two_entries} =  (($self->tag() == $JavaClass::ConstantPoolEntry::TAG_ENUM_LONG) || ($self->tag() == $JavaClass::ConstantPoolEntry::TAG_ENUM_DOUBLE)) ;
+    $self->{is_two_entries} = ($self->is_prev_two_entries() ? 0 :  (($self->tag() == $JavaClass::ConstantPoolEntry::TAG_ENUM_LONG) || ($self->tag() == $JavaClass::ConstantPoolEntry::TAG_ENUM_DOUBLE)) );
     return $self->{is_two_entries};
 }
 

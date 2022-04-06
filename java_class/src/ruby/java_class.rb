@@ -623,7 +623,7 @@ class JavaClass < Kaitai::Struct::Struct
     end
     def is_two_entries
       return @is_two_entries unless @is_two_entries.nil?
-      @is_two_entries =  ((tag == :tag_enum_long) || (tag == :tag_enum_double)) 
+      @is_two_entries = (is_prev_two_entries ? false :  ((tag == :tag_enum_long) || (tag == :tag_enum_double)) )
       @is_two_entries
     end
     attr_reader :tag

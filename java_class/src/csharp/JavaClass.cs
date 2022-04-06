@@ -1135,7 +1135,7 @@ namespace Kaitai
                 {
                     if (f_isTwoEntries)
                         return _isTwoEntries;
-                    _isTwoEntries = (bool) ( ((Tag == TagEnum.Long) || (Tag == TagEnum.Double)) );
+                    _isTwoEntries = (bool) ((IsPrevTwoEntries ? false :  ((Tag == TagEnum.Long) || (Tag == TagEnum.Double)) ));
                     f_isTwoEntries = true;
                     return _isTwoEntries;
                 }

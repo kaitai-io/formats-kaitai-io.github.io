@@ -945,7 +945,7 @@ proc read*(_: typedesc[JavaClass_ConstantPoolEntry], io: KaitaiStream, root: Kai
 proc isTwoEntries(this: JavaClass_ConstantPoolEntry): bool = 
   if this.isTwoEntriesInst != nil:
     return this.isTwoEntriesInst
-  let isTwoEntriesInstExpr = bool( ((this.tag == java_class.long) or (this.tag == java_class.double)) )
+  let isTwoEntriesInstExpr = bool((if this.isPrevTwoEntries: false else:  ((this.tag == java_class.long) or (this.tag == java_class.double)) ))
   this.isTwoEntriesInst = isTwoEntriesInstExpr
   if this.isTwoEntriesInst != nil:
     return this.isTwoEntriesInst

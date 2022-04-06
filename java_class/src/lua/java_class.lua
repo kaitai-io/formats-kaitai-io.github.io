@@ -708,7 +708,7 @@ function JavaClass.ConstantPoolEntry.property.is_two_entries:get()
     return self._m_is_two_entries
   end
 
-  self._m_is_two_entries =  ((self.tag == JavaClass.ConstantPoolEntry.TagEnum.long) or (self.tag == JavaClass.ConstantPoolEntry.TagEnum.double)) 
+  self._m_is_two_entries = utils.box_unwrap((self.is_prev_two_entries) and utils.box_wrap(false) or ( ((self.tag == JavaClass.ConstantPoolEntry.TagEnum.long) or (self.tag == JavaClass.ConstantPoolEntry.TagEnum.double)) ))
   return self._m_is_two_entries
 end
 

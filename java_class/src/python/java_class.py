@@ -630,7 +630,7 @@ class JavaClass(KaitaiStruct):
             if hasattr(self, '_m_is_two_entries'):
                 return self._m_is_two_entries if hasattr(self, '_m_is_two_entries') else None
 
-            self._m_is_two_entries =  ((self.tag == JavaClass.ConstantPoolEntry.TagEnum.long) or (self.tag == JavaClass.ConstantPoolEntry.TagEnum.double)) 
+            self._m_is_two_entries = (False if self.is_prev_two_entries else  ((self.tag == JavaClass.ConstantPoolEntry.TagEnum.long) or (self.tag == JavaClass.ConstantPoolEntry.TagEnum.double)) )
             return self._m_is_two_entries if hasattr(self, '_m_is_two_entries') else None
 
 

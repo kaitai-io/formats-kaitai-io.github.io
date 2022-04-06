@@ -785,7 +785,7 @@ var JavaClass = (function() {
       get: function() {
         if (this._m_isTwoEntries !== undefined)
           return this._m_isTwoEntries;
-        this._m_isTwoEntries =  ((this.tag == JavaClass.ConstantPoolEntry.TagEnum.LONG) || (this.tag == JavaClass.ConstantPoolEntry.TagEnum.DOUBLE)) ;
+        this._m_isTwoEntries = (this.isPrevTwoEntries ? false :  ((this.tag == JavaClass.ConstantPoolEntry.TagEnum.LONG) || (this.tag == JavaClass.ConstantPoolEntry.TagEnum.DOUBLE)) );
         return this._m_isTwoEntries;
       }
     });
