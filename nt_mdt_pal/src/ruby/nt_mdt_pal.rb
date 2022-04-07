@@ -101,7 +101,7 @@ class NtMdtPal < Kaitai::Struct::Struct
     def _read
       @size1 = @_io.read_u1
       @unkn = @_io.read_u1
-      @title = (@_io.read_bytes(_root.meta[index].name_size)).force_encoding("UTF-16")
+      @title = (@_io.read_bytes(_root.meta[index].name_size)).force_encoding("UTF-16LE")
       @unkn1 = @_io.read_u2be
       @colors = Array.new((_root.meta[index].colors_count - 1))
       ((_root.meta[index].colors_count - 1)).times { |i|

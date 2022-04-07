@@ -131,7 +131,7 @@ nt_mdt_pal_t::col_table_t::col_table_t(uint16_t p_index, kaitai::kstream* p__io,
 void nt_mdt_pal_t::col_table_t::_read() {
     m_size1 = m__io->read_u1();
     m_unkn = m__io->read_u1();
-    m_title = kaitai::kstream::bytes_to_str(m__io->read_bytes(_root()->meta()->at(index())->name_size()), std::string("UTF-16"));
+    m_title = kaitai::kstream::bytes_to_str(m__io->read_bytes(_root()->meta()->at(index())->name_size()), std::string("UTF-16LE"));
     m_unkn1 = m__io->read_u2be();
     int l_colors = (_root()->meta()->at(index())->colors_count() - 1);
     m_colors = new std::vector<color_t*>();

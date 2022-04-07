@@ -155,7 +155,7 @@ namespace Kaitai
             {
                 _size1 = m_io.ReadU1();
                 _unkn = m_io.ReadU1();
-                _title = System.Text.Encoding.GetEncoding("UTF-16").GetString(m_io.ReadBytes(M_Root.Meta[Index].NameSize));
+                _title = System.Text.Encoding.GetEncoding("UTF-16LE").GetString(m_io.ReadBytes(M_Root.Meta[Index].NameSize));
                 _unkn1 = m_io.ReadU2be();
                 _colors = new List<Color>((int) ((M_Root.Meta[Index].ColorsCount - 1)));
                 for (var i = 0; i < (M_Root.Meta[Index].ColorsCount - 1); i++)

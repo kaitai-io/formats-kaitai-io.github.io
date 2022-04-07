@@ -178,7 +178,7 @@ public class NtMdtPal extends KaitaiStruct {
         private void _read() {
             this.size1 = this._io.readU1();
             this.unkn = this._io.readU1();
-            this.title = new String(this._io.readBytes(_root.meta().get((int) index()).nameSize()), Charset.forName("UTF-16"));
+            this.title = new String(this._io.readBytes(_root.meta().get((int) index()).nameSize()), Charset.forName("UTF-16LE"));
             this.unkn1 = this._io.readU2be();
             colors = new ArrayList<Color>(((Number) ((_root.meta().get((int) index()).colorsCount() - 1))).intValue());
             for (int i = 0; i < (_root.meta().get((int) index()).colorsCount() - 1); i++) {

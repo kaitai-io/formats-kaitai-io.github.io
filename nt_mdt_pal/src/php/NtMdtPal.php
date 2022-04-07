@@ -137,7 +137,7 @@ namespace NtMdtPal {
         private function _read() {
             $this->_m_size1 = $this->_io->readU1();
             $this->_m_unkn = $this->_io->readU1();
-            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->_root()->meta()[$this->index()]->nameSize()), "UTF-16");
+            $this->_m_title = \Kaitai\Struct\Stream::bytesToStr($this->_io->readBytes($this->_root()->meta()[$this->index()]->nameSize()), "UTF-16LE");
             $this->_m_unkn1 = $this->_io->readU2be();
             $this->_m_colors = [];
             $n = ($this->_root()->meta()[$this->index()]->colorsCount() - 1);

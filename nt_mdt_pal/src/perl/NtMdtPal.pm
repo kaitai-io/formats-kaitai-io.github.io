@@ -249,7 +249,7 @@ sub _read {
 
     $self->{size1} = $self->{_io}->read_u1();
     $self->{unkn} = $self->{_io}->read_u1();
-    $self->{title} = Encode::decode("UTF-16", $self->{_io}->read_bytes(@{$self->_root()->meta()}[$self->index()]->name_size()));
+    $self->{title} = Encode::decode("UTF-16LE", $self->{_io}->read_bytes(@{$self->_root()->meta()}[$self->index()]->name_size()));
     $self->{unkn1} = $self->{_io}->read_u2be();
     $self->{colors} = ();
     my $n_colors = (@{$self->_root()->meta()}[$self->index()]->colors_count() - 1);

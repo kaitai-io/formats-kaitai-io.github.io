@@ -153,7 +153,7 @@ proc read*(_: typedesc[NtMdtPal_ColTable], io: KaitaiStream, root: KaitaiStruct,
   this.size1 = size1Expr
   let unknExpr = this.io.readU1()
   this.unkn = unknExpr
-  let titleExpr = encode(this.io.readBytes(int(NtMdtPal(this.root).meta[this.index].nameSize)), "UTF-16")
+  let titleExpr = encode(this.io.readBytes(int(NtMdtPal(this.root).meta[this.index].nameSize)), "UTF-16LE")
   this.title = titleExpr
   let unkn1Expr = this.io.readU2be()
   this.unkn1 = unkn1Expr

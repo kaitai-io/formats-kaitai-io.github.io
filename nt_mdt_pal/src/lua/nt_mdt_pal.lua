@@ -97,7 +97,7 @@ end
 function NtMdtPal.ColTable:_read()
   self.size1 = self._io:read_u1()
   self.unkn = self._io:read_u1()
-  self.title = str_decode.decode(self._io:read_bytes(self._root.meta[self.index + 1].name_size), "UTF-16")
+  self.title = str_decode.decode(self._io:read_bytes(self._root.meta[self.index + 1].name_size), "UTF-16LE")
   self.unkn1 = self._io:read_u2be()
   self.colors = {}
   for i = 0, (self._root.meta[self.index + 1].colors_count - 1) - 1 do

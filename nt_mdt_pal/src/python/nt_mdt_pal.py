@@ -75,7 +75,7 @@ class NtMdtPal(KaitaiStruct):
         def _read(self):
             self.size1 = self._io.read_u1()
             self.unkn = self._io.read_u1()
-            self.title = (self._io.read_bytes(self._root.meta[self.index].name_size)).decode(u"UTF-16")
+            self.title = (self._io.read_bytes(self._root.meta[self.index].name_size)).decode(u"UTF-16LE")
             self.unkn1 = self._io.read_u2be()
             self.colors = [None] * ((self._root.meta[self.index].colors_count - 1))
             for i in range((self._root.meta[self.index].colors_count - 1)):
