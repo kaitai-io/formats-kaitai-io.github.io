@@ -38,7 +38,13 @@ const (
 	Zip_Compression__Lzma Zip_Compression = 14
 	Zip_Compression__IbmTerse Zip_Compression = 18
 	Zip_Compression__IbmLz77Z Zip_Compression = 19
+	Zip_Compression__Zstandard Zip_Compression = 93
+	Zip_Compression__Mp3 Zip_Compression = 94
+	Zip_Compression__Xz Zip_Compression = 95
+	Zip_Compression__Jpeg Zip_Compression = 96
+	Zip_Compression__Wavpack Zip_Compression = 97
 	Zip_Compression__Ppmd Zip_Compression = 98
+	Zip_Compression__AexEncryptionMarker Zip_Compression = 99
 )
 
 type Zip_ExtraCodes int
@@ -61,8 +67,14 @@ const (
 	Zip_ExtraCodes__IbmS390Comp Zip_ExtraCodes = 102
 	Zip_ExtraCodes__Poszip4690 Zip_ExtraCodes = 18064
 	Zip_ExtraCodes__ExtendedTimestamp Zip_ExtraCodes = 21589
+	Zip_ExtraCodes__Beos Zip_ExtraCodes = 25922
+	Zip_ExtraCodes__AsiUnix Zip_ExtraCodes = 30062
 	Zip_ExtraCodes__InfozipUnix Zip_ExtraCodes = 30805
 	Zip_ExtraCodes__InfozipUnixVarSize Zip_ExtraCodes = 30837
+	Zip_ExtraCodes__AexEncryption Zip_ExtraCodes = 39169
+	Zip_ExtraCodes__ApacheCommonsCompress Zip_ExtraCodes = 41246
+	Zip_ExtraCodes__MicrosoftOpenPackagingGrowthHint Zip_ExtraCodes = 41504
+	Zip_ExtraCodes__SmsQdos Zip_ExtraCodes = 64842
 )
 type Zip struct {
 	Sections []*Zip_PkSection

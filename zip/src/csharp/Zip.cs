@@ -47,7 +47,13 @@ namespace Kaitai
             Lzma = 14,
             IbmTerse = 18,
             IbmLz77Z = 19,
+            Zstandard = 93,
+            Mp3 = 94,
+            Xz = 95,
+            Jpeg = 96,
+            Wavpack = 97,
             Ppmd = 98,
+            AexEncryptionMarker = 99,
         }
 
         public enum ExtraCodes
@@ -70,8 +76,14 @@ namespace Kaitai
             IbmS390Comp = 102,
             Poszip4690 = 18064,
             ExtendedTimestamp = 21589,
+            Beos = 25922,
+            AsiUnix = 30062,
             InfozipUnix = 30805,
             InfozipUnixVarSize = 30837,
+            AexEncryption = 39169,
+            ApacheCommonsCompress = 41246,
+            MicrosoftOpenPackagingGrowthHint = 41504,
+            SmsQdos = 64842,
         }
         public Zip(KaitaiStream p__io, KaitaiStruct p__parent = null, Zip p__root = null) : base(p__io)
         {

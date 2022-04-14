@@ -656,7 +656,13 @@ namespace Zip {
         const LZMA = 14;
         const IBM_TERSE = 18;
         const IBM_LZ77_Z = 19;
+        const ZSTANDARD = 93;
+        const MP3 = 94;
+        const XZ = 95;
+        const JPEG = 96;
+        const WAVPACK = 97;
         const PPMD = 98;
+        const AEX_ENCRYPTION_MARKER = 99;
     }
 }
 
@@ -680,7 +686,13 @@ namespace Zip {
         const IBM_S390_COMP = 102;
         const POSZIP_4690 = 18064;
         const EXTENDED_TIMESTAMP = 21589;
+        const BEOS = 25922;
+        const ASI_UNIX = 30062;
         const INFOZIP_UNIX = 30805;
         const INFOZIP_UNIX_VAR_SIZE = 30837;
+        const AEX_ENCRYPTION = 39169;
+        const APACHE_COMMONS_COMPRESS = 41246;
+        const MICROSOFT_OPEN_PACKAGING_GROWTH_HINT = 41504;
+        const SMS_QDOS = 64842;
     }
 }

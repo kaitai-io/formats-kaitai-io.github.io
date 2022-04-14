@@ -37,7 +37,13 @@ class Zip < Kaitai::Struct::Struct
     14 => :compression_lzma,
     18 => :compression_ibm_terse,
     19 => :compression_ibm_lz77_z,
+    93 => :compression_zstandard,
+    94 => :compression_mp3,
+    95 => :compression_xz,
+    96 => :compression_jpeg,
+    97 => :compression_wavpack,
     98 => :compression_ppmd,
+    99 => :compression_aex_encryption_marker,
   }
   I__COMPRESSION = COMPRESSION.invert
 
@@ -60,8 +66,14 @@ class Zip < Kaitai::Struct::Struct
     102 => :extra_codes_ibm_s390_comp,
     18064 => :extra_codes_poszip_4690,
     21589 => :extra_codes_extended_timestamp,
+    25922 => :extra_codes_beos,
+    30062 => :extra_codes_asi_unix,
     30805 => :extra_codes_infozip_unix,
     30837 => :extra_codes_infozip_unix_var_size,
+    39169 => :extra_codes_aex_encryption,
+    41246 => :extra_codes_apache_commons_compress,
+    41504 => :extra_codes_microsoft_open_packaging_growth_hint,
+    64842 => :extra_codes_sms_qdos,
   }
   I__EXTRA_CODES = EXTRA_CODES.invert
   def initialize(_io, _parent = nil, _root = self)

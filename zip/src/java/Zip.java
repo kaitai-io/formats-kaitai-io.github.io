@@ -45,12 +45,18 @@ public class Zip extends KaitaiStruct {
         LZMA(14),
         IBM_TERSE(18),
         IBM_LZ77_Z(19),
-        PPMD(98);
+        ZSTANDARD(93),
+        MP3(94),
+        XZ(95),
+        JPEG(96),
+        WAVPACK(97),
+        PPMD(98),
+        AEX_ENCRYPTION_MARKER(99);
 
         private final long id;
         Compression(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, Compression> byId = new HashMap<Long, Compression>(15);
+        private static final Map<Long, Compression> byId = new HashMap<Long, Compression>(21);
         static {
             for (Compression e : Compression.values())
                 byId.put(e.id(), e);
@@ -77,13 +83,19 @@ public class Zip extends KaitaiStruct {
         IBM_S390_COMP(102),
         POSZIP_4690(18064),
         EXTENDED_TIMESTAMP(21589),
+        BEOS(25922),
+        ASI_UNIX(30062),
         INFOZIP_UNIX(30805),
-        INFOZIP_UNIX_VAR_SIZE(30837);
+        INFOZIP_UNIX_VAR_SIZE(30837),
+        AEX_ENCRYPTION(39169),
+        APACHE_COMMONS_COMPRESS(41246),
+        MICROSOFT_OPEN_PACKAGING_GROWTH_HINT(41504),
+        SMS_QDOS(64842);
 
         private final long id;
         ExtraCodes(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ExtraCodes> byId = new HashMap<Long, ExtraCodes>(20);
+        private static final Map<Long, ExtraCodes> byId = new HashMap<Long, ExtraCodes>(26);
         static {
             for (ExtraCodes e : ExtraCodes.values())
                 byId.put(e.id(), e);

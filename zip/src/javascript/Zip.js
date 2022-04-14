@@ -40,7 +40,13 @@ var Zip = (function() {
     LZMA: 14,
     IBM_TERSE: 18,
     IBM_LZ77_Z: 19,
+    ZSTANDARD: 93,
+    MP3: 94,
+    XZ: 95,
+    JPEG: 96,
+    WAVPACK: 97,
     PPMD: 98,
+    AEX_ENCRYPTION_MARKER: 99,
 
     0: "NONE",
     1: "SHRUNK",
@@ -56,7 +62,13 @@ var Zip = (function() {
     14: "LZMA",
     18: "IBM_TERSE",
     19: "IBM_LZ77_Z",
+    93: "ZSTANDARD",
+    94: "MP3",
+    95: "XZ",
+    96: "JPEG",
+    97: "WAVPACK",
     98: "PPMD",
+    99: "AEX_ENCRYPTION_MARKER",
   });
 
   Zip.ExtraCodes = Object.freeze({
@@ -78,8 +90,14 @@ var Zip = (function() {
     IBM_S390_COMP: 102,
     POSZIP_4690: 18064,
     EXTENDED_TIMESTAMP: 21589,
+    BEOS: 25922,
+    ASI_UNIX: 30062,
     INFOZIP_UNIX: 30805,
     INFOZIP_UNIX_VAR_SIZE: 30837,
+    AEX_ENCRYPTION: 39169,
+    APACHE_COMMONS_COMPRESS: 41246,
+    MICROSOFT_OPEN_PACKAGING_GROWTH_HINT: 41504,
+    SMS_QDOS: 64842,
 
     1: "ZIP64",
     7: "AV_INFO",
@@ -99,8 +117,14 @@ var Zip = (function() {
     102: "IBM_S390_COMP",
     18064: "POSZIP_4690",
     21589: "EXTENDED_TIMESTAMP",
+    25922: "BEOS",
+    30062: "ASI_UNIX",
     30805: "INFOZIP_UNIX",
     30837: "INFOZIP_UNIX_VAR_SIZE",
+    39169: "AEX_ENCRYPTION",
+    41246: "APACHE_COMMONS_COMPRESS",
+    41504: "MICROSOFT_OPEN_PACKAGING_GROWTH_HINT",
+    64842: "SMS_QDOS",
   });
 
   function Zip(_io, _parent, _root) {
