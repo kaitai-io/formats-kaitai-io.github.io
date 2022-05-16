@@ -96,6 +96,7 @@ public class Elf extends KaitaiStruct {
         PREINIT_ARRAY(16),
         GROUP(17),
         SYMTAB_SHNDX(18),
+        RELR(19),
         SUNW_SYMNSORT(1879048172),
         SUNW_PHNAME(1879048173),
         SUNW_ANCILLARY(1879048174),
@@ -126,7 +127,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         ShType(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(43);
+        private static final Map<Long, ShType> byId = new HashMap<Long, ShType>(44);
         static {
             for (ShType e : ShType.values())
                 byId.put(e.id(), e);
@@ -469,6 +470,9 @@ public class Elf extends KaitaiStruct {
         PREINIT_ARRAY(32),
         PREINIT_ARRAYSZ(33),
         SYMTAB_SHNDX(34),
+        RELRSZ(35),
+        RELR(36),
+        RELRENT(37),
         DEPRECATED_SPARC_REGISTER(117440513),
         SUNW_AUXILIARY(1610612749),
         SUNW_RTLDINF(1610612750),
@@ -540,7 +544,7 @@ public class Elf extends KaitaiStruct {
         private final long id;
         DynamicArrayTags(long id) { this.id = id; }
         public long id() { return id; }
-        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(101);
+        private static final Map<Long, DynamicArrayTags> byId = new HashMap<Long, DynamicArrayTags>(104);
         static {
             for (DynamicArrayTags e : DynamicArrayTags.values())
                 byId.put(e.id(), e);

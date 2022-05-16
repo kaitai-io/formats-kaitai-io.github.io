@@ -2129,6 +2129,7 @@ namespace Elf {
         const PREINIT_ARRAY = 16;
         const GROUP = 17;
         const SYMTAB_SHNDX = 18;
+        const RELR = 19;
         const SUNW_SYMNSORT = 1879048172;
         const SUNW_PHNAME = 1879048173;
         const SUNW_ANCILLARY = 1879048174;
@@ -3375,6 +3376,9 @@ namespace Elf {
         const PREINIT_ARRAY = 32;
         const PREINIT_ARRAYSZ = 33;
         const SYMTAB_SHNDX = 34;
+        const RELRSZ = 35;
+        const RELR = 36;
+        const RELRENT = 37;
 
         /**
          * DT_SPARC_REGISTER was originally assigned 0x7000001. It is processor

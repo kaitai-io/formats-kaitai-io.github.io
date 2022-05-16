@@ -57,6 +57,7 @@ type
     preinit_array = 16
     group = 17
     symtab_shndx = 18
+    relr = 19
     sunw_symnsort = 1879048172
     sunw_phname = 1879048173
     sunw_ancillary = 1879048174
@@ -382,6 +383,9 @@ type
     preinit_array = 32
     preinit_arraysz = 33
     symtab_shndx = 34
+    relrsz = 35
+    relr = 36
+    relrent = 37
     deprecated_sparc_register = 117440513
     sunw_auxiliary = 1610612749
     sunw_rtldinf = 1610612750
