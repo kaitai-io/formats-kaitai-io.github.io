@@ -26,6 +26,8 @@ class JavaClass(KaitaiStruct):
             raise kaitaistruct.ValidationNotEqualError(b"\xCA\xFE\xBA\xBE", self.magic, self._io, u"/seq/0")
         self.version_minor = self._io.read_u2be()
         self.version_major = self._io.read_u2be()
+        if not self.version_major >= 43:
+            raise kaitaistruct.ValidationLessThanError(43, self.version_major, self._io, u"/seq/2")
         self.constant_pool_count = self._io.read_u2be()
         self.constant_pool = [None] * ((self.constant_pool_count - 1))
         for i in range((self.constant_pool_count - 1)):

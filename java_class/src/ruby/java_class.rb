@@ -20,6 +20,7 @@ class JavaClass < Kaitai::Struct::Struct
     raise Kaitai::Struct::ValidationNotEqualError.new([202, 254, 186, 190].pack('C*'), magic, _io, "/seq/0") if not magic == [202, 254, 186, 190].pack('C*')
     @version_minor = @_io.read_u2be
     @version_major = @_io.read_u2be
+    raise Kaitai::Struct::ValidationLessThanError.new(43, version_major, _io, "/seq/2") if not version_major >= 43
     @constant_pool_count = @_io.read_u2be
     @constant_pool = Array.new((constant_pool_count - 1))
     ((constant_pool_count - 1)).times { |i|

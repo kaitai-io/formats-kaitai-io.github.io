@@ -40,6 +40,9 @@ public class JavaClass extends KaitaiStruct {
         }
         this.versionMinor = this._io.readU2be();
         this.versionMajor = this._io.readU2be();
+        if (!(versionMajor() >= 43)) {
+            throw new KaitaiStream.ValidationLessThanError(43, versionMajor(), _io(), "/seq/2");
+        }
         this.constantPoolCount = this._io.readU2be();
         constantPool = new ArrayList<ConstantPoolEntry>(((Number) ((constantPoolCount() - 1))).intValue());
         for (int i = 0; i < (constantPoolCount() - 1); i++) {

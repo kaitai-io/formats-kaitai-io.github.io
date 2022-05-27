@@ -285,6 +285,9 @@ section#format-index .row {
   <span class="kr">end</span>
   <span class="n">self</span><span class="p">.</span><span class="n">version_minor</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">version_major</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
+  <span class="kr">if</span> <span class="ow">not</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">version_major</span> <span class="o">&gt;=</span> <span class="mi">43</span><span class="p">)</span> <span class="kr">then</span>
+    <span class="nb">error</span><span class="p">(</span><span class="s2">&quot;ValidationLessThanError&quot;</span><span class="p">)</span>
+  <span class="kr">end</span>
   <span class="n">self</span><span class="p">.</span><span class="n">constant_pool_count</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">_io</span><span class="p">:</span><span class="n">read_u2be</span><span class="p">()</span>
   <span class="n">self</span><span class="p">.</span><span class="n">constant_pool</span> <span class="o">=</span> <span class="p">{}</span>
   <span class="kr">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">constant_pool_count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="kr">do</span>

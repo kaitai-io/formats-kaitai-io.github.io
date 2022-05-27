@@ -21,6 +21,9 @@ void java_class_t::_read() {
     }
     m_version_minor = m__io->read_u2be();
     m_version_major = m__io->read_u2be();
+    if (!(version_major() >= 43)) {
+        throw kaitai::validation_less_than_error<uint16_t>(43, version_major(), _io(), std::string("/seq/2"));
+    }
     m_constant_pool_count = m__io->read_u2be();
     int l_constant_pool = (constant_pool_count() - 1);
     m_constant_pool = std::unique_ptr<std::vector<std::unique_ptr<constant_pool_entry_t>>>(new std::vector<std::unique_ptr<constant_pool_entry_t>>());

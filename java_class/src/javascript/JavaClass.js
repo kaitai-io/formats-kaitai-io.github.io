@@ -28,6 +28,9 @@ var JavaClass = (function() {
     }
     this.versionMinor = this._io.readU2be();
     this.versionMajor = this._io.readU2be();
+    if (!(this.versionMajor >= 43)) {
+      throw new KaitaiStream.ValidationLessThanError(43, this.versionMajor, this._io, "/seq/2");
+    }
     this.constantPoolCount = this._io.readU2be();
     this.constantPool = new Array((this.constantPoolCount - 1));
     for (var i = 0; i < (this.constantPoolCount - 1); i++) {

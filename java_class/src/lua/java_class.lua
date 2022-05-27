@@ -27,6 +27,9 @@ function JavaClass:_read()
   end
   self.version_minor = self._io:read_u2be()
   self.version_major = self._io:read_u2be()
+  if not(self.version_major >= 43) then
+    error("ValidationLessThanError")
+  end
   self.constant_pool_count = self._io:read_u2be()
   self.constant_pool = {}
   for i = 0, (self.constant_pool_count - 1) - 1 do

@@ -15,6 +15,9 @@ namespace {
             }
             $this->_m_versionMinor = $this->_io->readU2be();
             $this->_m_versionMajor = $this->_io->readU2be();
+            if (!($this->versionMajor() >= 43)) {
+                throw new \Kaitai\Struct\Error\ValidationLessThanError(43, $this->versionMajor(), $this->_io(), "/seq/2");
+            }
             $this->_m_constantPoolCount = $this->_io->readU2be();
             $this->_m_constantPool = [];
             $n = ($this->constantPoolCount() - 1);

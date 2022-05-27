@@ -30,6 +30,10 @@ namespace Kaitai
             }
             _versionMinor = m_io.ReadU2be();
             _versionMajor = m_io.ReadU2be();
+            if (!(VersionMajor >= 43))
+            {
+                throw new ValidationLessThanError(43, VersionMajor, M_Io, "/seq/2");
+            }
             _constantPoolCount = m_io.ReadU2be();
             _constantPool = new List<ConstantPoolEntry>((int) ((ConstantPoolCount - 1)));
             for (var i = 0; i < (ConstantPoolCount - 1); i++)
