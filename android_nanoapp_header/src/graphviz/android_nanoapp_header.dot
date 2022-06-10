@@ -1,0 +1,36 @@
+digraph {
+	rankdir=LR;
+	node [shape=plaintext];
+	subgraph cluster__android_nanoapp_header {
+		label="AndroidNanoappHeader";
+		graph[style=dotted];
+
+		android_nanoapp_header__seq [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
+			<TR><TD PORT="header_version_pos">0</TD><TD PORT="header_version_size">4</TD><TD>u4le</TD><TD PORT="header_version_type">header_version</TD></TR>
+			<TR><TD PORT="magic_pos">4</TD><TD PORT="magic_size">4</TD><TD></TD><TD PORT="magic_type">magic</TD></TR>
+			<TR><TD PORT="app_id_pos">8</TD><TD PORT="app_id_size">8</TD><TD>u8le</TD><TD PORT="app_id_type">app_id</TD></TR>
+			<TR><TD PORT="app_version_pos">16</TD><TD PORT="app_version_size">4</TD><TD>u4le</TD><TD PORT="app_version_type">app_version</TD></TR>
+			<TR><TD PORT="flags_pos">20</TD><TD PORT="flags_size">4</TD><TD>u4le</TD><TD PORT="flags_type">flags</TD></TR>
+			<TR><TD PORT="hub_type_pos">24</TD><TD PORT="hub_type_size">8</TD><TD>u8le</TD><TD PORT="hub_type_type">hub_type</TD></TR>
+			<TR><TD PORT="chre_api_major_version_pos">32</TD><TD PORT="chre_api_major_version_size">1</TD><TD>u1</TD><TD PORT="chre_api_major_version_type">chre_api_major_version</TD></TR>
+			<TR><TD PORT="chre_api_minor_version_pos">33</TD><TD PORT="chre_api_minor_version_size">1</TD><TD>u1</TD><TD PORT="chre_api_minor_version_type">chre_api_minor_version</TD></TR>
+			<TR><TD PORT="reserved_pos">34</TD><TD PORT="reserved_size">6</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
+		</TABLE>>];
+		android_nanoapp_header__inst__is_signed [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_signed</TD><TD>(flags &amp; 1) != 0</TD></TR>
+		</TABLE>>];
+		android_nanoapp_header__inst__is_encrypted [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_encrypted</TD><TD>(flags &amp; 2) != 0</TD></TR>
+		</TABLE>>];
+		android_nanoapp_header__inst__is_tcm_capable [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+			<TR><TD BGCOLOR="#E0FFE0">id</TD><TD BGCOLOR="#E0FFE0">value</TD></TR>
+			<TR><TD>is_tcm_capable</TD><TD>(flags &amp; 4) != 0</TD></TR>
+		</TABLE>>];
+	}
+	android_nanoapp_header__seq:flags_type -> android_nanoapp_header__inst__is_signed [color="#404040"];
+	android_nanoapp_header__seq:flags_type -> android_nanoapp_header__inst__is_encrypted [color="#404040"];
+	android_nanoapp_header__seq:flags_type -> android_nanoapp_header__inst__is_tcm_capable [color="#404040"];
+}
