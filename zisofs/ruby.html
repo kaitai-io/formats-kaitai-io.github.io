@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>zisofs: Ruby parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">zisofs</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>zisofs:
+            
+            Ruby parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>zisofs is a compression format for files on ISO9660 file system. It has
+limited support across operating systems, mainly Linux kernel. Typically a
+directory tree is first preprocessed by mkzftree (from the zisofs-tools
+package before being turned into an ISO9660 image by mkisofs, genisoimage
+or similar tool. The data is zlib compressed.</p>
+<p>The specification here describes the structure of a file that has been
+preprocessed by mkzftree, not of a full ISO9660 ziso. Data is not
+decompressed, as blocks with length 0 have a special meaning. Decompression
+and deconstruction of this data should be done outside of Kaitai Struct.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105854284">Wikidata Q105854284</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Zisofs">Zisofs in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of zisofs
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="zisofs parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="zisofs parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="zisofs parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="zisofs parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="zisofs parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="zisofs parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="zisofs parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="zisofs parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="zisofs parsing Lua library">Lua</a></li>
+                
+                
+                <li>
+                
+                <a href="nim.html" title="zisofs parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="zisofs parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="zisofs parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="zisofs parsing Python library">Python</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="ruby.html" title="zisofs parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="format-usage" class="format">
+    <div class="container">
+        <h2>Usage</h2>
+
+        <h3>Runtime library</h3>
+
+        <p>All parsing code for Ruby generated by Kaitai Struct depends on the
+        <a
+            href="https://github.com/kaitai-io/kaitai_struct_ruby_runtime/"
+            target="_blank" rel="noopener">
+        Ruby runtime library</a>. You have to
+        install it before you can parse data.</p>
+
+        <p>The Ruby runtime library can be installed <a href="https://rubygems.org/gems/kaitai-struct"
+    target="_blank" rel="noopener">from RubyGems</a>:</p>
+
+<pre><code>gem install kaitai-struct</code></pre>
+
+<h3>Code</h3>
+
+<p>Parse a local file and get structure in memory:</p>
+
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span> <span class="o">=</span> <span class="no">Zisofs</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s2">&quot;path/to/local/file.zisofs&quot;</span><span class="p">)</span>
+</pre></div>
+
+<p>Or parse structure from a string of bytes:</p>
+
+<div class="highlight"><pre><span></span><span class="n">bytes</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\x00\x01\x02</span><span class="s2">...&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="no">Zisofs</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+</pre></div>
+
+<p>After that, one can get various attributes from the structure by invoking getter methods like:</p>
+
+
+<div class="highlight"><pre><span></span><span class="n">data</span><span class="o">.</span><span class="n">block_pointers</span> <span class="c1"># =&gt; The final pointer (`block_pointers[header.num_blocks]`) indicates the end</span>
+<span class="n">of</span> <span class="n">the</span> <span class="n">last</span> <span class="n">block</span><span class="o">.</span> <span class="no">Typically</span> <span class="n">this</span> <span class="n">is</span> <span class="n">also</span> <span class="n">the</span> <span class="k">end</span> <span class="n">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">data</span><span class="o">.</span>
+</pre></div>
+
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Ruby source code to parse zisofs
+            
+        </h2>
+
+        
+
+        <h3>zisofs.rb</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/ruby/zisofs.rb" download="zisofs.rb" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="c1"># This is a generated file! Please edit source .ksy file and use kaitai-struct-compiler to rebuild</span>
+
+<span class="nb">require</span> <span class="s1">&#39;kaitai/struct/struct&#39;</span>
+
+<span class="k">unless</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="no">Gem</span><span class="o">::</span><span class="no">Version</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s1">&#39;0.9&#39;</span><span class="p">)</span>
+  <span class="k">raise</span> <span class="s2">&quot;Incompatible Kaitai Struct Ruby API: 0.9 or later is required, but you have </span><span class="si">#{</span><span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">VERSION</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
+
+
+<span class="c1">##</span>
+<span class="c1"># zisofs is a compression format for files on ISO9660 file system. It has</span>
+<span class="c1"># limited support across operating systems, mainly Linux kernel. Typically a</span>
+<span class="c1"># directory tree is first preprocessed by mkzftree (from the zisofs-tools</span>
+<span class="c1"># package before being turned into an ISO9660 image by mkisofs, genisoimage</span>
+<span class="c1"># or similar tool. The data is zlib compressed.</span>
+<span class="c1"># </span>
+<span class="c1"># The specification here describes the structure of a file that has been</span>
+<span class="c1"># preprocessed by mkzftree, not of a full ISO9660 ziso. Data is not</span>
+<span class="c1"># decompressed, as blocks with length 0 have a special meaning. Decompression</span>
+<span class="c1"># and deconstruction of this data should be done outside of Kaitai Struct.</span>
+<span class="c1"># @see https://web.archive.org/web/20200612093441/https://dev.lovelyhq.com/libburnia/web/-/wikis/zisofs Source</span>
+<span class="k">class</span> <span class="nc">Zisofs</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+    <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+    <span class="n">_read</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="n">_read</span>
+    <span class="vi">@_raw_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="n">_io__raw_header</span> <span class="o">=</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Stream</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_raw_header</span><span class="p">)</span>
+    <span class="vi">@header</span> <span class="o">=</span> <span class="no">Header</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">_io__raw_header</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">)</span>
+    <span class="vi">@block_pointers</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">num_blocks</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="p">((</span><span class="n">header</span><span class="o">.</span><span class="n">num_blocks</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@block_pointers</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+    <span class="p">}</span>
+    <span class="nb">self</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Header</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="vi">@magic</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">55</span><span class="p">,</span> <span class="mi">228</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">219</span><span class="p">,</span> <span class="mi">214</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">magic</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header/seq/0&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">magic</span> <span class="o">==</span> <span class="o">[</span><span class="mi">55</span><span class="p">,</span> <span class="mi">228</span><span class="p">,</span> <span class="mi">83</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mi">201</span><span class="p">,</span> <span class="mi">219</span><span class="p">,</span> <span class="mi">214</span><span class="p">,</span> <span class="mi">7</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="vi">@uncompressed_size</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u4le</span>
+      <span class="vi">@len_header</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">len_header</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header/seq/2&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">len_header</span> <span class="o">==</span> <span class="mi">4</span>
+      <span class="vi">@block_size_log2</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_u1</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotAnyOfError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">block_size_log2</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header/seq/3&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span>  <span class="p">((</span><span class="n">block_size_log2</span> <span class="o">==</span> <span class="mi">15</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">block_size_log2</span> <span class="o">==</span> <span class="mi">16</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">block_size_log2</span> <span class="o">==</span> <span class="mi">17</span><span class="p">))</span> 
+      <span class="vi">@reserved</span> <span class="o">=</span> <span class="vi">@_io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">ValidationNotEqualError</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">),</span> <span class="n">reserved</span><span class="p">,</span> <span class="n">_io</span><span class="p">,</span> <span class="s2">&quot;/types/header/seq/4&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">reserved</span> <span class="o">==</span> <span class="o">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">].</span><span class="n">pack</span><span class="p">(</span><span class="s1">&#39;C*&#39;</span><span class="p">)</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">block_size</span>
+      <span class="k">return</span> <span class="vi">@block_size</span> <span class="k">unless</span> <span class="vi">@block_size</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@block_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&lt;&lt;</span> <span class="n">block_size_log2</span><span class="p">)</span>
+      <span class="vi">@block_size</span>
+    <span class="k">end</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># ceil(uncompressed_size / block_size)</span>
+    <span class="k">def</span> <span class="nf">num_blocks</span>
+      <span class="k">return</span> <span class="vi">@num_blocks</span> <span class="k">unless</span> <span class="vi">@num_blocks</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@num_blocks</span> <span class="o">=</span> <span class="p">((</span><span class="n">uncompressed_size</span> <span class="o">/</span> <span class="n">block_size</span><span class="p">)</span> <span class="o">+</span> <span class="p">((</span><span class="n">uncompressed_size</span> <span class="o">%</span> <span class="n">block_size</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">?</span> <span class="mi">1</span> <span class="p">:</span> <span class="mi">0</span><span class="p">))</span>
+      <span class="vi">@num_blocks</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:magic</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># Size of the original uncompressed file</span>
+    <span class="kp">attr_reader</span> <span class="ss">:uncompressed_size</span>
+
+    <span class="c1">##</span>
+    <span class="c1"># header_size &gt;&gt; 2 (currently 4)</span>
+    <span class="kp">attr_reader</span> <span class="ss">:len_header</span>
+    <span class="kp">attr_reader</span> <span class="ss">:block_size_log2</span>
+    <span class="kp">attr_reader</span> <span class="ss">:reserved</span>
+  <span class="k">end</span>
+  <span class="k">class</span> <span class="nc">Block</span> <span class="o">&lt;</span> <span class="no">Kaitai</span><span class="o">::</span><span class="no">Struct</span><span class="o">::</span><span class="no">Struct</span>
+    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">,</span> <span class="n">_root</span> <span class="o">=</span> <span class="nb">self</span><span class="p">,</span> <span class="n">ofs_start</span><span class="p">,</span> <span class="n">ofs_end</span><span class="p">)</span>
+      <span class="k">super</span><span class="p">(</span><span class="n">_io</span><span class="p">,</span> <span class="n">_parent</span><span class="p">,</span> <span class="n">_root</span><span class="p">)</span>
+      <span class="vi">@ofs_start</span> <span class="o">=</span> <span class="n">ofs_start</span>
+      <span class="vi">@ofs_end</span> <span class="o">=</span> <span class="n">ofs_end</span>
+      <span class="n">_read</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="n">_read</span>
+      <span class="nb">self</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">len_data</span>
+      <span class="k">return</span> <span class="vi">@len_data</span> <span class="k">unless</span> <span class="vi">@len_data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="vi">@len_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">ofs_end</span> <span class="o">-</span> <span class="n">ofs_start</span><span class="p">)</span>
+      <span class="vi">@len_data</span>
+    <span class="k">end</span>
+    <span class="k">def</span> <span class="nf">data</span>
+      <span class="k">return</span> <span class="vi">@data</span> <span class="k">unless</span> <span class="vi">@data</span><span class="o">.</span><span class="n">nil?</span>
+      <span class="n">io</span> <span class="o">=</span> <span class="n">_root</span><span class="o">.</span><span class="n">_io</span>
+      <span class="n">_pos</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">pos</span>
+      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">ofs_start</span><span class="p">)</span>
+      <span class="vi">@data</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">read_bytes</span><span class="p">(</span><span class="n">len_data</span><span class="p">)</span>
+      <span class="n">io</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">_pos</span><span class="p">)</span>
+      <span class="vi">@data</span>
+    <span class="k">end</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_start</span>
+    <span class="kp">attr_reader</span> <span class="ss">:ofs_end</span>
+  <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">blocks</span>
+    <span class="k">return</span> <span class="vi">@blocks</span> <span class="k">unless</span> <span class="vi">@blocks</span><span class="o">.</span><span class="n">nil?</span>
+    <span class="vi">@blocks</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_blocks</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">header</span><span class="o">.</span><span class="n">num_blocks</span><span class="p">)</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+      <span class="vi">@blocks</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="no">Block</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="vi">@_io</span><span class="p">,</span> <span class="nb">self</span><span class="p">,</span> <span class="vi">@_root</span><span class="p">,</span> <span class="n">block_pointers</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span> <span class="n">block_pointers</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="vi">@blocks</span>
+  <span class="k">end</span>
+  <span class="kp">attr_reader</span> <span class="ss">:header</span>
+
+  <span class="c1">##</span>
+  <span class="c1"># The final pointer (`block_pointers[header.num_blocks]`) indicates the end</span>
+  <span class="c1"># of the last block. Typically this is also the end of the file data.</span>
+  <span class="kp">attr_reader</span> <span class="ss">:block_pointers</span>
+  <span class="kp">attr_reader</span> <span class="ss">:_raw_header</span>
+<span class="k">end</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>

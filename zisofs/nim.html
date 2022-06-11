@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>zisofs: Nim parsing library</title>
+  <meta name="keywords" content="kaitai,struct,binary,format,parsing,decoding,java,javascript,python,ruby,library,metadata">
+  <meta name="description" content="Kaitai Struct is a formal language for binary format specification that can be compiled into parser code">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap.min.css">
+  <link rel="stylesheet" href="//kaitai.io/styles/bootstrap-theme.min.css">
+  <link href='https://fonts.googleapis.com/css?family=Exo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Share+Tech+Mono' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="//kaitai.io/styles/main.css" type="text/css">
+  <link rel="stylesheet" href="/pygments-default.css" type="text/css">
+  <style>
+.diagram-img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+section.format {
+    padding: 30px 0;
+}
+
+section#format-meta, section#format-index-header {
+    background: #e3eef7;
+}
+
+section#format-diagram, section#format-index-footer {
+    background: #e9f8dd;
+}
+
+section#format-ksy, section#format-lang {
+    background: #d1eadd;
+}
+
+section#format-index .row {
+    padding-bottom: 10px;
+}
+
+  </style>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MFSBBRGREL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-MFSBBRGREL');
+  </script>
+</head>
+<body data-spy="scroll" data-target="#main-navbar" data-offset="100">
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="main-navbar">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-navbar-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">Kaitai Struct</span>
+            </div>
+            <div class="collapse navbar-collapse" id="main-navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="//kaitai.io/#what-is-it">What is it?</a></li>
+                    <li><a href="//kaitai.io/#quick-start">Quick Start</a></li>
+                    <li><a href="//kaitai.io/#download">Download</a></li>
+                    <li class="active"><a href="//formats.kaitai.io/">Format Gallery</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="https://ide.kaitai.io/">Try it &mdash; Web IDE</a></li>
+                    <li><a href="//doc.kaitai.io/">Documentation</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<nav>
+    <div class="container">
+    <ol class="breadcrumb">
+        <li><a href="../">Format Gallery</a></li>
+        <li>Archive Files</li>
+        <li class="active">zisofs</li>
+    </ol>
+    </div>
+</nav>
+
+<section id="format-meta" class="format">
+    <div class="container">
+        <h1>zisofs:
+            
+            Nim parsing library
+            
+        </h1>
+
+        <div class="row">
+            <div class="col-md-8">
+                <p><p>zisofs is a compression format for files on ISO9660 file system. It has
+limited support across operating systems, mainly Linux kernel. Typically a
+directory tree is first preprocessed by mkzftree (from the zisofs-tools
+package before being turned into an ISO9660 image by mkisofs, genisoimage
+or similar tool. The data is zlib compressed.</p>
+<p>The specification here describes the structure of a file that has been
+preprocessed by mkzftree, not of a full ISO9660 ziso. Data is not
+decompressed, as blocks with length 0 have a special meaning. Decompression
+and deconstruction of this data should be done outside of Kaitai Struct.</p>
+</p>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">KS implementation details</h3>
+                    </div>
+                    
+                    <div class="panel-body">
+                        License: <a href="https://spdx.org/licenses/CC0-1.0.html">CC0-1.0</a>
+                    </div>
+                    
+                    
+                    
+                    
+                    
+                    <div class="panel-heading">
+                        <h3 class="panel-title">References</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul>
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            
+                            <li><a href="https://www.wikidata.org/wiki/Q105854284">Wikidata Q105854284</a></li>
+                            
+                            
+                            
+                            <li><a href="http://fileformats.archiveteam.org/wiki/Zisofs">Zisofs in Just Solve the File Format Problem</a></li>
+                            
+                        </ul>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+            <p>
+            This page hosts a formal specification of zisofs
+            using <a href="//kaitai.io">Kaitai Struct</a>. This
+            specification can be automatically translated into a
+            variety of programming languages to get a parsing library.
+            </p>
+
+            <ul class="nav nav-pills">
+                
+                
+                <li>
+                
+                <a href="index.html" title="zisofs parsing Overview library">Overview</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_11.html" title="zisofs parsing C++11/STL library">C++11/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="cpp_stl_98.html" title="zisofs parsing C++98/STL library">C++98/STL</a></li>
+                
+                
+                <li>
+                
+                <a href="csharp.html" title="zisofs parsing C# library">C#</a></li>
+                
+                
+                <li>
+                
+                <a href="go.html" title="zisofs parsing Go library">Go</a></li>
+                
+                
+                <li>
+                
+                <a href="graphviz.html" title="zisofs parsing GraphViz library">GraphViz</a></li>
+                
+                
+                <li>
+                
+                <a href="java.html" title="zisofs parsing Java library">Java</a></li>
+                
+                
+                <li>
+                
+                <a href="javascript.html" title="zisofs parsing JavaScript library">JavaScript</a></li>
+                
+                
+                <li>
+                
+                <a href="lua.html" title="zisofs parsing Lua library">Lua</a></li>
+                
+                
+                <li class="active">
+                
+                <a href="nim.html" title="zisofs parsing Nim library">Nim</a></li>
+                
+                
+                <li>
+                
+                <a href="perl.html" title="zisofs parsing Perl library">Perl</a></li>
+                
+                
+                <li>
+                
+                <a href="php.html" title="zisofs parsing PHP library">PHP</a></li>
+                
+                
+                <li>
+                
+                <a href="python.html" title="zisofs parsing Python library">Python</a></li>
+                
+                
+                <li>
+                
+                <a href="ruby.html" title="zisofs parsing Ruby library">Ruby</a></li>
+                
+            </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section id="format-lang" class="format">
+    <div class="container">
+        <h2>
+            
+            Nim source code to parse zisofs
+            
+        </h2>
+
+        
+
+        <h3>zisofs.nim</h3>
+
+        <div class="row">
+            <div class="pull-right">
+                <p>
+                    <a href="src/nim/zisofs.nim" download="zisofs.nim" class="btn btn-success">Download <i class="fa fa-download"></i></a>
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="highlight"><pre><span></span><span class="kn">import</span> <span class="n">kaitai_struct_nim_runtime</span>
+<span class="kn">import</span> <span class="n">options</span>
+
+<span class="k">type</span>
+  <span class="n">Zisofs</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">header</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Zisofs_Header</span>
+    <span class="p">`</span><span class="n">blockPointers</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">rawHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">blocksInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Zisofs_Block</span><span class="o">]</span>
+  <span class="n">Zisofs_Header</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">magic</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">uncompressedSize</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">lenHeader</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">blockSizeLog2</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
+    <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Zisofs</span>
+    <span class="p">`</span><span class="n">blockSizeInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">numBlocksInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+  <span class="n">Zisofs_Block</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
+    <span class="p">`</span><span class="n">ofsStart</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">ofsEnd</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">Zisofs</span>
+    <span class="p">`</span><span class="n">lenDataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">int</span>
+    <span class="p">`</span><span class="n">dataInst</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zisofs</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs_Header], io: KaitaiStream, root: KaitaiStruct, parent: Zisofs): Zisofs_Header</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs_Block], io: KaitaiStream, root: KaitaiStruct, parent: Zisofs, ofsStart: any, ofsEnd: any): Zisofs_Block</span>
+
+<span class="k">proc </span><span class="nf">blocks</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Zisofs_Block</span><span class="o">]</span>
+<span class="k">proc </span><span class="nf">blockSize</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Header</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">numBlocks</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Header</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">lenData</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Block</span><span class="p">):</span> <span class="kt">int</span>
+<span class="k">proc </span><span class="nf">data</span><span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Block</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
+
+
+<span class="sd">##[</span>
+<span class="n">zisofs</span> <span class="ow">is</span> <span class="n">a</span> <span class="n">compression</span> <span class="n">format</span> <span class="k">for</span> <span class="n">files</span> <span class="n">on</span> <span class="n">ISO9660</span> <span class="n">file</span> <span class="n">system</span><span class="p">.</span> <span class="n">It</span> <span class="n">has</span>
+<span class="n">limited</span> <span class="n">support</span> <span class="n">across</span> <span class="n">operating</span> <span class="n">systems</span><span class="p">,</span> <span class="n">mainly</span> <span class="n">Linux</span> <span class="n">kernel</span><span class="p">.</span> <span class="n">Typically</span> <span class="n">a</span>
+<span class="n">directory</span> <span class="n">tree</span> <span class="ow">is</span> <span class="n">first</span> <span class="n">preprocessed</span> <span class="n">by</span> <span class="n">mkzftree</span> <span class="p">(</span><span class="kn">from</span> <span class="n">the</span> <span class="n">zisofs</span><span class="o">-</span><span class="n">tools</span>
+<span class="n">package</span> <span class="n">before</span> <span class="n">being</span> <span class="n">turned</span> <span class="n">into</span> <span class="n">an</span> <span class="n">ISO9660</span> <span class="n">image</span> <span class="n">by</span> <span class="n">mkisofs</span><span class="p">,</span> <span class="n">genisoimage</span>
+<span class="ow">or</span> <span class="n">similar</span> <span class="n">tool</span><span class="p">.</span> <span class="n">The</span> <span class="n">data</span> <span class="ow">is</span> <span class="n">zlib</span> <span class="n">compressed</span><span class="p">.</span>
+
+<span class="n">The</span> <span class="n">specification</span> <span class="n">here</span> <span class="n">describes</span> <span class="n">the</span> <span class="n">structure</span> <span class="k">of</span> <span class="n">a</span> <span class="n">file</span> <span class="n">that</span> <span class="n">has</span> <span class="n">been</span>
+<span class="n">preprocessed</span> <span class="n">by</span> <span class="n">mkzftree</span><span class="p">,</span> <span class="ow">not</span> <span class="k">of</span> <span class="n">a</span> <span class="n">full</span> <span class="n">ISO9660</span> <span class="n">ziso</span><span class="p">.</span> <span class="n">Data</span> <span class="ow">is</span> <span class="ow">not</span>
+<span class="n">decompressed</span><span class="p">,</span> <span class="k">as</span> <span class="n">blocks</span> <span class="n">with</span> <span class="n">length</span> <span class="mi">0</span> <span class="n">have</span> <span class="n">a</span> <span class="n">special</span> <span class="n">meaning</span><span class="p">.</span> <span class="n">Decompression</span>
+<span class="ow">and</span> <span class="n">deconstruction</span> <span class="k">of</span> <span class="n">this</span> <span class="n">data</span> <span class="n">should</span> <span class="n">be</span> <span class="n">done</span> <span class="n">outside</span> <span class="k">of</span> <span class="n">Kaitai</span> <span class="n">Struct</span><span class="p">.</span>
+
+<span class="o">@</span><span class="n">see</span> <span class="o">&lt;</span><span class="n">a</span> <span class="n">href</span><span class="o">=</span><span class="s">&quot;https://web.archive.org/web/20200612093441/https://dev.lovelyhq.com/libburnia/web/-/wikis/zisofs&quot;</span><span class="o">&gt;</span><span class="n">Source</span><span class="o">&lt;/</span><span class="n">a</span><span class="o">&gt;</span>
+<span class="o">]</span><span class="sd">##</span>
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs], io: KaitaiStream, root: KaitaiStruct, parent: KaitaiStruct): Zisofs =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Zisofs</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Zisofs</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Zisofs</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">rawHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">16</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">rawHeader</span> <span class="o">=</span> <span class="n">rawHeaderExpr</span>
+  <span class="k">let</span> <span class="n">rawHeaderIo</span> <span class="o">=</span> <span class="n">newKaitaiStream</span><span class="p">(</span><span class="n">rawHeaderExpr</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">headerExpr</span> <span class="o">=</span> <span class="n">Zisofs_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">rawHeaderIo</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">header</span> <span class="o">=</span> <span class="n">headerExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">The</span> <span class="n">final</span> <span class="n">pointer</span> <span class="p">(`</span><span class="n">block_pointers</span><span class="o">[</span><span class="n">header</span><span class="p">.</span><span class="n">num_blocks</span><span class="o">]</span><span class="p">`)</span> <span class="n">indicates</span> <span class="n">the</span> <span class="k">end</span>
+<span class="k">of</span> <span class="n">the</span> <span class="n">last</span> <span class="k">block</span><span class="p">.</span> <span class="n">Typically</span> <span class="n">this</span> <span class="ow">is</span> <span class="n">also</span> <span class="n">the</span> <span class="k">end</span> <span class="k">of</span> <span class="n">the</span> <span class="n">file</span> <span class="n">data</span><span class="p">.</span>
+
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">numBlocks</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">blockPointers</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">blocks</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">Zisofs_Block</span><span class="o">]</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blocksInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blocksInst</span>
+  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">header</span><span class="p">.</span><span class="n">numBlocks</span><span class="p">):</span>
+    <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">Zisofs_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">blockPointers</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span> <span class="n">this</span><span class="p">.</span><span class="n">blockPointers</span><span class="o">[</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">]</span><span class="p">)</span>
+    <span class="n">this</span><span class="p">.</span><span class="n">blocksInst</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blocksInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blocksInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs], filename: string): Zisofs =</span>
+  <span class="n">Zisofs</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs_Header], io: KaitaiStream, root: KaitaiStruct, parent: Zisofs): Zisofs_Header =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Zisofs_Header</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Zisofs</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Zisofs</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+
+  <span class="k">let</span> <span class="n">magicExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">8</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">magic</span> <span class="o">=</span> <span class="n">magicExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">Size</span> <span class="k">of</span> <span class="n">the</span> <span class="n">original</span> <span class="n">uncompressed</span> <span class="n">file</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">uncompressedSizeExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4le</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">uncompressedSize</span> <span class="o">=</span> <span class="n">uncompressedSizeExpr</span>
+
+  <span class="sd">##[</span>
+  <span class="n">header_size</span> <span class="o">&gt;&gt;</span> <span class="mi">2</span> <span class="p">(</span><span class="n">currently</span> <span class="mi">4</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">let</span> <span class="n">lenHeaderExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenHeader</span> <span class="o">=</span> <span class="n">lenHeaderExpr</span>
+  <span class="k">let</span> <span class="n">blockSizeLog2Expr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockSizeLog2</span> <span class="o">=</span> <span class="n">blockSizeLog2Expr</span>
+  <span class="k">let</span> <span class="n">reservedExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">reserved</span> <span class="o">=</span> <span class="n">reservedExpr</span>
+
+<span class="k">proc </span><span class="nf">blockSize</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Header</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span>
+  <span class="k">let</span> <span class="n">blockSizeInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="mi">1</span> <span class="ow">shl</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeLog2</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span> <span class="o">=</span> <span class="n">blockSizeInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSizeInst</span>
+
+<span class="k">proc </span><span class="nf">numBlocks</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Header</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+
+  <span class="sd">##[</span>
+  <span class="n">ceil</span><span class="p">(</span><span class="n">uncompressed_size</span> <span class="o">/</span> <span class="n">block_size</span><span class="p">)</span>
+  <span class="o">]</span><span class="sd">##</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlocksInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlocksInst</span>
+  <span class="k">let</span> <span class="n">numBlocksInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(((</span><span class="n">this</span><span class="p">.</span><span class="n">uncompressedSize</span> <span class="ow">div</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSize</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="k">if</span> <span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">uncompressedSize</span> <span class="o">%%%</span> <span class="n">this</span><span class="p">.</span><span class="n">blockSize</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span> <span class="mi">1</span> <span class="k">else</span><span class="p">:</span> <span class="mi">0</span><span class="p">)))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">numBlocksInst</span> <span class="o">=</span> <span class="n">numBlocksInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlocksInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">numBlocksInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs_Header], filename: string): Zisofs_Header =</span>
+  <span class="n">Zisofs_Header</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+
+<span class="k">proc </span><span class="nf">read</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs_Block], io: KaitaiStream, root: KaitaiStruct, parent: Zisofs, ofsStart: any, ofsEnd: any): Zisofs_Block =</span>
+  <span class="k">template</span> <span class="n">this</span><span class="p">:</span> <span class="n">untyped</span> <span class="o">=</span> <span class="n">result</span>
+  <span class="n">this</span> <span class="o">=</span> <span class="n">new</span><span class="p">(</span><span class="n">Zisofs_Block</span><span class="p">)</span>
+  <span class="k">let</span> <span class="n">root</span> <span class="o">=</span> <span class="k">if</span> <span class="n">root</span> <span class="o">==</span> <span class="kp">nil</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Zisofs</span><span class="o">]</span><span class="p">(</span><span class="n">this</span><span class="p">)</span> <span class="k">else</span><span class="p">:</span> <span class="k">cast</span><span class="o">[</span><span class="n">Zisofs</span><span class="o">]</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">io</span> <span class="o">=</span> <span class="n">io</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+  <span class="k">let</span> <span class="n">ofsStartExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">(</span><span class="n">ofsStart</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsStart</span> <span class="o">=</span> <span class="n">ofsStartExpr</span>
+  <span class="k">let</span> <span class="n">ofsEndExpr</span> <span class="o">=</span> <span class="n">uint32</span><span class="p">(</span><span class="n">ofsEnd</span><span class="p">)</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">ofsEnd</span> <span class="o">=</span> <span class="n">ofsEndExpr</span>
+
+
+<span class="k">proc </span><span class="nf">lenData</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Block</span><span class="p">):</span> <span class="kt">int</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+  <span class="k">let</span> <span class="n">lenDataInstExpr</span> <span class="o">=</span> <span class="kt">int</span><span class="p">((</span><span class="n">this</span><span class="p">.</span><span class="n">ofsEnd</span> <span class="o">-</span> <span class="n">this</span><span class="p">.</span><span class="n">ofsStart</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">=</span> <span class="n">lenDataInstExpr</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span> <span class="o">!=</span> <span class="kp">nil</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">lenDataInst</span>
+
+<span class="k">proc </span><span class="nf">data</span><span class="p">(</span><span class="n">this</span><span class="p">:</span> <span class="n">Zisofs_Block</span><span class="p">):</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span> <span class="o">=</span> 
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+  <span class="k">let</span> <span class="n">io</span> <span class="o">=</span> <span class="n">Zisofs</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">root</span><span class="p">).</span><span class="n">io</span>
+  <span class="k">let</span> <span class="n">pos</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">pos</span><span class="p">()</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">ofsStart</span><span class="p">))</span>
+  <span class="k">let</span> <span class="n">dataInstExpr</span> <span class="o">=</span> <span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">lenData</span><span class="p">))</span>
+  <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span> <span class="o">=</span> <span class="n">dataInstExpr</span>
+  <span class="n">io</span><span class="p">.</span><span class="n">seek</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span><span class="p">.</span><span class="n">len</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">this</span><span class="p">.</span><span class="n">dataInst</span>
+
+<span class="k">proc </span><span class="nf">fromFile</span><span class="o">*</span><span class="p">(</span><span class="err">_: typedesc[Zisofs_Block], filename: string): Zisofs_Block =</span>
+  <span class="n">Zisofs_Block</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">newKaitaiFileStream</span><span class="p">(</span><span class="n">filename</span><span class="p">),</span> <span class="kp">nil</span><span class="p">,</span> <span class="kp">nil</span><span class="p">)</span>
+</pre></div>
+
+        </div>
+        
+    </div>
+</section>
+
+    <footer id="main-footer">
+        <div class="container">
+            &copy; 2015&ndash;2021 Kaitai Project and <a href="https://github.com/kaitai-io/kaitai_struct_formats/graphs/contributors">format repo contributors</a>
+
+            <h3>Contacts</h3>
+
+            <div class="row">
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-github"></i> <a href="https://github.com/kaitai-io/kaitai_struct">GitHub</a>
+                </div>
+                <div class="col-sm-4">
+                    <i class="fa fa-fw fa-2x fa-twitter"></i> <a href="https://twitter.com/kaitai_io">@kaitai_io</a>
+                </div>
+                <div class="col-sm-4">
+                    Gitter: <a href="https://gitter.im/kaitai_struct/Lobby">kaitai_struct</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+  <script src="//kaitai.io/js/jquery-1.12.3.min.js"></script>
+  <script src="//kaitai.io/js/bootstrap.min.js"></script>
+
+  <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-76299550-1', 'auto');
+      ga('send', 'pageview');
+  </script>
+</body>
+</html>
