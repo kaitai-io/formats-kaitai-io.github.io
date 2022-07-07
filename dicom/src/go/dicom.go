@@ -189,7 +189,7 @@ const (
 	Dicom_Tags__OtherFailuresSequence Dicom_Tags = 528794
 	Dicom_Tags__StudiesContainingOtherReferencedInstancesSequence Dicom_Tags = 528896
 	Dicom_Tags__RelatedSeriesSequence Dicom_Tags = 528976
-	Dicom_Tags__LossyImageCompression Dicom_Tags = 532752
+	Dicom_Tags__LossyImageCompressionRetired Dicom_Tags = 532752
 	Dicom_Tags__DerivationDescription Dicom_Tags = 532753
 	Dicom_Tags__SourceImageSequence Dicom_Tags = 532754
 	Dicom_Tags__StageName Dicom_Tags = 532768

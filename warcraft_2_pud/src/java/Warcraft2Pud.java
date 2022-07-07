@@ -31,10 +31,10 @@ public class Warcraft2Pud extends KaitaiStruct {
     }
 
     public enum Controller {
-        COMPUTER(1),
+        COMPUTER1(1),
         PASSIVE_COMPUTER(2),
         NOBODY(3),
-        COMPUTER(4),
+        COMPUTER4(4),
         HUMAN(5),
         RESCUE_PASSIVE(6),
         RESCUE_ACTIVE(7);

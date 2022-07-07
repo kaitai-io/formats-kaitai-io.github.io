@@ -23,10 +23,10 @@ import (
 
 type Warcraft2Pud_Controller int
 const (
-	Warcraft2Pud_Controller__Computer Warcraft2Pud_Controller = 1
+	Warcraft2Pud_Controller__Computer1 Warcraft2Pud_Controller = 1
 	Warcraft2Pud_Controller__PassiveComputer Warcraft2Pud_Controller = 2
 	Warcraft2Pud_Controller__Nobody Warcraft2Pud_Controller = 3
-	Warcraft2Pud_Controller__Computer Warcraft2Pud_Controller = 4
+	Warcraft2Pud_Controller__Computer4 Warcraft2Pud_Controller = 4
 	Warcraft2Pud_Controller__Human Warcraft2Pud_Controller = 5
 	Warcraft2Pud_Controller__RescuePassive Warcraft2Pud_Controller = 6
 	Warcraft2Pud_Controller__RescueActive Warcraft2Pud_Controller = 7

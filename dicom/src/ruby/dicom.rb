@@ -189,7 +189,7 @@ class Dicom < Kaitai::Struct::Struct
     528794 => :tags_other_failures_sequence,
     528896 => :tags_studies_containing_other_referenced_instances_sequence,
     528976 => :tags_related_series_sequence,
-    532752 => :tags_lossy_image_compression,
+    532752 => :tags_lossy_image_compression_retired,
     532753 => :tags_derivation_description,
     532754 => :tags_source_image_sequence,
     532768 => :tags_stage_name,

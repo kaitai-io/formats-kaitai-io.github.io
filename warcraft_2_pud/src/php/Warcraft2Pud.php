@@ -313,10 +313,10 @@ namespace Warcraft2Pud {
 
 namespace Warcraft2Pud {
     class Controller {
-        const COMPUTER = 1;
+        const COMPUTER1 = 1;
         const PASSIVE_COMPUTER = 2;
         const NOBODY = 3;
-        const COMPUTER = 4;
+        const COMPUTER4 = 4;
         const HUMAN = 5;
         const RESCUE_PASSIVE = 6;
         const RESCUE_ACTIVE = 7;

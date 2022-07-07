@@ -31,10 +31,10 @@ namespace Kaitai
 
         public enum Controller
         {
-            Computer = 1,
+            Computer1 = 1,
             PassiveComputer = 2,
             Nobody = 3,
-            Computer = 4,
+            Computer4 = 4,
             Human = 5,
             RescuePassive = 6,
             RescueActive = 7,

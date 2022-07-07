@@ -23,10 +23,10 @@ end
 class Warcraft2Pud < Kaitai::Struct::Struct
 
   CONTROLLER = {
-    1 => :controller_computer,
+    1 => :controller_computer1,
     2 => :controller_passive_computer,
     3 => :controller_nobody,
-    4 => :controller_computer,
+    4 => :controller_computer4,
     5 => :controller_human,
     6 => :controller_rescue_passive,
     7 => :controller_rescue_active,

@@ -197,7 +197,7 @@ namespace Kaitai
             OtherFailuresSequence = 528794,
             StudiesContainingOtherReferencedInstancesSequence = 528896,
             RelatedSeriesSequence = 528976,
-            LossyImageCompression = 532752,
+            LossyImageCompressionRetired = 532752,
             DerivationDescription = 532753,
             SourceImageSequence = 532754,
             StageName = 532768,

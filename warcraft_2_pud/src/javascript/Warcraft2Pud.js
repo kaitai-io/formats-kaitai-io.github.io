@@ -26,18 +26,18 @@
 
 var Warcraft2Pud = (function() {
   Warcraft2Pud.Controller = Object.freeze({
-    COMPUTER: 1,
+    COMPUTER1: 1,
     PASSIVE_COMPUTER: 2,
     NOBODY: 3,
-    COMPUTER: 4,
+    COMPUTER4: 4,
     HUMAN: 5,
     RESCUE_PASSIVE: 6,
     RESCUE_ACTIVE: 7,
 
-    1: "COMPUTER",
+    1: "COMPUTER1",
     2: "PASSIVE_COMPUTER",
     3: "NOBODY",
-    4: "COMPUTER",
+    4: "COMPUTER4",
     5: "HUMAN",
     6: "RESCUE_PASSIVE",
     7: "RESCUE_ACTIVE",

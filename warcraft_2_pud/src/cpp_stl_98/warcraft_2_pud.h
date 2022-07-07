@@ -40,10 +40,10 @@ public:
     class unit_t;
 
     enum controller_t {
-        CONTROLLER_COMPUTER = 1,
+        CONTROLLER_COMPUTER1 = 1,
         CONTROLLER_PASSIVE_COMPUTER = 2,
         CONTROLLER_NOBODY = 3,
-        CONTROLLER_COMPUTER = 4,
+        CONTROLLER_COMPUTER4 = 4,
         CONTROLLER_HUMAN = 5,
         CONTROLLER_RESCUE_PASSIVE = 6,
         CONTROLLER_RESCUE_ACTIVE = 7

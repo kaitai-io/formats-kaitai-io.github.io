@@ -19,10 +19,10 @@ sub from_file {
     return new($class, IO::KaitaiStruct::Stream->new($fd));
 }
 
-our $CONTROLLER_COMPUTER = 1;
+our $CONTROLLER_COMPUTER1 = 1;
 our $CONTROLLER_PASSIVE_COMPUTER = 2;
 our $CONTROLLER_NOBODY = 3;
-our $CONTROLLER_COMPUTER = 4;
+our $CONTROLLER_COMPUTER4 = 4;
 our $CONTROLLER_HUMAN = 5;
 our $CONTROLLER_RESCUE_PASSIVE = 6;
 our $CONTROLLER_RESCUE_ACTIVE = 7;
