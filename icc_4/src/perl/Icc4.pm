@@ -812,6 +812,8 @@ our $TAG_SIGNATURES_VIEWING_COND_DESC = 1987405156;
 our $TAG_SIGNATURES_MEDIA_WHITE_POINT = 2004119668;
 
 our $TAG_TYPE_SIGNATURES_XYZ_TYPE = 1482250784;
+our $TAG_TYPE_SIGNATURES_CHROMATICITY_TYPE = 1667789421;
+our $TAG_TYPE_SIGNATURES_COLORANT_ORDER_TYPE = 1668051567;
 our $TAG_TYPE_SIGNATURES_COLORANT_TABLE_TYPE = 1668051572;
 our $TAG_TYPE_SIGNATURES_CURVE_TYPE = 1668641398;
 our $TAG_TYPE_SIGNATURES_DATA_TYPE = 1684108385;
@@ -1377,7 +1379,7 @@ sub _read {
     $self->{pcs_coordinates} = $self->{_io}->read_bytes(6);
     if ($self->_parent()->number_of_device_coordinates_for_each_named_colour() > 0) {
         $self->{device_coordinates} = ();
-        my $n_device_coordinates = $self->_parent()->count_of_named_colours();
+        my $n_device_coordinates = $self->_parent()->number_of_device_coordinates_for_each_named_colour();
         for (my $i = 0; $i < $n_device_coordinates; $i++) {
             $self->{device_coordinates}[$i] = $self->{_io}->read_u2be();
         }
@@ -1603,7 +1605,7 @@ sub _read {
         $self->{curve_values} = ();
         my $n_curve_values = $self->number_of_entries();
         for (my $i = 0; $i < $n_curve_values; $i++) {
-            $self->{curve_values}[$i] = $self->{_io}->read_u4be();
+            $self->{curve_values}[$i] = $self->{_io}->read_u2be();
         }
     }
     if ($self->number_of_entries() == 1) {
@@ -2112,8 +2114,8 @@ sub _read {
     for (my $i = 0; $i < $n_encoded_e_parameters; $i++) {
         $self->{encoded_e_parameters}[$i] = $self->{_io}->read_s4be();
     }
-    $self->{number_of_input_table_entries} = $self->{_io}->read_u4be();
-    $self->{number_of_output_table_entries} = $self->{_io}->read_u4be();
+    $self->{number_of_input_table_entries} = $self->{_io}->read_u2be();
+    $self->{number_of_output_table_entries} = $self->{_io}->read_u2be();
     $self->{input_tables} = $self->{_io}->read_bytes(((2 * $self->number_of_input_channels()) * $self->number_of_input_table_entries()));
     $self->{clut_values} = $self->{_io}->read_bytes(((2 * ($self->number_of_clut_grid_points() ^ $self->number_of_input_channels())) * $self->number_of_output_channels()));
     $self->{output_tables} = $self->{_io}->read_bytes(((2 * $self->number_of_output_channels()) * $self->number_of_output_table_entries()));

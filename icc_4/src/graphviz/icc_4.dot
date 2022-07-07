@@ -265,7 +265,7 @@ device_mfg_desc_tag__seq_tag_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1
 							<TR><TD COLSPAN="4" PORT="root_name_padding__repeat">repeat (32 - root_name.size) times</TD></TR>
 							<TR><TD PORT="pcs_coordinates_pos">...</TD><TD PORT="pcs_coordinates_size">6</TD><TD></TD><TD PORT="pcs_coordinates_type">pcs_coordinates</TD></TR>
 							<TR><TD PORT="device_coordinates_pos">...</TD><TD PORT="device_coordinates_size">2</TD><TD>u2be</TD><TD PORT="device_coordinates_type">device_coordinates</TD></TR>
-							<TR><TD COLSPAN="4" PORT="device_coordinates__repeat">repeat _parent.count_of_named_colours times</TD></TR>
+							<TR><TD COLSPAN="4" PORT="device_coordinates__repeat">repeat _parent.number_of_device_coordinates_for_each_named_colour times</TD></TR>
 						</TABLE>>];
 					}
 				}
@@ -320,7 +320,7 @@ blue_trc_tag__seq_tag_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 						<TR><TD BGCOLOR="#E0FFE0">pos</TD><TD BGCOLOR="#E0FFE0">size</TD><TD BGCOLOR="#E0FFE0">type</TD><TD BGCOLOR="#E0FFE0">id</TD></TR>
 						<TR><TD PORT="reserved_pos">0</TD><TD PORT="reserved_size">4</TD><TD></TD><TD PORT="reserved_type">reserved</TD></TR>
 						<TR><TD PORT="number_of_entries_pos">4</TD><TD PORT="number_of_entries_size">4</TD><TD>u4be</TD><TD PORT="number_of_entries_type">number_of_entries</TD></TR>
-						<TR><TD PORT="curve_values_pos">8</TD><TD PORT="curve_values_size">4</TD><TD>u4be</TD><TD PORT="curve_values_type">curve_values</TD></TR>
+						<TR><TD PORT="curve_values_pos">8</TD><TD PORT="curve_values_size">2</TD><TD>u2be</TD><TD PORT="curve_values_type">curve_values</TD></TR>
 						<TR><TD COLSPAN="4" PORT="curve_values__repeat">repeat number_of_entries times</TD></TR>
 						<TR><TD PORT="curve_value_pos">...</TD><TD PORT="curve_value_size">1</TD><TD>u1</TD><TD PORT="curve_value_type">curve_value</TD></TR>
 					</TABLE>>];
@@ -447,9 +447,9 @@ media_white_point_tag__seq_tag_data_switch [label=<<TABLE BORDER="0" CELLBORDER=
 						<TR><TD PORT="padding_pos">7</TD><TD PORT="padding_size">1</TD><TD></TD><TD PORT="padding_type">padding</TD></TR>
 						<TR><TD PORT="encoded_e_parameters_pos">8</TD><TD PORT="encoded_e_parameters_size">4</TD><TD>s4be</TD><TD PORT="encoded_e_parameters_type">encoded_e_parameters</TD></TR>
 						<TR><TD COLSPAN="4" PORT="encoded_e_parameters__repeat">repeat 9 times</TD></TR>
-						<TR><TD PORT="number_of_input_table_entries_pos">44</TD><TD PORT="number_of_input_table_entries_size">4</TD><TD>u4be</TD><TD PORT="number_of_input_table_entries_type">number_of_input_table_entries</TD></TR>
-						<TR><TD PORT="number_of_output_table_entries_pos">48</TD><TD PORT="number_of_output_table_entries_size">4</TD><TD>u4be</TD><TD PORT="number_of_output_table_entries_type">number_of_output_table_entries</TD></TR>
-						<TR><TD PORT="input_tables_pos">52</TD><TD PORT="input_tables_size">((2 * number_of_input_channels) * number_of_input_table_entries)</TD><TD></TD><TD PORT="input_tables_type">input_tables</TD></TR>
+						<TR><TD PORT="number_of_input_table_entries_pos">44</TD><TD PORT="number_of_input_table_entries_size">2</TD><TD>u2be</TD><TD PORT="number_of_input_table_entries_type">number_of_input_table_entries</TD></TR>
+						<TR><TD PORT="number_of_output_table_entries_pos">46</TD><TD PORT="number_of_output_table_entries_size">2</TD><TD>u2be</TD><TD PORT="number_of_output_table_entries_type">number_of_output_table_entries</TD></TR>
+						<TR><TD PORT="input_tables_pos">48</TD><TD PORT="input_tables_size">((2 * number_of_input_channels) * number_of_input_table_entries)</TD><TD></TD><TD PORT="input_tables_type">input_tables</TD></TR>
 						<TR><TD PORT="clut_values_pos">...</TD><TD PORT="clut_values_size">((2 * (number_of_clut_grid_points ^ number_of_input_channels)) * number_of_output_channels)</TD><TD></TD><TD PORT="clut_values_type">clut_values</TD></TR>
 						<TR><TD PORT="output_tables_pos">...</TD><TD PORT="output_tables_size">((2 * number_of_output_channels) * number_of_output_table_entries)</TD><TD></TD><TD PORT="output_tables_type">output_tables</TD></TR>
 					</TABLE>>];
@@ -1550,7 +1550,7 @@ b_to_d_2_tag__seq_tag_data_switch [label=<<TABLE BORDER="0" CELLBORDER="1" CELLS
 	named_color_2_type__seq:named_colour_definitions_type -> named_colour_definition__seq [style=bold];
 	named_color_2_type__seq:count_of_named_colours_type -> named_color_2_type__seq:named_colour_definitions__repeat [color="#404040"];
 	named_colour_definition__seq:root_name_type -> named_colour_definition__seq:root_name_padding__repeat [color="#404040"];
-	named_color_2_type__seq:count_of_named_colours_type -> named_colour_definition__seq:device_coordinates__repeat [color="#404040"];
+	named_color_2_type__seq:number_of_device_coordinates_for_each_named_colour_type -> named_colour_definition__seq:device_coordinates__repeat [color="#404040"];
 	viewing_conditions_tag__seq:tag_data_type -> viewing_conditions_tag__seq_tag_data_switch [style=bold];
 	viewing_conditions_tag__seq_tag_data_switch:case0 -> viewing_conditions_type__seq [style=bold];
 	viewing_conditions_tag__seq:tag_type_type -> viewing_conditions_tag__seq:tag_data_type [color="#404040"];

@@ -431,6 +431,8 @@ section#format-index .row {
     <span class="n">media_white_point</span> <span class="o">=</span> <span class="mi">2004119668</span>
   <span class="n">Icc4_TagTable_TagDefinition_TagTypeSignatures</span><span class="o">*</span> <span class="o">=</span> <span class="k">enum</span>
     <span class="n">xyz_type</span> <span class="o">=</span> <span class="mi">1482250784</span>
+    <span class="n">chromaticity_type</span> <span class="o">=</span> <span class="mi">1667789421</span>
+    <span class="n">colorant_order_type</span> <span class="o">=</span> <span class="mi">1668051567</span>
     <span class="n">colorant_table_type</span> <span class="o">=</span> <span class="mi">1668051572</span>
     <span class="n">curve_type</span> <span class="o">=</span> <span class="mi">1668641398</span>
     <span class="n">data_type</span> <span class="o">=</span> <span class="mi">1684108385</span>
@@ -508,7 +510,7 @@ section#format-index .row {
   <span class="n">Icc4_TagTable_TagDefinition_CurveType</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
     <span class="p">`</span><span class="n">reserved</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">numberOfEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">curveValues</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint32</span><span class="o">]</span>
+    <span class="p">`</span><span class="n">curveValues</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">uint16</span><span class="o">]</span>
     <span class="p">`</span><span class="n">curveValue</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">parent</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">KaitaiStruct</span>
   <span class="n">Icc4_TagTable_TagDefinition_SaturationRenderingIntentGamutTag</span><span class="o">*</span> <span class="o">=</span> <span class="k">ref</span> <span class="k">object</span> <span class="k">of</span> <span class="n">KaitaiStruct</span>
@@ -563,8 +565,8 @@ section#format-index .row {
     <span class="p">`</span><span class="n">numberOfClutGridPoints</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint8</span>
     <span class="p">`</span><span class="n">padding</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">encodedEParameters</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="kt">int32</span><span class="o">]</span>
-    <span class="p">`</span><span class="n">numberOfInputTableEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
-    <span class="p">`</span><span class="n">numberOfOutputTableEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint32</span>
+    <span class="p">`</span><span class="n">numberOfInputTableEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
+    <span class="p">`</span><span class="n">numberOfOutputTableEntries</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="n">uint16</span>
     <span class="p">`</span><span class="n">inputTables</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">clutValues</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
     <span class="p">`</span><span class="n">outputTables</span><span class="p">`</span><span class="o">*</span><span class="p">:</span> <span class="kt">seq</span><span class="o">[</span><span class="n">byte</span><span class="o">]</span>
@@ -1982,7 +1984,7 @@ section#format-index .row {
   <span class="k">let</span> <span class="n">pcsCoordinatesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">pcsCoordinates</span> <span class="o">=</span> <span class="n">pcsCoordinatesExpr</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">numberOfDeviceCoordinatesForEachNamedColour</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">countOfNamedColours</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">parent</span><span class="p">.</span><span class="n">numberOfDeviceCoordinatesForEachNamedColour</span><span class="p">):</span>
       <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
       <span class="n">this</span><span class="p">.</span><span class="n">deviceCoordinates</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
 
@@ -2067,7 +2069,7 @@ section#format-index .row {
   <span class="n">this</span><span class="p">.</span><span class="n">numberOfEntries</span> <span class="o">=</span> <span class="n">numberOfEntriesExpr</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numberOfEntries</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="n">this</span><span class="p">.</span><span class="n">numberOfEntries</span><span class="p">):</span>
-      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+      <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
       <span class="n">this</span><span class="p">.</span><span class="n">curveValues</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
   <span class="k">if</span> <span class="n">this</span><span class="p">.</span><span class="n">numberOfEntries</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
     <span class="k">let</span> <span class="n">curveValueExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU1</span><span class="p">()</span>
@@ -2272,9 +2274,9 @@ section#format-index .row {
   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="mi">0</span> <span class="p">..</span><span class="o">&lt;</span> <span class="kt">int</span><span class="p">(</span><span class="mi">9</span><span class="p">):</span>
     <span class="k">let</span> <span class="n">it</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readS4be</span><span class="p">()</span>
     <span class="n">this</span><span class="p">.</span><span class="n">encodedEParameters</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">it</span><span class="p">)</span>
-  <span class="k">let</span> <span class="n">numberOfInputTableEntriesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="k">let</span> <span class="n">numberOfInputTableEntriesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numberOfInputTableEntries</span> <span class="o">=</span> <span class="n">numberOfInputTableEntriesExpr</span>
-  <span class="k">let</span> <span class="n">numberOfOutputTableEntriesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU4be</span><span class="p">()</span>
+  <span class="k">let</span> <span class="n">numberOfOutputTableEntriesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readU2be</span><span class="p">()</span>
   <span class="n">this</span><span class="p">.</span><span class="n">numberOfOutputTableEntries</span> <span class="o">=</span> <span class="n">numberOfOutputTableEntriesExpr</span>
   <span class="k">let</span> <span class="n">inputTablesExpr</span> <span class="o">=</span> <span class="n">this</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">readBytes</span><span class="p">(</span><span class="kt">int</span><span class="p">(((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">numberOfInputChannels</span><span class="p">)</span> <span class="o">*</span> <span class="n">this</span><span class="p">.</span><span class="n">numberOfInputTableEntries</span><span class="p">)))</span>
   <span class="n">this</span><span class="p">.</span><span class="n">inputTables</span> <span class="o">=</span> <span class="n">inputTablesExpr</span>

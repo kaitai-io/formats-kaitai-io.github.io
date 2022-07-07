@@ -213,6 +213,8 @@ type
     media_white_point = 2004119668
   Icc4_TagTable_TagDefinition_TagTypeSignatures* = enum
     xyz_type = 1482250784
+    chromaticity_type = 1667789421
+    colorant_order_type = 1668051567
     colorant_table_type = 1668051572
     curve_type = 1668641398
     data_type = 1684108385
@@ -290,7 +292,7 @@ type
   Icc4_TagTable_TagDefinition_CurveType* = ref object of KaitaiStruct
     `reserved`*: seq[byte]
     `numberOfEntries`*: uint32
-    `curveValues`*: seq[uint32]
+    `curveValues`*: seq[uint16]
     `curveValue`*: uint8
     `parent`*: KaitaiStruct
   Icc4_TagTable_TagDefinition_SaturationRenderingIntentGamutTag* = ref object of KaitaiStruct
@@ -345,8 +347,8 @@ type
     `numberOfClutGridPoints`*: uint8
     `padding`*: seq[byte]
     `encodedEParameters`*: seq[int32]
-    `numberOfInputTableEntries`*: uint32
-    `numberOfOutputTableEntries`*: uint32
+    `numberOfInputTableEntries`*: uint16
+    `numberOfOutputTableEntries`*: uint16
     `inputTables`*: seq[byte]
     `clutValues`*: seq[byte]
     `outputTables`*: seq[byte]
@@ -1764,7 +1766,7 @@ proc read*(_: typedesc[Icc4_TagTable_TagDefinition_NamedColor2Type_NamedColourDe
   let pcsCoordinatesExpr = this.io.readBytes(int(6))
   this.pcsCoordinates = pcsCoordinatesExpr
   if this.parent.numberOfDeviceCoordinatesForEachNamedColour > 0:
-    for i in 0 ..< int(this.parent.countOfNamedColours):
+    for i in 0 ..< int(this.parent.numberOfDeviceCoordinatesForEachNamedColour):
       let it = this.io.readU2be()
       this.deviceCoordinates.add(it)
 
@@ -1849,7 +1851,7 @@ proc read*(_: typedesc[Icc4_TagTable_TagDefinition_CurveType], io: KaitaiStream,
   this.numberOfEntries = numberOfEntriesExpr
   if this.numberOfEntries > 1:
     for i in 0 ..< int(this.numberOfEntries):
-      let it = this.io.readU4be()
+      let it = this.io.readU2be()
       this.curveValues.add(it)
   if this.numberOfEntries == 1:
     let curveValueExpr = this.io.readU1()
@@ -2054,9 +2056,9 @@ proc read*(_: typedesc[Icc4_TagTable_TagDefinition_Lut16Type], io: KaitaiStream,
   for i in 0 ..< int(9):
     let it = this.io.readS4be()
     this.encodedEParameters.add(it)
-  let numberOfInputTableEntriesExpr = this.io.readU4be()
+  let numberOfInputTableEntriesExpr = this.io.readU2be()
   this.numberOfInputTableEntries = numberOfInputTableEntriesExpr
-  let numberOfOutputTableEntriesExpr = this.io.readU4be()
+  let numberOfOutputTableEntriesExpr = this.io.readU2be()
   this.numberOfOutputTableEntries = numberOfOutputTableEntriesExpr
   let inputTablesExpr = this.io.readBytes(int(((2 * this.numberOfInputChannels) * this.numberOfInputTableEntries)))
   this.inputTables = inputTablesExpr
